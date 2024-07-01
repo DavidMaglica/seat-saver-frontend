@@ -3,6 +3,10 @@ PODS:
   - FMDB (2.7.11):
     - FMDB/standard (= 2.7.11)
   - FMDB/standard (2.7.11)
+  - geocoding (1.0.5):
+    - Flutter
+  - geolocator_apple (1.2.0):
+    - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -14,6 +18,8 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - geocoding (from `.symlinks/plugins/geocoding/ios`)
+  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - rive_common (from `.symlinks/plugins/rive_common/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
@@ -25,6 +31,10 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  geocoding:
+    :path: ".symlinks/plugins/geocoding/ios"
+  geolocator_apple:
+    :path: ".symlinks/plugins/geolocator_apple/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   rive_common:
@@ -35,6 +45,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   FMDB: 57486c1117fd8e0e6b947b2f54c3f42bf8e57a4e
+  geocoding: 32cfcdb16d38d907caaba65e2e42ad10d38bee58
+  geolocator_apple: 6cbaf322953988e009e5ecb481f07efece75c450
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   rive_common: 60ae7896ab40f9513974f36f015de33f70d2c5c5
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904

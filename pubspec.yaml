@@ -49,6 +49,8 @@ dependencies:
   google_maps: 6.3.0
   flutter_launcher_icons: 0.13.1
   cupertino_icons: ^1.0.2
+  geolocator: 8.2.0
+  geocoding: 2.0.4
 
 flutter_launcher_icons:
   ios: true

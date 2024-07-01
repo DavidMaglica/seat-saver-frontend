@@ -93,9 +93,9 @@ class _LandingPageState extends State<LandingPage> {
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
-                    elevation: 3,
-                    borderSide: const BorderSide(
-                      color: Colors.transparent,
+                    elevation: 5,
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.onPrimary,
                       width: 1,
                     ),
                     borderRadius: BorderRadius.circular(8),

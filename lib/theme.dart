@@ -9,7 +9,8 @@ const Color lightAlternateColor = Color(0xFFFFC107);
 const Color lightPrimaryTextColor = Color(0xFF212121);
 const Color lightSecondaryTextColor = Color(0xFF757575);
 const Color lightPrimaryBackgroundColor = Color(0xFFFFFFFF);
-const Color lightSecondaryBackgroundColor = Color(0xFFF5F5F5);
+const Color lightSecondaryBackgroundColor = Color(0xFFE0DDDD);
+const Color mutedLightSecondaryBackgroundColor = Color(0xB3E0DDDD);
 
 // Dark theme colors
 const Color darkPrimaryColor = Color(0xFF4CAF50);
@@ -21,6 +22,7 @@ const Color darkPrimaryTextColor = Color(0xFFE0E0E0);
 const Color darkSecondaryTextColor = Color(0xFFBDBDBD);
 const Color darkPrimaryBackgroundColor = Color(0xFF212121);
 const Color darkSecondaryBackgroundColor = Color(0xFF424242);
+const Color mutedDarkSecondaryBackgroundColor = Color(0xB3424242);
 
 class AppThemes {
 
@@ -41,14 +43,15 @@ class AppThemes {
       brightness: Brightness.light,
       primary: lightPrimaryColor,
       secondary: lightSecondaryColor,
-      surface: lightPrimaryBackgroundColor,
+      surface: lightSecondaryBackgroundColor,
+      surfaceVariant: mutedLightSecondaryBackgroundColor,
       background: lightPrimaryBackgroundColor,
       error: errorColor,
       onPrimary: lightPrimaryTextColor,
       onSecondary: lightSecondaryTextColor,
       onSurface: lightPrimaryTextColor,
       onBackground: lightPrimaryTextColor,
-      onError: lightPrimaryBackgroundColor,
+      onError: errorColor,
     ),
     textTheme: const TextTheme(
       bodySmall: TextStyle(color: lightPrimaryTextColor, fontSize: 8, fontFamily: 'Roboto'),
@@ -66,7 +69,8 @@ class AppThemes {
       brightness: Brightness.dark,
       primary: darkPrimaryColor,
       secondary: darkSecondaryColor,
-      surface: darkPrimaryBackgroundColor,
+      surface: darkSecondaryBackgroundColor,
+      surfaceVariant: mutedDarkSecondaryBackgroundColor,
       background: darkPrimaryBackgroundColor,
       error: errorColor,
       onPrimary: darkPrimaryTextColor,
