@@ -23,6 +23,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   late HomepageModel _model;
   String? _currentCity;
+  List<String>? _nearbyCities;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -53,8 +54,12 @@ class _HomepageState extends State<Homepage> {
             ),
           );
         },
-      ).then((locality) => safeSetState(() {
-            _currentCity = locality;
+        // ).then((currentCity) => safeSetState(() {
+        // _currentCity = currentCity;
+        // }));
+      ).then((locationPopUpState) => safeSetState(() {
+            _currentCity = locationPopUpState[0];
+            _nearbyCities = locationPopUpState[1];
           }));
     });
   }
@@ -80,11 +85,21 @@ class _HomepageState extends State<Homepage> {
           body: SafeArea(
             top: true,
             child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 0, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
+                    ...(_nearbyCities ?? [])
+                        .map((city) => Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0, 24, 0, 0),
+                              child: Text(
+                                city,
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ))
+                        .toList(),
                     wrapWithModel(
                       model: _model.headerModel,
                       updateCallback: () => setState(() {}),
@@ -156,7 +171,7 @@ class _HomepageState extends State<Homepage> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
-                                      0, 12, 0, 0),
+                                      4, 12, 0, 0),
                                   child: SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
@@ -260,7 +275,7 @@ class _HomepageState extends State<Homepage> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
-                                      0, 12, 0, 0),
+                                      4, 12, 0, 0),
                                   child: SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
@@ -364,7 +379,7 @@ class _HomepageState extends State<Homepage> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
-                                      0, 12, 0, 0),
+                                      4, 12, 0, 0),
                                   child: SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
@@ -438,7 +453,7 @@ class _HomepageState extends State<Homepage> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
-                                      0, 12, 0, 0),
+                                      4, 12, 0, 0),
                                   child: SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
                                     child: Row(

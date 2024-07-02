@@ -1,3 +1,4 @@
+import 'package:diplomski/api/location_api.dart';
 import 'package:diplomski/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,8 @@ class LocationPermissionPopUp extends StatefulWidget {
 class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
   late LocationPermissionModel _model;
   Position? _currentPosition;
-  String? _currentAddress;
+  String? _currentCity;
+  List<String>? _nearbyCities;
 
   @override
   void initState() {
@@ -29,53 +31,66 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
   }
 
   Future<bool> _handleLocationPermission() async {
-    bool isServiceEnabled;
     LocationPermission locationPermission;
 
-    isServiceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!isServiceEnabled) {
-      return false;
-    }
+    if (!await Geolocator.isLocationServiceEnabled()) return false;
+
     locationPermission = await Geolocator.checkPermission();
-    if (locationPermission == LocationPermission.denied) {
-      locationPermission = await Geolocator.requestPermission();
-      if (locationPermission == LocationPermission.denied) {
+
+    if (await Geolocator.checkPermission() == LocationPermission.denied) {
+      if (await Geolocator.requestPermission() == LocationPermission.denied) {
         return false;
       }
     }
-    if (locationPermission == LocationPermission.deniedForever) {
-      return false;
-    }
+
+    if (locationPermission == LocationPermission.deniedForever) return false;
+
     return true;
   }
 
-  Future<void> _getAddressFromLatLng(Position? position) async {
+  Future<String?> _getAddressFromLatLng(Position? position) async {
+    String? currentCity;
     await placemarkFromCoordinates(
             _currentPosition!.latitude, _currentPosition!.longitude)
         .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
-      setState(() {
-        _currentAddress = place.locality;
-      });
+      currentCity = place.locality;
     }).catchError((e) {
       debugPrint(e);
     });
+
+    return currentCity;
   }
 
   Future<void> _getCurrentPosition() async {
-    final hasPermission = await _handleLocationPermission();
-    if (!hasPermission) return;
+    if (!await _handleLocationPermission()) return;
+
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
       setState(() => _currentPosition = position);
     }).catchError((e) {
       debugPrint(e);
     });
-    await _getAddressFromLatLng(_currentPosition)
-        .then((value) => Navigator.of(context).pop(_currentAddress))
-        .catchError((e) {
-          debugPrint(e);
+
+    if (_currentPosition == null) return;
+
+    await _getAddressFromLatLng(_currentPosition).then((currentCity) {
+      setState(() {
+        _currentCity = currentCity;
+      });
+    }).catchError((e) {
+      debugPrint(e);
     });
+    await getNearbyCities(_currentPosition!).then((nearbyCities) {
+      print('Cities on FE: $nearbyCities');
+      setState(() {
+        _nearbyCities = nearbyCities;
+      });
+    }).catchError((e) {
+      debugPrint(e);
+    });
+
+    Navigator.of(context).pop([_currentCity, _nearbyCities]);
   }
 
   @override

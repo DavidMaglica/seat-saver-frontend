@@ -86,7 +86,8 @@ class _CarouselItemState extends State<CarouselItem> {
                   alignment: const AlignmentDirectional(-1, 0),
                   child: Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                    child: Text('Discover new restaurants in Pula!',
+                    child: Text(
+                        'Discover new restaurants in ${widget.currentCity}!',
                         style: Theme.of(context).textTheme.bodyMedium),
                   ),
                 ),

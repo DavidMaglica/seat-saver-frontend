@@ -50,7 +50,7 @@ class _HeaderState extends State<Header> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                   child: Text(
                     'Welcome',
                     style: Theme.of(context).textTheme.titleMedium,

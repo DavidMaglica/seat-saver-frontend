@@ -39,7 +39,7 @@ class _SuggestedObjectState extends State<SuggestedObject> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
+      padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 0, 0),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
