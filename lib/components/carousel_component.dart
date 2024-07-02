@@ -8,7 +8,9 @@ import 'models/carousel_component_model.dart';
 export 'models/carousel_component_model.dart';
 
 class CarouselComponent extends StatefulWidget {
-  const CarouselComponent({super.key});
+  final String? currentCity;
+
+  const CarouselComponent(this.currentCity, {super.key});
 
   @override
   State<CarouselComponent> createState() => _CarouselComponentState();
@@ -16,6 +18,7 @@ class CarouselComponent extends StatefulWidget {
 
 class _CarouselComponentState extends State<CarouselComponent> {
   late CarouselComponentModel _model;
+
 
   @override
   void setState(VoidCallback callback) {
@@ -52,29 +55,29 @@ class _CarouselComponentState extends State<CarouselComponent> {
                   wrapWithModel(
                     model: _model.carouselItemModel1,
                     updateCallback: () => setState(() {}),
-                    child: const CarouselItem(),
+                    child: CarouselItem(widget.currentCity ?? 'Zagreb'),
                   ),
                   wrapWithModel(
                     model: _model.carouselItemModel2,
                     updateCallback: () => setState(() {}),
-                    child: const CarouselItem(),
+                    child: CarouselItem(widget.currentCity ?? 'Zagreb'),
                   ),
                   wrapWithModel(
                     model: _model.carouselItemModel3,
                     updateCallback: () => setState(() {}),
-                    child: const CarouselItem(),
+                    child: CarouselItem(widget.currentCity ?? 'Zagreb'),
                   ),
                   wrapWithModel(
                     model: _model.carouselItemModel4,
                     updateCallback: () => setState(() {}),
-                    child: const CarouselItem(),
+                    child: CarouselItem(widget.currentCity ?? 'Zagreb'),
                   ),
                 ],
                 carouselController: _model.carouselController ??=
                     CarouselController(),
                 options: CarouselOptions(
                   initialPage: 1,
-                  viewportFraction: 0.5,
+                  viewportFraction: 0.75,
                   disableCenter: true,
                   enlargeCenterPage: true,
                   enlargeFactor: 0.25,

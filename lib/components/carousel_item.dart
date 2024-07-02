@@ -7,7 +7,9 @@ import 'models/carouse_item_model.dart';
 export 'models/carouse_item_model.dart';
 
 class CarouselItem extends StatefulWidget {
-  const CarouselItem({super.key});
+  final String currentCity;
+
+  const CarouselItem(this.currentCity, {super.key});
 
   @override
   State<CarouselItem> createState() => _CarouselItemState();
@@ -56,7 +58,7 @@ class _CarouselItemState extends State<CarouselItem> {
             child: Image.network(
               'https://images.unsplash.com/photo-1617644558945-ea1c43e5d0a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHw1fHxQdWxhfGVufDB8fHx8MTcxOTUxNjIyMXww&ixlib=rb-4.0.3&q=80&w=1080',
               width: double.infinity,
-              height: 164,
+              height: 128,
               fit: BoxFit.cover,
             ),
           ),
@@ -65,15 +67,15 @@ class _CarouselItemState extends State<CarouselItem> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                const Align(
-                  alignment: AlignmentDirectional(-1, 0),
+                Align(
+                  alignment: const AlignmentDirectional(-1, 0),
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                     child: Text(
-                      'Pula',
-                      style: TextStyle(
+                      widget.currentCity,
+                      style: const TextStyle(
                         color: AppThemes.accent1,
-                        fontSize: 24,
+                        fontSize: 18,
                         fontFamily: 'Oswald',
                         fontWeight: FontWeight.bold,
                       ),
@@ -83,9 +85,9 @@ class _CarouselItemState extends State<CarouselItem> {
                 Align(
                   alignment: const AlignmentDirectional(-1, 0),
                   child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(12, 6, 0, 0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                     child: Text('Discover new restaurants in Pula!',
-                        style: Theme.of(context).textTheme.bodyLarge),
+                        style: Theme.of(context).textTheme.bodyMedium),
                   ),
                 ),
               ],

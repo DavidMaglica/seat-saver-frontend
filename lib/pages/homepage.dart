@@ -1,4 +1,4 @@
-import 'package:diplomski/components/carousel_item.dart';
+import 'package:diplomski/components/carousel_component.dart';
 import 'package:diplomski/components/header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -93,7 +93,7 @@ class _HomepageState extends State<Homepage> {
                     wrapWithModel(
                       model: _model.carouselComponentModel,
                       updateCallback: () => setState(() {}),
-                      child: const CarouselItem(),
+                      child: CarouselComponent(_currentCity),
                     ),
                     Padding(
                       padding:
@@ -113,9 +113,6 @@ class _HomepageState extends State<Homepage> {
                                       MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _currentCity != null
-                                        ? Text('Location: ${_currentCity!}')
-                                        : const Text('Location not enabled'),
                                     Padding(
                                       padding:
                                           const EdgeInsetsDirectional.fromSTEB(
