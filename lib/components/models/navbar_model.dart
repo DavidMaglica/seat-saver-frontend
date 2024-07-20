@@ -1,10 +1,8 @@
+import 'package:diplomski/components/navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-import '../location_permission.dart';
-
-class LocationPermissionModel
-    extends FlutterFlowModel<LocationPermissionPopUp> {
+class NavbarModel extends FlutterFlowModel<NavBar> {
   @override
   void initState(BuildContext context) {}
 

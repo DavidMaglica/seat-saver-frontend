@@ -1,4 +1,4 @@
-import 'package:diplomski/theme.dart';
+import 'package:diplomski/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
@@ -73,7 +73,6 @@ class _SuggestedObjectState extends State<SuggestedObject> {
                               fontFamily: 'Oswald',
                               color: AppThemes.accent1,
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],

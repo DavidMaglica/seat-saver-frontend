@@ -31,10 +31,12 @@ Future<List<String>> getNearbyCities(Position position) async {
       }
       return nearbyCities;
     } else {
+      // ignore: avoid_print
       print('Failed to fetch nearby cities: ${response.statusCode}');
       return mocked;
     }
   } catch (e) {
+    // ignore: avoid_print
     print('Error fetching nearby cities: $e');
     return mocked;
   }

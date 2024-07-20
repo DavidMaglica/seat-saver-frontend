@@ -19,7 +19,6 @@ class CarouselComponent extends StatefulWidget {
 class _CarouselComponentState extends State<CarouselComponent> {
   late CarouselComponentModel _model;
 
-
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);

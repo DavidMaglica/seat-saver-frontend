@@ -1,4 +1,4 @@
-import 'package:diplomski/theme.dart';
+import 'package:diplomski/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
@@ -59,9 +59,7 @@ class _HeaderState extends State<Header> {
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
                   child: FFButtonWidget(
-                    onPressed: () {
-                      print('Button pressed ...');
-                    },
+                    onPressed: () {},
                     text: 'Help',
                     options: FFButtonOptions(
                       width: 80,

@@ -1,4 +1,4 @@
-import 'package:diplomski/theme.dart';
+import 'package:diplomski/themes/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -65,7 +65,7 @@ class _LocationCardState extends State<LocationCard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Hero(
-                tag: 'locationCardImage',
+                tag: 'locationCardImage${randomDouble(0, 100)}',
                 transitionOnUserGestures: true,
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(
@@ -95,7 +95,6 @@ class _LocationCardState extends State<LocationCard> {
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onPrimary,
                               fontSize: 8,
-                              fontWeight: FontWeight.bold,
                             )),
                         const Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
@@ -106,7 +105,6 @@ class _LocationCardState extends State<LocationCard> {
                                   style: TextStyle(
                                     color: AppThemes.accent1,
                                     fontSize: 8,
-                                    fontWeight: FontWeight.bold,
                                   )),
                             ],
                           ),

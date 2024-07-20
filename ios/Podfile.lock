@@ -1,8 +1,17 @@
 PODS:
+  - Alamofire (5.9.1)
   - Flutter (1.0.0)
-  - FMDB (2.7.11):
-    - FMDB/standard (= 2.7.11)
-  - FMDB/standard (2.7.11)
+  - flutter_osm_plugin (0.0.1):
+    - Alamofire
+    - Flutter
+    - Polyline
+    - Tangram-es
+    - Yams
+  - FMDB (2.7.12):
+    - FMDB/standard (= 2.7.12)
+  - FMDB/Core (2.7.12)
+  - FMDB/standard (2.7.12):
+    - FMDB/Core
   - geocoding (1.0.5):
     - Flutter
   - geolocator_apple (1.2.0):
@@ -10,47 +19,74 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - permission_handler_apple (9.1.1):
+    - Flutter
+  - Polyline (5.1.0)
   - rive_common (0.0.1):
     - Flutter
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
+  - Tangram-es (0.17.1)
+  - url_launcher_ios (0.0.1):
+    - Flutter
+  - Yams (5.0.6)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - flutter_osm_plugin (from `.symlinks/plugins/flutter_osm_plugin/ios`)
   - geocoding (from `.symlinks/plugins/geocoding/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - rive_common (from `.symlinks/plugins/rive_common/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
+    - Alamofire
     - FMDB
+    - Polyline
+    - Tangram-es
+    - Yams
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  flutter_osm_plugin:
+    :path: ".symlinks/plugins/flutter_osm_plugin/ios"
   geocoding:
     :path: ".symlinks/plugins/geocoding/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
   rive_common:
     :path: ".symlinks/plugins/rive_common/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
+  Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  FMDB: 57486c1117fd8e0e6b947b2f54c3f42bf8e57a4e
+  flutter_osm_plugin: a661df71d2a3d1698ee410dd2272c8536f9e46f4
+  FMDB: 728731dd336af3936ce00f91d9d8495f5718a0e6
   geocoding: 32cfcdb16d38d907caaba65e2e42ad10d38bee58
   geolocator_apple: 6cbaf322953988e009e5ecb481f07efece75c450
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
+  permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
+  Polyline: 2a1f29f87f8d9b7de868940f4f76deb8c678a5b1
   rive_common: 60ae7896ab40f9513974f36f015de33f70d2c5c5
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
+  Tangram-es: 628b634f7fc09d2217469b9914de00d9de49ff9d
+  url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
+  Yams: e10dae147f517ed57ecae37c5e8681bdf8fcab65
 
-PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
+PODFILE CHECKSUM: 978dd492a93a8ef4ec2dc2b3631de447af34068a
 
-COCOAPODS: 1.14.2
+COCOAPODS: 1.15.2

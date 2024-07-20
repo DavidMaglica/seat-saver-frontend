@@ -1,5 +1,5 @@
 import 'package:diplomski/api/location_api.dart';
-import 'package:diplomski/theme.dart';
+import 'package:diplomski/themes/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
@@ -82,6 +82,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
       debugPrint(e);
     });
     await getNearbyCities(_currentPosition!).then((nearbyCities) {
+      // ignore: avoid_print
       print('Cities on FE: $nearbyCities');
       setState(() {
         _nearbyCities = nearbyCities;
@@ -165,7 +166,6 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
                     textStyle: TextStyle(
                       color: Theme.of(context).colorScheme.background,
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
                     ),
                     elevation: 3,
                     borderRadius: BorderRadius.circular(8),
@@ -189,7 +189,6 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
                   textStyle: TextStyle(
                     color: Theme.of(context).colorScheme.onPrimary,
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
                   ),
                   elevation: 3,
                   borderSide: BorderSide(

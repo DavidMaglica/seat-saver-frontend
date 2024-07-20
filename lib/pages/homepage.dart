@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:diplomski/components/carousel_component.dart';
 import 'package:diplomski/components/header.dart';
+import 'package:diplomski/components/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
@@ -8,7 +11,9 @@ import '../components/category_card.dart';
 import '../components/location_card.dart';
 import '../components/location_permission.dart';
 import '../components/suggested_object.dart';
-import '../theme.dart';
+import '../themes/theme.dart';
+import '../utils/localstore_utils.dart';
+import '../utils/routing_utils.dart';
 import 'models/homepage_model.dart';
 
 export 'models/homepage_model.dart';
@@ -21,6 +26,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final int pageIndex = 0;
   late HomepageModel _model;
   String? _currentCity;
   List<String>? _nearbyCities;
@@ -31,8 +37,19 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     super.initState();
     _model = createModel(context, () => HomepageModel());
+    loadCity().then((city) => _currentCity = city);
 
     // On page load action.
+    if (_currentCity != null) {
+      log('_currentCity is not null: $_currentCity', level: 1);
+      null;
+    } else {
+      log('_currentCity is null: $_currentCity', level: 1);
+      activateLocationPopUp();
+    }
+  }
+
+  void activateLocationPopUp() {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await showModalBottomSheet(
         isScrollControlled: true,
@@ -47,20 +64,23 @@ class _HomepageState extends State<Homepage> {
                 : FocusScope.of(context).unfocus(),
             child: Padding(
               padding: MediaQuery.viewInsetsOf(context),
-              child: Container(
+              child: const SizedBox(
                 height: 568,
-                child: const LocationPermissionPopUp(),
+                child: LocationPermissionPopUp(),
               ),
             ),
           );
         },
-        // ).then((currentCity) => safeSetState(() {
-        // _currentCity = currentCity;
-        // }));
-      ).then((locationPopUpState) => safeSetState(() {
-            _currentCity = locationPopUpState[0];
-            _nearbyCities = locationPopUpState[1];
-          }));
+      ).then((locationPopUpState) => {
+            if (locationPopUpState != null)
+              {
+                saveCity(locationPopUpState[0]),
+                safeSetState(() {
+                  _currentCity = locationPopUpState[0];
+                  _nearbyCities = locationPopUpState[1];
+                })
+              }
+          });
     });
   }
 
@@ -80,426 +100,439 @@ class _HomepageState extends State<Homepage> {
       child: WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
-          key: scaffoldKey,
-          backgroundColor: Theme.of(context).colorScheme.background,
-          body: SafeArea(
-            top: true,
-            child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    ...(_nearbyCities ?? [])
-                        .map((city) => Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  0, 24, 0, 0),
-                              child: Text(
-                                city,
-                                style: Theme.of(context).textTheme.titleMedium,
+            key: scaffoldKey,
+            backgroundColor: Theme.of(context).colorScheme.background,
+            body: SafeArea(
+              top: true,
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      wrapWithModel(
+                        model: _model.headerModel,
+                        updateCallback: () => setState(() {}),
+                        child: const Header(),
+                      ),
+                      wrapWithModel(
+                        model: _model.carouselComponentModel,
+                        updateCallback: () => setState(() {}),
+                        child: CarouselComponent(_currentCity),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(12, 0, 0, 0),
+                                        child: Text('Nearby',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(0, 0, 12, 0),
+                                        child: FFButtonWidget(
+                                          onPressed: () {},
+                                          text: 'See all',
+                                          options: FFButtonOptions(
+                                            width: 80,
+                                            height: 24,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .background,
+                                            textStyle: const TextStyle(
+                                              color: AppThemes.accent1,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            elevation: 2,
+                                            borderSide: const BorderSide(
+                                              color: AppThemes.accent1,
+                                              width: 1,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            4, 12, 0, 0),
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          wrapWithModel(
+                                            model: _model.locationCardModel1,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const LocationCard(),
+                                          ),
+                                          wrapWithModel(
+                                            model: _model.locationCardModel2,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const LocationCard(),
+                                          ),
+                                          wrapWithModel(
+                                            model: _model.locationCardModel3,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const LocationCard(),
+                                          ),
+                                          wrapWithModel(
+                                            model: _model.locationCardModel4,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const LocationCard(),
+                                          ),
+                                          wrapWithModel(
+                                            model: _model.locationCardModel5,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const LocationCard(),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ))
-                        .toList(),
-                    wrapWithModel(
-                      model: _model.headerModel,
-                      updateCallback: () => setState(() {}),
-                      child: const Header(),
-                    ),
-                    wrapWithModel(
-                      model: _model.carouselComponentModel,
-                      updateCallback: () => setState(() {}),
-                      child: CarouselComponent(_currentCity),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              12, 0, 0, 0),
-                                      child: Text('Nearby',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              0, 0, 12, 0),
-                                      child: FFButtonWidget(
-                                        onPressed: () {
-                                          print('Button pressed ...');
-                                        },
-                                        text: 'See all',
-                                        options: FFButtonOptions(
-                                          width: 80,
-                                          height: 24,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .background,
-                                          textStyle: const TextStyle(
-                                            color: AppThemes.accent1,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(12, 0, 0, 0),
+                                        child: Text('New Venues',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(0, 0, 12, 0),
+                                        child: FFButtonWidget(
+                                          onPressed: () {},
+                                          text: 'See all',
+                                          options: FFButtonOptions(
+                                            width: 80,
+                                            height: 24,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .background,
+                                            textStyle: const TextStyle(
+                                              color: AppThemes.accent1,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            elevation: 2,
+                                            borderSide: const BorderSide(
+                                              color: AppThemes.accent1,
+                                              width: 1,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                           ),
-                                          elevation: 2,
-                                          borderSide: const BorderSide(
-                                            color: AppThemes.accent1,
-                                            width: 1,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      4, 12, 0, 0),
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        wrapWithModel(
-                                          model: _model.locationCardModel1,
-                                          updateCallback: () => setState(() {}),
-                                          child: const LocationCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.locationCardModel2,
-                                          updateCallback: () => setState(() {}),
-                                          child: const LocationCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.locationCardModel3,
-                                          updateCallback: () => setState(() {}),
-                                          child: const LocationCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.locationCardModel4,
-                                          updateCallback: () => setState(() {}),
-                                          child: const LocationCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.locationCardModel5,
-                                          updateCallback: () => setState(() {}),
-                                          child: const LocationCard(),
-                                        ),
-                                      ],
-                                    ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              12, 0, 0, 0),
-                                      child: Text('New Venues',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              0, 0, 12, 0),
-                                      child: FFButtonWidget(
-                                        onPressed: () {
-                                          print('Button pressed ...');
-                                        },
-                                        text: 'See all',
-                                        options: FFButtonOptions(
-                                          width: 80,
-                                          height: 24,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .background,
-                                          textStyle: const TextStyle(
-                                            color: AppThemes.accent1,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
+                                  Padding(
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            4, 12, 0, 0),
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          wrapWithModel(
+                                            model: _model.locationCardModel6,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const LocationCard(),
                                           ),
-                                          elevation: 2,
-                                          borderSide: const BorderSide(
-                                            color: AppThemes.accent1,
-                                            width: 1,
+                                          wrapWithModel(
+                                            model: _model.locationCardModel7,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const LocationCard(),
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
+                                          wrapWithModel(
+                                            model: _model.locationCardModel8,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const LocationCard(),
+                                          ),
+                                          wrapWithModel(
+                                            model: _model.locationCardModel9,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const LocationCard(),
+                                          ),
+                                          wrapWithModel(
+                                            model: _model.locationCardModel10,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const LocationCard(),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      4, 12, 0, 0),
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        wrapWithModel(
-                                          model: _model.locationCardModel6,
-                                          updateCallback: () => setState(() {}),
-                                          child: const LocationCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.locationCardModel7,
-                                          updateCallback: () => setState(() {}),
-                                          child: const LocationCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.locationCardModel8,
-                                          updateCallback: () => setState(() {}),
-                                          child: const LocationCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.locationCardModel9,
-                                          updateCallback: () => setState(() {}),
-                                          child: const LocationCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.locationCardModel10,
-                                          updateCallback: () => setState(() {}),
-                                          child: const LocationCard(),
-                                        ),
-                                      ],
-                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              12, 0, 0, 0),
-                                      child: Text('Trending Venues',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              0, 0, 12, 0),
-                                      child: FFButtonWidget(
-                                        onPressed: () {
-                                          print('Button pressed ...');
-                                        },
-                                        text: 'See all',
-                                        options: FFButtonOptions(
-                                          width: 80,
-                                          height: 24,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .background,
-                                          textStyle: const TextStyle(
-                                            color: AppThemes.accent1,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
+                      Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(12, 0, 0, 0),
+                                        child: Text('Trending Venues',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(0, 0, 12, 0),
+                                        child: FFButtonWidget(
+                                          onPressed: () {},
+                                          text: 'See all',
+                                          options: FFButtonOptions(
+                                            width: 80,
+                                            height: 24,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .background,
+                                            textStyle: const TextStyle(
+                                              color: AppThemes.accent1,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            elevation: 2,
+                                            borderSide: const BorderSide(
+                                              color: AppThemes.accent1,
+                                              width: 1,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                           ),
-                                          elevation: 2,
-                                          borderSide: const BorderSide(
-                                            color: AppThemes.accent1,
-                                            width: 1,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      4, 12, 0, 0),
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        wrapWithModel(
-                                          model: _model.locationCardModel11,
-                                          updateCallback: () => setState(() {}),
-                                          child: const LocationCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.locationCardModel12,
-                                          updateCallback: () => setState(() {}),
-                                          child: const LocationCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.locationCardModel13,
-                                          updateCallback: () => setState(() {}),
-                                          child: const LocationCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.locationCardModel14,
-                                          updateCallback: () => setState(() {}),
-                                          child: const LocationCard(),
-                                        ),
-                                      ],
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            4, 12, 0, 0),
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          wrapWithModel(
+                                            model: _model.locationCardModel11,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const LocationCard(),
+                                          ),
+                                          wrapWithModel(
+                                            model: _model.locationCardModel12,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const LocationCard(),
+                                          ),
+                                          wrapWithModel(
+                                            model: _model.locationCardModel13,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const LocationCard(),
+                                          ),
+                                          wrapWithModel(
+                                            model: _model.locationCardModel14,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const LocationCard(),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    wrapWithModel(
-                      model: _model.suggestedObjectModel,
-                      updateCallback: () => setState(() {}),
-                      child: const SuggestedObject(),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 72),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              12, 0, 0, 0),
-                                      child: Text('Categories',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      4, 12, 0, 0),
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        wrapWithModel(
-                                          model: _model.categoryCardModel1,
-                                          updateCallback: () => setState(() {}),
-                                          child: const CategoryCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.categoryCardModel2,
-                                          updateCallback: () => setState(() {}),
-                                          child: const CategoryCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.categoryCardModel3,
-                                          updateCallback: () => setState(() {}),
-                                          child: const CategoryCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.categoryCardModel4,
-                                          updateCallback: () => setState(() {}),
-                                          child: const CategoryCard(),
-                                        ),
-                                        wrapWithModel(
-                                          model: _model.categoryCardModel5,
-                                          updateCallback: () => setState(() {}),
-                                          child: const CategoryCard(),
-                                        ),
-                                      ],
+                      wrapWithModel(
+                        model: _model.suggestedObjectModel,
+                        updateCallback: () => setState(() {}),
+                        child: const SuggestedObject(),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 72),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(12, 0, 0, 0),
+                                        child: Text('Categories',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            4, 12, 0, 0),
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          wrapWithModel(
+                                            model: _model.categoryCardModel1,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const CategoryCard(),
+                                          ),
+                                          wrapWithModel(
+                                            model: _model.categoryCardModel2,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const CategoryCard(),
+                                          ),
+                                          wrapWithModel(
+                                            model: _model.categoryCardModel3,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const CategoryCard(),
+                                          ),
+                                          wrapWithModel(
+                                            model: _model.categoryCardModel4,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const CategoryCard(),
+                                          ),
+                                          wrapWithModel(
+                                            model: _model.categoryCardModel5,
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            child: const CategoryCard(),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
+            bottomNavigationBar: NavBar(
+              currentIndex: pageIndex,
+              context: context,
+              onTap: (index, context) =>
+                  onNavbarItemTapped(pageIndex, index, context),
+            )),
       ),
     );
   }

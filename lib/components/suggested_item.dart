@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-import '../theme.dart';
+import '../themes/theme.dart';
 import 'models/suggested_item_model.dart';
 
 export 'models/suggested_item_model.dart';
@@ -64,7 +64,7 @@ class _SuggestedItemState extends State<SuggestedItem> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Hero(
-                tag: 'suggestedItemImage',
+                tag: 'suggestedItemImage${randomDouble(0, 100)}',
                 transitionOnUserGestures: true,
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(
@@ -94,7 +94,6 @@ class _SuggestedItemState extends State<SuggestedItem> {
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary,
                                 fontSize: 14,
-                                fontWeight: FontWeight.bold,
                               )),
                           const Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
@@ -105,7 +104,6 @@ class _SuggestedItemState extends State<SuggestedItem> {
                                     style: TextStyle(
                                       color: AppThemes.accent1,
                                       fontSize: 12,
-                                      fontWeight: FontWeight.bold,
                                     )),
                               ],
                             ),

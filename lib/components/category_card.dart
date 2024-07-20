@@ -40,13 +40,13 @@ class _CategoryCardState extends State<CategoryCard> {
       alignment: const AlignmentDirectional(0, 0),
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-        child: Container(
+        child: SizedBox(
           width: 140,
           child: Stack(
             alignment: const AlignmentDirectional(0, 0),
             children: [
               Hero(
-                tag: 'categoryCardImage',
+                tag: 'categoryCardImage${randomDouble(0, 100)}',
                 transitionOnUserGestures: true,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
