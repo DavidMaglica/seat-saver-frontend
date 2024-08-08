@@ -1,17 +1,18 @@
-import 'models/landing_model.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
+
+import 'models/landing_model.dart';
 
 export 'models/landing_model.dart';
 
-class LandingPage extends StatefulWidget {
-  const LandingPage({super.key});
+class Landing extends StatefulWidget {
+  const Landing({super.key});
 
   @override
-  State<LandingPage> createState() => _LandingPageState();
+  State<Landing> createState() => _LandingState();
 }
 
-class _LandingPageState extends State<LandingPage> {
+class _LandingState extends State<Landing> {
   late LandingModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -52,7 +53,10 @@ class _LandingPageState extends State<LandingPage> {
                     borderRadius: BorderRadius.circular(96),
                     boxShadow: [
                       BoxShadow(
-                        color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.3),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onPrimary
+                            .withOpacity(0.3),
                         blurRadius: 5,
                         spreadRadius: 2,
                         offset: const Offset(4, 4),
@@ -91,11 +95,10 @@ class _LandingPageState extends State<LandingPage> {
                       color: Colors.white,
                       letterSpacing: 0,
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
                     ),
-                    elevation: 3,
-                    borderSide: const BorderSide(
-                      color: Colors.transparent,
+                    elevation: 5,
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.onPrimary,
                       width: 1,
                     ),
                     borderRadius: BorderRadius.circular(8),

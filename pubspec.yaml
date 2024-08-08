@@ -31,14 +31,14 @@ dependencies:
   flutter:
     sdk: flutter
   flutterflow_ui: 0.2.0+1
-  auto_size_text: 3.0.0
+  auto_size_text: ^3.0.0
   cached_network_image: 3.2.1
-  carousel_slider: 4.2.1
+  carousel_slider: ^4.2.1
   collection: 1.17.2
-  dropdown_button2: 2.3.9
+  dropdown_button2: ^2.3.9
   flutter_animate: 4.1.1+1
   flutter_cache_manager: 3.3.0
-  flutter_credit_card:  3.0.6
+  flutter_credit_card: 3.0.6
   flutter_rating_bar: 4.0.1
   flutter_spinkit: 5.2.0
   flutter_staggered_grid_view: 0.6.2
@@ -48,7 +48,11 @@ dependencies:
   google_fonts: 4.0.3
   google_maps: 6.3.0
   flutter_launcher_icons: 0.13.1
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.8
+  geolocator: 8.2.0
+  geocoding: 2.0.4
+  http: 0.13.3
+  flutter_osm_plugin: ^0.70.0
 
 flutter_launcher_icons:
   ios: true
@@ -73,7 +77,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
