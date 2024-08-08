@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:diplomski/components/carousel_component.dart';
 import 'package:diplomski/components/header.dart';
 import 'package:diplomski/components/navbar.dart';
@@ -12,7 +10,6 @@ import '../components/location_card.dart';
 import '../components/location_permission.dart';
 import '../components/suggested_object.dart';
 import '../themes/theme.dart';
-import '../utils/localstore_utils.dart';
 import '../utils/routing_utils.dart';
 import 'models/homepage_model.dart';
 
@@ -37,16 +34,9 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     super.initState();
     _model = createModel(context, () => HomepageModel());
-    loadCity().then((city) => _currentCity = city);
 
     // On page load action.
-    if (_currentCity != null) {
-      log('_currentCity is not null: $_currentCity', level: 1);
-      null;
-    } else {
-      log('_currentCity is null: $_currentCity', level: 1);
-      activateLocationPopUp();
-    }
+    activateLocationPopUp();
   }
 
   void activateLocationPopUp() {
@@ -74,7 +64,6 @@ class _HomepageState extends State<Homepage> {
       ).then((locationPopUpState) => {
             if (locationPopUpState != null)
               {
-                saveCity(locationPopUpState[0]),
                 safeSetState(() {
                   _currentCity = locationPopUpState[0];
                   _nearbyCities = locationPopUpState[1];
