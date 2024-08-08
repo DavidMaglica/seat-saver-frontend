@@ -10,7 +10,7 @@ const Color lightPrimaryTextColor = Color(0xFF212121);
 const Color lightSecondaryTextColor = Color(0xFF757575);
 const Color lightPrimaryBackgroundColor = Color(0xFFFFFFFF);
 const Color lightSecondaryBackgroundColor = Color(0xFFE0DDDD);
-const Color mutedLightSecondaryBackgroundColor = Color(0xB3E0DDDD);
+const Color mutedLightSecondaryBackgroundColor = Color(0x40E0DDDD);
 
 // Dark theme colors
 const Color darkPrimaryColor = Color(0xFF4CAF50);
@@ -43,6 +43,7 @@ class AppThemes {
       brightness: Brightness.light,
       primary: lightPrimaryColor,
       secondary: lightSecondaryColor,
+      tertiary: lightTertiaryColor,
       surface: lightSecondaryBackgroundColor,
       surfaceVariant: mutedLightSecondaryBackgroundColor,
       background: lightPrimaryBackgroundColor,
@@ -60,6 +61,8 @@ class AppThemes {
       titleSmall: TextStyle(color: lightPrimaryTextColor, fontSize: 14, fontFamily: 'Oswald', fontWeight: FontWeight.bold),
       titleMedium: TextStyle(color: lightPrimaryTextColor, fontSize: 18, fontFamily: 'Oswald', fontWeight: FontWeight.bold),
       titleLarge: TextStyle(color: lightPrimaryTextColor, fontSize: 24, fontFamily: 'Oswald', fontWeight: FontWeight.bold),
+      headlineSmall: TextStyle(color: lightPrimaryTextColor, fontSize: 16, fontFamily: 'Roboto'),
+      headlineMedium: TextStyle(color: lightPrimaryBackgroundColor, fontSize: 16, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
     ),
     scaffoldBackgroundColor: lightPrimaryBackgroundColor,
   );
@@ -69,6 +72,7 @@ class AppThemes {
       brightness: Brightness.dark,
       primary: darkPrimaryColor,
       secondary: darkSecondaryColor,
+      tertiary: darkTertiaryColor,
       surface: darkSecondaryBackgroundColor,
       surfaceVariant: mutedDarkSecondaryBackgroundColor,
       background: darkPrimaryBackgroundColor,
@@ -86,6 +90,8 @@ class AppThemes {
       titleSmall: TextStyle(color: darkPrimaryTextColor, fontSize: 14, fontFamily: 'Oswald', fontWeight: FontWeight.bold),
       titleMedium: TextStyle(color: darkPrimaryTextColor, fontSize: 18, fontFamily: 'Oswald', fontWeight: FontWeight.bold),
       titleLarge: TextStyle(color: darkPrimaryTextColor, fontSize: 24, fontFamily: 'Oswald', fontWeight: FontWeight.bold),
+      headlineSmall: TextStyle(color: darkPrimaryTextColor, fontSize: 16, fontFamily: 'Roboto'),
+      headlineMedium: TextStyle(color: lightPrimaryBackgroundColor, fontSize: 16, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
     ),
     scaffoldBackgroundColor: darkPrimaryBackgroundColor,
   );

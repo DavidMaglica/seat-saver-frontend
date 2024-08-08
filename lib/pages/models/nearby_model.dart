@@ -8,10 +8,6 @@ class NearbyModel extends FlutterFlowModel<Nearby> {
 
   final unfocusNode = FocusNode();
 
-  // State field(s) for GoogleMap widget.
-  // gmaps.LatLng? googleMapsCenter;
-  // final googleMapsController = Completer<gmaps.GoogleMapController>();
-
   @override
   void initState(BuildContext context) {}
 

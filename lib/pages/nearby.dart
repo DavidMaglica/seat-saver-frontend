@@ -18,7 +18,7 @@ class Nearby extends StatefulWidget {
 }
 
 class _NearbyState extends State<Nearby> {
-  final int pageIndex = 1;
+  final int pageIndex = 2;
   late NearbyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();

@@ -9,9 +9,10 @@ void onNavbarItemTapped(int pageIndex, int index, BuildContext context) {
       Navigator.pushNamed(context, '/homepage');
       break;
     case 1:
-      Navigator.pushNamed(context, '/nearby');
+      Navigator.pushNamed(context, '/search');
       break;
     case 2:
+      Navigator.pushNamed(context, '/nearby');
       break;
     case 3:
     // Handle Info page navigation
