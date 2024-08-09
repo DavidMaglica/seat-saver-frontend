@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
+import '../components/appbar.dart';
 import '../components/navbar.dart';
 import '../themes/theme.dart';
 import '../utils/routing_utils.dart';
@@ -18,7 +19,7 @@ class Nearby extends StatefulWidget {
 }
 
 class _NearbyState extends State<Nearby> {
-  final int pageIndex = 1;
+  final int pageIndex = 2;
   late NearbyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -51,6 +52,7 @@ class _NearbyState extends State<Nearby> {
       child: Scaffold(
           key: scaffoldKey,
           resizeToAvoidBottomInset: false,
+          appBar: CustomAppbar(context: context),
           backgroundColor: Theme.of(context).colorScheme.background,
           body: SafeArea(
             top: true,

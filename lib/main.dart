@@ -1,6 +1,7 @@
 import 'package:diplomski/pages/homepage.dart';
 import 'package:diplomski/pages/landing.dart';
 import 'package:diplomski/pages/nearby.dart';
+import 'package:diplomski/pages/search.dart';
 import 'package:diplomski/themes/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/landing': (context) => const Landing(),
         '/homepage': (context) => const Homepage(),
+        '/search': (context) => const Search(),
         '/nearby': (context) => const Nearby(),
       },
     );
