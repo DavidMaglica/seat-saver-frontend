@@ -79,18 +79,18 @@ class _SearchState extends State<Search> {
                 children: [
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(
-                        0.0, 24.0, 0.0, 36.0),
+                        0, 24, 0, 36),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
-                                24.0, 36.0, 24.0, 0.0),
+                                24, 36, 24, 0),
                             child: Container(
-                              height: 50.0,
+                              height: 50,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.0),
+                                borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
                                   color: Theme.of(context)
                                       .colorScheme
@@ -99,10 +99,10 @@ class _SearchState extends State<Search> {
                               ),
                               child: Align(
                                 alignment:
-                                    const AlignmentDirectional(-1.0, 0.0),
+                                    const AlignmentDirectional(-1, 0),
                                 child: Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
-                                      12.0, 0.0, 0.0, 0.0),
+                                      12, 0, 0, 0),
                                   child: Text('Search',
                                       style: Theme.of(context)
                                           .textTheme
@@ -124,7 +124,7 @@ class _SearchState extends State<Search> {
                   const Flexible(
                     child: Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 36.0),
+                          EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [

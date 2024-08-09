@@ -22,7 +22,7 @@ class SettingsItem extends StatelessWidget {
           size: 24,
         ),
         Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
+          padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
           child: Text(
             text,
             style: Theme.of(context).textTheme.bodyLarge,

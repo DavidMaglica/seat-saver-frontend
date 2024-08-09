@@ -6,6 +6,7 @@ import 'pages/landing.dart';
 import 'pages/nearby.dart';
 import 'pages/search.dart';
 import 'pages/settings/notification_settings.dart';
+import 'pages/settings/support.dart';
 import 'themes/theme.dart';
 
 void main() {
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         '/nearby': (context) => const Nearby(),
         '/account': (context) => const Account(),
         '/notificationSettings': (context) => const NotificationSettings(),
+        '/support': (context) => const Support(),
       },
     );
   }

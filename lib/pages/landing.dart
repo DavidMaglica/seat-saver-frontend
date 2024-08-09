@@ -86,8 +86,8 @@ class _LandingState extends State<Landing> {
                   },
                   text: 'Get Started',
                   options: FFButtonOptions(
-                    width: 150.0,
-                    height: 44.0,
+                    width: 150,
+                    height: 44,
                     color: Theme.of(context).colorScheme.primary,
                     textStyle: TextStyle(
                       color: Theme.of(context).colorScheme.background,

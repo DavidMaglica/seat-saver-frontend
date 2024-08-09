@@ -11,7 +11,7 @@ class CustomListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+      padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
       child: ListTile(
         title: Text(
           title,
@@ -20,12 +20,12 @@ class CustomListTile extends StatelessWidget {
         trailing: Icon(
           Icons.arrow_forward_ios,
           color: Theme.of(context).colorScheme.onPrimary,
-          size: 20.0,
+          size: 20,
         ),
         tileColor: Theme.of(context).colorScheme.surfaceVariant,
         dense: true,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );
