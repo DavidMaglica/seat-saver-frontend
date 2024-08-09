@@ -1,3 +1,4 @@
+import 'package:diplomski/components/appbar.dart';
 import 'package:diplomski/components/custom_choice_chips.dart';
 import 'package:diplomski/components/custom_list_tile.dart';
 import 'package:diplomski/components/list_divider.dart';
@@ -69,6 +70,7 @@ class _SearchState extends State<Search> {
       child: Scaffold(
           key: scaffoldKey,
           backgroundColor: Theme.of(context).colorScheme.background,
+          appBar: CustomAppbar(context: context),
           body: SafeArea(
             top: true,
             child: SingleChildScrollView(

@@ -37,11 +37,11 @@ class NavBar extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.home),
+            icon: Icon(CupertinoIcons.house_fill),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.search),
+            icon: Icon(CupertinoIcons.search_circle_fill),
             label: 'Search',
           ),
           BottomNavigationBarItem(
@@ -49,7 +49,7 @@ class NavBar extends StatelessWidget {
             label: 'Nearby',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.info),
+            icon: Icon(CupertinoIcons.info_circle_fill),
             label: 'Info',
           ),
         ],
