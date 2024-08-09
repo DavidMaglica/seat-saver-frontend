@@ -89,7 +89,10 @@ class _LandingState extends State<Landing> {
                     width: 150.0,
                     height: 44.0,
                     color: Theme.of(context).colorScheme.primary,
-                    textStyle: Theme.of(context).textTheme.bodyLarge,
+                    textStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.background,
+                      fontSize: 16,
+                    ),
                     elevation: 3,
                     borderRadius: BorderRadius.circular(8),
                   ),
