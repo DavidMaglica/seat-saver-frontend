@@ -1,10 +1,10 @@
-import 'package:diplomski/components/appbar.dart';
-import 'package:diplomski/components/custom_choice_chips.dart';
-import 'package:diplomski/components/custom_list_tile.dart';
-import 'package:diplomski/components/list_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
+import '../components/appbar.dart';
+import '../components/custom_choice_chips.dart';
+import '../components/custom_list_tile.dart';
+import '../components/list_divider.dart';
 import '../components/navbar.dart';
 import '../utils/routing_utils.dart';
 import 'models/search_model.dart';
@@ -70,7 +70,7 @@ class _SearchState extends State<Search> {
       child: Scaffold(
           key: scaffoldKey,
           backgroundColor: Theme.of(context).colorScheme.background,
-          appBar: CustomAppbar(context: context),
+          appBar: const CustomAppbar(title: ''),
           body: SafeArea(
             top: true,
             child: SingleChildScrollView(

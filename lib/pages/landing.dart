@@ -84,23 +84,13 @@ class _LandingState extends State<Landing> {
                       '/homepage',
                     );
                   },
-                  text: 'Get Started!',
+                  text: 'Get Started',
                   options: FFButtonOptions(
-                    height: 40,
-                    padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-                    iconPadding:
-                        const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                    width: 150.0,
+                    height: 44.0,
                     color: Theme.of(context).colorScheme.primary,
-                    textStyle: const TextStyle(
-                      color: Colors.white,
-                      letterSpacing: 0,
-                      fontSize: 16,
-                    ),
-                    elevation: 5,
-                    borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      width: 1,
-                    ),
+                    textStyle: Theme.of(context).textTheme.bodyLarge,
+                    elevation: 3,
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),

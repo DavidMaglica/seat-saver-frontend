@@ -1,11 +1,11 @@
-import 'package:diplomski/api/location_api.dart';
-import 'package:diplomski/themes/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../api/location_api.dart';
+import '../themes/theme.dart';
 import 'models/location_permission_model.dart';
 
 export 'models/location_permission_model.dart';

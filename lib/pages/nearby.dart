@@ -52,7 +52,7 @@ class _NearbyState extends State<Nearby> {
       child: Scaffold(
           key: scaffoldKey,
           resizeToAvoidBottomInset: false,
-          appBar: CustomAppbar(context: context),
+          appBar: const CustomAppbar(title: ''),
           backgroundColor: Theme.of(context).colorScheme.background,
           body: SafeArea(
             top: true,

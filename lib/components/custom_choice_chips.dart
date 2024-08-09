@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart'; // Adjust the import path as necessary
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class CustomChoiceChips extends StatefulWidget {
   final List<String> options;

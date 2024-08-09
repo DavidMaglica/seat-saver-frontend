@@ -1,13 +1,13 @@
-import 'package:diplomski/components/carousel_component.dart';
-import 'package:diplomski/components/header.dart';
-import 'package:diplomski/components/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
+import '../components/carousel_component.dart';
 import '../components/category_card.dart';
+import '../components/header.dart';
 import '../components/location_card.dart';
 import '../components/location_permission.dart';
+import '../components/navbar.dart';
 import '../components/suggested_object.dart';
 import '../themes/theme.dart';
 import '../utils/routing_utils.dart';

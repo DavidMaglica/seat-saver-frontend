@@ -1,8 +1,8 @@
-import 'package:diplomski/components/models/suggested_item_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../suggested_object.dart';
+import 'suggested_item_model.dart';
 
 class SuggestedObjectModel extends FlutterFlowModel<SuggestedObject> {
   ///  State fields for stateful widgets in this component.

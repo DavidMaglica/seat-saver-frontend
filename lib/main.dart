@@ -1,9 +1,12 @@
-import 'package:diplomski/pages/homepage.dart';
-import 'package:diplomski/pages/landing.dart';
-import 'package:diplomski/pages/nearby.dart';
-import 'package:diplomski/pages/search.dart';
-import 'package:diplomski/themes/theme.dart';
 import 'package:flutter/material.dart';
+
+import 'pages/account.dart';
+import 'pages/homepage.dart';
+import 'pages/landing.dart';
+import 'pages/nearby.dart';
+import 'pages/search.dart';
+import 'pages/settings/notification_settings.dart';
+import 'themes/theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +29,8 @@ class MyApp extends StatelessWidget {
         '/homepage': (context) => const Homepage(),
         '/search': (context) => const Search(),
         '/nearby': (context) => const Nearby(),
+        '/account': (context) => const Account(),
+        '/notificationSettings': (context) => const NotificationSettings(),
       },
     );
   }

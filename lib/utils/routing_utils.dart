@@ -15,7 +15,7 @@ void onNavbarItemTapped(int pageIndex, int index, BuildContext context) {
       Navigator.pushNamed(context, '/nearby');
       break;
     case 3:
-    // Handle Info page navigation
+      Navigator.pushNamed(context, '/account');
       break;
     default:
       break;
