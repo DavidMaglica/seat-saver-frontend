@@ -143,7 +143,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                   },
                   text: 'Save Changes',
                   options: FFButtonOptions(
-                    width: 150,
+                    width: 270,
                     height: 44,
                     color: Theme.of(context).colorScheme.primary,
                     textStyle: TextStyle(

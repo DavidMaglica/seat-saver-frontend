@@ -256,7 +256,6 @@ class _AccountWidgetState extends State<Account> with TickerProviderStateMixin {
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: InkWell(
-                    splashColor: Theme.of(context).colorScheme.onError,
                     onTap: () async {
                       Navigator.pushNamed(
                         context,

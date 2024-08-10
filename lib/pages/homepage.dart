@@ -154,7 +154,7 @@ class _HomepageState extends State<Homepage> {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                             ),
-                                            elevation: 2,
+                                            elevation: 3,
                                             borderSide: const BorderSide(
                                               color: AppThemes.accent1,
                                               width: 1,
@@ -262,7 +262,7 @@ class _HomepageState extends State<Homepage> {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                             ),
-                                            elevation: 2,
+                                            elevation: 3,
                                             borderSide: const BorderSide(
                                               color: AppThemes.accent1,
                                               width: 1,
@@ -370,7 +370,7 @@ class _HomepageState extends State<Homepage> {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                             ),
-                                            elevation: 2,
+                                            elevation: 3,
                                             borderSide: const BorderSide(
                                               color: AppThemes.accent1,
                                               width: 1,

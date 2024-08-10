@@ -12,14 +12,14 @@ class LogOutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 36, 0, 0),
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
       child: FFButtonWidget(
         onPressed: onPressed,
         text: 'Log Out',
         options: FFButtonOptions(
-          width: 150,
+          width: 270,
           height: 44,
-          color: Theme.of(context).colorScheme.onError,
+          color: Theme.of(context).colorScheme.error,
           textStyle: TextStyle(
             color: Theme.of(context).colorScheme.background,
             fontSize: 16,

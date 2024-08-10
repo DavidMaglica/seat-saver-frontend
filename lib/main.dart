@@ -5,6 +5,7 @@ import 'pages/homepage.dart';
 import 'pages/landing.dart';
 import 'pages/nearby.dart';
 import 'pages/search.dart';
+import 'pages/settings/edit_profile.dart';
 import 'pages/settings/notification_settings.dart';
 import 'pages/settings/support.dart';
 import 'themes/theme.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         '/account': (context) => const Account(),
         '/notificationSettings': (context) => const NotificationSettings(),
         '/support': (context) => const Support(),
+        '/editProfile': (context) => const EditProfile(),
       },
     );
   }

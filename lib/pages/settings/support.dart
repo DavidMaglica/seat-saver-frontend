@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../components/appbar.dart';
+import '../../themes/theme.dart';
 import 'models/support_model.dart';
 
 export 'models/support_model.dart';
@@ -194,22 +195,22 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.tertiary,
+                              borderSide: const BorderSide(
+                                color: AppThemes.infoColor,
                                 width: 2,
                               ),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.onError,
+                                color: Theme.of(context).colorScheme.error,
                                 width: 2,
                               ),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.onError,
+                                color: Theme.of(context).colorScheme.error,
                                 width: 2,
                               ),
                               borderRadius: BorderRadius.circular(12),
@@ -218,7 +219,7 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                                 const EdgeInsetsDirectional.fromSTEB(
                                     16, 12, 16, 12),
                           ),
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: Theme.of(context).textTheme.bodyMedium,
                           cursorColor: Theme.of(context).colorScheme.onPrimary,
                           validator: _model.textController1Validator
                               .asValidator(context),
@@ -242,22 +243,22 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.tertiary,
+                              borderSide: const BorderSide(
+                                color: AppThemes.infoColor,
                                 width: 2,
                               ),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.onError,
+                                color: Theme.of(context).colorScheme.error,
                                 width: 2,
                               ),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.onError,
+                                color: Theme.of(context).colorScheme.error,
                                 width: 2,
                               ),
                               borderRadius: BorderRadius.circular(12),
@@ -266,7 +267,7 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                                 const EdgeInsetsDirectional.fromSTEB(
                                     16, 12, 16, 12),
                           ),
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: Theme.of(context).textTheme.bodyMedium,
                           maxLines: 16,
                           minLines: 6,
                           cursorColor: Theme.of(context).colorScheme.onPrimary,

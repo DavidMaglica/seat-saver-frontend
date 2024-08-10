@@ -157,7 +157,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
                   onPressed: _getCurrentPosition,
                   text: 'Enable location',
                   options: FFButtonOptions(
-                    width: 200,
+                    width: 270,
                     height: 40,
                     padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
                     iconPadding:
@@ -181,7 +181,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
                 },
                 text: 'No, thanks',
                 options: FFButtonOptions(
-                  width: 200,
+                  width: 270,
                   height: 40,
                   padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
                   iconPadding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
