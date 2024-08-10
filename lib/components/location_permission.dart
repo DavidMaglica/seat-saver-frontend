@@ -1,11 +1,11 @@
-import 'package:diplomski/api/location_api.dart';
-import 'package:diplomski/themes/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../api/location_api.dart';
+import '../themes/theme.dart';
 import 'models/location_permission_model.dart';
 
 export 'models/location_permission_model.dart';
@@ -82,8 +82,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
       debugPrint(e);
     });
     await getNearbyCities(_currentPosition!).then((nearbyCities) {
-      // ignore: avoid_print
-      print('Cities on FE: $nearbyCities');
+      debugPrint('Cities on FE: $nearbyCities');
       setState(() {
         _nearbyCities = nearbyCities;
       });
@@ -157,7 +156,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
                   onPressed: _getCurrentPosition,
                   text: 'Enable location',
                   options: FFButtonOptions(
-                    width: 200,
+                    width: 270,
                     height: 40,
                     padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
                     iconPadding:
@@ -181,7 +180,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
                 },
                 text: 'No, thanks',
                 options: FFButtonOptions(
-                  width: 200,
+                  width: 270,
                   height: 40,
                   padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
                   iconPadding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),

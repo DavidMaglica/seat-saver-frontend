@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart'; // Adjust the import path as necessary
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class CustomChoiceChips extends StatefulWidget {
   final List<String> options;
@@ -29,7 +29,7 @@ class _CustomChoiceChipsState extends State<CustomChoiceChips> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 4.0, 36.0),
+      padding: const EdgeInsetsDirectional.fromSTEB(4, 0, 4, 36),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -46,17 +46,17 @@ class _CustomChoiceChipsState extends State<CustomChoiceChips> {
             selectedChipStyle: ChipStyle(
               backgroundColor: Theme.of(context).colorScheme.primary,
               textStyle: Theme.of(context).textTheme.headlineMedium,
-              elevation: 4.0,
-              borderRadius: BorderRadius.circular(16.0),
+              elevation: 4,
+              borderRadius: BorderRadius.circular(16),
             ),
             unselectedChipStyle: ChipStyle(
               backgroundColor: Theme.of(context).colorScheme.surface,
               textStyle: Theme.of(context).textTheme.headlineSmall,
-              elevation: 0.0,
-              borderRadius: BorderRadius.circular(16.0),
+              elevation: 1,
+              borderRadius: BorderRadius.circular(16),
             ),
-            chipSpacing: 8.0,
-            rowSpacing: 12.0,
+            chipSpacing: 8,
+            rowSpacing: 12,
             multiselect: true,
             initialized: selectedValues!.isNotEmpty,
             alignment: WrapAlignment.spaceEvenly,

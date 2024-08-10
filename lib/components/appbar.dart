@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
-  final BuildContext context;
+  final String title;
 
   const CustomAppbar({
     Key? key,
-    required this.context,
+    required this.title,
   }) : super(key: key);
 
   @override
@@ -15,24 +15,29 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       automaticallyImplyLeading: false,
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.labelLarge,
+      ),
       leading: FlutterFlowIconButton(
         borderColor: Colors.transparent,
-        borderRadius: 30.0,
-        borderWidth: 1.0,
-        buttonSize: 60.0,
+        borderRadius: 30,
+        borderWidth: 1,
+        buttonSize: 60,
         icon: const Icon(
           CupertinoIcons.chevron_back,
           color: Colors.white,
-          size: 30.0,
+          size: 30,
         ),
         onPressed: () async {
-          Navigator.of(this.context).pop();
+          Navigator.of(context).pop();
         },
       ),
       centerTitle: false,
-      elevation: 2.0,
+      elevation: 2,
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);}
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}

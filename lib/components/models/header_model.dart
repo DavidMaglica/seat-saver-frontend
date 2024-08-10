@@ -1,6 +1,7 @@
-import 'package:diplomski/components/header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+
+import '../header.dart';
 
 class HeaderModel extends FlutterFlowModel<Header> {
   @override

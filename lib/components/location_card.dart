@@ -1,9 +1,9 @@
-import 'package:diplomski/themes/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
+import '../themes/theme.dart';
 import 'models/location_card_model.dart';
 
 export 'models/location_card_model.dart';

@@ -1,12 +1,10 @@
-import 'package:diplomski/components/appbar.dart';
-import 'package:diplomski/components/custom_choice_chips.dart';
-import 'package:diplomski/components/custom_list_tile.dart';
-import 'package:diplomski/components/list_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-import '../components/navbar.dart';
-import '../utils/routing_utils.dart';
+import '../../components/appbar.dart';
+import '../../components/custom_choice_chips.dart';
+import '../../components/navbar.dart';
+import '../../utils/routing_utils.dart';
 import 'models/search_model.dart';
 
 export 'models/search_model.dart';
@@ -70,7 +68,7 @@ class _SearchState extends State<Search> {
       child: Scaffold(
           key: scaffoldKey,
           backgroundColor: Theme.of(context).colorScheme.background,
-          appBar: CustomAppbar(context: context),
+          appBar: const CustomAppbar(title: ''),
           body: SafeArea(
             top: true,
             child: SingleChildScrollView(
@@ -79,18 +77,18 @@ class _SearchState extends State<Search> {
                 children: [
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(
-                        0.0, 24.0, 0.0, 36.0),
+                        0, 24, 0, 36),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
-                                24.0, 36.0, 24.0, 0.0),
+                                24, 36, 24, 0),
                             child: Container(
-                              height: 50.0,
+                              height: 50,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.0),
+                                borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
                                   color: Theme.of(context)
                                       .colorScheme
@@ -99,10 +97,10 @@ class _SearchState extends State<Search> {
                               ),
                               child: Align(
                                 alignment:
-                                    const AlignmentDirectional(-1.0, 0.0),
+                                    const AlignmentDirectional(-1, 0),
                                 child: Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
-                                      12.0, 0.0, 0.0, 0.0),
+                                      12, 0, 0, 0),
                                   child: Text('Search',
                                       style: Theme.of(context)
                                           .textTheme
@@ -121,24 +119,24 @@ class _SearchState extends State<Search> {
                       initialValues: const [],
                     ),
                   ),
-                  const Flexible(
+                  Flexible(
                     child: Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 36.0),
+                          EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          CustomListTile(title: 'Restaurant 1'),
-                          ListDivider(),
-                          CustomListTile(title: 'Coffee Shop 1'),
-                          ListDivider(),
-                          CustomListTile(title: 'Coffee Shop 2'),
-                          ListDivider(),
-                          CustomListTile(title: 'Restaurant 2'),
-                          ListDivider(),
-                          CustomListTile(title: 'Restaurant 3'),
-                          ListDivider(),
-                          CustomListTile(title: 'Coffee Shop 3')
+                          _buildListTitle('Restaurant 1'),
+                          _buildDivider(),
+                          _buildListTitle('Coffee Shop 1'),
+                          _buildDivider(),
+                          _buildListTitle('Coffee Shop 2'),
+                          _buildDivider(),
+                          _buildListTitle('Restaurant 2'),
+                          _buildDivider(),
+                          _buildListTitle('Restaurant 3'),
+                          _buildDivider(),
+                          _buildListTitle('Coffee Shop 3')
                         ],
                       ),
                     ),
@@ -153,6 +151,40 @@ class _SearchState extends State<Search> {
             onTap: (index, context) =>
                 onNavbarItemTapped(pageIndex, index, context),
           )),
+    );
+  }
+
+  Widget _buildListTitle(String title) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+      child: ListTile(
+        title: Text(
+          title,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          color: Theme.of(context).colorScheme.onPrimary,
+          size: 20,
+        ),
+        tileColor: Theme.of(context).colorScheme.surfaceVariant,
+        dense: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
+      child: Divider(
+        indent: 36,
+        endIndent: 36,
+        thickness: .5,
+        color: Theme.of(context).colorScheme.onBackground,
+      ),
     );
   }
 }

@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-import '../nearby.dart';
+import '../account.dart';
 
-class NearbyModel extends FlutterFlowModel<Nearby> {
-  ///  State fields for stateful widgets in this page.
+class AccountModel extends FlutterFlowModel<Account> {
 
   final unfocusNode = FocusNode();
 

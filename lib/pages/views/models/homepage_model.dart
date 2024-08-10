@@ -1,82 +1,58 @@
-import 'package:diplomski/components/carousel_component.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-import '../../components/models/category_card_model.dart';
-import '../../components/models/header_model.dart';
-import '../../components/models/location_card_model.dart';
-import '../../components/models/suggested_object_model.dart';
+import '../../../components/models/carousel_component_model.dart';
+import '../../../components/models/category_card_model.dart';
+import '../../../components/models/header_model.dart';
+import '../../../components/models/location_card_model.dart';
+import '../../../components/models/suggested_object_model.dart';
 import '../homepage.dart';
 
 class HomepageModel extends FlutterFlowModel<Homepage> {
-  ///  State fields for stateful widgets in this page.
-
   final unfocusNode = FocusNode();
 
-  // Model for Header component.
   late HeaderModel headerModel;
 
-  // Model for Carousel component.
   late CarouselComponentModel carouselComponentModel;
 
-  // Model for LocationCard component.
   late LocationCardModel locationCardModel1;
 
-  // Model for LocationCard component.
   late LocationCardModel locationCardModel2;
 
-  // Model for LocationCard component.
   late LocationCardModel locationCardModel3;
 
-  // Model for LocationCard component.
   late LocationCardModel locationCardModel4;
 
-  // Model for LocationCard component.
   late LocationCardModel locationCardModel5;
 
-  // Model for LocationCard component.
   late LocationCardModel locationCardModel6;
 
-  // Model for LocationCard component.
   late LocationCardModel locationCardModel7;
 
-  // Model for LocationCard component.
   late LocationCardModel locationCardModel8;
 
-  // Model for LocationCard component.
   late LocationCardModel locationCardModel9;
 
-  // Model for LocationCard component.
   late LocationCardModel locationCardModel10;
 
-  // Model for LocationCard component.
   late LocationCardModel locationCardModel11;
 
-  // Model for LocationCard component.
   late LocationCardModel locationCardModel12;
 
-  // Model for LocationCard component.
   late LocationCardModel locationCardModel13;
 
-  // Model for LocationCard component.
   late LocationCardModel locationCardModel14;
 
-  // Model for SuggestedObject component.
   late SuggestedObjectModel suggestedObjectModel;
 
-  // Model for CategoryCard component.
   late CategoryCardModel categoryCardModel1;
 
-  // Model for CategoryCard component.
   late CategoryCardModel categoryCardModel2;
 
-  // Model for CategoryCard component.
   late CategoryCardModel categoryCardModel3;
 
-  // Model for CategoryCard component.
   late CategoryCardModel categoryCardModel4;
 
-  // Model for CategoryCard component.
   late CategoryCardModel categoryCardModel5;
 
   @override

@@ -1,16 +1,16 @@
-import 'package:diplomski/components/carousel_component.dart';
-import 'package:diplomski/components/header.dart';
-import 'package:diplomski/components/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-import '../components/category_card.dart';
-import '../components/location_card.dart';
-import '../components/location_permission.dart';
-import '../components/suggested_object.dart';
-import '../themes/theme.dart';
-import '../utils/routing_utils.dart';
+import '../../components/carousel_component.dart';
+import '../../components/category_card.dart';
+import '../../components/header.dart';
+import '../../components/location_card.dart';
+import '../../components/location_permission.dart';
+import '../../components/navbar.dart';
+import '../../components/suggested_object.dart';
+import '../../themes/theme.dart';
+import '../../utils/routing_utils.dart';
 import 'models/homepage_model.dart';
 
 export 'models/homepage_model.dart';
@@ -154,7 +154,7 @@ class _HomepageState extends State<Homepage> {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                             ),
-                                            elevation: 2,
+                                            elevation: 3,
                                             borderSide: const BorderSide(
                                               color: AppThemes.accent1,
                                               width: 1,
@@ -262,7 +262,7 @@ class _HomepageState extends State<Homepage> {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                             ),
-                                            elevation: 2,
+                                            elevation: 3,
                                             borderSide: const BorderSide(
                                               color: AppThemes.accent1,
                                               width: 1,
@@ -370,7 +370,7 @@ class _HomepageState extends State<Homepage> {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                             ),
-                                            elevation: 2,
+                                            elevation: 3,
                                             borderSide: const BorderSide(
                                               color: AppThemes.accent1,
                                               width: 1,

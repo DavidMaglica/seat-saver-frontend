@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
@@ -31,13 +32,11 @@ Future<List<String>> getNearbyCities(Position position) async {
       }
       return nearbyCities;
     } else {
-      // ignore: avoid_print
-      print('Failed to fetch nearby cities: ${response.statusCode}');
+      debugPrint('Failed to fetch nearby cities: ${response.statusCode}');
       return mocked;
     }
   } catch (e) {
-    // ignore: avoid_print
-    print('Error fetching nearby cities: $e');
+    debugPrint('Error fetching nearby cities: $e');
     return mocked;
   }
 }
