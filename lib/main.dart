@@ -8,6 +8,7 @@ import 'pages/search.dart';
 import 'pages/settings/edit_profile.dart';
 import 'pages/settings/notification_settings.dart';
 import 'pages/settings/support.dart';
+import 'pages/settings/terms_of_service.dart';
 import 'themes/theme.dart';
 
 void main() {
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         '/notificationSettings': (context) => const NotificationSettings(),
         '/support': (context) => const Support(),
         '/editProfile': (context) => const EditProfile(),
+        '/termsOfService': (context) => const TermsOfService(),
       },
     );
   }

@@ -6,22 +6,15 @@ import '../carousel_component.dart';
 import 'carouse_item_model.dart';
 
 class CarouselComponentModel extends FlutterFlowModel<CarouselComponent> {
-  ///  State fields for stateful widgets in this component.
-
-  // State field(s) for Carousel widget.
   CarouselController? carouselController;
   int carouselCurrentIndex = 1;
 
-  // Model for CarouselItem component.
   late CarouselItemModel carouselItemModel1;
 
-  // Model for CarouselItem component.
   late CarouselItemModel carouselItemModel2;
 
-  // Model for CarouselItem component.
   late CarouselItemModel carouselItemModel3;
 
-  // Model for CarouselItem component.
   late CarouselItemModel carouselItemModel4;
 
   @override

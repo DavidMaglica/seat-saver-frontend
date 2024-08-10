@@ -82,8 +82,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
       debugPrint(e);
     });
     await getNearbyCities(_currentPosition!).then((nearbyCities) {
-      // ignore: avoid_print
-      print('Cities on FE: $nearbyCities');
+      debugPrint('Cities on FE: $nearbyCities');
       setState(() {
         _nearbyCities = nearbyCities;
       });

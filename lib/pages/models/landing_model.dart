@@ -4,7 +4,6 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import '../landing.dart';
 
 class LandingModel extends FlutterFlowModel<Landing> {
-  ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
 
