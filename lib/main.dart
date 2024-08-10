@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'pages/account.dart';
-import 'pages/homepage.dart';
-import 'pages/landing.dart';
-import 'pages/nearby.dart';
-import 'pages/search.dart';
 import 'pages/settings/edit_profile.dart';
 import 'pages/settings/notification_settings.dart';
 import 'pages/settings/support.dart';
 import 'pages/settings/terms_of_service.dart';
+import 'pages/views/account.dart';
+import 'pages/views/homepage.dart';
+import 'pages/views/landing.dart';
+import 'pages/views/nearby.dart';
+import 'pages/views/search.dart';
 import 'themes/theme.dart';
 
 void main() {

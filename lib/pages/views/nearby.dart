@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-import '../components/appbar.dart';
-import '../components/navbar.dart';
-import '../themes/theme.dart';
-import '../utils/routing_utils.dart';
+import '../../components/appbar.dart';
+import '../../components/navbar.dart';
+import '../../themes/theme.dart';
+import '../../utils/routing_utils.dart';
 import 'models/nearby_model.dart';
 
 export 'models/nearby_model.dart';

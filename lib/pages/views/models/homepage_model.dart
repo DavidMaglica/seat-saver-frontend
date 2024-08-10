@@ -1,15 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-import '../../components/models/carousel_component_model.dart';
-import '../../components/models/category_card_model.dart';
-import '../../components/models/header_model.dart';
-import '../../components/models/location_card_model.dart';
-import '../../components/models/suggested_object_model.dart';
+import '../../../components/models/carousel_component_model.dart';
+import '../../../components/models/category_card_model.dart';
+import '../../../components/models/header_model.dart';
+import '../../../components/models/location_card_model.dart';
+import '../../../components/models/suggested_object_model.dart';
 import '../homepage.dart';
 
 class HomepageModel extends FlutterFlowModel<Homepage> {
-
   final unfocusNode = FocusNode();
 
   late HeaderModel headerModel;

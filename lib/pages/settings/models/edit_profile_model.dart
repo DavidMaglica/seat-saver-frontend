@@ -4,7 +4,6 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import '../edit_profile.dart';
 
 class EditProfileModel extends FlutterFlowModel<EditProfile> {
-
   FocusNode? usernameFocusNode;
   TextEditingController? usernameTextController;
   String? Function(BuildContext, String?)? usernameTextControllerValidator;
@@ -13,8 +12,8 @@ class EditProfileModel extends FlutterFlowModel<EditProfile> {
   TextEditingController? emailTextController;
   String? Function(BuildContext, String?)? emailTextControllerValidator;
 
-  FocusNode? cityFocusNode;
-  TextEditingController? cityTextController;
+  FocusNode? addressFocusNode;
+  TextEditingController? addressTextController;
   String? Function(BuildContext, String?)? cityTextControllerValidator;
 
   final creditCardFormKey = GlobalKey<FormState>();
@@ -31,7 +30,7 @@ class EditProfileModel extends FlutterFlowModel<EditProfile> {
     emailFocusNode?.dispose();
     emailTextController?.dispose();
 
-    cityFocusNode?.dispose();
-    cityTextController?.dispose();
+    addressFocusNode?.dispose();
+    addressTextController?.dispose();
   }
 }

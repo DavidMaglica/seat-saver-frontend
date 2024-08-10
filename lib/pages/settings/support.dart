@@ -1,3 +1,4 @@
+import 'package:diplomski/pages/settings/utils/settings_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
@@ -25,11 +26,11 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
     super.initState();
     _model = createModel(context, () => SupportModel());
 
-    _model.textController1 ??= TextEditingController();
-    _model.textFieldFocusNode1 ??= FocusNode();
+    _model.ticketTitleController ??= TextEditingController();
+    _model.ticketTitleFocusNode ??= FocusNode();
 
-    _model.textController2 ??= TextEditingController();
-    _model.textFieldFocusNode2 ??= FocusNode();
+    _model.ticketDescriptionController ??= TextEditingController();
+    _model.ticketDescriptionFocusNode ??= FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -73,102 +74,11 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Expanded(
-                        child: Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                          child: Container(
-                            width: 120,
-                            constraints: const BoxConstraints(
-                              maxWidth: 500,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.background,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                width: 2,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  8, 16, 8, 16),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    CupertinoIcons.mail_solid,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    size: 36,
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            0, 12, 0, 0),
-                                    child: Text(
-                                      'Email Us',
-                                      textAlign: TextAlign.center,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                          child: _buildBanner(
+                              'Email Us', CupertinoIcons.mail_solid)),
                       Expanded(
-                        child: Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                          child: Container(
-                            width: 120,
-                            constraints: const BoxConstraints(
-                              maxWidth: 500,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.background,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                width: 2,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  8, 16, 8, 16),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    CupertinoIcons.search_circle_fill,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    size: 36,
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            0, 12, 0, 0),
-                                    child: Text(
-                                      'Search FAQs',
-                                      textAlign: TextAlign.center,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                        child: _buildBanner(
+                            'Search FAQs', CupertinoIcons.search_circle_fill),
                       ),
                     ].divide(const SizedBox(width: 12)),
                   ),
@@ -177,137 +87,29 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        TextFormField(
-                          controller: _model.textController1,
-                          focusNode: _model.textFieldFocusNode1,
-                          autofocus: true,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            labelText: 'Ticket title',
-                            labelStyle: Theme.of(context).textTheme.bodyLarge,
-                            hintText: 'Enter a title for your ticket...',
-                            hintStyle: Theme.of(context).textTheme.bodyMedium,
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: AppThemes.infoColor,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.error,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.error,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            contentPadding:
-                                const EdgeInsetsDirectional.fromSTEB(
-                                    16, 12, 16, 12),
-                          ),
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          cursorColor: Theme.of(context).colorScheme.onPrimary,
-                          validator: _model.textController1Validator
-                              .asValidator(context),
+                        _buildInputField(
+                          _model.ticketTitleController,
+                          _model.ticketTitleFocusNode,
+                          _model.ticketTitleValidator,
+                          'Ticket title',
+                          'Enter a title for your ticket.',
+                          null,
+                          null,
                         ),
-                        TextFormField(
-                          controller: _model.textController2,
-                          focusNode: _model.textFieldFocusNode2,
-                          autofocus: true,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            labelText: 'Short description',
-                            labelStyle: Theme.of(context).textTheme.bodyLarge,
-                            hintStyle: Theme.of(context).textTheme.bodyMedium,
-                            hintText:
-                                'Short description of what is going on...',
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: AppThemes.infoColor,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.error,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.error,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            contentPadding:
-                                const EdgeInsetsDirectional.fromSTEB(
-                                    16, 12, 16, 12),
-                          ),
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          maxLines: 16,
-                          minLines: 6,
-                          cursorColor: Theme.of(context).colorScheme.onPrimary,
-                          validator: _model.textController2Validator
-                              .asValidator(context),
+                        _buildInputField(
+                          _model.ticketDescriptionController,
+                          _model.ticketDescriptionFocusNode,
+                          _model.ticketDescriptionValidator,
+                          'Short description',
+                          'Short description of what is going on...',
+                          16,
+                          6,
                         ),
                       ].divide(const SizedBox(height: 12)),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 12),
-                    child: FFButtonWidget(
-                      onPressed: () {
-                        debugPrint('Button pressed ...');
-                      },
-                      text: 'Submit Ticket',
-                      icon: const Icon(
-                        CupertinoIcons.paperplane_fill,
-                        size: 16,
-                      ),
-                      options: FFButtonOptions(
-                        width: double.infinity,
-                        height: 48,
-                        padding: const EdgeInsets.all(0),
-                        iconPadding:
-                            const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                        color: Theme.of(context).colorScheme.primary,
-                        textStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.background,
-                          fontSize: 16,
-                        ),
-                        elevation: 3,
-                        borderSide: const BorderSide(
-                          color: Colors.transparent,
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
+                  buildActionButton(context, 'Submit Ticket', _submitTicket,
+                      CupertinoIcons.paperplane_fill),
                 ],
               ),
             ),
@@ -316,4 +118,107 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
       ),
     );
   }
+
+  Widget _buildBanner(
+    String title,
+    IconData icon,
+  ) =>
+      Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+        child: Container(
+          width: 120,
+          constraints: const BoxConstraints(
+            maxWidth: 500,
+          ),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.onPrimary,
+              width: 2,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(8, 16, 8, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 36,
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
+                  child: Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  Widget _buildInputField(
+    TextEditingController? controller,
+    FocusNode? focusNode,
+    String? Function(BuildContext, String?)? validator,
+    String labelText,
+    String hintText,
+    int? maxLines,
+    int? minLines,
+  ) =>
+      TextFormField(
+        controller: controller,
+        focusNode: focusNode,
+        autofocus: true,
+        obscureText: false,
+        decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: Theme.of(context).textTheme.bodyLarge,
+          hintStyle: Theme.of(context).textTheme.bodyMedium,
+          hintText: hintText,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.onPrimary,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              color: AppThemes.infoColor,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.error,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.error,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),
+        ),
+        style: Theme.of(context).textTheme.bodyMedium,
+        maxLines: maxLines,
+        minLines: minLines,
+        cursorColor: Theme.of(context).colorScheme.onPrimary,
+        validator: validator.asValidator(context),
+      );
+
+  _submitTicket() => debugPrint('Submit ticket');
 }

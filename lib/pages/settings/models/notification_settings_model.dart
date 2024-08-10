@@ -5,11 +5,11 @@ import '../notification_settings.dart';
 
 class NotificationSettingsModel extends FlutterFlowModel<NotificationSettings> {
 
-  bool? switchListTileValue1;
+  bool? isActivePushNotifications;
 
-  bool? switchListTileValue2;
+  bool? isActiveEmailNotifications;
 
-  bool? switchListTileValue3;
+  bool? isActiveLocationServices;
 
   @override
   void initState(BuildContext context) {}

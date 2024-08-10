@@ -7,13 +7,13 @@ class SupportModel extends FlutterFlowModel<Support> {
 
   final unfocusNode = FocusNode();
 
-  FocusNode? textFieldFocusNode1;
-  TextEditingController? textController1;
-  String? Function(BuildContext, String?)? textController1Validator;
+  FocusNode? ticketTitleFocusNode;
+  TextEditingController? ticketTitleController;
+  String? Function(BuildContext, String?)? ticketTitleValidator;
 
-  FocusNode? textFieldFocusNode2;
-  TextEditingController? textController2;
-  String? Function(BuildContext, String?)? textController2Validator;
+  FocusNode? ticketDescriptionFocusNode;
+  TextEditingController? ticketDescriptionController;
+  String? Function(BuildContext, String?)? ticketDescriptionValidator;
 
   @override
   void initState(BuildContext context) {}
@@ -21,10 +21,10 @@ class SupportModel extends FlutterFlowModel<Support> {
   @override
   void dispose() {
     unfocusNode.dispose();
-    textFieldFocusNode1?.dispose();
-    textController1?.dispose();
+    ticketTitleFocusNode?.dispose();
+    ticketTitleController?.dispose();
 
-    textFieldFocusNode2?.dispose();
-    textController2?.dispose();
+    ticketDescriptionFocusNode?.dispose();
+    ticketDescriptionController?.dispose();
   }
 }

@@ -90,11 +90,9 @@ class _TermsOfServiceState extends State<TermsOfService> {
   Widget _buildBodyText(String text) {
     return Padding(
       padding: const EdgeInsetsDirectional.only(bottom: 8),
-      child: Text(
-        text,
-        style: Theme.of(context).textTheme.bodyLarge,
-        textAlign: TextAlign.center, // Center text
-      ),
+      child: Text(text,
+          style: Theme.of(context).textTheme.bodyLarge,
+          textAlign: TextAlign.center),
     );
   }
 
