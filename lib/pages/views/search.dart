@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
@@ -75,44 +76,7 @@ class _SearchState extends State<Search> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(
-                        0, 24, 0, 36),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                24, 36, 24, 0),
-                            child: Container(
-                              height: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground,
-                                ),
-                              ),
-                              child: Align(
-                                alignment:
-                                    const AlignmentDirectional(-1, 0),
-                                child: Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      12, 0, 0, 0),
-                                  child: Text('Search',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildSearchBar(_model.searchBarController),
                   Flexible(
                     child: CustomChoiceChips(
                       options: chipsOptions,
@@ -122,7 +86,7 @@ class _SearchState extends State<Search> {
                   Flexible(
                     child: Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
+                          const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -153,6 +117,44 @@ class _SearchState extends State<Search> {
           )),
     );
   }
+
+  void onChanged(String value) {
+    debugPrint("Searching for: $value");
+  }
+
+  Widget _buildSearchBar(TextEditingController? controller) => Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(36, 36, 36, 0),
+                child: TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    hintStyle: Theme.of(context).textTheme.bodyLarge,
+                    prefixIcon: const Icon(CupertinoIcons.search),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  onChanged: (value) => onChanged(value),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildListTitle(String title) {
     return Padding(
