@@ -132,7 +132,7 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
           ),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.background,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: Theme.of(context).colorScheme.onPrimary,
               width: 2,
@@ -188,28 +188,28 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
               color: Theme.of(context).colorScheme.onPrimary,
               width: 2,
             ),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
               color: AppThemes.infoColor,
               width: 2,
             ),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
           ),
           errorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.error,
               width: 2,
             ),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.error,
               width: 2,
             ),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
           ),
           contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),
         ),

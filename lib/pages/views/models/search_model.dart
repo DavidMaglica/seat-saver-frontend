@@ -10,6 +10,8 @@ class SearchModel extends FlutterFlowModel<Search> {
 
   List<String>? get choiceChipsValues => choiceChipsValueController?.value;
 
+  TextEditingController? searchBarController;
+
   set choiceChipsValues(List<String>? val) =>
       choiceChipsValueController?.value = val;
 
@@ -19,5 +21,7 @@ class SearchModel extends FlutterFlowModel<Search> {
   @override
   void dispose() {
     unfocusNode.dispose();
+
+    searchBarController?.dispose();
   }
 }

@@ -70,7 +70,7 @@ class _AccountWidgetState extends State<Account> with TickerProviderStateMixin {
               _buildAccountSettings(),
               _buildApplicationSettings(),
               _buildLogOutButton(() async {
-                Navigator.pushNamed(context, '/landing');
+                Navigator.pushNamed(context, '/authentication');
               }),
             ],
           ),

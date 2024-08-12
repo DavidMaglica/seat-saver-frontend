@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'pages/auth/authentication.dart';
 import 'pages/settings/edit_profile.dart';
 import 'pages/settings/notification_settings.dart';
 import 'pages/settings/support.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         '/support': (context) => const Support(),
         '/editProfile': (context) => const EditProfile(),
         '/termsOfService': (context) => const TermsOfService(),
+        '/authentication': (context) => const Authentication(),
       },
     );
   }

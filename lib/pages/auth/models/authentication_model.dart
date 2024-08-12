@@ -4,11 +4,8 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import '../authentication.dart';
 
 class AuthenticationModel extends FlutterFlowModel<Authentication> {
-  ///  State fields for stateful widgets in this page.
-
   final unfocusNode = FocusNode();
 
-  // State field(s) for TabBar widget.
   TabController? tabBarController;
 
   int get tabBarCurrentIndex =>
