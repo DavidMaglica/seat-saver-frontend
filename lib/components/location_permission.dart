@@ -4,7 +4,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../api/location_api.dart';
+import '../api/geolocation_api.dart';
 import '../themes/theme.dart';
 import 'models/location_permission_model.dart';
 

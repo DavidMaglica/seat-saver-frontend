@@ -47,7 +47,7 @@ class _LocationCardState extends State<LocationCard> {
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
         onTap: () async {
-          // Navigator.pushNamed('ObjectPage');
+          Navigator.pushNamed(context, '/objectLocation');
         },
         child: Container(
           width: 128,

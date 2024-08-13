@@ -9,6 +9,7 @@ import 'pages/views/account.dart';
 import 'pages/views/homepage.dart';
 import 'pages/views/landing.dart';
 import 'pages/views/nearby.dart';
+import 'pages/views/object_location.dart';
 import 'pages/views/search.dart';
 import 'themes/theme.dart';
 
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         '/editProfile': (context) => const EditProfile(),
         '/termsOfService': (context) => const TermsOfService(),
         '/authentication': (context) => const Authentication(),
+        '/objectLocation': (context) => const ObjectLocation(),
       },
     );
   }
