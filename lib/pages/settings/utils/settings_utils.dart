@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-Widget buildActionButton(BuildContext context, String title,
+Align buildActionButton(BuildContext context, String title,
         Function() onPressed, IconData? iconData) =>
     Align(
       alignment: const AlignmentDirectional(0, 0),
@@ -28,7 +28,7 @@ Widget buildActionButton(BuildContext context, String title,
       ),
     );
 
-Widget buildProfilePicture(BuildContext context) => Align(
+Align buildProfilePicture(BuildContext context) => Align(
       alignment: const AlignmentDirectional(-1, 1),
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 16),

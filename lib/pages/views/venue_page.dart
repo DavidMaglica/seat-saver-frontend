@@ -4,12 +4,12 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-import '../../api/object_location_api.dart';
+import '../../api/venue_api.dart';
 import '../../components/appbar.dart';
 import '../../themes/theme.dart';
 import '../../utils/full_image_view.dart';
 
-class ObjectLocation extends StatefulWidget {
+class VenuePage extends StatefulWidget {
   final String name;
   final String location;
   final String workingHours;
@@ -17,7 +17,7 @@ class ObjectLocation extends StatefulWidget {
   final String type;
   final String description;
 
-  const ObjectLocation({
+  const VenuePage({
     Key? key,
     required this.name,
     required this.location,
@@ -28,10 +28,10 @@ class ObjectLocation extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ObjectLocation> createState() => _ObjectLocationState();
+  State<VenuePage> createState() => _VenuePageState();
 }
 
-class _ObjectLocationState extends State<ObjectLocation> {
+class _VenuePageState extends State<VenuePage> {
   late Future<List<String>> _images;
   double? _mockRating;
   DateTime? _selectedDate;
@@ -51,6 +51,10 @@ class _ObjectLocationState extends State<ObjectLocation> {
   void dispose() {
     super.dispose();
   }
+
+  void _reserveSpot() => debugPrint('Reserve your spot now');
+
+  void _mockRatingUpdate() => setState(() => _mockRating = 4.5);
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +90,8 @@ class _ObjectLocationState extends State<ObjectLocation> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       _buildHeadingImage(images[0]),
-                      _buildObjectDetails(
-                          widget.name, widget.location, widget.workingHours),
+                      _buildObjectDetails(widget.name, widget.location,
+                          widget.workingHours, widget.rating),
                       _buildObjectType(widget.type),
                       _buildObjectDescription(widget.description),
                       Row(
@@ -120,9 +124,7 @@ class _ObjectLocationState extends State<ObjectLocation> {
     );
   }
 
-  void _reserveSpot() => debugPrint('Reserve your spot now');
-
-  Widget _buildHeadingImage(String image) => Padding(
+  Padding _buildHeadingImage(String image) => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(32, 0, 0, 0),
         child: InkWell(
           onTap: () {
@@ -147,7 +149,7 @@ class _ObjectLocationState extends State<ObjectLocation> {
         ),
       );
 
-  Widget _buildObjectType(String type) => Flexible(
+  Flexible _buildObjectType(String type) => Flexible(
         child: Align(
           alignment: const AlignmentDirectional(-1, 0),
           child: Padding(
@@ -160,7 +162,7 @@ class _ObjectLocationState extends State<ObjectLocation> {
         ),
       );
 
-  Widget _buildObjectDescription(String description) => Flexible(
+  Flexible _buildObjectDescription(String description) => Flexible(
         child: Align(
           alignment: const AlignmentDirectional(-1, 0),
           child: Padding(
@@ -173,8 +175,8 @@ class _ObjectLocationState extends State<ObjectLocation> {
         ),
       );
 
-  Widget _buildObjectDetails(
-          String name, String location, String workingHours) =>
+  Padding _buildObjectDetails(
+          String name, String location, String workingHours, double rating) =>
       Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
         child: Column(
@@ -211,7 +213,7 @@ class _ObjectLocationState extends State<ObjectLocation> {
                 direction: Axis.horizontal,
                 glow: false,
                 ignoreGestures: true,
-                initialRating: widget.rating,
+                initialRating: rating,
                 itemSize: 24,
                 allowHalfRating: true,
               ),
@@ -220,9 +222,7 @@ class _ObjectLocationState extends State<ObjectLocation> {
         ),
       );
 
-  void _mockRatingUpdate() => setState(() => _mockRating = 4.5);
-
-  Widget _buildDatePickerButton() {
+  Padding _buildDatePickerButton() {
     DateFormat dateFormat = DateFormat('dd-MM-yyyy');
 
     return Padding(
@@ -288,7 +288,7 @@ class _ObjectLocationState extends State<ObjectLocation> {
     );
   }
 
-  Widget _buildNumberOfGuestsButton() => Padding(
+  Padding _buildNumberOfGuestsButton() => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
         child: FFButtonWidget(
           onPressed: () {
@@ -357,7 +357,7 @@ class _ObjectLocationState extends State<ObjectLocation> {
     );
   }
 
-  Widget _buildTimePickerButton() {
+  Padding _buildTimePickerButton() {
     String minutesToDisplay = _selectedMinute == 0 ? '00' : '30';
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 12),
@@ -472,7 +472,7 @@ class _ObjectLocationState extends State<ObjectLocation> {
     );
   }
 
-  Widget _buildReserveSpotButton(Function() onPressed) => Padding(
+  Padding _buildReserveSpotButton(Function() onPressed) => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 36),
         child: FFButtonWidget(
           onPressed: onPressed,
@@ -494,7 +494,7 @@ class _ObjectLocationState extends State<ObjectLocation> {
         ),
       );
 
-  Widget _buildMasonryView(List<String> imageUrls) => Padding(
+  Padding _buildMasonryView(List<String> imageUrls) => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(24, 12, 24, 96),
         child: MasonryGridView.builder(
           gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
@@ -535,7 +535,7 @@ class _ObjectLocationState extends State<ObjectLocation> {
         ),
       );
 
-  Widget _buildDivider() => Divider(
+  Divider _buildDivider() => Divider(
         thickness: 1,
         indent: 16,
         endIndent: 16,

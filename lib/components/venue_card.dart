@@ -3,18 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
+import '../api/data/venue.dart';
 import '../themes/theme.dart';
 
-export 'models/location_card_model.dart';
+class VenueCard extends StatefulWidget {
+  final String name;
+  final String location;
+  final String workingHours;
+  final double rating;
+  final VenueType type;
+  final String description;
 
-class LocationCard extends StatefulWidget {
-  const LocationCard({super.key});
+  const VenueCard({
+    Key? key,
+    required this.name,
+    required this.location,
+    required this.workingHours,
+    required this.rating,
+    required this.type,
+    required this.description,
+  }) : super(key: key);
 
   @override
-  State<LocationCard> createState() => _LocationCardState();
+  State<VenueCard> createState() => _VenueCardState();
 }
 
-class _LocationCardState extends State<LocationCard> {
+class _VenueCardState extends State<VenueCard> {
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
@@ -30,10 +44,19 @@ class _LocationCardState extends State<LocationCard> {
     super.dispose();
   }
 
+  void _onTap() => Navigator.pushNamed(context, '/venue', arguments: {
+        'name': widget.name,
+        'location': widget.location,
+        'workingHours': widget.workingHours,
+        'rating': widget.rating,
+        'type': widget.type.toString(),
+        'description': widget.description,
+      });
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 8),
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
       child: InkWell(
         splashColor: Colors.transparent,
         focusColor: Colors.transparent,
@@ -43,8 +66,8 @@ class _LocationCardState extends State<LocationCard> {
           _onTap();
         },
         child: Container(
-          width: 128,
-          height: 128,
+          width: 148,
+          height: 148,
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.background,
             borderRadius: BorderRadius.circular(8),
@@ -69,9 +92,9 @@ class _LocationCardState extends State<LocationCard> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildName(context),
-                        _buildLocation(),
-                        _buildRatingBar(),
+                        _buildName(widget.name),
+                        _buildLocation(widget.location),
+                        _buildRatingBar(widget.rating),
                       ],
                     ),
                   ],
@@ -84,24 +107,7 @@ class _LocationCardState extends State<LocationCard> {
     );
   }
 
-  Widget _buildLocation() => const Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-      child: Row(mainAxisSize: MainAxisSize.max, children: [
-        Text('Firenze',
-            style: TextStyle(
-              color: AppThemes.accent1,
-              fontWeight: FontWeight.w900,
-              fontSize: 8,
-            )),
-      ]));
-
-  Widget _buildName(BuildContext context) => Text('Giardino Bardini',
-      style: TextStyle(
-        color: Theme.of(context).colorScheme.onPrimary,
-        fontSize: 10,
-      ));
-
-  Widget _buildImage() => Hero(
+  Hero _buildImage() => Hero(
       tag: 'locationCardImage${randomDouble(0, 100)}',
       transitionOnUserGestures: true,
       child: ClipRRect(
@@ -111,33 +117,41 @@ class _LocationCardState extends State<LocationCard> {
           ),
           child: Image.network(
             'https://images.unsplash.com/photo-1528114039593-4366cc08227d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8aXRhbHl8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60',
-            width: 128,
-            height: 72,
+            width: double.infinity,
+            height: 80,
             fit: BoxFit.cover,
           )));
 
-  void _onTap() => Navigator.pushNamed(context, '/objectLocation', arguments: {
-        'name': 'Mele Melinda',
-        'location': '123 Main St',
-        'workingHours': '8:00 AM - 10:00 PM',
-        'rating': 4.5,
-        'type': 'Restaurant',
-        'description': 'A lovely place to eat.',
-      });
+  Text _buildName(String name) => Text(name,
+      style: Theme.of(context)
+          .textTheme
+          .titleSmall
+          ?.copyWith(color: AppThemes.infoColor, fontSize: 12));
 
-  Widget _buildRatingBar() => Padding(
+  Padding _buildLocation(String location) => Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
       child: Row(mainAxisSize: MainAxisSize.max, children: [
+        Text(location,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontWeight: FontWeight.w800,
+              fontSize: 10,
+            )),
+      ]));
+
+  Padding _buildRatingBar(double rating) => Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+      child: Row(mainAxisSize: MainAxisSize.max, children: [
         RatingBarIndicator(
-          itemBuilder: (context, index) => const Icon(
+          itemBuilder: (context, index) => Icon(
             CupertinoIcons.star_fill,
-            color: AppThemes.warningColor,
+            color: Theme.of(context).colorScheme.onTertiary,
           ),
           direction: Axis.horizontal,
-          rating: 4,
+          rating: rating,
           unratedColor: const Color(0xFF57636C),
           itemCount: 5,
-          itemSize: 10,
+          itemSize: 12,
         )
       ]));
 }

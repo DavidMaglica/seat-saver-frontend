@@ -76,10 +76,10 @@ class _CarouselComponentState extends State<CarouselComponent> {
                     CarouselController(),
                 options: CarouselOptions(
                   initialPage: 1,
-                  viewportFraction: 0.75,
+                  viewportFraction: .75,
                   disableCenter: true,
                   enlargeCenterPage: true,
-                  enlargeFactor: 0.25,
+                  enlargeFactor: .25,
                   enableInfiniteScroll: true,
                   scrollDirection: Axis.horizontal,
                   autoPlay: true,

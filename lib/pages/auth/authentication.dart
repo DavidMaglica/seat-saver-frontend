@@ -57,6 +57,52 @@ class _AuthenticationState extends State<Authentication>
     super.dispose();
   }
 
+  Future<String> _login(SignupMethod? signupMethod) async {
+    await Future.delayed(const Duration(seconds: 1));
+    switch (signupMethod) {
+      case SignupMethod.apple:
+        debugPrint('Apple log in button pressed ...');
+        Navigator.pushNamed(context, '/landing');
+        break;
+      case SignupMethod.google:
+        debugPrint('Google log in button pressed ...');
+        Navigator.pushNamed(context, '/landing');
+        break;
+      case SignupMethod.custom:
+        debugPrint('Custom log in button pressed ...');
+        Navigator.pushNamed(context, '/landing');
+        break;
+      default:
+        debugPrint('Log in button pressed ...');
+    }
+    return '';
+  }
+
+  Future<String> _signup(SignupMethod? signupMethod) async {
+    await Future.delayed(const Duration(seconds: 1));
+    switch (signupMethod) {
+      case SignupMethod.apple:
+        debugPrint('Apple sign up button pressed ...');
+        Navigator.pushNamed(context, '/landing');
+        break;
+      case SignupMethod.google:
+        debugPrint('Google sign up button pressed ...');
+        Navigator.pushNamed(context, '/landing');
+        break;
+      case SignupMethod.custom:
+        debugPrint('Custom sign up button pressed ...');
+        Navigator.pushNamed(context, '/landing');
+        break;
+      default:
+        debugPrint('Sign up button pressed ...');
+    }
+    return '';
+  }
+
+  void _forgotPassword() {
+    debugPrint('Forgot password button pressed ...');
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -78,7 +124,7 @@ class _AuthenticationState extends State<Authentication>
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                     child: Container(
                       width: double.infinity,
-                      height: MediaQuery.sizeOf(context).height * 0.8,
+                      height: MediaQuery.sizeOf(context).height * .8,
                       constraints: const BoxConstraints(
                         maxWidth: 530,
                       ),
@@ -139,51 +185,7 @@ class _AuthenticationState extends State<Authentication>
     );
   }
 
-  Future<String> _login(SignupMethod? signupMethod) async {
-    switch (signupMethod) {
-      case SignupMethod.apple:
-        debugPrint('Apple log in button pressed ...');
-        Navigator.pushNamed(context, '/landing');
-        break;
-      case SignupMethod.google:
-        debugPrint('Google log in button pressed ...');
-        Navigator.pushNamed(context, '/landing');
-        break;
-      case SignupMethod.custom:
-        debugPrint('Custom log in button pressed ...');
-        Navigator.pushNamed(context, '/landing');
-        break;
-      default:
-        debugPrint('Log in button pressed ...');
-    }
-    return '';
-  }
-
-  Future<String> _signup(SignupMethod? signupMethod) async {
-    switch (signupMethod) {
-      case SignupMethod.apple:
-        debugPrint('Apple sign up button pressed ...');
-        Navigator.pushNamed(context, '/landing');
-        break;
-      case SignupMethod.google:
-        debugPrint('Google sign up button pressed ...');
-        Navigator.pushNamed(context, '/landing');
-        break;
-      case SignupMethod.custom:
-        debugPrint('Custom sign up button pressed ...');
-        Navigator.pushNamed(context, '/landing');
-        break;
-      default:
-        debugPrint('Sign up button pressed ...');
-    }
-    return '';
-  }
-
-  void _forgotPassword() {
-    debugPrint('Forgot password button pressed ...');
-  }
-
-  Widget _buildPasswordField(
+  TextFormField _buildPasswordField(
     TextEditingController? controller,
     FocusNode? focusNode,
     String? Function(BuildContext, String?)? validator,
@@ -255,7 +257,7 @@ class _AuthenticationState extends State<Authentication>
         validator: validator.asValidator(context),
       );
 
-  Widget _buildRetypePasswordField() => TextFormField(
+  TextFormField _buildRetypePasswordField() => TextFormField(
         controller: _model.passwordConfirmTextController,
         focusNode: _model.passwordConfirmFocusNode,
         autofocus: true,
@@ -314,7 +316,7 @@ class _AuthenticationState extends State<Authentication>
             _model.passwordConfirmTextControllerValidator.asValidator(context),
       );
 
-  Widget _buildEmailField(
+  TextFormField _buildEmailField(
     TextEditingController? controller,
     FocusNode? focusNode,
     String? Function(BuildContext, String?)? validator,
@@ -365,7 +367,7 @@ class _AuthenticationState extends State<Authentication>
         validator: validator.asValidator(context),
       );
 
-  Widget _buildForgotPassword(Function() onPressed) => Padding(
+  Padding _buildForgotPassword(Function() onPressed) => Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
       child: TextButton(
         onPressed: onPressed,
@@ -380,7 +382,7 @@ class _AuthenticationState extends State<Authentication>
         ),
       ));
 
-  Widget _buildSignupTab() => Align(
+  Align _buildSignupTab() => Align(
         alignment: const AlignmentDirectional(0, -1),
         child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 0),
@@ -501,7 +503,7 @@ class _AuthenticationState extends State<Authentication>
         ),
       );
 
-  Widget _buildLoginTab() => Align(
+  Align _buildLoginTab() => Align(
         alignment: const AlignmentDirectional(0, -1),
         child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 0),
@@ -607,7 +609,7 @@ class _AuthenticationState extends State<Authentication>
         ),
       );
 
-  Widget _buildButton(String text, Icon? icon,
+  Align _buildButton(String text, Icon? icon,
           Function(SignupMethod?)? onPressed, SignupMethod? signupMethod) =>
       Align(
         child: Padding(

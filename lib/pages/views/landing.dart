@@ -56,7 +56,7 @@ class _LandingState extends State<Landing> {
                         color: Theme.of(context)
                             .colorScheme
                             .onPrimary
-                            .withOpacity(0.3),
+                            .withOpacity(.4),
                         blurRadius: 5,
                         spreadRadius: 2,
                         offset: const Offset(4, 4),
@@ -79,6 +79,7 @@ class _LandingState extends State<Landing> {
                 ),
                 FFButtonWidget(
                   onPressed: () async {
+                    await Future.delayed(const Duration(seconds: 1));
                     Navigator.pushNamed(
                       context,
                       '/homepage',

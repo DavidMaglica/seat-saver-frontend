@@ -42,6 +42,8 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  void _submitTicket() => debugPrint('Submit ticket');
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -219,6 +221,4 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
         cursorColor: Theme.of(context).colorScheme.onPrimary,
         validator: validator.asValidator(context),
       );
-
-  _submitTicket() => debugPrint('Submit ticket');
 }

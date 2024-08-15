@@ -1,11 +1,7 @@
 import 'package:diplomski/pages/settings/utils/settings_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../components/appbar.dart';
-import 'models/notification_settings_model.dart';
-
-export 'models/notification_settings_model.dart';
 
 class NotificationSettings extends StatefulWidget {
   const NotificationSettings({super.key});
@@ -15,24 +11,25 @@ class NotificationSettings extends StatefulWidget {
 }
 
 class _NotificationSettingsState extends State<NotificationSettings> {
-  late NotificationSettingsModel _model;
+  bool? isActivePushNotifications;
+  bool? isActiveEmailNotifications;
+  bool? isActiveLocationServices;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => NotificationSettingsModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
   void dispose() {
-    _model.dispose();
-
     super.dispose();
   }
+
+  void _saveChanges() => debugPrint('Save changes on Notification settings');
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +48,9 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                 padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
               ),
               SwitchListTile.adaptive(
-                value: _model.isActivePushNotifications ??= true,
+                value: isActivePushNotifications ??= true,
                 onChanged: (newValue) async {
-                  setState(() => _model.isActivePushNotifications = newValue);
+                  setState(() => isActivePushNotifications = newValue);
                 },
                 title: Text('Push Notifications',
                     style: Theme.of(context).textTheme.titleMedium),
@@ -71,9 +68,9 @@ class _NotificationSettingsState extends State<NotificationSettings> {
               ),
               _buildDivider(),
               SwitchListTile.adaptive(
-                value: _model.isActiveEmailNotifications ??= true,
+                value: isActiveEmailNotifications ??= true,
                 onChanged: (newValue) async {
-                  setState(() => _model.isActiveEmailNotifications = newValue);
+                  setState(() => isActiveEmailNotifications = newValue);
                 },
                 title: Text('Email Notifications',
                     style: Theme.of(context).textTheme.titleMedium),
@@ -91,9 +88,9 @@ class _NotificationSettingsState extends State<NotificationSettings> {
               ),
               _buildDivider(),
               SwitchListTile.adaptive(
-                value: _model.isActiveLocationServices ??= true,
+                value: isActiveLocationServices ??= true,
                 onChanged: (newValue) async {
-                  setState(() => _model.isActiveLocationServices = newValue);
+                  setState(() => isActiveLocationServices = newValue);
                 },
                 title: Text('Location Services',
                     style: Theme.of(context).textTheme.titleMedium),
@@ -117,9 +114,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
     );
   }
 
-  void _saveChanges() => debugPrint('Save changes on Notification settings');
-
-  Widget _buildDescriptionText() => Padding(
+  Padding _buildDescriptionText() => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 12, 0),
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -134,7 +129,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
         ),
       );
 
-  Widget _buildDivider() => Divider(
+  Divider _buildDivider() => Divider(
         height: 1,
         thickness: 1,
         color: Theme.of(context).colorScheme.onPrimary,

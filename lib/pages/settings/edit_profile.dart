@@ -44,6 +44,8 @@ class _EditProfileState extends State<EditProfile> {
     super.dispose();
   }
 
+  void _saveChanges() => debugPrint('Save changes on Edit Profile');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +80,7 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget _buildInputField(
+  Padding _buildInputField(
           String labelText,
           TextEditingController? controller,
           FocusNode? focusNode,
@@ -130,7 +132,7 @@ class _EditProfileState extends State<EditProfile> {
         ),
       );
 
-  Widget _buildCreditCardForm() => Padding(
+  Padding _buildCreditCardForm() => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
         child: FlutterFlowCreditCardForm(
           formKey: _model.creditCardFormKey,
@@ -157,6 +159,4 @@ class _EditProfileState extends State<EditProfile> {
           ),
         ),
       );
-
-  void _saveChanges() => debugPrint('Save changes on Edit Profile');
 }

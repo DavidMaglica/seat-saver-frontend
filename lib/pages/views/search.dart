@@ -1,3 +1,4 @@
+import 'package:diplomski/api/data/venue.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
@@ -20,28 +21,7 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   final int pageIndex = 1;
   late SearchModel _model;
-
-  List<String> chipsOptions = [
-    'Italian',
-    'Asian',
-    'Gluten Free',
-    'Coffee',
-    'Traditional',
-    'Japanese',
-    'Middle Eastern',
-    'Barbecue',
-    'Greek',
-    'Cocktails',
-    'Vegetarian',
-    'Vegan',
-    'Fine Dining',
-    'Fast Food',
-    'Seafood',
-    'Mexican',
-    'Indian',
-    'Chinese',
-    'Pizza',
-  ];
+  List<String> _chipsOptions = [];
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -49,8 +29,17 @@ class _SearchState extends State<Search> {
   void initState() {
     super.initState();
     _model = createModel(context, () => SearchModel());
+    _getChipsChoice();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  void _getChipsChoice() {
+    List<String> options =
+        VenueType.values.map((type) => type.toString()).toList();
+    setState(() {
+      _chipsOptions = options;
+    });
   }
 
   @override
@@ -58,6 +47,10 @@ class _SearchState extends State<Search> {
     _model.dispose();
 
     super.dispose();
+  }
+
+  void onChanged(String value) {
+    debugPrint("Searching for: $value");
   }
 
   @override
@@ -79,7 +72,7 @@ class _SearchState extends State<Search> {
                   _buildSearchBar(_model.searchBarController),
                   Flexible(
                     child: CustomChoiceChips(
-                      options: chipsOptions,
+                      options: _chipsOptions,
                       initialValues: const [],
                     ),
                   ),
@@ -118,11 +111,7 @@ class _SearchState extends State<Search> {
     );
   }
 
-  void onChanged(String value) {
-    debugPrint("Searching for: $value");
-  }
-
-  Widget _buildSearchBar(TextEditingController? controller) => Padding(
+  Padding _buildSearchBar(TextEditingController? controller) => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -156,37 +145,33 @@ class _SearchState extends State<Search> {
         ),
       );
 
-  Widget _buildListTitle(String title) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-      child: ListTile(
-        title: Text(
-          title,
-          style: Theme.of(context).textTheme.bodyLarge,
+  Padding _buildListTitle(String title) => Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+        child: ListTile(
+          title: Text(
+            title,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            color: Theme.of(context).colorScheme.onPrimary,
+            size: 20,
+          ),
+          tileColor: Theme.of(context).colorScheme.surfaceVariant,
+          dense: true,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          color: Theme.of(context).colorScheme.onPrimary,
-          size: 20,
-        ),
-        tileColor: Theme.of(context).colorScheme.surfaceVariant,
-        dense: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildDivider() {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
-      child: Divider(
-        indent: 36,
-        endIndent: 36,
-        thickness: .5,
-        color: Theme.of(context).colorScheme.onBackground,
-      ),
-    );
-  }
+  Padding _buildDivider() => Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
+        child: Divider(
+          indent: 36,
+          endIndent: 36,
+          thickness: .5,
+          color: Theme.of(context).colorScheme.onBackground,
+        ),
+      );
 }

@@ -6,9 +6,6 @@ import 'package:geolocator/geolocator.dart';
 
 import '../api/geolocation_api.dart';
 import '../themes/theme.dart';
-import 'models/location_permission_model.dart';
-
-export 'models/location_permission_model.dart';
 
 class LocationPermissionPopUp extends StatefulWidget {
   const LocationPermissionPopUp({super.key});
@@ -19,7 +16,6 @@ class LocationPermissionPopUp extends StatefulWidget {
 }
 
 class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
-  late LocationPermissionModel _model;
   Position? _currentPosition;
   String? _currentCity;
   List<String>? _nearbyCities;
@@ -27,7 +23,6 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => LocationPermissionModel());
   }
 
   Future<bool> _handleLocationPermission() async {
@@ -96,13 +91,10 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
-    _model.onUpdate();
   }
 
   @override
   void dispose() {
-    _model.maybeDispose();
-
     super.dispose();
   }
 
