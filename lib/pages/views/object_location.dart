@@ -1,4 +1,3 @@
-import 'package:diplomski/themes/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -7,10 +6,26 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../api/object_location_api.dart';
 import '../../components/appbar.dart';
+import '../../themes/theme.dart';
 import '../../utils/full_image_view.dart';
 
 class ObjectLocation extends StatefulWidget {
-  const ObjectLocation({super.key});
+  final String name;
+  final String location;
+  final String workingHours;
+  final double rating;
+  final String type;
+  final String description;
+
+  const ObjectLocation({
+    Key? key,
+    required this.name,
+    required this.location,
+    required this.workingHours,
+    required this.rating,
+    required this.type,
+    required this.description,
+  }) : super(key: key);
 
   @override
   State<ObjectLocation> createState() => _ObjectLocationState();
@@ -18,8 +33,10 @@ class ObjectLocation extends StatefulWidget {
 
 class _ObjectLocationState extends State<ObjectLocation> {
   late Future<List<String>> _images;
-  double? _ratingBarValue;
+  double? _mockRating;
   DateTime? _selectedDate;
+  int? _selectedHour;
+  int? _selectedMinute;
   int? _selectedNumberOfGuests;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -28,7 +45,6 @@ class _ObjectLocationState extends State<ObjectLocation> {
   void initState() {
     super.initState();
     _images = getImages();
-    _ratingBarValue = 3.5;
   }
 
   @override
@@ -43,7 +59,7 @@ class _ObjectLocationState extends State<ObjectLocation> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: const CustomAppbar(title: 'Object Location'),
+        appBar: CustomAppbar(title: widget.name),
         body: FutureBuilder<List<String>>(
           future: _images,
           builder: (context, snapshot) {
@@ -71,11 +87,9 @@ class _ObjectLocationState extends State<ObjectLocation> {
                     children: [
                       _buildHeadingImage(images[0]),
                       _buildObjectDetails(
-                          'Object Name', 'Location', '8:00 AM - 10:00 PM'),
-                      _buildObjectType('Restaurant'),
-                      _buildObjectDescription(
-                        'Description provided by object Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin accumsan eu sapien vitae tincidunt. Fusce quis dui mauris. Vivamus quam leo, vestibulum in mi non, rhoncus elementum purus.',
-                      ),
+                          widget.name, widget.location, widget.workingHours),
+                      _buildObjectType(widget.type),
+                      _buildObjectDescription(widget.description),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -139,18 +153,23 @@ class _ObjectLocationState extends State<ObjectLocation> {
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 0),
             child: Text(
-              'Type: Restaurant',
-              style: Theme.of(context).textTheme.bodyLarge,
+              'Type: $type',
+              style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
         ),
       );
 
-  Widget _buildObjectDescription(String description) => Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 24, 0),
-        child: Text(
-          description,
-          style: Theme.of(context).textTheme.bodyMedium,
+  Widget _buildObjectDescription(String description) => Flexible(
+        child: Align(
+          alignment: const AlignmentDirectional(-1, 0),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 0, 16),
+            child: Text(
+              description,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
         ),
       );
 
@@ -183,8 +202,7 @@ class _ObjectLocationState extends State<ObjectLocation> {
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
               child: RatingBar.builder(
-                onRatingUpdate: (newValue) =>
-                    setState(() => _ratingBarValue = newValue),
+                onRatingUpdate: (value) => _mockRatingUpdate(),
                 itemBuilder: (context, index) => Icon(
                   CupertinoIcons.star_fill,
                   color: Theme.of(context).colorScheme.onTertiary,
@@ -193,7 +211,7 @@ class _ObjectLocationState extends State<ObjectLocation> {
                 direction: Axis.horizontal,
                 glow: false,
                 ignoreGestures: true,
-                initialRating: _ratingBarValue ??= 0,
+                initialRating: widget.rating,
                 itemSize: 24,
                 allowHalfRating: true,
               ),
@@ -201,6 +219,8 @@ class _ObjectLocationState extends State<ObjectLocation> {
           ],
         ),
       );
+
+  void _mockRatingUpdate() => setState(() => _mockRating = 4.5);
 
   Widget _buildDatePickerButton() {
     DateFormat dateFormat = DateFormat('dd-MM-yyyy');
@@ -241,7 +261,9 @@ class _ObjectLocationState extends State<ObjectLocation> {
                         DateTime.now().subtract(const Duration(days: 1)),
                     maximumDate: DateTime(2100),
                     onDateTimeChanged: (DateTime newDate) {
-                      _selectedDate = newDate;
+                      setState(() {
+                        _selectedDate = newDate;
+                      });
                       debugPrint('Selected date: $_selectedDate');
                     }),
               ),
@@ -272,7 +294,9 @@ class _ObjectLocationState extends State<ObjectLocation> {
           onPressed: () {
             _buildNumberOfGuestsPicker();
           },
-          text: _selectedNumberOfGuests?.toString() ?? 'Select no. of guests',
+          text: _selectedNumberOfGuests != null
+              ? '$_selectedNumberOfGuests'
+              : 'Select no. of guests',
           icon: const Icon(
             CupertinoIcons.person_2_alt,
             size: 18,
@@ -293,15 +317,16 @@ class _ObjectLocationState extends State<ObjectLocation> {
               SizedBox(
                 height: 200,
                 child: CupertinoPicker(
-                  itemExtent: 32.0,
+                  itemExtent: 32,
                   onSelectedItemChanged: (int selectedIndex) {
-                    _selectedNumberOfGuests = selectedIndex+1;
-                    debugPrint('Selected number of guests: $_selectedNumberOfGuests');
+                    setState(() {
+                      _selectedNumberOfGuests = selectedIndex + 1;
+                    });
                   },
                   children: List<Widget>.generate(10, (int index) {
                     return Center(
                       child: Text(
-                        '${index+1}',
+                        '${index + 1}',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onPrimary,
                           fontSize: 20,
@@ -332,28 +357,30 @@ class _ObjectLocationState extends State<ObjectLocation> {
     );
   }
 
-  Widget _buildTimePickerButton() => Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 12),
-        child: FFButtonWidget(
-          onPressed: () {
-            _buildTimePicker();
-          },
-          text: 'Select time',
-          icon: const Icon(
-            CupertinoIcons.clock,
-            size: 18,
-          ),
-          options: _selectorButtonOptions(),
+  Widget _buildTimePickerButton() {
+    String minutesToDisplay = _selectedMinute == 0 ? '00' : '30';
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 12),
+      child: FFButtonWidget(
+        onPressed: () {
+          _buildTimePicker();
+        },
+        text: _selectedHour != null && _selectedMinute != null
+            ? '$_selectedHour:$minutesToDisplay'
+            : 'Select time',
+        icon: const Icon(
+          CupertinoIcons.clock,
+          size: 18,
         ),
-      );
+        options: _selectorButtonOptions(),
+      ),
+    );
+  }
 
   Future<dynamic> _buildTimePicker() {
     return showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) {
-        int selectedHour = DateTime.now().hour;
-        int selectedMinute = DateTime.now().minute;
-
         return Container(
           height: 250,
           color: Theme.of(context).colorScheme.background,
@@ -366,13 +393,14 @@ class _ObjectLocationState extends State<ObjectLocation> {
                   children: [
                     Expanded(
                       child: CupertinoPicker(
-                        itemExtent: 32.0,
+                        itemExtent: 32,
                         onSelectedItemChanged: (int index) {
-                          selectedHour = index;
-                          debugPrint('Selected hour: $selectedHour');
+                          setState(() {
+                            _selectedHour = index;
+                          });
                         },
                         scrollController: FixedExtentScrollController(
-                          initialItem: selectedHour,
+                          initialItem: _selectedHour ?? 0,
                         ),
                         children: List<Widget>.generate(24, (int index) {
                           return Center(
@@ -396,18 +424,19 @@ class _ObjectLocationState extends State<ObjectLocation> {
                     ),
                     Expanded(
                       child: CupertinoPicker(
-                        itemExtent: 32.0,
+                        itemExtent: 32,
                         onSelectedItemChanged: (int index) {
-                          selectedMinute = index;
-                          debugPrint('Selected minute: $selectedMinute');
+                          setState(() {
+                            _selectedMinute = index;
+                          });
                         },
                         scrollController: FixedExtentScrollController(
-                          initialItem: selectedMinute,
+                          initialItem: _selectedMinute ?? 00,
                         ),
-                        children: List<Widget>.generate(60, (int index) {
+                        children: List<Widget>.generate(2, (int index) {
                           return Center(
                             child: Text(
-                              '$index'.padLeft(2, '0'),
+                              index == 0 ? '00' : '30',
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary,
                                 fontSize: 20,
@@ -431,7 +460,8 @@ class _ObjectLocationState extends State<ObjectLocation> {
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    debugPrint('Selected time: $selectedHour:$selectedMinute');
+                    debugPrint(
+                        'Selected time: $_selectedHour:$_selectedMinute');
                   },
                 ),
               ),

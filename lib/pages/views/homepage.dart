@@ -166,10 +166,9 @@ class _HomepageState extends State<Homepage> {
                                       ),
                                     ],
                                   ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            4, 12, 0, 0),
+                                  const Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        4, 12, 0, 0),
                                     child: SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       child: Row(
@@ -177,36 +176,7 @@ class _HomepageState extends State<Homepage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          wrapWithModel(
-                                            model: _model.locationCardModel1,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const LocationCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.locationCardModel2,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const LocationCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.locationCardModel3,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const LocationCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.locationCardModel4,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const LocationCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.locationCardModel5,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const LocationCard(),
-                                          ),
+                                          LocationCard(),
                                         ],
                                       ),
                                     ),
@@ -274,10 +244,9 @@ class _HomepageState extends State<Homepage> {
                                       ),
                                     ],
                                   ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            4, 12, 0, 0),
+                                  const Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        4, 12, 0, 0),
                                     child: SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       child: Row(
@@ -285,36 +254,7 @@ class _HomepageState extends State<Homepage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          wrapWithModel(
-                                            model: _model.locationCardModel6,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const LocationCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.locationCardModel7,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const LocationCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.locationCardModel8,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const LocationCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.locationCardModel9,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const LocationCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.locationCardModel10,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const LocationCard(),
-                                          ),
+                                          LocationCard(),
                                         ],
                                       ),
                                     ),
@@ -382,10 +322,9 @@ class _HomepageState extends State<Homepage> {
                                       ),
                                     ],
                                   ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            4, 12, 0, 0),
+                                  const Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        4, 12, 0, 0),
                                     child: SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       child: Row(
@@ -393,30 +332,7 @@ class _HomepageState extends State<Homepage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          wrapWithModel(
-                                            model: _model.locationCardModel11,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const LocationCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.locationCardModel12,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const LocationCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.locationCardModel13,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const LocationCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.locationCardModel14,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const LocationCard(),
-                                          ),
+                                          LocationCard(),
                                         ],
                                       ),
                                     ),
@@ -462,45 +378,15 @@ class _HomepageState extends State<Homepage> {
                                       ),
                                     ],
                                   ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            4, 12, 0, 0),
+                                  const Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        4, 12, 0, 0),
                                     child: SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
-                                          wrapWithModel(
-                                            model: _model.categoryCardModel1,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const CategoryCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.categoryCardModel2,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const CategoryCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.categoryCardModel3,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const CategoryCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.categoryCardModel4,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const CategoryCard(),
-                                          ),
-                                          wrapWithModel(
-                                            model: _model.categoryCardModel5,
-                                            updateCallback: () =>
-                                                setState(() {}),
-                                            child: const CategoryCard(),
-                                          ),
+                                          CategoryCard(),
                                         ],
                                       ),
                                     ),
