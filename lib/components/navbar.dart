@@ -41,7 +41,7 @@ class NavBar extends StatelessWidget {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.search_circle_fill),
+            icon: Icon(CupertinoIcons.search),
             label: 'Search',
           ),
           BottomNavigationBarItem(

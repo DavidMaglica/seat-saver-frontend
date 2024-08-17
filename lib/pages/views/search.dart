@@ -98,7 +98,7 @@ class _SearchState extends State<Search> {
                             itemBuilder: (context, index) {
                               return Column(
                                 children: [
-                                  _buildListTitle(_allVenues[index].name),
+                                  _buildListTitle(_allVenues[index]),
                                   if (index < _allVenues.length - 1)
                                     _buildDivider(),
                                 ],
@@ -126,6 +126,16 @@ class _SearchState extends State<Search> {
       ),
     );
   }
+
+  Function() _onTap(Venue venue) => () =>
+      Navigator.pushNamed(context, '/venue', arguments: {
+        'name': venue.name,
+        'location': venue.location,
+        'workingHours': venue.workingHours,
+        'rating': venue.rating,
+        'type': venue.type.toString(),
+        'description': venue.description,
+      });
 
   Padding _buildSearchBar(TextEditingController? controller) => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
@@ -161,11 +171,12 @@ class _SearchState extends State<Search> {
         ),
       );
 
-  Padding _buildListTitle(String title) => Padding(
+  Padding _buildListTitle(Venue venue) => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
         child: ListTile(
+          onTap: _onTap(venue),
           title: Text(
-            title,
+            venue.name,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           trailing: Icon(
@@ -182,7 +193,7 @@ class _SearchState extends State<Search> {
       );
 
   Padding _buildDivider() => Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
         child: Divider(
           indent: 36,
           endIndent: 36,
