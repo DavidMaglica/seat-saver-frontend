@@ -25,6 +25,16 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
     super.initState();
   }
 
+  @override
+  void setState(VoidCallback callback) {
+    super.setState(callback);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Future<bool> _handleLocationPermission() async {
     LocationPermission locationPermission;
 
@@ -86,16 +96,6 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
     });
 
     Navigator.of(context).pop([_currentCity, _nearbyCities]);
-  }
-
-  @override
-  void setState(VoidCallback callback) {
-    super.setState(callback);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override

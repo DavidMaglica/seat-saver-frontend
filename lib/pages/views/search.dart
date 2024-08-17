@@ -1,4 +1,5 @@
 import 'package:diplomski/api/data/venue.dart';
+import 'package:diplomski/api/venue_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
@@ -7,9 +8,6 @@ import '../../components/appbar.dart';
 import '../../components/custom_choice_chips.dart';
 import '../../components/navbar.dart';
 import '../../utils/routing_utils.dart';
-import 'models/search_model.dart';
-
-export 'models/search_model.dart';
 
 class Search extends StatefulWidget {
   const Search({super.key});
@@ -19,19 +17,35 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  final unfocusNode = FocusNode();
+
   final int pageIndex = 1;
-  late SearchModel _model;
+
   List<String> _chipsOptions = [];
+  FormFieldController<List<String>>? choiceChipsValueController;
+
+  List<String>? get choiceChipsValues => choiceChipsValueController?.value;
+
+  set choiceChipsValues(List<String>? val) =>
+      choiceChipsValueController?.value = val;
+
+  TextEditingController? searchBarController;
+
+  List<Venue> _allVenues = [];
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SearchModel());
     _getChipsChoice();
+    _getAllVenues();
+  }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  @override
+  void dispose() {
+    unfocusNode.dispose();
+    super.dispose();
   }
 
   void _getChipsChoice() {
@@ -42,12 +56,9 @@ class _SearchState extends State<Search> {
     });
   }
 
-  @override
-  void dispose() {
-    _model.dispose();
-
-    super.dispose();
-  }
+  void _getAllVenues() => getSortedVenues().then((value) => safeSetState(() {
+        _allVenues = value;
+      }));
 
   void onChanged(String value) {
     debugPrint("Searching for: $value");
@@ -56,58 +67,63 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+      onTap: () => unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(unfocusNode)
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
-          key: scaffoldKey,
-          backgroundColor: Theme.of(context).colorScheme.background,
-          appBar: const CustomAppbar(title: ''),
-          body: SafeArea(
-            top: true,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildSearchBar(_model.searchBarController),
-                  Flexible(
-                    child: CustomChoiceChips(
-                      options: _chipsOptions,
-                      initialValues: const [],
-                    ),
+        key: scaffoldKey,
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: const CustomAppbar(title: ''),
+        body: SafeArea(
+          top: true,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildSearchBar(searchBarController),
+                Flexible(
+                  child: CustomChoiceChips(
+                    options: _chipsOptions,
+                    initialValues: const [],
                   ),
-                  Flexible(
-                    child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _buildListTitle('Restaurant 1'),
-                          _buildDivider(),
-                          _buildListTitle('Coffee Shop 1'),
-                          _buildDivider(),
-                          _buildListTitle('Coffee Shop 2'),
-                          _buildDivider(),
-                          _buildListTitle('Restaurant 2'),
-                          _buildDivider(),
-                          _buildListTitle('Restaurant 3'),
-                          _buildDivider(),
-                          _buildListTitle('Coffee Shop 3')
-                        ],
-                      ),
-                    ),
+                ),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
+                    child: _allVenues.isNotEmpty
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: _allVenues.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  _buildListTitle(_allVenues[index].name),
+                                  if (index < _allVenues.length - 1)
+                                    _buildDivider(),
+                                ],
+                              );
+                            },
+                          )
+                        : const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Text('No venues available'),
+                            ),
+                          ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          bottomNavigationBar: NavBar(
-            currentIndex: pageIndex,
-            context: context,
-            onTap: (index, context) =>
-                onNavbarItemTapped(pageIndex, index, context),
-          )),
+        ),
+        bottomNavigationBar: NavBar(
+          currentIndex: pageIndex,
+          context: context,
+          onTap: (index, context) =>
+              onNavbarItemTapped(pageIndex, index, context),
+        ),
+      ),
     );
   }
 

@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-import 'models/landing_model.dart';
-
-export 'models/landing_model.dart';
-
 class Landing extends StatefulWidget {
   const Landing({super.key});
 
@@ -13,28 +9,26 @@ class Landing extends StatefulWidget {
 }
 
 class _LandingState extends State<Landing> {
-  late LandingModel _model;
+  final unfocusNode = FocusNode();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => LandingModel());
   }
 
   @override
   void dispose() {
-    _model.dispose();
-
+    unfocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+      onTap: () => unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(unfocusNode)
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,

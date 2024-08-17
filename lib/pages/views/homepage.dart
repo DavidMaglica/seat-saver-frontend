@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:diplomski/api/venue_api.dart';
 import 'package:diplomski/components/venue_suggested_card.dart';
 import 'package:flutter/material.dart';
@@ -5,15 +6,12 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../api/data/venue.dart';
-import '../../components/carousel_component.dart';
+import '../../components/carousel_item.dart';
 import '../../components/location_permission.dart';
 import '../../components/navbar.dart';
 import '../../components/venue_card.dart';
 import '../../themes/theme.dart';
 import '../../utils/routing_utils.dart';
-import 'models/homepage_model.dart';
-
-export 'models/homepage_model.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -23,27 +21,35 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final unfocusNode = FocusNode();
+
   final int pageIndex = 0;
-  late HomepageModel _model;
   String? _currentCity;
   List<String>? _nearbyCities;
   List<Venue>? _nearbyVenues;
   List<Venue>? _newVenues;
   List<Venue>? _trendingVenues;
   List<Venue>? _suggestedVenues;
+  CarouselController? _carouselController;
+  int _carouselCurrentIndex = 1;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => HomepageModel());
     _getNearbyVenues();
     _getNewVenues();
     _getTrendingVenues();
     _getSuggestedVenues();
 
     _activateLocationPopUp();
+  }
+
+  @override
+  void dispose() {
+    unfocusNode.dispose();
+    super.dispose();
   }
 
   void _getNearbyVenues() async {
@@ -84,8 +90,8 @@ class _HomepageState extends State<Homepage> {
         context: context,
         builder: (context) {
           return GestureDetector(
-            onTap: () => _model.unfocusNode.canRequestFocus
-                ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+            onTap: () => unfocusNode.canRequestFocus
+                ? FocusScope.of(context).requestFocus(unfocusNode)
                 : FocusScope.of(context).unfocus(),
             child: Padding(
               padding: MediaQuery.viewInsetsOf(context),
@@ -108,13 +114,6 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  @override
-  void dispose() {
-    _model.dispose();
-
-    super.dispose();
-  }
-
   void _openNearbyVenues() => Navigator.pushNamed(context, '/search');
 
   void _openNewVenues() => Navigator.pushNamed(context, '/search');
@@ -124,8 +123,8 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () => _model.unfocusNode.canRequestFocus
-            ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+        onTap: () => unfocusNode.canRequestFocus
+            ? FocusScope.of(context).requestFocus(unfocusNode)
             : FocusScope.of(context).unfocus(),
         child: WillPopScope(
             onWillPop: () async => false,
@@ -141,11 +140,8 @@ class _HomepageState extends State<Homepage> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           _buildHeader(),
-                          wrapWithModel(
-                            model: _model.carouselComponentModel,
-                            updateCallback: () => setState(() {}),
-                            child: CarouselComponent(_currentCity),
-                          ),
+                          _buildCarouselComponent(
+                              _nearbyCities ?? ['undefined']),
                           _buildVenues('Nearby Venues', _openNearbyVenues,
                               _nearbyVenues ?? []),
                           _buildVenues(
@@ -165,6 +161,43 @@ class _HomepageState extends State<Homepage> {
                   onTap: (index, context) =>
                       onNavbarItemTapped(pageIndex, index, context),
                 ))));
+  }
+
+  Row _buildCarouselComponent(List<String> nearbyCities) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+            child: SizedBox(
+              width: double.infinity,
+              height: 196,
+              child: CarouselSlider(
+                items: nearbyCities.map((city) => CarouselItem(city)).toList(),
+                carouselController: _carouselController ??=
+                    CarouselController(),
+                options: CarouselOptions(
+                  initialPage: 1,
+                  viewportFraction: .75,
+                  disableCenter: true,
+                  enlargeCenterPage: true,
+                  enlargeFactor: .25,
+                  enableInfiniteScroll: true,
+                  scrollDirection: Axis.horizontal,
+                  autoPlay: true,
+                  autoPlayAnimationDuration: const Duration(milliseconds: 1500),
+                  autoPlayInterval: const Duration(seconds: 5),
+                  autoPlayCurve: Curves.linear,
+                  pauseAutoPlayInFiniteScroll: true,
+                  onPageChanged: (index, _) => _carouselCurrentIndex = index,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Padding _buildVenues(

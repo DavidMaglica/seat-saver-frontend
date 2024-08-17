@@ -4,9 +4,6 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../components/appbar.dart';
 import '../../themes/theme.dart';
-import 'models/edit_profile_model.dart';
-
-export 'models/edit_profile_model.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -16,30 +13,33 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  late EditProfileModel _model;
+  FocusNode? _usernameFocusNode;
+  TextEditingController? _usernameTextController;
+  String? Function(BuildContext, String?)? _usernameTextControllerValidator;
+
+  FocusNode? _emailFocusNode;
+  TextEditingController? _emailTextController;
+  String? Function(BuildContext, String?)? _emailTextControllerValidator;
+
+  final _creditCardFormKey = GlobalKey<FormState>();
+  final CreditCardModel _creditCardInfo = emptyCreditCard();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => EditProfileModel());
-
-    _model.usernameTextController ??= TextEditingController();
-    _model.usernameFocusNode ??= FocusNode();
-
-    _model.emailTextController ??= TextEditingController();
-    _model.emailFocusNode ??= FocusNode();
-
-    _model.addressTextController ??= TextEditingController();
-    _model.addressFocusNode ??= FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
   void dispose() {
-    _model.dispose();
+    _usernameFocusNode?.dispose();
+    _usernameTextController?.dispose();
+
+    _emailFocusNode?.dispose();
+    _emailTextController?.dispose();
 
     super.dispose();
   }
@@ -64,13 +64,12 @@ class _EditProfileState extends State<EditProfile> {
               buildProfilePicture(context),
               _buildInputField(
                   'Name and Surname',
-                  _model.usernameTextController,
-                  _model.usernameFocusNode,
-                  _model.usernameTextControllerValidator),
-              _buildInputField('Email', _model.emailTextController,
-                  _model.emailFocusNode, _model.emailTextControllerValidator),
-              _buildInputField('Address', _model.addressTextController,
-                  _model.addressFocusNode, _model.cityTextControllerValidator),
+                  _usernameTextController,
+                  _usernameFocusNode,
+                  _usernameTextControllerValidator,
+                  TextInputType.text),
+              _buildInputField('Email', _emailTextController, _emailFocusNode,
+                  _emailTextControllerValidator, TextInputType.emailAddress),
               _buildCreditCardForm(),
               buildActionButton(context, 'Save changes', _saveChanges, null),
             ],
@@ -84,7 +83,8 @@ class _EditProfileState extends State<EditProfile> {
           String labelText,
           TextEditingController? controller,
           FocusNode? focusNode,
-          String? Function(BuildContext, String?)? validator) =>
+          String? Function(BuildContext, String?)? validator,
+          TextInputType keyboardType) =>
       Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
         child: TextFormField(
@@ -126,6 +126,7 @@ class _EditProfileState extends State<EditProfile> {
             ),
             contentPadding: const EdgeInsetsDirectional.fromSTEB(20, 24, 0, 24),
           ),
+          keyboardType: keyboardType,
           cursorColor: Theme.of(context).colorScheme.onPrimary,
           style: Theme.of(context).textTheme.bodyMedium,
           validator: validator.asValidator(context),
@@ -135,8 +136,8 @@ class _EditProfileState extends State<EditProfile> {
   Padding _buildCreditCardForm() => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
         child: FlutterFlowCreditCardForm(
-          formKey: _model.creditCardFormKey,
-          creditCardModel: _model.creditCardInfo,
+          formKey: _creditCardFormKey,
+          creditCardModel: _creditCardInfo,
           obscureNumber: false,
           obscureCvv: false,
           spacing: 12,

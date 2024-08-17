@@ -5,19 +5,16 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import '../../components/navbar.dart';
 import '../../utils/routing_utils.dart';
 import '../settings/utils/settings_utils.dart';
-import 'models/account_model.dart';
-
-export 'models/account_model.dart';
 
 class Account extends StatefulWidget {
   const Account({super.key});
 
   @override
-  State<Account> createState() => _AccountWidgetState();
+  State<Account> createState() => _AccountState();
 }
 
-class _AccountWidgetState extends State<Account> with TickerProviderStateMixin {
-  late AccountModel _model;
+class _AccountState extends State<Account> with TickerProviderStateMixin {
+  final unfocusNode = FocusNode();
   final int pageIndex = 3;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -25,23 +22,19 @@ class _AccountWidgetState extends State<Account> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => AccountModel());
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
   void dispose() {
-    _model.dispose();
-
+    unfocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () => _model.unfocusNode.canRequestFocus
-            ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+        onTap: () => unfocusNode.canRequestFocus
+            ? FocusScope.of(context).requestFocus(unfocusNode)
             : FocusScope.of(context).unfocus(),
         child: Scaffold(
             key: scaffoldKey,

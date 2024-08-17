@@ -88,6 +88,12 @@ Future<List<Venue>> getAllVenues() async {
       description: 'A lovely place to eat.',
     ),
   ];
+  return allVenues.toList();
+}
+
+Future<List<Venue>> getSortedVenues() async {
+  List<Venue> allVenues = await getAllVenues();
+  allVenues.sort((a, b) => a.name.compareTo(b.name));
   return allVenues;
 }
 

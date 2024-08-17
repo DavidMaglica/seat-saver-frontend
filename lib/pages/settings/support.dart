@@ -5,9 +5,6 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../components/appbar.dart';
 import '../../themes/theme.dart';
-import 'models/support_model.dart';
-
-export 'models/support_model.dart';
 
 class Support extends StatefulWidget {
   const Support({super.key});
@@ -17,27 +14,30 @@ class Support extends StatefulWidget {
 }
 
 class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
-  late SupportModel _model;
+  final _unfocusNode = FocusNode();
+  FocusNode? _ticketTitleFocusNode;
+  TextEditingController? _ticketTitleController;
+  String? Function(BuildContext, String?)? _ticketTitleValidator;
+  FocusNode? _ticketDescriptionFocusNode;
+  TextEditingController? _ticketDescriptionController;
+  String? Function(BuildContext, String?)? _ticketDescriptionValidator;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SupportModel());
-
-    _model.ticketTitleController ??= TextEditingController();
-    _model.ticketTitleFocusNode ??= FocusNode();
-
-    _model.ticketDescriptionController ??= TextEditingController();
-    _model.ticketDescriptionFocusNode ??= FocusNode();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
   void dispose() {
-    _model.dispose();
+    _unfocusNode.dispose();
+
+    _ticketTitleFocusNode?.dispose();
+    _ticketTitleController?.dispose();
+
+    _ticketDescriptionFocusNode?.dispose();
+    _ticketDescriptionController?.dispose();
 
     super.dispose();
   }
@@ -47,8 +47,8 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+      onTap: () => _unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(_unfocusNode)
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
@@ -90,18 +90,18 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         _buildInputField(
-                          _model.ticketTitleController,
-                          _model.ticketTitleFocusNode,
-                          _model.ticketTitleValidator,
+                          _ticketTitleController,
+                          _ticketTitleFocusNode,
+                          _ticketTitleValidator,
                           'Ticket title',
                           'Enter a title for your ticket.',
                           null,
                           null,
                         ),
                         _buildInputField(
-                          _model.ticketDescriptionController,
-                          _model.ticketDescriptionFocusNode,
-                          _model.ticketDescriptionValidator,
+                          _ticketDescriptionController,
+                          _ticketDescriptionFocusNode,
+                          _ticketDescriptionValidator,
                           'Short description',
                           'Short description of what is going on...',
                           16,

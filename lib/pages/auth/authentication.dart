@@ -53,7 +53,6 @@ class _AuthenticationState extends State<Authentication>
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
   }
 
