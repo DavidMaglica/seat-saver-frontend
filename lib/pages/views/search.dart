@@ -60,9 +60,20 @@ class _SearchState extends State<Search> {
         _allVenues = value;
       }));
 
-  void onChanged(String value) {
+  void _search(String value) {
     debugPrint("Searching for: $value");
   }
+
+  Function() _onTap(Venue venue) => () =>
+      Navigator.pushNamed(context, '/venue', arguments: {
+        'name': venue.name,
+        'location': venue.location,
+        'workingHours': venue.workingHours,
+        'rating': venue.rating,
+        'type': venue.type.toString(),
+        'description': venue.description,
+      });
+
 
   @override
   Widget build(BuildContext context) {
@@ -127,16 +138,6 @@ class _SearchState extends State<Search> {
     );
   }
 
-  Function() _onTap(Venue venue) => () =>
-      Navigator.pushNamed(context, '/venue', arguments: {
-        'name': venue.name,
-        'location': venue.location,
-        'workingHours': venue.workingHours,
-        'rating': venue.rating,
-        'type': venue.type.toString(),
-        'description': venue.description,
-      });
-
   Padding _buildSearchBar(TextEditingController? controller) => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
         child: Row(
@@ -163,7 +164,7 @@ class _SearchState extends State<Search> {
                     ),
                   ),
                   style: Theme.of(context).textTheme.bodyLarge,
-                  onChanged: (value) => onChanged(value),
+                  onChanged: (value) => _search(value),
                 ),
               ),
             ),
