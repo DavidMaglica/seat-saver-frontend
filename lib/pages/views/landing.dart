@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-import 'models/landing_model.dart';
-
-export 'models/landing_model.dart';
-
 class Landing extends StatefulWidget {
   const Landing({super.key});
 
@@ -13,28 +9,26 @@ class Landing extends StatefulWidget {
 }
 
 class _LandingState extends State<Landing> {
-  late LandingModel _model;
+  final unfocusNode = FocusNode();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => LandingModel());
   }
 
   @override
   void dispose() {
-    _model.dispose();
-
+    unfocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+      onTap: () => unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(unfocusNode)
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
@@ -56,7 +50,7 @@ class _LandingState extends State<Landing> {
                         color: Theme.of(context)
                             .colorScheme
                             .onPrimary
-                            .withOpacity(0.3),
+                            .withOpacity(.4),
                         blurRadius: 5,
                         spreadRadius: 2,
                         offset: const Offset(4, 4),
@@ -79,6 +73,7 @@ class _LandingState extends State<Landing> {
                 ),
                 FFButtonWidget(
                   onPressed: () async {
+                    await Future.delayed(const Duration(seconds: 1));
                     Navigator.pushNamed(
                       context,
                       '/homepage',

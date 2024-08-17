@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../components/appbar.dart';
-import 'models/terms_of_service_model.dart';
-
-export 'models/terms_of_service_model.dart';
 
 class TermsOfService extends StatefulWidget {
   const TermsOfService({Key? key}) : super(key: key);
@@ -14,18 +10,15 @@ class TermsOfService extends StatefulWidget {
 }
 
 class _TermsOfServiceState extends State<TermsOfService> {
-  late TermsOfServiceModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => TermsOfServiceModel());
   }
 
   @override
   void dispose() {
-    _model.dispose();
     super.dispose();
   }
 
@@ -80,37 +73,31 @@ class _TermsOfServiceState extends State<TermsOfService> {
     );
   }
 
-  Widget _buildDivider() {
-    return Divider(
-      thickness: .3,
-      color: Theme.of(context).colorScheme.onBackground,
-    );
-  }
+  Widget _buildDivider() => Divider(
+        thickness: .3,
+        color: Theme.of(context).colorScheme.onBackground,
+      );
 
-  Widget _buildBodyText(String text) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.only(bottom: 8),
-      child: Text(text,
-          style: Theme.of(context).textTheme.bodyLarge,
-          textAlign: TextAlign.center),
-    );
-  }
+  Widget _buildBodyText(String text) => Padding(
+        padding: const EdgeInsetsDirectional.only(bottom: 8),
+        child: Text(text,
+            style: Theme.of(context).textTheme.bodyLarge,
+            textAlign: TextAlign.center),
+      );
 
-  Widget _buildSection(String title, String bodyText) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.only(top: 12, bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(title,
-              style: Theme.of(context).textTheme.bodyLarge,
-              textAlign: TextAlign.center),
-          const SizedBox(height: 4),
-          Text(bodyText,
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center)
-        ],
-      ),
-    );
-  }
+  Widget _buildSection(String title, String bodyText) => Padding(
+        padding: const EdgeInsetsDirectional.only(top: 12, bottom: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(title,
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center),
+            const SizedBox(height: 4),
+            Text(bodyText,
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center)
+          ],
+        ),
+      );
 }

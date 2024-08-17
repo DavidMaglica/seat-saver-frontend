@@ -27,6 +27,11 @@ class _CustomChoiceChipsState extends State<CustomChoiceChips> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(4, 0, 4, 36),

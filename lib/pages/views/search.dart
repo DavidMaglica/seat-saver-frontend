@@ -1,3 +1,5 @@
+import 'package:diplomski/api/data/venue.dart';
+import 'package:diplomski/api/venue_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
@@ -6,9 +8,6 @@ import '../../components/appbar.dart';
 import '../../components/custom_choice_chips.dart';
 import '../../components/navbar.dart';
 import '../../utils/routing_utils.dart';
-import 'models/search_model.dart';
-
-export 'models/search_model.dart';
 
 class Search extends StatefulWidget {
   const Search({super.key});
@@ -18,111 +17,128 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  final int pageIndex = 1;
-  late SearchModel _model;
+  final unfocusNode = FocusNode();
 
-  List<String> chipsOptions = [
-    'Italian',
-    'Asian',
-    'Gluten Free',
-    'Coffee',
-    'Traditional',
-    'Japanese',
-    'Middle Eastern',
-    'Barbecue',
-    'Greek',
-    'Cocktails',
-    'Vegetarian',
-    'Vegan',
-    'Fine Dining',
-    'Fast Food',
-    'Seafood',
-    'Mexican',
-    'Indian',
-    'Chinese',
-    'Pizza',
-  ];
+  final int pageIndex = 1;
+
+  List<String> _chipsOptions = [];
+  FormFieldController<List<String>>? choiceChipsValueController;
+
+  List<String>? get choiceChipsValues => choiceChipsValueController?.value;
+
+  set choiceChipsValues(List<String>? val) =>
+      choiceChipsValueController?.value = val;
+
+  TextEditingController? searchBarController;
+
+  List<Venue> _allVenues = [];
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SearchModel());
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    _getChipsChoice();
+    _getAllVenues();
   }
 
   @override
   void dispose() {
-    _model.dispose();
-
+    unfocusNode.dispose();
     super.dispose();
   }
+
+  void _getChipsChoice() {
+    List<String> options =
+        VenueType.values.map((type) => type.toString()).toList();
+    setState(() {
+      _chipsOptions = options;
+    });
+  }
+
+  void _getAllVenues() => getSortedVenues().then((value) => safeSetState(() {
+        _allVenues = value;
+      }));
+
+  void _search(String value) {
+    debugPrint("Searching for: $value");
+  }
+
+  Function() _onTap(Venue venue) => () =>
+      Navigator.pushNamed(context, '/venue', arguments: {
+        'name': venue.name,
+        'location': venue.location,
+        'workingHours': venue.workingHours,
+        'rating': venue.rating,
+        'type': venue.type.toString(),
+        'description': venue.description,
+      });
+
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+      onTap: () => unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(unfocusNode)
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
-          key: scaffoldKey,
-          backgroundColor: Theme.of(context).colorScheme.background,
-          appBar: const CustomAppbar(title: ''),
-          body: SafeArea(
-            top: true,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildSearchBar(_model.searchBarController),
-                  Flexible(
-                    child: CustomChoiceChips(
-                      options: chipsOptions,
-                      initialValues: const [],
-                    ),
+        key: scaffoldKey,
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: const CustomAppbar(title: ''),
+        body: SafeArea(
+          top: true,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildSearchBar(searchBarController),
+                Flexible(
+                  child: CustomChoiceChips(
+                    options: _chipsOptions,
+                    initialValues: const [],
                   ),
-                  Flexible(
-                    child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _buildListTitle('Restaurant 1'),
-                          _buildDivider(),
-                          _buildListTitle('Coffee Shop 1'),
-                          _buildDivider(),
-                          _buildListTitle('Coffee Shop 2'),
-                          _buildDivider(),
-                          _buildListTitle('Restaurant 2'),
-                          _buildDivider(),
-                          _buildListTitle('Restaurant 3'),
-                          _buildDivider(),
-                          _buildListTitle('Coffee Shop 3')
-                        ],
-                      ),
-                    ),
+                ),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
+                    child: _allVenues.isNotEmpty
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: _allVenues.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  _buildListTitle(_allVenues[index]),
+                                  if (index < _allVenues.length - 1)
+                                    _buildDivider(),
+                                ],
+                              );
+                            },
+                          )
+                        : const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Text('No venues available'),
+                            ),
+                          ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          bottomNavigationBar: NavBar(
-            currentIndex: pageIndex,
-            context: context,
-            onTap: (index, context) =>
-                onNavbarItemTapped(pageIndex, index, context),
-          )),
+        ),
+        bottomNavigationBar: NavBar(
+          currentIndex: pageIndex,
+          context: context,
+          onTap: (index, context) =>
+              onNavbarItemTapped(pageIndex, index, context),
+        ),
+      ),
     );
   }
 
-  void onChanged(String value) {
-    debugPrint("Searching for: $value");
-  }
-
-  Widget _buildSearchBar(TextEditingController? controller) => Padding(
+  Padding _buildSearchBar(TextEditingController? controller) => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -148,7 +164,7 @@ class _SearchState extends State<Search> {
                     ),
                   ),
                   style: Theme.of(context).textTheme.bodyLarge,
-                  onChanged: (value) => onChanged(value),
+                  onChanged: (value) => _search(value),
                 ),
               ),
             ),
@@ -156,37 +172,34 @@ class _SearchState extends State<Search> {
         ),
       );
 
-  Widget _buildListTitle(String title) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-      child: ListTile(
-        title: Text(
-          title,
-          style: Theme.of(context).textTheme.bodyLarge,
+  Padding _buildListTitle(Venue venue) => Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+        child: ListTile(
+          onTap: _onTap(venue),
+          title: Text(
+            venue.name,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            color: Theme.of(context).colorScheme.onPrimary,
+            size: 20,
+          ),
+          tileColor: Theme.of(context).colorScheme.surfaceVariant,
+          dense: true,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          color: Theme.of(context).colorScheme.onPrimary,
-          size: 20,
-        ),
-        tileColor: Theme.of(context).colorScheme.surfaceVariant,
-        dense: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildDivider() {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
-      child: Divider(
-        indent: 36,
-        endIndent: 36,
-        thickness: .5,
-        color: Theme.of(context).colorScheme.onBackground,
-      ),
-    );
-  }
+  Padding _buildDivider() => Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+        child: Divider(
+          indent: 36,
+          endIndent: 36,
+          thickness: .5,
+          color: Theme.of(context).colorScheme.onBackground,
+        ),
+      );
 }

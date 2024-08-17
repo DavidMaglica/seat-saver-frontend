@@ -46,6 +46,7 @@ class AppThemes {
       secondary: lightSecondaryColor,
       onSecondary: lightSecondaryTextColor,
       tertiary: lightTertiaryColor,
+      onTertiary: lightAlternateColor,
       surface: lightSecondaryBackgroundColor,
       onSurface: lightPrimaryTextColor,
       surfaceVariant: mutedLightSecondaryBackgroundColor,
@@ -53,6 +54,7 @@ class AppThemes {
       onBackground: lightPrimaryTextColor,
       error: errorColor,
       onError: errorColor,
+
     ),
     textTheme: const TextTheme(
       bodySmall: TextStyle(color: lightPrimaryTextColor, fontSize: 8, fontFamily: 'Roboto'),
@@ -74,6 +76,7 @@ class AppThemes {
       primary: darkPrimaryColor,
       secondary: darkSecondaryColor,
       tertiary: darkTertiaryColor,
+      onTertiary: darkAlternateColor,
       surface: darkSecondaryBackgroundColor,
       surfaceVariant: mutedDarkSecondaryBackgroundColor,
       background: darkPrimaryBackgroundColor,

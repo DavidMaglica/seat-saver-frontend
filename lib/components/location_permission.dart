@@ -4,11 +4,8 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../api/location_api.dart';
+import '../api/geolocation_api.dart';
 import '../themes/theme.dart';
-import 'models/location_permission_model.dart';
-
-export 'models/location_permission_model.dart';
 
 class LocationPermissionPopUp extends StatefulWidget {
   const LocationPermissionPopUp({super.key});
@@ -19,7 +16,6 @@ class LocationPermissionPopUp extends StatefulWidget {
 }
 
 class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
-  late LocationPermissionModel _model;
   Position? _currentPosition;
   String? _currentCity;
   List<String>? _nearbyCities;
@@ -27,7 +23,16 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => LocationPermissionModel());
+  }
+
+  @override
+  void setState(VoidCallback callback) {
+    super.setState(callback);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   Future<bool> _handleLocationPermission() async {
@@ -91,19 +96,6 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
     });
 
     Navigator.of(context).pop([_currentCity, _nearbyCities]);
-  }
-
-  @override
-  void setState(VoidCallback callback) {
-    super.setState(callback);
-    _model.onUpdate();
-  }
-
-  @override
-  void dispose() {
-    _model.maybeDispose();
-
-    super.dispose();
   }
 
   @override

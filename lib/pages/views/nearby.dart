@@ -1,15 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../components/appbar.dart';
 import '../../components/navbar.dart';
 import '../../themes/theme.dart';
 import '../../utils/routing_utils.dart';
-import 'models/nearby_model.dart';
-
-export 'models/nearby_model.dart';
 
 class Nearby extends StatefulWidget {
   const Nearby({super.key});
@@ -19,23 +15,19 @@ class Nearby extends StatefulWidget {
 }
 
 class _NearbyState extends State<Nearby> {
+  final unfocusNode = FocusNode();
   final int pageIndex = 2;
-  late NearbyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => NearbyModel());
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
   void dispose() {
-    _model.dispose();
-
+    unfocusNode.dispose();
     super.dispose();
   }
 
@@ -46,8 +38,8 @@ class _NearbyState extends State<Nearby> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+      onTap: () => unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(unfocusNode)
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
           key: scaffoldKey,
@@ -82,7 +74,6 @@ class _NearbyState extends State<Nearby> {
                       directionArrowMarker: const MarkerIcon(
                         icon: Icon(
                           CupertinoIcons.arrow_right_circle,
-
                           size: 48,
                         ),
                       ),
