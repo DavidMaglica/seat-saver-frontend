@@ -1,10 +1,10 @@
-import 'package:diplomski/themes/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../api/data/venue.dart';
+import '../themes/theme.dart';
 
 class VenueSuggestedCard extends StatefulWidget {
   final String name;

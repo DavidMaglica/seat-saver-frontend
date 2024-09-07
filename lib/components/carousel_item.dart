@@ -1,5 +1,6 @@
-import 'package:diplomski/themes/theme.dart';
 import 'package:flutter/material.dart';
+
+import '../themes/theme.dart';
 
 class CarouselItem extends StatefulWidget {
   final String currentCity;

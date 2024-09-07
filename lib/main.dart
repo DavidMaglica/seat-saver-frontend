@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'pages/auth/authentication.dart';
+import 'pages/helpers/successful_reservation.dart';
 import 'pages/settings/edit_profile.dart';
 import 'pages/settings/notification_settings.dart';
 import 'pages/settings/support.dart';
@@ -9,8 +10,8 @@ import 'pages/views/account.dart';
 import 'pages/views/homepage.dart';
 import 'pages/views/landing.dart';
 import 'pages/views/nearby.dart';
-import 'pages/views/venue_page.dart';
 import 'pages/views/search.dart';
+import 'pages/views/venue_page.dart';
 import 'themes/theme.dart';
 
 void main() {
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Diplomski',
+      title: 'TableReserver',
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
       home: const Landing(),
@@ -53,6 +54,16 @@ class MyApp extends StatelessWidget {
                   as Map<String, dynamic>)['type'],
               description: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['description'],
+            ),
+        '/successfulReservation': (context) => SuccessfulReservation(
+              venueName: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['venueName'],
+              numberOfPeople: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['numberOfPeople'],
+              reservationDate: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['reservationDate'],
+              reservationTime: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['reservationTime'],
             ),
       },
     );

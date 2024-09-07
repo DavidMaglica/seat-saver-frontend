@@ -94,6 +94,7 @@ class AppThemes {
       titleSmall: TextStyle(color: darkPrimaryTextColor, fontSize: 14, fontFamily: 'Oswald', fontWeight: FontWeight.bold),
       titleMedium: TextStyle(color: darkPrimaryTextColor, fontSize: 18, fontFamily: 'Oswald', fontWeight: FontWeight.bold),
       titleLarge: TextStyle(color: darkPrimaryTextColor, fontSize: 24, fontFamily: 'Oswald', fontWeight: FontWeight.bold),
+      labelLarge: TextStyle(color: darkPrimaryBackgroundColor, fontSize: 22, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
       headlineSmall: TextStyle(color: darkPrimaryTextColor, fontSize: 16, fontFamily: 'Roboto'),
       headlineMedium: TextStyle(color: lightPrimaryBackgroundColor, fontSize: 16, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
     ),

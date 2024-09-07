@@ -24,9 +24,9 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
         borderRadius: 30,
         borderWidth: 1,
         buttonSize: 60,
-        icon: const Icon(
+        icon: Icon(
           CupertinoIcons.chevron_back,
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.background,
           size: 30,
         ),
         onPressed: () async {

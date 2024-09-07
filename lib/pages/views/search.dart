@@ -1,9 +1,9 @@
-import 'package:diplomski/api/data/venue.dart';
-import 'package:diplomski/api/venue_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
+import '../../api/data/venue.dart';
+import '../../api/venue_api.dart';
 import '../../components/appbar.dart';
 import '../../components/custom_choice_chips.dart';
 import '../../components/navbar.dart';
@@ -64,16 +64,15 @@ class _SearchState extends State<Search> {
     debugPrint("Searching for: $value");
   }
 
-  Function() _onTap(Venue venue) => () =>
-      Navigator.pushNamed(context, '/venue', arguments: {
-        'name': venue.name,
-        'location': venue.location,
-        'workingHours': venue.workingHours,
-        'rating': venue.rating,
-        'type': venue.type.toString(),
-        'description': venue.description,
-      });
-
+  Function() _onTap(Venue venue) =>
+      () => Navigator.pushNamed(context, '/venue', arguments: {
+            'name': venue.name,
+            'location': venue.location,
+            'workingHours': venue.workingHours,
+            'rating': venue.rating,
+            'type': venue.type.toString(),
+            'description': venue.description,
+          });
 
   @override
   Widget build(BuildContext context) {

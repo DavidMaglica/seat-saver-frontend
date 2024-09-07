@@ -1,15 +1,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:diplomski/api/venue_api.dart';
-import 'package:diplomski/components/venue_suggested_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../api/data/venue.dart';
+import '../../api/venue_api.dart';
 import '../../components/carousel_item.dart';
 import '../../components/location_permission.dart';
 import '../../components/navbar.dart';
 import '../../components/venue_card.dart';
+import '../../components/venue_suggested_card.dart';
 import '../../themes/theme.dart';
 import '../../utils/routing_utils.dart';
 

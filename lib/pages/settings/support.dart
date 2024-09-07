@@ -1,10 +1,10 @@
-import 'package:diplomski/pages/settings/utils/settings_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../components/appbar.dart';
 import '../../themes/theme.dart';
+import 'utils/settings_utils.dart';
 
 class Support extends StatefulWidget {
   const Support({super.key});

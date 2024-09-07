@@ -1,7 +1,7 @@
-import 'package:diplomski/pages/settings/utils/settings_utils.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/appbar.dart';
+import 'utils/settings_utils.dart';
 
 class NotificationSettings extends StatefulWidget {
   const NotificationSettings({super.key});

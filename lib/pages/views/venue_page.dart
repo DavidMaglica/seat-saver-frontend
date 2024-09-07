@@ -52,7 +52,20 @@ class _VenuePageState extends State<VenuePage> {
     super.dispose();
   }
 
-  void _reserveSpot() => debugPrint('Reserve your spot now');
+  void _reserveSpot() {
+    DateFormat dateFormat = DateFormat('dd-MM-yyyy');
+
+    String date = dateFormat.format(_selectedDate!).toString();
+    String minutes = _selectedMinute == 0 ? '00' : '30';
+    String time = '$_selectedHour:$minutes';
+
+    Navigator.pushNamed(context, '/successfulReservation', arguments: {
+      'venueName': widget.name,
+      'numberOfPeople': _selectedNumberOfGuests,
+      'reservationDate': date,
+      'reservationTime': time,
+    });
+  }
 
   void _mockRatingUpdate() => setState(() => _mockRating = 4.5);
 
@@ -94,6 +107,7 @@ class _VenuePageState extends State<VenuePage> {
                           widget.workingHours, widget.rating),
                       _buildObjectType(widget.type),
                       _buildObjectDescription(widget.description),
+                      _buildLeaveRatingButton(),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -170,6 +184,35 @@ class _VenuePageState extends State<VenuePage> {
             child: Text(
               description,
               style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+        ),
+      );
+
+  Flexible _buildLeaveRatingButton() => Flexible(
+        child: Align(
+          alignment: const AlignmentDirectional(-1, 0),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 0, 8),
+            child: FFButtonWidget(
+              onPressed: _mockRatingUpdate,
+              text: 'Leave a rating',
+              options: FFButtonOptions(
+                width: 128,
+                height: 30,
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                color: Theme.of(context).colorScheme.background,
+                textStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontSize: 12,
+                ),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  width: 1,
+                ),
+                elevation: 3,
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
           ),
         ),
@@ -378,6 +421,7 @@ class _VenuePageState extends State<VenuePage> {
   }
 
   Future<dynamic> _buildTimePicker() {
+    _selectedMinute ??= 0;
     return showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) {

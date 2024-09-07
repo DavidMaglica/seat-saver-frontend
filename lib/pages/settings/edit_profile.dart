@@ -1,9 +1,9 @@
-import 'package:diplomski/pages/settings/utils/settings_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../components/appbar.dart';
 import '../../themes/theme.dart';
+import 'utils/settings_utils.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
