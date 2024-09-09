@@ -25,21 +25,16 @@ class SuccessfulReservation extends StatefulWidget {
 class _SuccessfulReservationState extends State<SuccessfulReservation> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   Timer? _timer;
-  int _start = 25;
+  int _start = 15;
 
   @override
   void initState() {
     super.initState();
 
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      if (_start == 0) {
-        timer.cancel();
-        Navigator.pop(context); // Navigate back after 25 seconds
-      } else {
-        setState(() {
-          _start--; // Decrease the countdown
-        });
-      }
+      _start == 0
+          ? {timer.cancel(), Navigator.pop(context)}
+          : setState(() => _start--);
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
@@ -69,7 +64,7 @@ class _SuccessfulReservationState extends State<SuccessfulReservation> {
                       _buildIcon(),
                       _buildText(widget.venueName, widget.numberOfPeople,
                           widget.reservationDate, widget.reservationTime),
-                _buildCountdown(),
+                      _buildCountdown(),
                       _buildBackButton()
                     ],
                   ),
@@ -135,14 +130,14 @@ class _SuccessfulReservationState extends State<SuccessfulReservation> {
       ));
 
   Align _buildCountdown() => Align(
-    alignment: const AlignmentDirectional(0, 0),
-    child: Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-      child: Text(
-        'Navigating back in $_start seconds...',
-        style: Theme.of(context).textTheme.bodyMedium,
-    ),
-  ));
+      alignment: const AlignmentDirectional(0, 0),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+        child: Text(
+          'Navigating back in $_start seconds...',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ));
 
   Align _buildBackButton() => Align(
         alignment: const AlignmentDirectional(0, 0),

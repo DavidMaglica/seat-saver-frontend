@@ -1,13 +1,19 @@
+import 'package:TableReserver/api/data/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
+import '../../api/account_api.dart';
 import '../../components/navbar.dart';
 import '../../utils/routing_utils.dart';
-import '../settings/utils/settings_utils.dart';
 
 class Account extends StatefulWidget {
-  const Account({super.key});
+  final String? email;
+
+  const Account({
+    Key? key,
+    this.email,
+  }) : super(key: key);
 
   @override
   State<Account> createState() => _AccountState();
@@ -16,18 +22,28 @@ class Account extends StatefulWidget {
 class _AccountState extends State<Account> with TickerProviderStateMixin {
   final unfocusNode = FocusNode();
   final int pageIndex = 3;
+  User? user;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
+
+    if (widget.email != null) _getUserByEmail(widget.email!);
   }
 
   @override
   void dispose() {
     unfocusNode.dispose();
     super.dispose();
+  }
+
+  Future<void> _getUserByEmail(String email) async {
+    UserResponse? response = await getUserByEmail(email);
+    if (response != null && response.success) {
+      setState(() => user = response.user);
+    }
   }
 
   @override
@@ -44,25 +60,11 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: 200,
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          height: 140,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        buildProfilePicture(context)
-                      ],
-                    ),
-                  ),
-                  _buildAccountDetails(
-                      'name surname', 'name.surname@email.com'),
-                  _buildAccountSettings(),
-                  _buildApplicationSettings(),
+                  const Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 96, 0, 0)),
+                  _buildAccountDetails(user),
+                  _buildAccountSettings(user),
+                  _buildApplicationSettings(user),
                   _buildLogOutButton(() async {
                     await Future.delayed(const Duration(seconds: 1));
                     Navigator.pushNamed(context, '/authentication');
@@ -74,7 +76,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                 context: context,
                 currentIndex: pageIndex,
                 onTap: (index, context) {
-                  onNavbarItemTapped(pageIndex, index, context);
+                  onNavbarItemTapped(pageIndex, index, context, widget.email);
                 })));
   }
 
@@ -85,25 +87,26 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
         style: Theme.of(context).textTheme.titleMedium,
       ));
 
-  Column _buildAccountSettings() =>
+  Column _buildAccountSettings(User? user) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildSettingsTitle('Account Settings'),
-        _buildSettingsItem(
-            CupertinoIcons.person_circle_fill, 'Edit profile', '/editProfile'),
+        _buildSettingsItem(CupertinoIcons.person_circle_fill, 'Edit profile',
+            '/editProfile', user),
         _buildSettingsItem(CupertinoIcons.bell_circle_fill,
-            'Notification settings', '/notificationSettings'),
+            'Notification settings', '/notificationSettings', user),
       ]);
 
-  Column _buildApplicationSettings() =>
+  Column _buildApplicationSettings(User? user) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildSettingsTitle('Application Settings'),
         _buildSettingsItem(
-            CupertinoIcons.question_circle_fill, 'Support', '/support'),
+            CupertinoIcons.question_circle_fill, 'Support', '/support', user),
         _buildSettingsItem(CupertinoIcons.exclamationmark_shield_fill,
-            'Terms of service', '/termsOfService'),
+            'Terms of service', '/termsOfService', null),
       ]);
 
-  Padding _buildSettingsItem(IconData icon, String text, String route) =>
+  Padding _buildSettingsItem(
+          IconData icon, String text, String route, User? user) =>
       Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
           child: Container(
@@ -126,7 +129,8 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                   padding: const EdgeInsets.all(12),
                   child: InkWell(
                       onTap: () async {
-                        Navigator.pushNamed(context, route);
+                        Navigator.pushNamed(context, route,
+                            arguments: user != null ? {'user': user} : {});
                       },
                       child: Row(mainAxisSize: MainAxisSize.max, children: [
                         Icon(
@@ -150,19 +154,19 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                         )
                       ])))));
 
-  Column _buildAccountDetails(String username, String email) =>
+  Column _buildAccountDetails(User? user) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
           child: Text(
-            'Name Surname',
+            user?.nameAndSurname ?? '',
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(24, 4, 0, 16),
           child: Text(
-            'name.surname@email.com',
+            user?.email ?? '',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         )
@@ -179,8 +183,8 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                 width: 270,
                 height: 44,
                 color: Theme.of(context).colorScheme.error,
-                textStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.background,
+                textStyle: const TextStyle(
+                  color: Colors.white,
                   fontSize: 16,
                 ),
                 elevation: 3,

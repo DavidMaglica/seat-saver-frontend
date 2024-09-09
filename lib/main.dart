@@ -32,13 +32,25 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         '/landing': (context) => const Landing(),
-        '/homepage': (context) => const Homepage(),
+        '/homepage': (context) => Homepage(
+              email: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['email'],
+            ),
         '/search': (context) => const Search(),
         '/nearby': (context) => const Nearby(),
-        '/account': (context) => const Account(),
-        '/notificationSettings': (context) => const NotificationSettings(),
+        '/account': (context) => Account(
+              email: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, String?>)['email'],
+            ),
+        '/notificationSettings': (context) => NotificationSettings(
+              user: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['user'],
+            ),
         '/support': (context) => const Support(),
-        '/editProfile': (context) => const EditProfile(),
+        '/editProfile': (context) => EditProfile(
+              user: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['user'],
+            ),
         '/termsOfService': (context) => const TermsOfService(),
         '/authentication': (context) => const Authentication(),
         '/venue': (context) => VenuePage(

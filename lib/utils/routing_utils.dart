@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 
-void onNavbarItemTapped(int pageIndex, int index, BuildContext context) {
+void onNavbarItemTapped(int pageIndex, int index, BuildContext context, String? email) {
   if (index == pageIndex) {
     return;
   }
   switch (index) {
     case 0:
-      Navigator.pushNamed(context, '/homepage');
+      debugPrint('Opening account page with email: $email');
+      Navigator.pushNamed(context, '/homepage', arguments: {'email': email});
       break;
     case 1:
       Navigator.pushNamed(context, '/search');
@@ -15,7 +16,8 @@ void onNavbarItemTapped(int pageIndex, int index, BuildContext context) {
       Navigator.pushNamed(context, '/nearby');
       break;
     case 3:
-      Navigator.pushNamed(context, '/account');
+      debugPrint('Opening account page with email: $email');
+      Navigator.pushNamed(context, '/account', arguments: {'email': email});
       break;
     default:
       break;

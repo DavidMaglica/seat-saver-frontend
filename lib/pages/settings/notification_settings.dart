@@ -1,19 +1,32 @@
+import 'package:TableReserver/api/account_api.dart';
+import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/themes/theme.dart';
 import 'package:flutter/material.dart';
 
+import '../../api/data/notification_settings.dart';
+import '../../api/data/user.dart';
 import '../../components/appbar.dart';
 import 'utils/settings_utils.dart';
 
 class NotificationSettings extends StatefulWidget {
-  const NotificationSettings({super.key});
+  final User? user;
+
+  const NotificationSettings({
+    Key? key,
+    this.user,
+  }) : super(key: key);
 
   @override
   State<NotificationSettings> createState() => _NotificationSettingsState();
 }
 
 class _NotificationSettingsState extends State<NotificationSettings> {
-  bool? isActivePushNotifications;
-  bool? isActiveEmailNotifications;
-  bool? isActiveLocationServices;
+  bool _isActivePushNotifications = false;
+  bool _isActiveEmailNotifications = false;
+  bool _isActiveLocationServices = false;
+
+  String? _email;
+
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -21,7 +34,12 @@ class _NotificationSettingsState extends State<NotificationSettings> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    if (widget.user != null) {
+      setState(() {
+        _email = widget.user!.email;
+      });
+      _getNotificationSettingsByEmail();
+    }
   }
 
   @override
@@ -29,7 +47,41 @@ class _NotificationSettingsState extends State<NotificationSettings> {
     super.dispose();
   }
 
-  void _saveChanges() => debugPrint('Save changes on Notification settings');
+  Future<void> _getNotificationSettingsByEmail() async {
+    NotificationSettingsResponse response =
+        await getNotificationSettingsByEmail(_email!);
+
+    if (response.notificationSettings != null) {
+      setState(() {
+        _isActivePushNotifications =
+            response.notificationSettings!.pushNotificationsTurnedOn;
+        _isActiveEmailNotifications =
+            response.notificationSettings!.emailNotificationsTurnedOn;
+        _isActiveLocationServices =
+            response.notificationSettings!.locationServicesTurnedOn;
+      });
+    }
+  }
+
+  Future<void> _saveChanges() async {
+    if (_email == null) return;
+    BasicResponse response = await updateUserNotificationOptions(
+      _email!,
+      _isActivePushNotifications,
+      _isActiveEmailNotifications,
+      _isActiveLocationServices,
+    );
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(response.message),
+        backgroundColor:
+            response.success ? AppThemes.successColor : AppThemes.errorColor,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +100,9 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                 padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
               ),
               SwitchListTile.adaptive(
-                value: isActivePushNotifications ??= true,
+                value: _isActivePushNotifications,
                 onChanged: (newValue) async {
-                  setState(() => isActivePushNotifications = newValue);
+                  setState(() => _isActivePushNotifications = newValue);
                 },
                 title: Text('Push Notifications',
                     style: Theme.of(context).textTheme.titleMedium),
@@ -68,9 +120,9 @@ class _NotificationSettingsState extends State<NotificationSettings> {
               ),
               _buildDivider(),
               SwitchListTile.adaptive(
-                value: isActiveEmailNotifications ??= true,
+                value: _isActiveEmailNotifications,
                 onChanged: (newValue) async {
-                  setState(() => isActiveEmailNotifications = newValue);
+                  setState(() => _isActiveEmailNotifications = newValue);
                 },
                 title: Text('Email Notifications',
                     style: Theme.of(context).textTheme.titleMedium),
@@ -88,9 +140,9 @@ class _NotificationSettingsState extends State<NotificationSettings> {
               ),
               _buildDivider(),
               SwitchListTile.adaptive(
-                value: isActiveLocationServices ??= true,
+                value: _isActiveLocationServices,
                 onChanged: (newValue) async {
-                  setState(() => isActiveLocationServices = newValue);
+                  setState(() => _isActiveLocationServices = newValue);
                 },
                 title: Text('Location Services',
                     style: Theme.of(context).textTheme.titleMedium),

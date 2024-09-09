@@ -10,7 +10,12 @@ import '../../components/navbar.dart';
 import '../../utils/routing_utils.dart';
 
 class Search extends StatefulWidget {
-  const Search({super.key});
+  final String? email;
+
+  const Search({
+    Key? key,
+    this.email,
+  }) : super(key: key);
 
   @override
   State<Search> createState() => _SearchState();
@@ -131,7 +136,7 @@ class _SearchState extends State<Search> {
           currentIndex: pageIndex,
           context: context,
           onTap: (index, context) =>
-              onNavbarItemTapped(pageIndex, index, context),
+              onNavbarItemTapped(pageIndex, index, context, widget.email),
         ),
       ),
     );

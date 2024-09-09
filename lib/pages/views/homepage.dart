@@ -14,7 +14,12 @@ import '../../themes/theme.dart';
 import '../../utils/routing_utils.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+  final String? email;
+
+  const Homepage({
+    Key? key,
+    this.email,
+  }) : super(key: key);
 
   @override
   State<Homepage> createState() => _HomepageState();
@@ -33,6 +38,8 @@ class _HomepageState extends State<Homepage> {
   CarouselController? _carouselController;
   int _carouselCurrentIndex = 1;
 
+  String? email;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -44,6 +51,8 @@ class _HomepageState extends State<Homepage> {
     _getSuggestedVenues();
 
     _activateLocationPopUp();
+
+    if (widget.email != null) setState(() => email = widget.email);
   }
 
   @override
@@ -158,8 +167,8 @@ class _HomepageState extends State<Homepage> {
                 bottomNavigationBar: NavBar(
                   currentIndex: pageIndex,
                   context: context,
-                  onTap: (index, context) =>
-                      onNavbarItemTapped(pageIndex, index, context),
+                  onTap: (index, context) => onNavbarItemTapped(
+                      pageIndex, index, context, email),
                 ))));
   }
 

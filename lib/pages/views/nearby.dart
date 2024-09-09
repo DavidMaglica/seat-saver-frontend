@@ -8,7 +8,12 @@ import '../../themes/theme.dart';
 import '../../utils/routing_utils.dart';
 
 class Nearby extends StatefulWidget {
-  const Nearby({super.key});
+  final String? email;
+
+  const Nearby({
+    Key? key,
+    this.email,
+  }) : super(key: key);
 
   @override
   State<Nearby> createState() => _NearbyState();
@@ -98,7 +103,7 @@ class _NearbyState extends State<Nearby> {
             currentIndex: pageIndex,
             context: context,
             onTap: (index, context) =>
-                onNavbarItemTapped(pageIndex, index, context),
+                onNavbarItemTapped(pageIndex, index, context, widget.email),
           )),
     );
   }

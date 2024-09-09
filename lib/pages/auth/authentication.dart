@@ -1,8 +1,10 @@
+import 'package:TableReserver/api/account_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../api/data/basic_response.dart';
 import '../../themes/theme.dart';
 import '../../utils/data.dart';
 import 'models/authentication_model.dart';
@@ -32,6 +34,9 @@ class _AuthenticationState extends State<Authentication>
       length: 2,
       initialIndex: 0,
     )..addListener(() => setState(() {}));
+    _model.nameAndSurnameSignupTextController ??= TextEditingController();
+    _model.nameAndSurnameSignupFocusNode ??= FocusNode();
+
     _model.emailAddressSignupTextController ??= TextEditingController();
     _model.emailAddressSignupFocusNode ??= FocusNode();
 
@@ -56,46 +61,139 @@ class _AuthenticationState extends State<Authentication>
     super.dispose();
   }
 
-  Future<String> _login(SignupMethod? signupMethod) async {
+  Future<void> _login(SignupMethod? signupMethod, bool active) async {
     await Future.delayed(const Duration(seconds: 1));
+
+    if (!active) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Currently unavailable'),
+          backgroundColor: AppThemes.infoColor,
+        ),
+      );
+      return;
+    }
+
     switch (signupMethod) {
       case SignupMethod.apple:
-        debugPrint('Apple log in button pressed ...');
-        Navigator.pushNamed(context, '/landing');
         break;
+
       case SignupMethod.google:
-        debugPrint('Google log in button pressed ...');
-        Navigator.pushNamed(context, '/landing');
         break;
+
       case SignupMethod.custom:
-        debugPrint('Custom log in button pressed ...');
-        Navigator.pushNamed(context, '/landing');
+        _customLogin(
+          _model.emailAddressLoginTextController.text,
+          _model.passwordLoginTextController.text,
+        );
         break;
+
       default:
-        debugPrint('Log in button pressed ...');
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unknown sign up method'),
+            backgroundColor: AppThemes.warningColor,
+          ),
+        );
     }
-    return '';
   }
 
-  Future<String> _signup(SignupMethod? signupMethod) async {
+  Future<void> _signup(SignupMethod? signupMethod, bool active) async {
+    if (!active) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Currently unavailable'),
+          backgroundColor: AppThemes.infoColor,
+        ),
+      );
+      return;
+    }
+
     await Future.delayed(const Duration(seconds: 1));
+
     switch (signupMethod) {
       case SignupMethod.apple:
-        debugPrint('Apple sign up button pressed ...');
-        Navigator.pushNamed(context, '/landing');
         break;
+
       case SignupMethod.google:
-        debugPrint('Google sign up button pressed ...');
-        Navigator.pushNamed(context, '/landing');
         break;
+
       case SignupMethod.custom:
-        debugPrint('Custom sign up button pressed ...');
-        Navigator.pushNamed(context, '/landing');
+        _customSignup(
+            _model.nameAndSurnameSignupTextController.text,
+            _model.emailAddressSignupTextController.text,
+            _model.passwordSignupTextController.text,
+            _model.passwordConfirmTextController.text);
         break;
+
       default:
-        debugPrint('Sign up button pressed ...');
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unknown sign up method'),
+            backgroundColor: AppThemes.warningColor,
+          ),
+        );
     }
-    return '';
+    return;
+  }
+
+  void _customLogin(String email, String password) async {
+    if (!mounted) return;
+
+    BasicResponse response = await login(email, password);
+
+    if (response.success) {
+      if (!mounted) return;
+      Navigator.pushNamed(context, '/homepage', arguments: {'email': email});
+    } else {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.message),
+          backgroundColor: AppThemes.errorColor,
+        ),
+      );
+      return;
+    }
+  }
+
+  void _customSignup(
+    String nameAndSurname,
+    String email,
+    String password,
+    String confirmedPassword,
+  ) async {
+    if (!mounted) return;
+
+    if (password != confirmedPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Passwords do not match'),
+          backgroundColor: AppThemes.errorColor,
+        ),
+      );
+      return;
+    }
+
+    BasicResponse response = await signup(nameAndSurname, email, password);
+
+    if (response.success) {
+      if (!mounted) return;
+      Navigator.pushNamed(context, '/homepage', arguments: {'email': email});
+    } else {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.message),
+          backgroundColor: AppThemes.errorColor,
+        ),
+      );
+      return;
+    }
   }
 
   void _forgotPassword() {
@@ -196,9 +294,7 @@ class _AuthenticationState extends State<Authentication>
         focusNode: focusNode,
         autofocus: true,
         autofillHints: const [AutofillHints.password],
-        obscureText: tabIndex == 0
-            ? _model.passwordSignupVisibility
-            : _model.passwordLoginVisibility,
+        obscureText: !passwordVisibility,
         decoration: InputDecoration(
           labelText: 'Password',
           labelStyle: Theme.of(context).textTheme.bodyMedium,
@@ -234,16 +330,12 @@ class _AuthenticationState extends State<Authentication>
           suffixIcon: InkWell(
             onTap: () => setState(
               () => tabIndex == 0
-                  ? _model.passwordSignupVisibility =
-                      !_model.passwordSignupVisibility
-                  : _model.passwordLoginVisibility =
-                      !_model.passwordLoginVisibility,
+                  ? _model.passwordSignupVisibility = !passwordVisibility
+                  : _model.passwordLoginVisibility = !passwordVisibility,
             ),
             focusNode: FocusNode(skipTraversal: true),
             child: Icon(
-              (tabIndex == 0
-                      ? _model.passwordSignupVisibility
-                      : _model.passwordLoginVisibility)
+              (passwordVisibility)
                   ? CupertinoIcons.eye_solid
                   : CupertinoIcons.eye_slash_fill,
               color: Theme.of(context).colorScheme.onPrimary,
@@ -366,6 +458,57 @@ class _AuthenticationState extends State<Authentication>
         validator: validator.asValidator(context),
       );
 
+  TextFormField _buildNameAndSurnameField(
+    TextEditingController? controller,
+    FocusNode? focusNode,
+    String? Function(BuildContext, String?)? validator,
+  ) =>
+      TextFormField(
+        controller: controller,
+        focusNode: focusNode,
+        autofocus: true,
+        autofillHints: const [AutofillHints.name, AutofillHints.familyName],
+        obscureText: false,
+        decoration: InputDecoration(
+          isDense: false,
+          labelText: 'Name and Surname',
+          labelStyle: Theme.of(context).textTheme.bodyMedium,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.onPrimary,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              color: AppThemes.infoColor,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.error,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.error,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          contentPadding: const EdgeInsets.all(24),
+        ),
+        style: Theme.of(context).textTheme.bodyLarge,
+        keyboardType: TextInputType.name,
+        cursorColor: Theme.of(context).colorScheme.onPrimary,
+        validator: validator.asValidator(context),
+      );
+
   Padding _buildForgotPassword(Function() onPressed) => Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
       child: TextButton(
@@ -424,6 +567,17 @@ class _AuthenticationState extends State<Authentication>
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
                   child: SizedBox(
                     width: double.infinity,
+                    child: _buildNameAndSurnameField(
+                      _model.nameAndSurnameSignupTextController,
+                      _model.nameAndSurnameSignupFocusNode,
+                      _model.nameAndSurnameSignupTextControllerValidator,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
+                  child: SizedBox(
+                    width: double.infinity,
                     child: _buildPasswordField(
                       _model.passwordSignupTextController,
                       _model.passwordSignupFocusNode,
@@ -445,6 +599,7 @@ class _AuthenticationState extends State<Authentication>
                   null,
                   _signup,
                   SignupMethod.custom,
+                  true,
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.max,
@@ -480,6 +635,7 @@ class _AuthenticationState extends State<Authentication>
                               ),
                               _signup,
                               SignupMethod.google,
+                              false,
                             ),
                             _buildButton(
                               'Continue with Apple',
@@ -489,6 +645,7 @@ class _AuthenticationState extends State<Authentication>
                               ),
                               _signup,
                               SignupMethod.apple,
+                              false,
                             ),
                           ],
                         ),
@@ -497,6 +654,50 @@ class _AuthenticationState extends State<Authentication>
                   ],
                 ),
               ],
+            ),
+          ),
+        ),
+      );
+
+  Align _buildButton(
+          String text,
+          Icon? icon,
+          Function(SignupMethod?, bool)? onPressed,
+          SignupMethod? signupMethod,
+          bool active) =>
+      Align(
+        child: Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
+          child: FFButtonWidget(
+            onPressed: onPressed != null
+                ? () => onPressed(signupMethod, active)
+                : null,
+            text: text,
+            icon: icon,
+            options: FFButtonOptions(
+              width: 270,
+              height: 50,
+              color: active
+                  ? icon != null
+                      ? Theme.of(context).colorScheme.background
+                      : Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.surface,
+              textStyle: TextStyle(
+                color: active
+                    ? icon != null
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : Theme.of(context).colorScheme.background
+                    : Theme.of(context).colorScheme.onSurface.withOpacity(.3),
+                fontSize: 18,
+              ),
+              borderSide: icon != null
+                  ? BorderSide(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      width: 1,
+                    )
+                  : BorderSide.none,
+              elevation: active ? 3 : 0,
+              borderRadius: BorderRadius.circular(8),
             ),
           ),
         ),
@@ -552,14 +753,15 @@ class _AuthenticationState extends State<Authentication>
                   child: SizedBox(
                     width: double.infinity,
                     child: _buildPasswordField(
-                        _model.passwordLoginTextController,
-                        _model.passwordLoginFocusNode,
-                        _model.passwordLoginTextControllerValidator,
-                        _model.passwordLoginVisibility,
-                        _model.tabBarCurrentIndex),
+                      _model.passwordLoginTextController,
+                      _model.passwordLoginFocusNode,
+                      _model.passwordLoginTextControllerValidator,
+                      _model.passwordLoginVisibility,
+                      _model.tabBarCurrentIndex,
+                    ),
                   ),
                 ),
-                _buildButton('Log in', null, _login, SignupMethod.custom),
+                _buildButton('Log in', null, _login, SignupMethod.custom, true),
                 Align(
                   alignment: const AlignmentDirectional(0, 0),
                   child: Padding(
@@ -581,13 +783,15 @@ class _AuthenticationState extends State<Authentication>
                     clipBehavior: Clip.none,
                     children: [
                       _buildButton(
-                          'Log in with Google',
-                          const Icon(
-                            FontAwesomeIcons.google,
-                            size: 16,
-                          ),
-                          _login,
-                          SignupMethod.google),
+                        'Log in with Google',
+                        const Icon(
+                          FontAwesomeIcons.google,
+                          size: 16,
+                        ),
+                        _login,
+                        SignupMethod.google,
+                        false,
+                      ),
                       _buildButton(
                           'Log in with Apple',
                           const Icon(
@@ -595,7 +799,8 @@ class _AuthenticationState extends State<Authentication>
                             size: 24,
                           ),
                           _login,
-                          SignupMethod.apple),
+                          SignupMethod.apple,
+                          false),
                     ],
                   ),
                 ),
@@ -603,40 +808,6 @@ class _AuthenticationState extends State<Authentication>
                   child: _buildForgotPassword(_forgotPassword),
                 ),
               ],
-            ),
-          ),
-        ),
-      );
-
-  Align _buildButton(String text, Icon? icon,
-          Function(SignupMethod?)? onPressed, SignupMethod? signupMethod) =>
-      Align(
-        child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
-          child: FFButtonWidget(
-            onPressed: onPressed != null ? () => onPressed(signupMethod) : null,
-            text: text,
-            icon: icon,
-            options: FFButtonOptions(
-              width: 270,
-              height: 50,
-              color: icon != null
-                  ? Theme.of(context).colorScheme.background
-                  : Theme.of(context).colorScheme.primary,
-              textStyle: TextStyle(
-                color: icon != null
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : Theme.of(context).colorScheme.background,
-                fontSize: 18,
-              ),
-              borderSide: icon != null
-                  ? BorderSide(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      width: 1,
-                    )
-                  : BorderSide.none,
-              elevation: 3,
-              borderRadius: BorderRadius.circular(8),
             ),
           ),
         ),
