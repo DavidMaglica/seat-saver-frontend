@@ -7,6 +7,9 @@ PODS:
     - Polyline
     - Tangram-es
     - Yams
+  - fluttertoast (0.0.2):
+    - Flutter
+    - Toast
   - FMDB (2.7.12):
     - FMDB/standard (= 2.7.12)
   - FMDB/Core (2.7.12)
@@ -28,6 +31,7 @@ PODS:
     - Flutter
     - FMDB (>= 2.7.5)
   - Tangram-es (0.17.1)
+  - Toast (4.1.1)
   - url_launcher_ios (0.0.1):
     - Flutter
   - Yams (5.0.6)
@@ -35,6 +39,7 @@ PODS:
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_osm_plugin (from `.symlinks/plugins/flutter_osm_plugin/ios`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - geocoding (from `.symlinks/plugins/geocoding/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -49,6 +54,7 @@ SPEC REPOS:
     - FMDB
     - Polyline
     - Tangram-es
+    - Toast
     - Yams
 
 EXTERNAL SOURCES:
@@ -56,6 +62,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_osm_plugin:
     :path: ".symlinks/plugins/flutter_osm_plugin/ios"
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
   geocoding:
     :path: ".symlinks/plugins/geocoding/ios"
   geolocator_apple:
@@ -75,6 +83,7 @@ SPEC CHECKSUMS:
   Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_osm_plugin: a661df71d2a3d1698ee410dd2272c8536f9e46f4
+  fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   FMDB: 728731dd336af3936ce00f91d9d8495f5718a0e6
   geocoding: 32cfcdb16d38d907caaba65e2e42ad10d38bee58
   geolocator_apple: 6cbaf322953988e009e5ecb481f07efece75c450
@@ -84,6 +93,7 @@ SPEC CHECKSUMS:
   rive_common: 60ae7896ab40f9513974f36f015de33f70d2c5c5
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   Tangram-es: 628b634f7fc09d2217469b9914de00d9de49ff9d
+  Toast: 1f5ea13423a1e6674c4abdac5be53587ae481c4e
   url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
   Yams: e10dae147f517ed57ecae37c5e8681bdf8fcab65
 

@@ -13,6 +13,7 @@ import 'pages/views/nearby.dart';
 import 'pages/views/search.dart';
 import 'pages/views/venue_page.dart';
 import 'themes/theme.dart';
+import 'utils/constants.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,29 +32,32 @@ class MyApp extends StatelessWidget {
       home: const Landing(),
       debugShowCheckedModeBanner: false,
       routes: {
-        '/landing': (context) => const Landing(),
-        '/homepage': (context) => Homepage(
+        Routes.LANDING: (context) => const Landing(),
+        Routes.HOMEPAGE: (context) => Homepage(
               email: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['email'],
             ),
-        '/search': (context) => const Search(),
-        '/nearby': (context) => const Nearby(),
-        '/account': (context) => Account(
+        Routes.SEARCH: (context) => const Search(),
+        Routes.NEARBY: (context) => const Nearby(),
+        Routes.ACCOUNT: (context) => Account(
               email: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, String?>)['email'],
+                  as Map<String, dynamic>)['email'],
             ),
-        '/notificationSettings': (context) => NotificationSettings(
+        Routes.NOTIFICATION_SETTINGS: (context) => NotificationSettings(
               user: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['user'],
             ),
-        '/support': (context) => const Support(),
-        '/editProfile': (context) => EditProfile(
+        Routes.SUPPORT: (context) => Support(
               user: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['user'],
             ),
-        '/termsOfService': (context) => const TermsOfService(),
-        '/authentication': (context) => const Authentication(),
-        '/venue': (context) => VenuePage(
+        Routes.EDIT_PROFILE: (context) => EditProfile(
+              user: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['user'],
+            ),
+        Routes.TERMS_OF_SERVICE: (context) => const TermsOfService(),
+        Routes.AUTHENTICATION: (context) => const Authentication(),
+        Routes.VENUE: (context) => VenuePage(
               name: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['name'],
               location: (ModalRoute.of(context)!.settings.arguments
@@ -67,7 +71,7 @@ class MyApp extends StatelessWidget {
               description: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['description'],
             ),
-        '/successfulReservation': (context) => SuccessfulReservation(
+        Routes.SUCCESSFUL_RESERVATION: (context) => SuccessfulReservation(
               venueName: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['venueName'],
               numberOfPeople: (ModalRoute.of(context)!.settings.arguments

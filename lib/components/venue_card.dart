@@ -5,6 +5,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../api/data/venue.dart';
 import '../themes/theme.dart';
+import '../utils/constants.dart';
 
 class VenueCard extends StatefulWidget {
   final String name;
@@ -44,7 +45,7 @@ class _VenueCardState extends State<VenueCard> {
     super.dispose();
   }
 
-  void _onTap() => Navigator.pushNamed(context, '/venue', arguments: {
+  void _onTap() => Navigator.pushNamed(context, Routes.VENUE, arguments: {
         'name': widget.name,
         'location': widget.location,
         'workingHours': widget.workingHours,

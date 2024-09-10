@@ -1,10 +1,12 @@
-import 'package:TableReserver/api/data/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../api/account_api.dart';
+import '../../api/data/user.dart';
 import '../../components/navbar.dart';
+import '../../themes/theme.dart';
+import '../../utils/constants.dart';
 import '../../utils/routing_utils.dart';
 
 class Account extends StatefulWidget {
@@ -31,6 +33,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
     super.initState();
 
     if (widget.email != null) _getUserByEmail(widget.email!);
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -65,9 +68,9 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                   _buildAccountDetails(user),
                   _buildAccountSettings(user),
                   _buildApplicationSettings(user),
-                  _buildLogOutButton(() async {
-                    await Future.delayed(const Duration(seconds: 1));
-                    Navigator.pushNamed(context, '/authentication');
+                  _buildLogOutButton(user?.email, () async {
+                    if (!mounted) return;
+                    Navigator.pushNamed(context, Routes.AUTHENTICATION);
                   }),
                 ],
               ),
@@ -91,18 +94,18 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildSettingsTitle('Account Settings'),
         _buildSettingsItem(CupertinoIcons.person_circle_fill, 'Edit profile',
-            '/editProfile', user),
+            Routes.EDIT_PROFILE, user),
         _buildSettingsItem(CupertinoIcons.bell_circle_fill,
-            'Notification settings', '/notificationSettings', user),
+            'Notification settings', Routes.NOTIFICATION_SETTINGS, user),
       ]);
 
   Column _buildApplicationSettings(User? user) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildSettingsTitle('Application Settings'),
-        _buildSettingsItem(
-            CupertinoIcons.question_circle_fill, 'Support', '/support', user),
+        _buildSettingsItem(CupertinoIcons.question_circle_fill, 'Support',
+            Routes.SUPPORT, user),
         _buildSettingsItem(CupertinoIcons.exclamationmark_shield_fill,
-            'Terms of service', '/termsOfService', null),
+            'Terms of service', Routes.TERMS_OF_SERVICE, null),
       ]);
 
   Padding _buildSettingsItem(
@@ -129,8 +132,20 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                   padding: const EdgeInsets.all(12),
                   child: InkWell(
                       onTap: () async {
+                        if (route == Routes.TERMS_OF_SERVICE) {
+                          Navigator.pushNamed(context, route);
+                          return;
+                        }
+                        if (user == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content:
+                                      Text('Please log in to access this page'),
+                                  backgroundColor: AppThemes.infoColor));
+                          return;
+                        }
                         Navigator.pushNamed(context, route,
-                            arguments: user != null ? {'user': user} : {});
+                            arguments: {'user': user});
                       },
                       child: Row(mainAxisSize: MainAxisSize.max, children: [
                         Icon(
@@ -172,17 +187,19 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
         )
       ]);
 
-  Align _buildLogOutButton(Function() onPressed) => Align(
+  Align _buildLogOutButton(String? email, Function() onPressed) => Align(
       alignment: const AlignmentDirectional(0, 0),
       child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
           child: FFButtonWidget(
               onPressed: onPressed,
-              text: 'Log Out',
+              text: email != null ? 'Log out' : 'Log in',
               options: FFButtonOptions(
                 width: 270,
                 height: 44,
-                color: Theme.of(context).colorScheme.error,
+                color: email != null
+                    ? AppThemes.errorColor
+                    : AppThemes.successColor,
                 textStyle: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,

@@ -4,9 +4,9 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../api/data/venue.dart';
 import '../../api/venue_api.dart';
-import '../../components/appbar.dart';
 import '../../components/custom_choice_chips.dart';
 import '../../components/navbar.dart';
+import '../../utils/constants.dart';
 import '../../utils/routing_utils.dart';
 
 class Search extends StatefulWidget {
@@ -70,7 +70,7 @@ class _SearchState extends State<Search> {
   }
 
   Function() _onTap(Venue venue) =>
-      () => Navigator.pushNamed(context, '/venue', arguments: {
+      () => Navigator.pushNamed(context, Routes.VENUE, arguments: {
             'name': venue.name,
             'location': venue.location,
             'workingHours': venue.workingHours,
@@ -88,7 +88,6 @@ class _SearchState extends State<Search> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: const CustomAppbar(title: ''),
         body: SafeArea(
           top: true,
           child: SingleChildScrollView(

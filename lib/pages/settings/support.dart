@@ -2,12 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-import '../../components/appbar.dart';
+import '../../api/data/user.dart';
+import '../../components/custom_appbar.dart';
 import '../../themes/theme.dart';
+import '../../utils/constants.dart';
 import 'utils/settings_utils.dart';
 
 class Support extends StatefulWidget {
-  const Support({super.key});
+  final User user;
+
+  const Support({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
   State<Support> createState() => _SupportWidgetState();
@@ -53,7 +60,10 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: const CustomAppbar(title: 'Support'),
+        appBar: CustomAppbar(
+            title: 'Support',
+            routeToPush: Routes.ACCOUNT,
+            args: {'email': widget.user.email}),
         body: SafeArea(
           top: true,
           child: Padding(
@@ -185,34 +195,11 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
           labelStyle: Theme.of(context).textTheme.bodyLarge,
           hintStyle: Theme.of(context).textTheme.bodyMedium,
           hintText: hintText,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onPrimary,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: AppThemes.infoColor,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.error,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.error,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
+          enabledBorder:
+              outlineInputBorder(Theme.of(context).colorScheme.onPrimary),
+          focusedBorder: outlineInputBorder(AppThemes.infoColor),
+          errorBorder: outlineInputBorder(Theme.of(context).colorScheme.error),
+          focusedErrorBorder: outlineInputBorder(AppThemes.infoColor),
           contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),
         ),
         style: Theme.of(context).textTheme.bodyMedium,

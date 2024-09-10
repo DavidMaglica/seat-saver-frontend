@@ -1,6 +1,6 @@
-import 'package:TableReserver/api/data/basic_response.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'data/basic_response.dart';
 import 'data/notification_settings.dart';
 import 'data/user.dart';
 
@@ -19,9 +19,14 @@ Future<UserResponse?> getUserByEmail(String email) async {
   );
 }
 
-Future<BasicResponse> signup(String nameAndSurname, String email, String password) async {
+User? findUser(String email) {
+  return userStore[email];
+}
+
+Future<BasicResponse> signup(
+    String nameAndSurname, String email, String password) async {
   debugPrint('Signup request: $nameAndSurname, $email, $password');
-  if(nameAndSurname.isEmpty || email.isEmpty || password.isEmpty) {
+  if (nameAndSurname.isEmpty || email.isEmpty || password.isEmpty) {
     return BasicResponse(success: false, message: 'Please fill in all fields');
   }
 
@@ -82,10 +87,11 @@ Future<NotificationSettingsResponse> getNotificationSettingsByEmail(
 }
 
 Future<BasicResponse> updateUserNotificationOptions(
-    String email,
-    bool pushNotificationsTurnedOn,
-    bool emailNotificationsTurnedOn,
-    bool locationServicesTurnedOn) async {
+  String email,
+  bool pushNotificationsTurnedOn,
+  bool emailNotificationsTurnedOn,
+  bool locationServicesTurnedOn,
+) async {
   if (!userStore.containsKey(email)) {
     return BasicResponse(success: false, message: 'User not found');
   }
@@ -106,4 +112,45 @@ Future<BasicResponse> updateUserNotificationOptions(
   userStore[email] = updatedUser;
   return BasicResponse(
       success: true, message: 'Notification settings updated successfully');
+}
+
+Future<BasicResponse> changePasswordByEmail(
+    String email, String newPassword) async {
+  User? user = findUser(email);
+
+  if (user != null) {
+    User updatedUser = User(
+      nameAndSurname: user.nameAndSurname,
+      email: user.email,
+      password: newPassword,
+      notificationOptions: user.notificationOptions,
+    );
+
+    userStore[email] = updatedUser;
+
+    return BasicResponse(
+        success: true, message: 'Password updated successfully');
+  } else {
+    return BasicResponse(success: false, message: 'User not found');
+  }
+}
+
+Future<BasicResponse> changeNameAndSurname(
+    String email, String newNameAndSurname) async {
+  User? user = findUser(email);
+
+  if (user != null) {
+    User updatedUser = User(
+      nameAndSurname: newNameAndSurname,
+      email: user.email,
+      password: user.password,
+      notificationOptions: user.notificationOptions,
+    );
+    userStore[email] = updatedUser;
+
+    return BasicResponse(
+        success: true, message: 'Name and surname successfully updated');
+  } else {
+    return BasicResponse(success: false, message: 'User not found');
+  }
 }

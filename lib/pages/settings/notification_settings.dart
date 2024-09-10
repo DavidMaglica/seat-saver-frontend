@@ -1,19 +1,20 @@
-import 'package:TableReserver/api/account_api.dart';
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/themes/theme.dart';
 import 'package:flutter/material.dart';
 
+import '../../api/account_api.dart';
+import '../../api/data/basic_response.dart';
 import '../../api/data/notification_settings.dart';
 import '../../api/data/user.dart';
-import '../../components/appbar.dart';
+import '../../components/custom_appbar.dart';
+import '../../themes/theme.dart';
+import '../../utils/constants.dart';
 import 'utils/settings_utils.dart';
 
 class NotificationSettings extends StatefulWidget {
-  final User? user;
+  final User user;
 
   const NotificationSettings({
     Key? key,
-    this.user,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -25,21 +26,13 @@ class _NotificationSettingsState extends State<NotificationSettings> {
   bool _isActiveEmailNotifications = false;
   bool _isActiveLocationServices = false;
 
-  String? _email;
-
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.user != null) {
-      setState(() {
-        _email = widget.user!.email;
-      });
-      _getNotificationSettingsByEmail();
-    }
+    _getNotificationSettingsByEmail();
   }
 
   @override
@@ -49,7 +42,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
 
   Future<void> _getNotificationSettingsByEmail() async {
     NotificationSettingsResponse response =
-        await getNotificationSettingsByEmail(_email!);
+        await getNotificationSettingsByEmail(widget.user.email);
 
     if (response.notificationSettings != null) {
       setState(() {
@@ -64,9 +57,8 @@ class _NotificationSettingsState extends State<NotificationSettings> {
   }
 
   Future<void> _saveChanges() async {
-    if (_email == null) return;
     BasicResponse response = await updateUserNotificationOptions(
-      _email!,
+      widget.user.email,
       _isActivePushNotifications,
       _isActiveEmailNotifications,
       _isActiveLocationServices,
@@ -74,13 +66,11 @@ class _NotificationSettingsState extends State<NotificationSettings> {
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(response.message),
-        backgroundColor:
-            response.success ? AppThemes.successColor : AppThemes.errorColor,
-      ),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(response.message),
+      backgroundColor:
+          response.success ? AppThemes.successColor : AppThemes.errorColor,
+    ));
   }
 
   @override
@@ -88,7 +78,11 @@ class _NotificationSettingsState extends State<NotificationSettings> {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: const CustomAppbar(title: 'Notification settings'),
+      appBar: CustomAppbar(
+        title: 'Notification settings',
+        routeToPush: Routes.ACCOUNT,
+        args: {'email': widget.user.email},
+      ),
       body: SafeArea(
         top: true,
         child: SingleChildScrollView(

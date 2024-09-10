@@ -11,6 +11,7 @@ import '../../components/navbar.dart';
 import '../../components/venue_card.dart';
 import '../../components/venue_suggested_card.dart';
 import '../../themes/theme.dart';
+import '../../utils/constants.dart';
 import '../../utils/routing_utils.dart';
 
 class Homepage extends StatefulWidget {
@@ -123,11 +124,11 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  void _openNearbyVenues() => Navigator.pushNamed(context, '/search');
+  void _openNearbyVenues() => Navigator.pushNamed(context, Routes.SEARCH);
 
-  void _openNewVenues() => Navigator.pushNamed(context, '/search');
+  void _openNewVenues() => Navigator.pushNamed(context, Routes.SEARCH);
 
-  void _openTrendingVenues() => Navigator.pushNamed(context, '/search');
+  void _openTrendingVenues() => Navigator.pushNamed(context, Routes.SEARCH);
 
   @override
   Widget build(BuildContext context) {
@@ -167,8 +168,8 @@ class _HomepageState extends State<Homepage> {
                 bottomNavigationBar: NavBar(
                   currentIndex: pageIndex,
                   context: context,
-                  onTap: (index, context) => onNavbarItemTapped(
-                      pageIndex, index, context, email),
+                  onTap: (index, context) =>
+                      onNavbarItemTapped(pageIndex, index, context, email),
                 ))));
   }
 
@@ -355,7 +356,7 @@ class _HomepageState extends State<Homepage> {
           ]));
 
   InkWell _buildCategoryCard(VenueType category) => InkWell(
-      onTap: () => Navigator.pushNamed(context, '/search', arguments: {
+      onTap: () => Navigator.pushNamed(context, Routes.SEARCH, arguments: {
             'type': category,
           }),
       child: Align(

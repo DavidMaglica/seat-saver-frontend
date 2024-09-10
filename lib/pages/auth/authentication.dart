@@ -1,11 +1,12 @@
-import 'package:TableReserver/api/account_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../api/account_api.dart';
 import '../../api/data/basic_response.dart';
 import '../../themes/theme.dart';
+import '../../utils/constants.dart';
 import '../../utils/data.dart';
 import 'models/authentication_model.dart';
 
@@ -66,12 +67,10 @@ class _AuthenticationState extends State<Authentication>
 
     if (!active) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Currently unavailable'),
-          backgroundColor: AppThemes.infoColor,
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Currently unavailable'),
+        backgroundColor: AppThemes.infoColor,
+      ));
       return;
     }
 
@@ -91,24 +90,20 @@ class _AuthenticationState extends State<Authentication>
 
       default:
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Unknown sign up method'),
-            backgroundColor: AppThemes.warningColor,
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Unknown sign up method'),
+          backgroundColor: AppThemes.warningColor,
+        ));
     }
   }
 
   Future<void> _signup(SignupMethod? signupMethod, bool active) async {
     if (!active) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Currently unavailable'),
-          backgroundColor: AppThemes.infoColor,
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Currently unavailable'),
+        backgroundColor: AppThemes.infoColor,
+      ));
       return;
     }
 
@@ -131,12 +126,10 @@ class _AuthenticationState extends State<Authentication>
 
       default:
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Unknown sign up method'),
-            backgroundColor: AppThemes.warningColor,
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Unknown sign up method'),
+          backgroundColor: AppThemes.warningColor,
+        ));
     }
     return;
   }
@@ -148,15 +141,14 @@ class _AuthenticationState extends State<Authentication>
 
     if (response.success) {
       if (!mounted) return;
-      Navigator.pushNamed(context, '/homepage', arguments: {'email': email});
+      Navigator.pushNamed(context, Routes.HOMEPAGE,
+          arguments: {'email': email});
     } else {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message),
-          backgroundColor: AppThemes.errorColor,
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response.message),
+        backgroundColor: AppThemes.errorColor,
+      ));
       return;
     }
   }
@@ -170,12 +162,10 @@ class _AuthenticationState extends State<Authentication>
     if (!mounted) return;
 
     if (password != confirmedPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Passwords do not match'),
-          backgroundColor: AppThemes.errorColor,
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Passwords do not match'),
+        backgroundColor: AppThemes.errorColor,
+      ));
       return;
     }
 
@@ -183,15 +173,14 @@ class _AuthenticationState extends State<Authentication>
 
     if (response.success) {
       if (!mounted) return;
-      Navigator.pushNamed(context, '/homepage', arguments: {'email': email});
+      Navigator.pushNamed(context, Routes.HOMEPAGE,
+          arguments: {'email': email});
     } else {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message),
-          backgroundColor: AppThemes.errorColor,
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response.message),
+        backgroundColor: AppThemes.errorColor,
+      ));
       return;
     }
   }

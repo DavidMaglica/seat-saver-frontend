@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../components/appbar.dart';
+import '../../components/custom_appbar.dart';
+import '../../utils/constants.dart';
 
 class TermsOfService extends StatefulWidget {
   const TermsOfService({Key? key}) : super(key: key);
@@ -27,7 +28,11 @@ class _TermsOfServiceState extends State<TermsOfService> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: const CustomAppbar(title: 'Terms of Service'),
+        appBar: const CustomAppbar(
+          title: 'Terms of Service',
+          routeToPush: Routes.ACCOUNT,
+          args: {'email': null},
+        ),
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.background,
         body: SafeArea(

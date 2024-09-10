@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
+import '../../utils/constants.dart';
+
 class Landing extends StatefulWidget {
   const Landing({super.key});
 
@@ -78,7 +80,7 @@ class _LandingState extends State<Landing> {
                     if (!mounted) return;
                     Navigator.pushNamed(
                       context,
-                      '/homepage',
+                      Routes.HOMEPAGE,
                       arguments: {'email': ''},
                     );
                   },

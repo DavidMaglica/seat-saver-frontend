@@ -5,8 +5,9 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../api/venue_api.dart';
-import '../../components/appbar.dart';
+import '../../components/custom_appbar.dart';
 import '../../themes/theme.dart';
+import '../../utils/constants.dart';
 import '../../utils/full_image_view.dart';
 
 class VenuePage extends StatefulWidget {
@@ -59,7 +60,7 @@ class _VenuePageState extends State<VenuePage> {
     String minutes = _selectedMinute == 0 ? '00' : '30';
     String time = '$_selectedHour:$minutes';
 
-    Navigator.pushNamed(context, '/successfulReservation', arguments: {
+    Navigator.pushNamed(context, Routes.SUCCESSFUL_RESERVATION, arguments: {
       'venueName': widget.name,
       'numberOfPeople': _selectedNumberOfGuests,
       'reservationDate': date,
@@ -76,7 +77,7 @@ class _VenuePageState extends State<VenuePage> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: CustomAppbar(title: widget.name),
+        appBar: CustomAppbar(title: widget.name, routeToPush: Routes.HOMEPAGE),
         body: FutureBuilder<List<String>>(
           future: _images,
           builder: (context, snapshot) {
