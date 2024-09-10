@@ -10,11 +10,11 @@ import '../../utils/constants.dart';
 import '../../utils/routing_utils.dart';
 
 class Search extends StatefulWidget {
-  final String? email;
+  final String? userEmail;
 
   const Search({
     Key? key,
-    this.email,
+    this.userEmail,
   }) : super(key: key);
 
   @override
@@ -40,11 +40,14 @@ class _SearchState extends State<Search> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+
   @override
   void initState() {
     super.initState();
     _getChipsChoice();
     _getAllVenues();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -77,6 +80,7 @@ class _SearchState extends State<Search> {
             'rating': venue.rating,
             'type': venue.type.toString(),
             'description': venue.description,
+            'userEmail': widget.userEmail,
           });
 
   @override
@@ -135,7 +139,7 @@ class _SearchState extends State<Search> {
           currentIndex: pageIndex,
           context: context,
           onTap: (index, context) =>
-              onNavbarItemTapped(pageIndex, index, context, widget.email),
+              onNavbarItemTapped(pageIndex, index, context, widget.userEmail),
         ),
       ),
     );

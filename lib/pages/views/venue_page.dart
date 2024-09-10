@@ -17,6 +17,7 @@ class VenuePage extends StatefulWidget {
   final double rating;
   final String type;
   final String description;
+  final String? userEmail;
 
   const VenuePage({
     Key? key,
@@ -26,6 +27,7 @@ class VenuePage extends StatefulWidget {
     required this.rating,
     required this.type,
     required this.description,
+    this.userEmail,
   }) : super(key: key);
 
   @override
@@ -34,7 +36,6 @@ class VenuePage extends StatefulWidget {
 
 class _VenuePageState extends State<VenuePage> {
   late Future<List<String>> _images;
-  double? _mockRating;
   DateTime? _selectedDate;
   int? _selectedHour;
   int? _selectedMinute;
@@ -68,8 +69,6 @@ class _VenuePageState extends State<VenuePage> {
     });
   }
 
-  void _mockRatingUpdate() => setState(() => _mockRating = 4.5);
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -77,7 +76,11 @@ class _VenuePageState extends State<VenuePage> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: CustomAppbar(title: widget.name, routeToPush: Routes.HOMEPAGE),
+        appBar: CustomAppbar(
+          title: widget.name,
+          routeToPush: Routes.HOMEPAGE,
+          args: {'userEmail': widget.userEmail},
+        ),
         body: FutureBuilder<List<String>>(
           future: _images,
           builder: (context, snapshot) {
@@ -196,7 +199,7 @@ class _VenuePageState extends State<VenuePage> {
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 0, 8),
             child: FFButtonWidget(
-              onPressed: _mockRatingUpdate,
+              onPressed: () => {},
               text: 'Leave a rating',
               options: FFButtonOptions(
                 width: 128,
@@ -248,7 +251,7 @@ class _VenuePageState extends State<VenuePage> {
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
               child: RatingBar.builder(
-                onRatingUpdate: (value) => _mockRatingUpdate(),
+                onRatingUpdate: (value) => {},
                 itemBuilder: (context, index) => Icon(
                   CupertinoIcons.star_fill,
                   color: Theme.of(context).colorScheme.onTertiary,
@@ -308,7 +311,6 @@ class _VenuePageState extends State<VenuePage> {
                       setState(() {
                         _selectedDate = newDate;
                       });
-                      debugPrint('Selected date: $_selectedDate');
                     }),
               ),
               SizedBox(
@@ -505,8 +507,6 @@ class _VenuePageState extends State<VenuePage> {
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    debugPrint(
-                        'Selected time: $_selectedHour:$_selectedMinute');
                   },
                 ),
               ),

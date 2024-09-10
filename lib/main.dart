@@ -34,14 +34,20 @@ class MyApp extends StatelessWidget {
       routes: {
         Routes.LANDING: (context) => const Landing(),
         Routes.HOMEPAGE: (context) => Homepage(
-              email: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['email'],
+              userEmail: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userEmail'],
             ),
-        Routes.SEARCH: (context) => const Search(),
-        Routes.NEARBY: (context) => const Nearby(),
+        Routes.SEARCH: (context) => Search(
+              userEmail: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userEmail'],
+            ),
+        Routes.NEARBY: (context) => Nearby(
+              userEmail: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userEmail'],
+            ),
         Routes.ACCOUNT: (context) => Account(
-              email: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['email'],
+              userEmail: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userEmail'],
             ),
         Routes.NOTIFICATION_SETTINGS: (context) => NotificationSettings(
               user: (ModalRoute.of(context)!.settings.arguments
@@ -70,6 +76,8 @@ class MyApp extends StatelessWidget {
                   as Map<String, dynamic>)['type'],
               description: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['description'],
+              userEmail: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userEmail'],
             ),
         Routes.SUCCESSFUL_RESERVATION: (context) => SuccessfulReservation(
               venueName: (ModalRoute.of(context)!.settings.arguments

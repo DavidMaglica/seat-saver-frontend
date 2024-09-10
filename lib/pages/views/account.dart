@@ -10,11 +10,11 @@ import '../../utils/constants.dart';
 import '../../utils/routing_utils.dart';
 
 class Account extends StatefulWidget {
-  final String? email;
+  final String? userEmail;
 
   const Account({
     Key? key,
-    this.email,
+    this.userEmail,
   }) : super(key: key);
 
   @override
@@ -32,7 +32,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    if (widget.email != null) _getUserByEmail(widget.email!);
+    if (widget.userEmail != null) _getUserByEmail(widget.userEmail!);
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -79,7 +79,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                 context: context,
                 currentIndex: pageIndex,
                 onTap: (index, context) {
-                  onNavbarItemTapped(pageIndex, index, context, widget.email);
+                  onNavbarItemTapped(pageIndex, index, context, widget.userEmail);
                 })));
   }
 

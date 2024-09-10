@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 import 'data/basic_response.dart';
 import 'data/notification_settings.dart';
 import 'data/user.dart';
@@ -25,7 +23,6 @@ User? findUser(String email) {
 
 Future<BasicResponse> signup(
     String nameAndSurname, String email, String password) async {
-  debugPrint('Signup request: $nameAndSurname, $email, $password');
   if (nameAndSurname.isEmpty || email.isEmpty || password.isEmpty) {
     return BasicResponse(success: false, message: 'Please fill in all fields');
   }
@@ -44,8 +41,6 @@ Future<BasicResponse> signup(
       locationServicesTurnedOn: true,
     ),
   );
-
-  debugPrint('New user: $newUser');
 
   userStore[email] = newUser;
   return BasicResponse(success: true, message: 'Signup successful');

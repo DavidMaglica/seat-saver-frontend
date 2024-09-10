@@ -2,24 +2,26 @@ import 'package:flutter/cupertino.dart';
 
 import 'constants.dart';
 
-void onNavbarItemTapped(int pageIndex, int index, BuildContext context, String? email) {
+void onNavbarItemTapped(int pageIndex, int index, BuildContext context, String? userEmail) {
   if (index == pageIndex) {
     return;
   }
   switch (index) {
     case 0:
-      debugPrint('Opening account page with email: $email');
-      Navigator.pushNamed(context, Routes.HOMEPAGE, arguments: {'email': email});
+      debugPrint('Opening homepage with email: $userEmail');
+      Navigator.pushNamed(context, Routes.HOMEPAGE, arguments: {'userEmail': userEmail});
       break;
     case 1:
-      Navigator.pushNamed(context, Routes.SEARCH);
+      debugPrint('Opening search with email: $userEmail');
+      Navigator.pushNamed(context, Routes.SEARCH, arguments: {'userEmail': userEmail});
       break;
     case 2:
-      Navigator.pushNamed(context, Routes.NEARBY);
+      debugPrint('Opening nearby with email: $userEmail');
+      Navigator.pushNamed(context, Routes.NEARBY, arguments: {'userEmail': userEmail});
       break;
     case 3:
-      debugPrint('Opening account page with email: $email');
-      Navigator.pushNamed(context, Routes.ACCOUNT, arguments: {'email': email});
+      debugPrint('Opening account page with email: $userEmail');
+      Navigator.pushNamed(context, Routes.ACCOUNT, arguments: {'userEmail': userEmail});
       break;
     default:
       break;

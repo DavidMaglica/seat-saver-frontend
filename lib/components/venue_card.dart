@@ -14,6 +14,7 @@ class VenueCard extends StatefulWidget {
   final double rating;
   final VenueType type;
   final String description;
+  final String? userEmail;
 
   const VenueCard({
     Key? key,
@@ -23,6 +24,7 @@ class VenueCard extends StatefulWidget {
     required this.rating,
     required this.type,
     required this.description,
+    this.userEmail,
   }) : super(key: key);
 
   @override
@@ -52,6 +54,7 @@ class _VenueCardState extends State<VenueCard> {
         'rating': widget.rating,
         'type': widget.type.toString(),
         'description': widget.description,
+        'userEmail': widget.userEmail,
       });
 
   @override

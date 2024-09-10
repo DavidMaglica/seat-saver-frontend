@@ -7,11 +7,11 @@ import '../../themes/theme.dart';
 import '../../utils/routing_utils.dart';
 
 class Nearby extends StatefulWidget {
-  final String? email;
+  final String? userEmail;
 
   const Nearby({
     Key? key,
-    this.email,
+    this.userEmail,
   }) : super(key: key);
 
   @override
@@ -24,9 +24,13 @@ class _NearbyState extends State<Nearby> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  String? email;
+
   @override
   void initState() {
     super.initState();
+    if (widget.userEmail != null) setState(() => email = widget.userEmail);
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -101,7 +105,7 @@ class _NearbyState extends State<Nearby> {
             currentIndex: pageIndex,
             context: context,
             onTap: (index, context) =>
-                onNavbarItemTapped(pageIndex, index, context, widget.email),
+                onNavbarItemTapped(pageIndex, index, context, widget.userEmail),
           )),
     );
   }

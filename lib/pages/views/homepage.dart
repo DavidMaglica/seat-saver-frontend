@@ -15,11 +15,11 @@ import '../../utils/constants.dart';
 import '../../utils/routing_utils.dart';
 
 class Homepage extends StatefulWidget {
-  final String? email;
+  final String? userEmail;
 
   const Homepage({
     Key? key,
-    this.email,
+    this.userEmail,
   }) : super(key: key);
 
   @override
@@ -39,7 +39,6 @@ class _HomepageState extends State<Homepage> {
   CarouselController? _carouselController;
   int _carouselCurrentIndex = 1;
 
-  String? email;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -52,8 +51,6 @@ class _HomepageState extends State<Homepage> {
     _getSuggestedVenues();
 
     _activateLocationPopUp();
-
-    if (widget.email != null) setState(() => email = widget.email);
   }
 
   @override
@@ -124,11 +121,14 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  void _openNearbyVenues() => Navigator.pushNamed(context, Routes.SEARCH);
+  void _openNearbyVenues() => Navigator.pushNamed(context, Routes.SEARCH,
+      arguments: {'userEmail': widget.userEmail});
 
-  void _openNewVenues() => Navigator.pushNamed(context, Routes.SEARCH);
+  void _openNewVenues() => Navigator.pushNamed(context, Routes.SEARCH,
+      arguments: {'userEmail': widget.userEmail});
 
-  void _openTrendingVenues() => Navigator.pushNamed(context, Routes.SEARCH);
+  void _openTrendingVenues() => Navigator.pushNamed(context, Routes.SEARCH,
+      arguments: {'userEmail': widget.userEmail});
 
   @override
   Widget build(BuildContext context) {
@@ -168,8 +168,8 @@ class _HomepageState extends State<Homepage> {
                 bottomNavigationBar: NavBar(
                   currentIndex: pageIndex,
                   context: context,
-                  onTap: (index, context) =>
-                      onNavbarItemTapped(pageIndex, index, context, email),
+                  onTap: (index, context) => onNavbarItemTapped(
+                      pageIndex, index, context, widget.userEmail),
                 ))));
   }
 
@@ -293,6 +293,7 @@ class _HomepageState extends State<Homepage> {
                     rating: venue.rating,
                     type: venue.type,
                     description: venue.description,
+                    userEmail: widget.userEmail,
                   ),
                 );
               }).toList())));
@@ -314,6 +315,7 @@ class _HomepageState extends State<Homepage> {
                     rating: venue.rating,
                     type: venue.type,
                     description: venue.description,
+                    userEmail: widget.userEmail,
                   ),
                 );
               }).toList())));
@@ -356,9 +358,8 @@ class _HomepageState extends State<Homepage> {
           ]));
 
   InkWell _buildCategoryCard(VenueType category) => InkWell(
-      onTap: () => Navigator.pushNamed(context, Routes.SEARCH, arguments: {
-            'type': category,
-          }),
+      onTap: () => Navigator.pushNamed(context, Routes.SEARCH,
+          arguments: {'type': category, 'userEmail': widget.userEmail}),
       child: Align(
           alignment: AlignmentDirectional.center,
           child: Padding(

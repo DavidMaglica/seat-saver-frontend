@@ -134,15 +134,15 @@ class _AuthenticationState extends State<Authentication>
     return;
   }
 
-  void _customLogin(String email, String password) async {
+  void _customLogin(String userEmail, String password) async {
     if (!mounted) return;
 
-    BasicResponse response = await login(email, password);
+    BasicResponse response = await login(userEmail, password);
 
     if (response.success) {
       if (!mounted) return;
       Navigator.pushNamed(context, Routes.HOMEPAGE,
-          arguments: {'email': email});
+          arguments: {'userEmail': userEmail});
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -155,7 +155,7 @@ class _AuthenticationState extends State<Authentication>
 
   void _customSignup(
     String nameAndSurname,
-    String email,
+    String userEmail,
     String password,
     String confirmedPassword,
   ) async {
@@ -169,12 +169,12 @@ class _AuthenticationState extends State<Authentication>
       return;
     }
 
-    BasicResponse response = await signup(nameAndSurname, email, password);
+    BasicResponse response = await signup(nameAndSurname, userEmail, password);
 
     if (response.success) {
       if (!mounted) return;
       Navigator.pushNamed(context, Routes.HOMEPAGE,
-          arguments: {'email': email});
+          arguments: {'userEmail': userEmail});
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
