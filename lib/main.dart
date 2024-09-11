@@ -60,18 +60,26 @@ class MyApp extends StatelessWidget {
         Routes.NOTIFICATION_SETTINGS: (context) => NotificationSettings(
               user: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['user'],
+              userLocation: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userLocation'],
             ),
         Routes.SUPPORT: (context) => Support(
               user: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['user'],
+              userLocation: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userLocation'],
             ),
         Routes.EDIT_PROFILE: (context) => EditProfile(
               user: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['user'],
+              userLocation: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userLocation'],
             ),
         Routes.TERMS_OF_SERVICE: (context) => TermsOfService(
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
+              userLocation: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userLocation'],
             ),
         Routes.AUTHENTICATION: (context) => const Authentication(),
         Routes.VENUE: (context) => VenuePage(
@@ -89,6 +97,8 @@ class MyApp extends StatelessWidget {
                   as Map<String, dynamic>)['description'],
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
+              userLocation: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userLocation'],
             ),
         Routes.SUCCESSFUL_RESERVATION: (context) => SuccessfulReservation(
               venueName: (ModalRoute.of(context)!.settings.arguments
@@ -99,6 +109,10 @@ class MyApp extends StatelessWidget {
                   as Map<String, dynamic>)['reservationDate'],
               reservationTime: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['reservationTime'],
+              userEmail: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userEmail'],
+              userLocation: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userLocation'],
             ),
       },
     );

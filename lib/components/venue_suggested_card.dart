@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../api/data/venue.dart';
 import '../themes/theme.dart';
@@ -15,6 +16,7 @@ class VenueSuggestedCard extends StatefulWidget {
   final VenueType type;
   final String description;
   final String? userEmail;
+  final Position? userLocation;
 
   const VenueSuggestedCard({
     Key? key,
@@ -25,6 +27,7 @@ class VenueSuggestedCard extends StatefulWidget {
     required this.type,
     required this.description,
     this.userEmail,
+    this.userLocation,
   }) : super(key: key);
 
   @override
@@ -55,6 +58,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
         'type': widget.type.toString(),
         'description': widget.description,
         'userEmail': widget.userEmail,
+        'userLocation': widget.userLocation,
       });
 
   @override

@@ -138,7 +138,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                       onTap: () async {
                         if (route == Routes.TERMS_OF_SERVICE) {
                           Navigator.pushNamed(context, route,
-                              arguments: {'userEmail': user?.email});
+                              arguments: {'userEmail': user?.email, 'userLocation': widget.userLocation});
                           return;
                         }
                         if (user == null) {
@@ -150,7 +150,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                           return;
                         }
                         Navigator.pushNamed(context, route,
-                            arguments: {'user': user});
+                            arguments: {'user': user, 'userLocation': widget.userLocation});
                       },
                       child: Row(mainAxisSize: MainAxisSize.max, children: [
                         Icon(

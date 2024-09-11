@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../api/venue_api.dart';
 import '../../components/custom_appbar.dart';
@@ -18,6 +20,7 @@ class VenuePage extends StatefulWidget {
   final String type;
   final String description;
   final String? userEmail;
+  final Position? userLocation;
 
   const VenuePage({
     Key? key,
@@ -28,6 +31,7 @@ class VenuePage extends StatefulWidget {
     required this.type,
     required this.description,
     this.userEmail,
+    this.userLocation,
   }) : super(key: key);
 
   @override
@@ -57,6 +61,21 @@ class _VenuePageState extends State<VenuePage> {
   void _reserveSpot() {
     DateFormat dateFormat = DateFormat('dd-MM-yyyy');
 
+    if (_selectedDate == null) {
+      _showToast('Please select a date');
+      return;
+    }
+
+    if (_selectedHour == null || _selectedMinute == null) {
+      _showToast('Please select a time');
+      return;
+    }
+
+    if (_selectedNumberOfGuests == null) {
+      _showToast('Please select the number of guests');
+      return;
+    }
+
     String date = dateFormat.format(_selectedDate!).toString();
     String minutes = _selectedMinute == 0 ? '00' : '30';
     String time = '$_selectedHour:$minutes';
@@ -66,8 +85,21 @@ class _VenuePageState extends State<VenuePage> {
       'numberOfPeople': _selectedNumberOfGuests,
       'reservationDate': date,
       'reservationTime': time,
+      'userEmail': widget.userEmail,
+      'userLocation': widget.userLocation,
     });
   }
+
+  void _showToast(String message) => showToast(
+    message,
+    context: context,
+    backgroundColor: AppThemes.errorColor,
+    textStyle: const TextStyle(color: Colors.white, fontSize: 16.0),
+    borderRadius: BorderRadius.circular(8),
+    textPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+    alignment: Alignment.bottomLeft,
+    duration: const Duration(seconds: 4),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +111,10 @@ class _VenuePageState extends State<VenuePage> {
         appBar: CustomAppbar(
           title: widget.name,
           routeToPush: Routes.HOMEPAGE,
-          args: {'userEmail': widget.userEmail},
+          args: {
+            'userEmail': widget.userEmail,
+            'userLocation': widget.userLocation
+          },
         ),
         body: FutureBuilder<List<String>>(
           future: _images,

@@ -1,14 +1,18 @@
 import 'dart:async';
 
+import 'package:TableReserver/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:geolocator/geolocator.dart';
 
 class SuccessfulReservation extends StatefulWidget {
   final String venueName;
   final int numberOfPeople;
   final String reservationDate;
   final String reservationTime;
+  final String? userEmail;
+  final Position? userLocation;
 
   const SuccessfulReservation({
     Key? key,
@@ -16,6 +20,8 @@ class SuccessfulReservation extends StatefulWidget {
     required this.numberOfPeople,
     required this.reservationDate,
     required this.reservationTime,
+    this.userEmail,
+    this.userLocation,
   }) : super(key: key);
 
   @override
@@ -33,7 +39,13 @@ class _SuccessfulReservationState extends State<SuccessfulReservation> {
 
     timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       _start == 0
-          ? {timer.cancel(), Navigator.pop(context)}
+          ? {
+              timer.cancel(),
+              Navigator.popAndPushNamed(context, Routes.HOMEPAGE, arguments: {
+                'userEmail': widget.userEmail,
+                'userLocation': widget.userLocation
+              })
+            }
           : setState(() => _start--);
     });
 

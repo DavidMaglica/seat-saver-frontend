@@ -131,13 +131,13 @@ class _HomepageState extends State<Homepage> {
   }
 
   void _openNearbyVenues() => Navigator.pushNamed(context, Routes.SEARCH,
-      arguments: {'userEmail': widget.userEmail});
+      arguments: {'userEmail': widget.userEmail, 'userLocation': widget.userLocation});
 
   void _openNewVenues() => Navigator.pushNamed(context, Routes.SEARCH,
-      arguments: {'userEmail': widget.userEmail});
+      arguments: {'userEmail': widget.userEmail, 'userLocation': widget.userLocation});
 
   void _openTrendingVenues() => Navigator.pushNamed(context, Routes.SEARCH,
-      arguments: {'userEmail': widget.userEmail});
+      arguments: {'userEmail': widget.userEmail, 'userLocation': widget.userLocation});
 
   @override
   Widget build(BuildContext context) {
@@ -303,6 +303,7 @@ class _HomepageState extends State<Homepage> {
                     type: venue.type,
                     description: venue.description,
                     userEmail: widget.userEmail,
+                    userLocation: widget.userLocation,
                   ),
                 );
               }).toList())));
@@ -325,6 +326,7 @@ class _HomepageState extends State<Homepage> {
                     type: venue.type,
                     description: venue.description,
                     userEmail: widget.userEmail,
+                    userLocation: widget.userLocation,
                   ),
                 );
               }).toList())));
@@ -368,7 +370,7 @@ class _HomepageState extends State<Homepage> {
 
   InkWell _buildCategoryCard(VenueType category) => InkWell(
       onTap: () => Navigator.pushNamed(context, Routes.SEARCH,
-          arguments: {'type': category, 'userEmail': widget.userEmail}),
+          arguments: {'type': category, 'userEmail': widget.userEmail, 'userLocation': widget.userLocation}),
       child: Align(
           alignment: AlignmentDirectional.center,
           child: Padding(

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../api/data/user.dart';
 import '../../components/custom_appbar.dart';
@@ -10,10 +11,12 @@ import 'utils/settings_utils.dart';
 
 class Support extends StatefulWidget {
   final User user;
+  final Position? userLocation;
 
   const Support({
     Key? key,
     required this.user,
+    this.userLocation,
   }) : super(key: key);
 
   @override
@@ -63,7 +66,7 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
         appBar: CustomAppbar(
             title: 'Support',
             routeToPush: Routes.ACCOUNT,
-            args: {'userEmail': widget.user.email}),
+            args: {'userEmail': widget.user.email, 'userLocation': widget.userLocation}),
         body: SafeArea(
           top: true,
           child: Padding(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/extension.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../api/account_api.dart';
 import '../../api/data/user.dart';
@@ -14,10 +15,12 @@ import 'utils/settings_utils.dart';
 
 class EditProfile extends StatefulWidget {
   final User user;
+  final Position? userLocation;
 
   const EditProfile({
     Key? key,
     required this.user,
+    this.userLocation,
   }) : super(key: key);
 
   @override
@@ -165,7 +168,7 @@ class _EditProfileState extends State<EditProfile> {
         appBar: CustomAppbar(
           title: 'Edit Profile',
           routeToPush: Routes.ACCOUNT,
-          args: {'userEmail': widget.user.email},
+          args: {'userEmail': widget.user.email, 'userLocation': widget.userLocation},
         ),
         body: SafeArea(
             top: true,

@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../components/custom_appbar.dart';
 import '../../utils/constants.dart';
 
 class TermsOfService extends StatefulWidget {
   final String? userEmail;
+  final Position? userLocation;
 
   const TermsOfService({
     Key? key,
     this.userEmail,
+    this.userLocation,
   }) : super(key: key);
 
   @override
@@ -36,7 +39,7 @@ class _TermsOfServiceState extends State<TermsOfService> {
         appBar: CustomAppbar(
           title: 'Terms of Service',
           routeToPush: Routes.ACCOUNT,
-          args: {'userEmail': widget.userEmail},
+          args: {'userEmail': widget.userEmail, 'userLocation': widget.userLocation},
         ),
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.background,

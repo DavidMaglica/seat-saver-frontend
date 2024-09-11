@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../api/account_api.dart';
 import '../../api/data/basic_response.dart';
@@ -11,10 +12,12 @@ import 'utils/settings_utils.dart';
 
 class NotificationSettings extends StatefulWidget {
   final User user;
+  final Position? userLocation;
 
   const NotificationSettings({
     Key? key,
     required this.user,
+    this.userLocation,
   }) : super(key: key);
 
   @override
@@ -81,7 +84,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
       appBar: CustomAppbar(
         title: 'Notification settings',
         routeToPush: Routes.ACCOUNT,
-        args: {'userEmail': widget.user.email},
+        args: {'userEmail': widget.user.email, 'userLocation': widget.userLocation},
       ),
       body: SafeArea(
         top: true,
