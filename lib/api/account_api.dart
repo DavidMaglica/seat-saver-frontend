@@ -4,6 +4,8 @@ import 'data/user.dart';
 
 Map<String, User> userStore = {};
 
+User? findUser(String email) => userStore[email];
+
 Future<UserResponse?> getUserByEmail(String email) async {
   if (!userStore.containsKey(email)) {
     return null;
@@ -15,10 +17,6 @@ Future<UserResponse?> getUserByEmail(String email) async {
     message: 'User retrieved successfully',
     user: user,
   );
-}
-
-User? findUser(String email) {
-  return userStore[email];
 }
 
 Future<BasicResponse> signup(
@@ -36,9 +34,9 @@ Future<BasicResponse> signup(
     email: email,
     password: password,
     notificationOptions: NotificationSettings(
-      pushNotificationsTurnedOn: true,
-      emailNotificationsTurnedOn: true,
-      locationServicesTurnedOn: true,
+      pushNotificationsTurnedOn: false,
+      emailNotificationsTurnedOn: false,
+      locationServicesTurnedOn: false,
     ),
   );
 
@@ -107,6 +105,30 @@ Future<BasicResponse> updateUserNotificationOptions(
   userStore[email] = updatedUser;
   return BasicResponse(
       success: true, message: 'Notification settings updated successfully');
+}
+
+Future<BasicResponse> updateLocationServicesByEmail(
+    String email, bool locationServicesTurnedOn) async {
+  if (!userStore.containsKey(email)) {
+    return BasicResponse(success: false, message: 'User not found');
+  }
+
+  User existingUser = userStore[email]!;
+
+  User updatedUser = User(
+    nameAndSurname: existingUser.nameAndSurname,
+    email: existingUser.email,
+    password: existingUser.password,
+    notificationOptions: NotificationSettings(
+      pushNotificationsTurnedOn: existingUser.notificationOptions.pushNotificationsTurnedOn,
+      emailNotificationsTurnedOn: existingUser.notificationOptions.emailNotificationsTurnedOn,
+      locationServicesTurnedOn: locationServicesTurnedOn,
+    ),
+  );
+
+  userStore[email] = updatedUser;
+  return BasicResponse(
+      success: true, message: 'Location services updated successfully');
 }
 
 Future<BasicResponse> changePasswordByEmail(

@@ -1,14 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../api/geolocation_api.dart';
+import '../api/account_api.dart';
 import '../themes/theme.dart';
+import '../utils/constants.dart';
 
 class LocationPermissionPopUp extends StatefulWidget {
-  const LocationPermissionPopUp({super.key});
+  final String userEmail;
+
+  const LocationPermissionPopUp({
+    Key? key,
+    required this.userEmail,
+  }) : super(key: key);
 
   @override
   State<LocationPermissionPopUp> createState() =>
@@ -16,10 +23,6 @@ class LocationPermissionPopUp extends StatefulWidget {
 }
 
 class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
-  Position? _currentPosition;
-  String? _currentCity;
-  List<String>? _nearbyCities;
-
   @override
   void initState() {
     super.initState();
@@ -50,16 +53,16 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
 
     if (locationPermission == LocationPermission.deniedForever) return false;
 
+    updateLocationServicesByEmail(widget.userEmail, true);
+
     return true;
   }
 
-  Future<String?> _getAddressFromLatLng(Position? position) async {
+  Future<String?> _getCityFromLatLng(Position? position) async {
     String? currentCity;
-    await placemarkFromCoordinates(
-            _currentPosition!.latitude, _currentPosition!.longitude)
+    await placemarkFromCoordinates(position!.latitude, position.longitude)
         .then((List<Placemark> placemarks) {
-      Placemark place = placemarks[0];
-      currentCity = place.locality;
+      currentCity = placemarks[0].locality;
     }).catchError((e) {
       debugPrint(e);
     });
@@ -70,32 +73,24 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
   Future<void> _getCurrentPosition() async {
     if (!await _handleLocationPermission()) return;
 
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      setState(() => _currentPosition = position);
-    }).catchError((e) {
-      debugPrint(e);
-    });
+    Position? location = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
 
-    if (_currentPosition == null) return;
+    String? currentCity = await _getCityFromLatLng(location);
+    if (currentCity == null || currentCity.isEmpty) {
+      if (!mounted) return;
+      showToast('Failed to get current location',
+          context: context,
+          animation: StyledToastAnimation.scale,
+          position: StyledToastPosition.center,
+          duration: const Duration(seconds: 4));
+    }
 
-    await _getAddressFromLatLng(_currentPosition).then((currentCity) {
-      setState(() {
-        _currentCity = currentCity;
-      });
-    }).catchError((e) {
-      debugPrint(e);
+    if (!mounted) return;
+    Navigator.popAndPushNamed(context, Routes.HOMEPAGE, arguments: {
+      'userEmail': widget.userEmail,
+      'location': location,
     });
-    await getNearbyCities(_currentPosition!).then((nearbyCities) {
-      debugPrint('Cities on FE: $nearbyCities');
-      setState(() {
-        _nearbyCities = nearbyCities;
-      });
-    }).catchError((e) {
-      debugPrint(e);
-    });
-
-    Navigator.of(context).pop([_currentCity, _nearbyCities]);
   }
 
   @override
@@ -168,7 +163,13 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
               padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 24),
               child: FFButtonWidget(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).popAndPushNamed(
+                    Routes.HOMEPAGE,
+                    arguments: {
+                      'userEmail': widget.userEmail,
+                      'location': null
+                    },
+                  );
                 },
                 text: 'No, thanks',
                 options: FFButtonOptions(

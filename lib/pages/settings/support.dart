@@ -63,7 +63,7 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
         appBar: CustomAppbar(
             title: 'Support',
             routeToPush: Routes.ACCOUNT,
-            args: {'email': widget.user.email}),
+            args: {'userEmail': widget.user.email}),
         body: SafeArea(
           top: true,
           child: Padding(

@@ -81,7 +81,7 @@ class _LandingState extends State<Landing> {
                     Navigator.pushNamed(
                       context,
                       Routes.HOMEPAGE,
-                      arguments: {'email': ''},
+                      arguments: {'userEmail': ''},
                     );
                   },
                   text: 'Get Started',

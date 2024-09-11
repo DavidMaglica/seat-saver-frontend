@@ -4,7 +4,12 @@ import '../../components/custom_appbar.dart';
 import '../../utils/constants.dart';
 
 class TermsOfService extends StatefulWidget {
-  const TermsOfService({Key? key}) : super(key: key);
+  final String? userEmail;
+
+  const TermsOfService({
+    Key? key,
+    this.userEmail,
+  }) : super(key: key);
 
   @override
   State<TermsOfService> createState() => _TermsOfServiceState();
@@ -28,10 +33,10 @@ class _TermsOfServiceState extends State<TermsOfService> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: const CustomAppbar(
+        appBar: CustomAppbar(
           title: 'Terms of Service',
           routeToPush: Routes.ACCOUNT,
-          args: {'email': null},
+          args: {'userEmail': widget.userEmail},
         ),
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.background,

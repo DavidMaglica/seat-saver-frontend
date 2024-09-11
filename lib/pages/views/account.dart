@@ -105,7 +105,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
         _buildSettingsItem(CupertinoIcons.question_circle_fill, 'Support',
             Routes.SUPPORT, user),
         _buildSettingsItem(CupertinoIcons.exclamationmark_shield_fill,
-            'Terms of service', Routes.TERMS_OF_SERVICE, null),
+            'Terms of service', Routes.TERMS_OF_SERVICE, user),
       ]);
 
   Padding _buildSettingsItem(
@@ -133,7 +133,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                   child: InkWell(
                       onTap: () async {
                         if (route == Routes.TERMS_OF_SERVICE) {
-                          Navigator.pushNamed(context, route);
+                          Navigator.pushNamed(context, route, arguments: {'userEmail': user?.email});
                           return;
                         }
                         if (user == null) {

@@ -165,7 +165,7 @@ class _EditProfileState extends State<EditProfile> {
         appBar: CustomAppbar(
           title: 'Edit Profile',
           routeToPush: Routes.ACCOUNT,
-          args: {'email': widget.user.email},
+          args: {'userEmail': widget.user.email},
         ),
         body: SafeArea(
             top: true,

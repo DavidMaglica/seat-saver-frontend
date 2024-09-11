@@ -81,7 +81,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
       appBar: CustomAppbar(
         title: 'Notification settings',
         routeToPush: Routes.ACCOUNT,
-        args: {'email': widget.user.email},
+        args: {'userEmail': widget.user.email},
       ),
       body: SafeArea(
         top: true,

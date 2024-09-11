@@ -1,9 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_credit_card/extension.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:geolocator/geolocator.dart';
 
+import '../../api/account_api.dart';
+import '../../api/data/user.dart';
 import '../../api/data/venue.dart';
+import '../../api/geolocation_api.dart';
 import '../../api/venue_api.dart';
 import '../../components/carousel_item.dart';
 import '../../components/location_permission.dart';
@@ -16,11 +21,9 @@ import '../../utils/routing_utils.dart';
 
 class Homepage extends StatefulWidget {
   final String? userEmail;
+  final Position? location;
 
-  const Homepage({
-    Key? key,
-    this.userEmail,
-  }) : super(key: key);
+  const Homepage({Key? key, this.userEmail, this.location}) : super(key: key);
 
   @override
   State<Homepage> createState() => _HomepageState();
@@ -30,33 +33,50 @@ class _HomepageState extends State<Homepage> {
   final unfocusNode = FocusNode();
 
   final int pageIndex = 0;
-  String? _currentCity;
-  List<String>? _nearbyCities;
   List<Venue>? _nearbyVenues;
   List<Venue>? _newVenues;
   List<Venue>? _trendingVenues;
   List<Venue>? _suggestedVenues;
   CarouselController? _carouselController;
-  int _carouselCurrentIndex = 1;
-
+  int carouselCurrentIndex = 1;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  List<String>? _nearbyCities;
 
   @override
   void initState() {
     super.initState();
+
+    User? loggedInUser;
+    if (widget.userEmail.isNotNullAndNotEmpty) {
+      loggedInUser = findUser(widget.userEmail!);
+    }
+
+    if (loggedInUser != null &&
+        loggedInUser.notificationOptions.locationServicesTurnedOn == false) {
+      _activateLocationPopUp(loggedInUser.email);
+    }
+
+    if (widget.location != null) {
+      _getNearbyCities(widget.location);
+    }
+
     _getNearbyVenues();
     _getNewVenues();
     _getTrendingVenues();
     _getSuggestedVenues();
-
-    _activateLocationPopUp();
   }
 
   @override
   void dispose() {
     unfocusNode.dispose();
     super.dispose();
+  }
+
+  void _getNearbyCities(Position? position) async {
+    List<String> cities = await getNearbyCities(position!);
+    setState(() => _nearbyCities = cities);
   }
 
   void _getNearbyVenues() async {
@@ -87,36 +107,25 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  void _activateLocationPopUp() {
+  void _activateLocationPopUp(String userEmail) {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await showModalBottomSheet(
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        barrierColor: Theme.of(context).colorScheme.onSecondary,
-        enableDrag: false,
-        context: context,
-        builder: (context) {
-          return GestureDetector(
-            onTap: () => unfocusNode.canRequestFocus
-                ? FocusScope.of(context).requestFocus(unfocusNode)
-                : FocusScope.of(context).unfocus(),
-            child: Padding(
-              padding: MediaQuery.viewInsetsOf(context),
-              child: const SizedBox(
-                height: 568,
-                child: LocationPermissionPopUp(),
-              ),
-            ),
-          );
-        },
-      ).then((locationPopUpState) => {
-            if (locationPopUpState != null)
-              {
-                safeSetState(() {
-                  _currentCity = locationPopUpState[0];
-                  _nearbyCities = locationPopUpState[1];
-                })
-              }
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          barrierColor: Theme.of(context).colorScheme.onSecondary,
+          enableDrag: false,
+          context: context,
+          builder: (context) {
+            return GestureDetector(
+                onTap: () => unfocusNode.canRequestFocus
+                    ? FocusScope.of(context).requestFocus(unfocusNode)
+                    : FocusScope.of(context).unfocus(),
+                child: Padding(
+                    padding: MediaQuery.viewInsetsOf(context),
+                    child: SizedBox(
+                      height: 568,
+                      child: LocationPermissionPopUp(userEmail: userEmail),
+                    )));
           });
     });
   }
@@ -200,7 +209,7 @@ class _HomepageState extends State<Homepage> {
                   autoPlayInterval: const Duration(seconds: 5),
                   autoPlayCurve: Curves.linear,
                   pauseAutoPlayInFiniteScroll: true,
-                  onPageChanged: (index, _) => _carouselCurrentIndex = index,
+                  onPageChanged: (index, _) => carouselCurrentIndex = index,
                 ),
               ),
             ),

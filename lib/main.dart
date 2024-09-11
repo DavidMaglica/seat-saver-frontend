@@ -36,6 +36,8 @@ class MyApp extends StatelessWidget {
         Routes.HOMEPAGE: (context) => Homepage(
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
+              location: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['location'],
             ),
         Routes.SEARCH: (context) => Search(
               userEmail: (ModalRoute.of(context)!.settings.arguments
@@ -61,7 +63,10 @@ class MyApp extends StatelessWidget {
               user: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['user'],
             ),
-        Routes.TERMS_OF_SERVICE: (context) => const TermsOfService(),
+        Routes.TERMS_OF_SERVICE: (context) => TermsOfService(
+              userEmail: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userEmail'],
+            ),
         Routes.AUTHENTICATION: (context) => const Authentication(),
         Routes.VENUE: (context) => VenuePage(
               name: (ModalRoute.of(context)!.settings.arguments
