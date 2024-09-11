@@ -23,7 +23,8 @@ class Homepage extends StatefulWidget {
   final String? userEmail;
   final Position? userLocation;
 
-  const Homepage({Key? key, this.userEmail, this.userLocation}) : super(key: key);
+  const Homepage({Key? key, this.userEmail, this.userLocation})
+      : super(key: key);
 
   @override
   State<Homepage> createState() => _HomepageState();
@@ -47,15 +48,19 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
+    int locationPopUpCounter = 0;
 
     User? loggedInUser;
     if (widget.userEmail.isNotNullAndNotEmpty) {
       loggedInUser = findUser(widget.userEmail!);
     }
 
-    if (loggedInUser != null &&
-        loggedInUser.notificationOptions.locationServicesTurnedOn == false) {
-      _activateLocationPopUp(loggedInUser.email);
+    if (locationPopUpCounter != 0) {
+      if (loggedInUser != null &&
+          loggedInUser.notificationOptions.locationServicesTurnedOn == false) {
+        _activateLocationPopUp(loggedInUser.email);
+      }
+      locationPopUpCounter++;
     }
 
     if (widget.userLocation != null) {
@@ -130,14 +135,23 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  void _openNearbyVenues() => Navigator.pushNamed(context, Routes.SEARCH,
-      arguments: {'userEmail': widget.userEmail, 'userLocation': widget.userLocation});
+  void _openNearbyVenues() =>
+      Navigator.pushNamed(context, Routes.SEARCH, arguments: {
+        'userEmail': widget.userEmail,
+        'userLocation': widget.userLocation
+      });
 
-  void _openNewVenues() => Navigator.pushNamed(context, Routes.SEARCH,
-      arguments: {'userEmail': widget.userEmail, 'userLocation': widget.userLocation});
+  void _openNewVenues() =>
+      Navigator.pushNamed(context, Routes.SEARCH, arguments: {
+        'userEmail': widget.userEmail,
+        'userLocation': widget.userLocation
+      });
 
-  void _openTrendingVenues() => Navigator.pushNamed(context, Routes.SEARCH,
-      arguments: {'userEmail': widget.userEmail, 'userLocation': widget.userLocation});
+  void _openTrendingVenues() =>
+      Navigator.pushNamed(context, Routes.SEARCH, arguments: {
+        'userEmail': widget.userEmail,
+        'userLocation': widget.userLocation
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -159,8 +173,7 @@ class _HomepageState extends State<Homepage> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           _buildHeader(),
-                          _buildCarouselComponent(
-                              _nearbyCities ?? ['undefined']),
+                          _buildCarouselComponent(_nearbyCities ?? []),
                           _buildVenues('Nearby Venues', _openNearbyVenues,
                               _nearbyVenues ?? []),
                           _buildVenues(
@@ -177,12 +190,15 @@ class _HomepageState extends State<Homepage> {
                 bottomNavigationBar: NavBar(
                   currentIndex: pageIndex,
                   context: context,
-                  onTap: (index, context) => onNavbarItemTapped(
-                      pageIndex, index, context, widget.userEmail, widget.userLocation),
+                  onTap: (index, context) => onNavbarItemTapped(pageIndex,
+                      index, context, widget.userEmail, widget.userLocation),
                 ))));
   }
 
   Row _buildCarouselComponent(List<String> nearbyCities) {
+    if (nearbyCities.isEmpty) {
+      return const Row();
+    }
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
@@ -369,8 +385,11 @@ class _HomepageState extends State<Homepage> {
           ]));
 
   InkWell _buildCategoryCard(VenueType category) => InkWell(
-      onTap: () => Navigator.pushNamed(context, Routes.SEARCH,
-          arguments: {'type': category, 'userEmail': widget.userEmail, 'userLocation': widget.userLocation}),
+      onTap: () => Navigator.pushNamed(context, Routes.SEARCH, arguments: {
+            'type': category,
+            'userEmail': widget.userEmail,
+            'userLocation': widget.userLocation
+          }),
       child: Align(
           alignment: AlignmentDirectional.center,
           child: Padding(
