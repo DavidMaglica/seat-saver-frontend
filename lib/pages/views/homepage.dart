@@ -21,9 +21,9 @@ import '../../utils/routing_utils.dart';
 
 class Homepage extends StatefulWidget {
   final String? userEmail;
-  final Position? location;
+  final Position? userLocation;
 
-  const Homepage({Key? key, this.userEmail, this.location}) : super(key: key);
+  const Homepage({Key? key, this.userEmail, this.userLocation}) : super(key: key);
 
   @override
   State<Homepage> createState() => _HomepageState();
@@ -58,8 +58,8 @@ class _HomepageState extends State<Homepage> {
       _activateLocationPopUp(loggedInUser.email);
     }
 
-    if (widget.location != null) {
-      _getNearbyCities(widget.location);
+    if (widget.userLocation != null) {
+      _getNearbyCities(widget.userLocation);
     }
 
     _getNearbyVenues();
@@ -178,7 +178,7 @@ class _HomepageState extends State<Homepage> {
                   currentIndex: pageIndex,
                   context: context,
                   onTap: (index, context) => onNavbarItemTapped(
-                      pageIndex, index, context, widget.userEmail),
+                      pageIndex, index, context, widget.userEmail, widget.userLocation),
                 ))));
   }
 

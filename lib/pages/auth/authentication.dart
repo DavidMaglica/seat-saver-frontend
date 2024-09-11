@@ -142,7 +142,7 @@ class _AuthenticationState extends State<Authentication>
     if (response.success) {
       if (!mounted) return;
       Navigator.pushNamed(context, Routes.HOMEPAGE,
-          arguments: {'userEmail': userEmail, 'location': null});
+          arguments: {'userEmail': userEmail, 'userLocation': null});
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -174,7 +174,7 @@ class _AuthenticationState extends State<Authentication>
     if (response.success) {
       if (!mounted) return;
       Navigator.pushNamed(context, Routes.HOMEPAGE,
-          arguments: {'userEmail': userEmail, 'location': null});
+          arguments: {'userEmail': userEmail, 'userLocation': null});
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

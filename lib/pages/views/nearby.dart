@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../components/navbar.dart';
 import '../../themes/theme.dart';
@@ -8,10 +9,12 @@ import '../../utils/routing_utils.dart';
 
 class Nearby extends StatefulWidget {
   final String? userEmail;
+  final Position? userLocation;
 
   const Nearby({
     Key? key,
     this.userEmail,
+    this.userLocation,
   }) : super(key: key);
 
   @override
@@ -50,63 +53,64 @@ class _NearbyState extends State<Nearby> {
           ? FocusScope.of(context).requestFocus(unfocusNode)
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
-          key: scaffoldKey,
-          resizeToAvoidBottomInset: false,
-          backgroundColor: Theme.of(context).colorScheme.background,
-          body: SafeArea(
-            top: true,
-            child: Column(
-              children: [
-                Expanded(
-                    child: OSMFlutter(
-                  controller: osmMapController,
-                  osmOption: OSMOption(
-                    userTrackingOption: const UserTrackingOption(
-                      enableTracking: true,
-                      unFollowUser: false,
-                    ),
-                    zoomOption: const ZoomOption(
-                      initZoom: 14,
-                      minZoomLevel: 2,
-                      maxZoomLevel: 19,
-                      stepZoom: 10,
-                    ),
-                    userLocationMarker: UserLocationMaker(
-                      personMarker: const MarkerIcon(
-                        icon: Icon(
-                          CupertinoIcons.location_solid,
-                          color: AppThemes.accent1,
-                        ),
-                      ),
-                      directionArrowMarker: const MarkerIcon(
-                        icon: Icon(
-                          CupertinoIcons.arrow_right_circle,
-                          size: 48,
-                        ),
-                      ),
-                    ),
-                    roadConfiguration: const RoadOption(
-                      roadColor: Colors.yellowAccent,
-                    ),
-                    markerOption: MarkerOption(
-                        defaultMarker: const MarkerIcon(
-                      icon: Icon(
-                        CupertinoIcons.person_circle,
-                        color: Colors.blue,
-                        size: 56,
-                      ),
-                    )),
+        key: scaffoldKey,
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: SafeArea(
+          top: true,
+          child: Column(
+            children: [
+              Expanded(
+                  child: OSMFlutter(
+                controller: osmMapController,
+                osmOption: OSMOption(
+                  userTrackingOption: const UserTrackingOption(
+                    enableTracking: true,
+                    unFollowUser: false,
                   ),
-                )),
-              ],
-            ),
+                  zoomOption: const ZoomOption(
+                    initZoom: 14,
+                    minZoomLevel: 2,
+                    maxZoomLevel: 19,
+                    stepZoom: 10,
+                  ),
+                  userLocationMarker: UserLocationMaker(
+                    personMarker: const MarkerIcon(
+                      icon: Icon(
+                        CupertinoIcons.location_solid,
+                        color: AppThemes.accent1,
+                      ),
+                    ),
+                    directionArrowMarker: const MarkerIcon(
+                      icon: Icon(
+                        CupertinoIcons.arrow_right_circle,
+                        size: 48,
+                      ),
+                    ),
+                  ),
+                  roadConfiguration: const RoadOption(
+                    roadColor: Colors.yellowAccent,
+                  ),
+                  markerOption: MarkerOption(
+                      defaultMarker: const MarkerIcon(
+                    icon: Icon(
+                      CupertinoIcons.person_circle,
+                      color: Colors.blue,
+                      size: 56,
+                    ),
+                  )),
+                ),
+              )),
+            ],
           ),
-          bottomNavigationBar: NavBar(
-            currentIndex: pageIndex,
-            context: context,
-            onTap: (index, context) =>
-                onNavbarItemTapped(pageIndex, index, context, widget.userEmail),
-          )),
+        ),
+        bottomNavigationBar: NavBar(
+          currentIndex: pageIndex,
+          context: context,
+          onTap: (index, context) => onNavbarItemTapped(
+              pageIndex, index, context, widget.userEmail, widget.userLocation),
+        ),
+      ),
     );
   }
 }

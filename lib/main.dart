@@ -36,20 +36,26 @@ class MyApp extends StatelessWidget {
         Routes.HOMEPAGE: (context) => Homepage(
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
-              location: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['location'],
+              userLocation: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userLocation'],
             ),
         Routes.SEARCH: (context) => Search(
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
+              userLocation: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userLocation'],
             ),
         Routes.NEARBY: (context) => Nearby(
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
+              userLocation: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userLocation'],
             ),
         Routes.ACCOUNT: (context) => Account(
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
+              userLocation: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userLocation'],
             ),
         Routes.NOTIFICATION_SETTINGS: (context) => NotificationSettings(
               user: (ModalRoute.of(context)!.settings.arguments

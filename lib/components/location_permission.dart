@@ -73,10 +73,10 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
   Future<void> _getCurrentPosition() async {
     if (!await _handleLocationPermission()) return;
 
-    Position? location = await Geolocator.getCurrentPosition(
+    Position? userLocation = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
-    String? currentCity = await _getCityFromLatLng(location);
+    String? currentCity = await _getCityFromLatLng(userLocation);
     if (currentCity == null || currentCity.isEmpty) {
       if (!mounted) return;
       showToast('Failed to get current location',
@@ -89,7 +89,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
     if (!mounted) return;
     Navigator.popAndPushNamed(context, Routes.HOMEPAGE, arguments: {
       'userEmail': widget.userEmail,
-      'location': location,
+      'userLocation': userLocation,
     });
   }
 
@@ -167,7 +167,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
                     Routes.HOMEPAGE,
                     arguments: {
                       'userEmail': widget.userEmail,
-                      'location': null
+                      'userLocation': null
                     },
                   );
                 },

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../api/account_api.dart';
 import '../../api/data/user.dart';
@@ -11,10 +12,12 @@ import '../../utils/routing_utils.dart';
 
 class Account extends StatefulWidget {
   final String? userEmail;
+  final Position? userLocation;
 
   const Account({
     Key? key,
     this.userEmail,
+    this.userLocation,
   }) : super(key: key);
 
   @override
@@ -79,7 +82,8 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                 context: context,
                 currentIndex: pageIndex,
                 onTap: (index, context) {
-                  onNavbarItemTapped(pageIndex, index, context, widget.userEmail);
+                  onNavbarItemTapped(
+                      pageIndex, index, context, widget.userEmail, widget.userLocation);
                 })));
   }
 
@@ -133,7 +137,8 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                   child: InkWell(
                       onTap: () async {
                         if (route == Routes.TERMS_OF_SERVICE) {
-                          Navigator.pushNamed(context, route, arguments: {'userEmail': user?.email});
+                          Navigator.pushNamed(context, route,
+                              arguments: {'userEmail': user?.email});
                           return;
                         }
                         if (user == null) {

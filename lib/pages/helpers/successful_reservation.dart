@@ -24,14 +24,14 @@ class SuccessfulReservation extends StatefulWidget {
 
 class _SuccessfulReservationState extends State<SuccessfulReservation> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  Timer? _timer;
+  Timer? timer;
   int _start = 15;
 
   @override
   void initState() {
     super.initState();
 
-    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       _start == 0
           ? {timer.cancel(), Navigator.pop(context)}
           : setState(() => _start--);

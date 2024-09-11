@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../api/data/venue.dart';
 import '../../api/venue_api.dart';
@@ -11,10 +12,12 @@ import '../../utils/routing_utils.dart';
 
 class Search extends StatefulWidget {
   final String? userEmail;
+  final Position? userLocation;
 
   const Search({
     Key? key,
     this.userEmail,
+    this.userLocation,
   }) : super(key: key);
 
   @override
@@ -139,7 +142,7 @@ class _SearchState extends State<Search> {
           currentIndex: pageIndex,
           context: context,
           onTap: (index, context) =>
-              onNavbarItemTapped(pageIndex, index, context, widget.userEmail),
+              onNavbarItemTapped(pageIndex, index, context, widget.userEmail, widget.userLocation),
         ),
       ),
     );
