@@ -27,12 +27,21 @@ class _NearbyState extends State<Nearby> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  late MapController osmMapController;
+
   String? email;
 
   @override
   void initState() {
     super.initState();
     if (widget.userEmail != null) setState(() => email = widget.userEmail);
+
+    osmMapController = MapController(
+      initPosition: GeoPoint(
+          latitude: widget.userLocation?.latitude ?? 0,
+          longitude: widget.userLocation?.longitude ?? 0),
+    );
+
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -41,10 +50,6 @@ class _NearbyState extends State<Nearby> {
     unfocusNode.dispose();
     super.dispose();
   }
-
-  MapController osmMapController = MapController(
-    initPosition: GeoPoint(latitude: 47.4358055, longitude: 8.4737324),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -64,12 +69,15 @@ class _NearbyState extends State<Nearby> {
                   child: OSMFlutter(
                 controller: osmMapController,
                 osmOption: OSMOption(
+                  showDefaultInfoWindow: true,
+                  isPicker: false,
+                  showContributorBadgeForOSM: true,
                   userTrackingOption: const UserTrackingOption(
                     enableTracking: true,
                     unFollowUser: false,
                   ),
                   zoomOption: const ZoomOption(
-                    initZoom: 14,
+                    initZoom: 16,
                     minZoomLevel: 2,
                     maxZoomLevel: 19,
                     stepZoom: 10,
@@ -79,12 +87,14 @@ class _NearbyState extends State<Nearby> {
                       icon: Icon(
                         CupertinoIcons.location_solid,
                         color: AppThemes.accent1,
+                        size: 32,
                       ),
                     ),
                     directionArrowMarker: const MarkerIcon(
                       icon: Icon(
-                        CupertinoIcons.arrow_right_circle,
-                        size: 48,
+                        CupertinoIcons.location_solid,
+                        color: AppThemes.accent1,
+                        size: 32,
                       ),
                     ),
                   ),

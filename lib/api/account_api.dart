@@ -1,3 +1,5 @@
+import 'package:geolocator/geolocator.dart';
+
 import 'data/basic_response.dart';
 import 'data/notification_settings.dart';
 import 'data/user.dart';
@@ -20,8 +22,8 @@ Future<UserResponse?> getUserByEmail(String email) async {
 }
 
 Future<BasicResponse> signup(
-    String nameAndSurname, String email, String password) async {
-  if (nameAndSurname.isEmpty || email.isEmpty || password.isEmpty) {
+    String username, String email, String password) async {
+  if (username.isEmpty || email.isEmpty || password.isEmpty) {
     return BasicResponse(success: false, message: 'Please fill in all fields');
   }
 
@@ -30,7 +32,7 @@ Future<BasicResponse> signup(
   }
 
   User newUser = User(
-    nameAndSurname: nameAndSurname,
+    username: username,
     email: email,
     password: password,
     notificationOptions: NotificationSettings(
@@ -38,6 +40,7 @@ Future<BasicResponse> signup(
       emailNotificationsTurnedOn: false,
       locationServicesTurnedOn: false,
     ),
+    lastKnownLocation: null,
   );
 
   userStore[email] = newUser;
@@ -79,6 +82,19 @@ Future<NotificationSettingsResponse> getNotificationSettingsByEmail(
   );
 }
 
+Future<UserResponse> getLastKnownLocationByEmail(String email) async {
+  if (!userStore.containsKey(email)) {
+    return UserResponse(success: false, message: 'User not found', user: null);
+  }
+
+  User user = userStore[email]!;
+  return UserResponse(
+    success: true,
+    message: 'Last known location retrieved successfully',
+    user: user,
+  );
+}
+
 Future<BasicResponse> updateUserNotificationOptions(
   String email,
   bool pushNotificationsTurnedOn,
@@ -92,7 +108,7 @@ Future<BasicResponse> updateUserNotificationOptions(
   User existingUser = userStore[email]!;
 
   User updatedUser = User(
-    nameAndSurname: existingUser.nameAndSurname,
+    username: existingUser.username,
     email: existingUser.email,
     password: existingUser.password,
     notificationOptions: NotificationSettings(
@@ -100,11 +116,32 @@ Future<BasicResponse> updateUserNotificationOptions(
       emailNotificationsTurnedOn: emailNotificationsTurnedOn,
       locationServicesTurnedOn: locationServicesTurnedOn,
     ),
+    lastKnownLocation: existingUser.lastKnownLocation,
   );
 
   userStore[email] = updatedUser;
   return BasicResponse(
       success: true, message: 'Notification settings updated successfully');
+}
+
+Future<BasicResponse> updateUserLocationByEmail(
+    String userEmail, Position? position) async {
+  if (!userStore.containsKey(userEmail)) {
+    return BasicResponse(success: false, message: 'User not found');
+  }
+
+  User existingUser = userStore[userEmail]!;
+
+  User updatedUser = User(
+    username: existingUser.username,
+    email: existingUser.email,
+    password: existingUser.password,
+    notificationOptions: existingUser.notificationOptions,
+    lastKnownLocation: position,
+  );
+
+  userStore[userEmail] = updatedUser;
+  return BasicResponse(success: true, message: 'Location updated successfully');
 }
 
 Future<BasicResponse> updateLocationServicesByEmail(
@@ -116,14 +153,17 @@ Future<BasicResponse> updateLocationServicesByEmail(
   User existingUser = userStore[email]!;
 
   User updatedUser = User(
-    nameAndSurname: existingUser.nameAndSurname,
+    username: existingUser.username,
     email: existingUser.email,
     password: existingUser.password,
     notificationOptions: NotificationSettings(
-      pushNotificationsTurnedOn: existingUser.notificationOptions.pushNotificationsTurnedOn,
-      emailNotificationsTurnedOn: existingUser.notificationOptions.emailNotificationsTurnedOn,
+      pushNotificationsTurnedOn:
+          existingUser.notificationOptions.pushNotificationsTurnedOn,
+      emailNotificationsTurnedOn:
+          existingUser.notificationOptions.emailNotificationsTurnedOn,
       locationServicesTurnedOn: locationServicesTurnedOn,
     ),
+    lastKnownLocation: existingUser.lastKnownLocation,
   );
 
   userStore[email] = updatedUser;
@@ -137,7 +177,7 @@ Future<BasicResponse> changePasswordByEmail(
 
   if (user != null) {
     User updatedUser = User(
-      nameAndSurname: user.nameAndSurname,
+      username: user.username,
       email: user.email,
       password: newPassword,
       notificationOptions: user.notificationOptions,
@@ -152,16 +192,16 @@ Future<BasicResponse> changePasswordByEmail(
   }
 }
 
-Future<BasicResponse> changeNameAndSurname(
-    String email, String newNameAndSurname) async {
+Future<BasicResponse> changeUsername(String email, String newUsername) async {
   User? user = findUser(email);
 
   if (user != null) {
     User updatedUser = User(
-      nameAndSurname: newNameAndSurname,
+      username: newUsername,
       email: user.email,
       password: user.password,
       notificationOptions: user.notificationOptions,
+      lastKnownLocation: user.lastKnownLocation,
     );
     userStore[email] = updatedUser;
 

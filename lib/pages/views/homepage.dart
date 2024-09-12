@@ -44,6 +44,7 @@ class _HomepageState extends State<Homepage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<String>? _nearbyCities;
+  Position? currentUserLocation;
 
   @override
   void initState() {
@@ -55,7 +56,7 @@ class _HomepageState extends State<Homepage> {
       loggedInUser = findUser(widget.userEmail!);
     }
 
-    if (locationPopUpCounter != 0) {
+    if (locationPopUpCounter <= 1) {
       if (loggedInUser != null &&
           loggedInUser.notificationOptions.locationServicesTurnedOn == false) {
         _activateLocationPopUp(loggedInUser.email);
@@ -65,6 +66,11 @@ class _HomepageState extends State<Homepage> {
 
     if (widget.userLocation != null) {
       _getNearbyCities(widget.userLocation);
+    } else {
+      if (loggedInUser != null &&
+          loggedInUser.notificationOptions.locationServicesTurnedOn) {
+        _getNearbyCities(loggedInUser.lastKnownLocation);
+      }
     }
 
     _getNearbyVenues();

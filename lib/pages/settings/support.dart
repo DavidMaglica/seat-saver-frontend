@@ -191,12 +191,12 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
       TextFormField(
         controller: controller,
         focusNode: focusNode,
-        autofocus: true,
+        autofocus: false,
         obscureText: false,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: Theme.of(context).textTheme.bodyLarge,
-          hintStyle: Theme.of(context).textTheme.bodyMedium,
+          labelStyle: Theme.of(context).textTheme.bodyMedium,
+          hintStyle: Theme.of(context).textTheme.bodySmall,
           hintText: hintText,
           enabledBorder:
               outlineInputBorder(Theme.of(context).colorScheme.onPrimary),

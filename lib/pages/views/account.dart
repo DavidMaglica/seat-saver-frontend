@@ -163,7 +163,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                               const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                           child: Text(
                             text,
-                            style: Theme.of(context).textTheme.bodyLarge,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ),
                         const Spacer(),
@@ -179,7 +179,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
           child: Text(
-            user?.nameAndSurname ?? '',
+            user?.username ?? '',
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),

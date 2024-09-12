@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_credit_card/extension.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
@@ -28,12 +29,10 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  FocusNode? _newNameAndSurnameFocusNode;
-  TextEditingController? _newNameAndSurnameTextController;
+  FocusNode? _newUsernameFocusNode;
+  TextEditingController? _newUsernameTextController;
   String? Function(BuildContext, String?)?
-      _newNameAndSurnameTextControllerValidator;
-
-  bool _oldPasswordVisibility = false;
+  _newUsernameTextControllerValidator;
 
   FocusNode? _newPasswordFocusNode;
   TextEditingController? _newPasswordTextController;
@@ -44,12 +43,13 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController? _confirmNewPasswordTextController;
   bool _confirmNewPasswordVisibility = false;
   String? Function(BuildContext, String?)?
-      _confirmNewPasswordTextControllerValidator;
+  _confirmNewPasswordTextControllerValidator;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String updatedNameAndSurname = '';
+  String updatedUsername = '';
   String updatedPassword = '';
+  String updatedEmail = '';
 
   @override
   void initState() {
@@ -58,15 +58,15 @@ class _EditProfileState extends State<EditProfile> {
     _newPasswordTextController = TextEditingController();
     _confirmNewPasswordTextController = TextEditingController();
 
-    _newNameAndSurnameTextController = TextEditingController();
+    _newUsernameTextController = TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
   void dispose() {
-    _newNameAndSurnameFocusNode?.dispose();
-    _newNameAndSurnameTextController?.dispose();
+    _newUsernameFocusNode?.dispose();
+    _newUsernameTextController?.dispose();
 
     _newPasswordFocusNode?.dispose();
     _newPasswordTextController?.dispose();
@@ -77,59 +77,69 @@ class _EditProfileState extends State<EditProfile> {
     super.dispose();
   }
 
-  void _changeNameAndSurname() {
-    String? newName = _newNameAndSurnameTextController?.text;
+  void _changeUsername() {
+    String? newName = _newUsernameTextController?.text;
 
     if (newName.isNullOrEmpty) {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast('Please enter a new name and surname', AppThemes.errorColor);
       return;
     }
 
-    changeNameAndSurname(widget.user.email, newName!).then((response) {
+    changeUsername(widget.user.email, newName!).then((response) {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast(response.message,
           response.success ? AppThemes.successColor : AppThemes.errorColor);
 
       if (response.success) {
         setState(() {
-          updatedNameAndSurname = newName;
-          _newNameAndSurnameTextController?.clear();
+          updatedUsername = newName;
+          _newUsernameTextController?.clear();
         });
         Navigator.of(context).pop();
       }
     }).catchError((error) {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast(
           'Error while changing name and surname. Please try again later.',
           AppThemes.errorColor);
     });
   }
 
+  void _changeEmail() {}
+
   void _changePassword() {
     String? newPassword = _newPasswordTextController?.text;
     String? confirmNewPassword = _confirmNewPasswordTextController?.text;
 
     if (newPassword == null || newPassword.isEmpty) {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast('Please enter a new password', AppThemes.errorColor);
       return;
     }
 
     if (confirmNewPassword == null || confirmNewPassword.isEmpty) {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast("New password hasn't been confirmed", AppThemes.errorColor);
       return;
     }
 
     if (newPassword.length < 8) {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast(
           'Password must be at least 8 characters long', AppThemes.errorColor);
       return;
     }
 
     if (newPassword != confirmNewPassword) {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast('Passwords do not match', AppThemes.errorColor);
       return;
     }
 
     changePasswordByEmail(widget.user.email, newPassword)
         .then((response) async {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast(response.message,
           response.success ? AppThemes.successColor : AppThemes.errorColor);
 
@@ -142,6 +152,7 @@ class _EditProfileState extends State<EditProfile> {
         Navigator.of(context).pop();
       }
     }).catchError((error) {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast('Error while changing password. Please try again later.',
           AppThemes.errorColor);
     });
@@ -149,7 +160,8 @@ class _EditProfileState extends State<EditProfile> {
 
   void _cancel() => Navigator.of(context).pop();
 
-  void _showToast(String message, Color colour) => showToast(
+  void _showToast(String message, Color colour) =>
+      showToast(
         message,
         context: context,
         backgroundColor: colour,
@@ -164,11 +176,17 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme
+            .of(context)
+            .colorScheme
+            .background,
         appBar: CustomAppbar(
           title: 'Edit Profile',
           routeToPush: Routes.ACCOUNT,
-          args: {'userEmail': widget.user.email, 'userLocation': widget.userLocation},
+          args: {
+            'userEmail': widget.user.email,
+            'userLocation': widget.userLocation
+          },
         ),
         body: SafeArea(
             top: true,
@@ -177,134 +195,237 @@ class _EditProfileState extends State<EditProfile> {
                 const Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0, 36, 0, 0),
                 ),
-                Align(
-                  alignment: const AlignmentDirectional(-1, 0),
-                  child: Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                      child: _buildAccountDetails()),
-                ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      buildOpenBottomSheetButton(
-                          'Change name', _openNameModalBottomSheet, context),
-                      buildOpenBottomSheetButton('Change password',
-                          _openPasswordModalBottomSheet, context),
-                    ])
+                _buildChangeDetailGroup(),
               ]),
             )));
   }
 
-  Padding _buildBodyText(String detail, String text,
-          {bool isPassword = false}) =>
-      Padding(
-          padding:
-              EdgeInsetsDirectional.fromSTEB(0, isPassword ? 24 : 36, 0, 0),
-          child: isPassword
-              ? Row(children: [
-                  Expanded(
-                      child: RichText(
-                          text: TextSpan(
-                    children: [
-                      TextSpan(
-                          text: '$detail: ',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(fontWeight: FontWeight.bold)),
-                      TextSpan(
-                          text:
-                              _oldPasswordVisibility ? text : '•' * text.length,
-                          style: Theme.of(context).textTheme.bodyLarge)
-                    ],
-                  ))),
-                  IconButton(
-                      icon: Icon(
-                        _oldPasswordVisibility
-                            ? CupertinoIcons.eye_slash_fill
-                            : CupertinoIcons.eye_solid,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _oldPasswordVisibility = !_oldPasswordVisibility;
-                        });
-                      })
-                ])
-              : RichText(
-                  text: TextSpan(children: [
-                  TextSpan(
-                    text: '$detail: ',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  TextSpan(
-                    text: text,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  )
-                ])));
-
-  Padding _buildAccountDetails() => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          buildEditProfileTitle('Your account details', context),
-          _buildBodyText('Email', widget.user.email),
-          _buildBodyText(
-              'Name and Surname',
-              updatedNameAndSurname.isNotNullAndNotEmpty
-                  ? updatedNameAndSurname
-                  : widget.user.nameAndSurname),
-          _buildBodyText(
-              'Password',
-              updatedPassword.isNotNullAndNotEmpty
-                  ? updatedPassword
-                  : widget.user.password,
-              isPassword: true),
-        ],
-      ));
-
-  void _openNameModalBottomSheet() => showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(16),
+  Widget _buildChangeDetailGroup() {
+    return Padding(
+      padding: const EdgeInsetsDirectional.all(16),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Theme
+              .of(context)
+              .colorScheme
+              .background,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 3,
+              color: Theme
+                  .of(context)
+                  .colorScheme
+                  .onPrimary
+                  .withOpacity(.5),
+              offset: const Offset(0, 1),
+            )
+          ],
+          borderRadius: BorderRadius.circular(8),
+          shape: BoxShape.rectangle,
         ),
+        child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                _buildChangeUsername(),
+                _buildDivider(),
+                _buildChangeEmail(),
+                _buildDivider(),
+                _buildChangePassword(),
+              ],
+            )),
       ),
-      builder: (BuildContext context) {
-        return Padding(
-            padding: modalPadding(context),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              buildModalTitle('Change Name and Surname', context),
-              const SizedBox(height: 16),
-              _buildNameInputField(
-                'New name',
-                'Enter a new name and surname',
-                _newNameAndSurnameTextController,
-                _newNameAndSurnameFocusNode,
-                _newNameAndSurnameTextControllerValidator,
-              ),
-              const SizedBox(height: 24),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                buildModalButton('Cancel', _cancel, AppThemes.errorColor),
-                buildModalButton(
-                    'Save', _changeNameAndSurname, AppThemes.successColor),
-              ]),
-              const SizedBox(height: 36),
-            ]));
-      });
+    );
+  }
 
-  Padding _buildNameInputField(
-    String labelText,
-    String hint,
-    TextEditingController? controller,
-    FocusNode? focusNode,
-    String? Function(BuildContext, String?)? validator,
-  ) =>
+  Divider _buildDivider() {
+    return Divider(
+      color:
+      Theme
+          .of(context)
+          .colorScheme
+          .onPrimary
+          .withOpacity(.5),
+      thickness: .5,
+    );
+  }
+
+  Padding _buildChangeUsername() =>
+      Padding(
+          padding: const EdgeInsetsDirectional.all(12),
+          child: InkWell(
+              onTap: () {
+                _openChangeUsernameBottomSheet();
+              },
+              child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Change Username',
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .titleMedium,
+                    ),
+                    Row(children: [
+                      Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            0, 0, 8, 0),
+                        child: Text(
+                          updatedUsername.isNotNullAndNotEmpty
+                              ? updatedUsername
+                              : widget.user.username,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                            color: Theme
+                                .of(context)
+                                .colorScheme
+                                .onPrimary
+                                .withOpacity(.6),
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        CupertinoIcons.chevron_right,
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .onPrimary,
+                        size: 14,
+                      )
+                    ])
+                  ])));
+
+  void _openChangeUsernameBottomSheet() =>
+      showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(16),
+            ),
+          ),
+          builder: (BuildContext context) {
+            return Padding(
+                padding: modalPadding(context),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  buildModalTitle('Change Username', context),
+                  const SizedBox(height: 16),
+                  _buildUsernameInputField(
+                    'New Username',
+                    'Enter a new username',
+                    _newUsernameTextController,
+                    _newUsernameFocusNode,
+                    _newUsernameTextControllerValidator,
+                  ),
+                  const SizedBox(height: 24),
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        buildModalButton(
+                            'Cancel', _cancel, AppThemes.errorColor),
+                        buildModalButton(
+                            'Save', _changeUsername, AppThemes.successColor),
+                      ]),
+                  const SizedBox(height: 36),
+                ]));
+          });
+
+
+  Padding _buildChangeEmail() =>
+      Padding(
+          padding: const EdgeInsetsDirectional.all(12),
+          child: InkWell(
+              onTap: () {
+                _openChangeEmailBottomSheet();
+              },
+              child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Change Email',
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .titleMedium,
+                    ),
+                    Row(children: [
+                      Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            0, 0, 8, 0),
+                        child: Text(
+                          updatedEmail.isNotNullAndNotEmpty
+                              ? updatedEmail
+                              : widget.user.email,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                            color: Theme
+                                .of(context)
+                                .colorScheme
+                                .onPrimary
+                                .withOpacity(.6),
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        CupertinoIcons.chevron_right,
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .onPrimary,
+                        size: 14,
+                      )
+                    ])
+                  ])));
+
+  void _openChangeEmailBottomSheet() =>
+      showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(16),
+            ),
+          ),
+          builder: (BuildContext context) {
+            return Padding(
+                padding: modalPadding(context),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  buildModalTitle('Change Email', context),
+                  const SizedBox(height: 16),
+                  _buildUsernameInputField(
+                    'New email',
+                    'Enter your new email',
+                    _newUsernameTextController,
+                    _newUsernameFocusNode,
+                    _newUsernameTextControllerValidator,
+                  ),
+                  const SizedBox(height: 24),
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        buildModalButton(
+                            'Cancel', _cancel, AppThemes.errorColor),
+                        buildModalButton(
+                            'Save', _changeEmail, AppThemes.successColor),
+                      ]),
+                  const SizedBox(height: 36),
+                ]));
+          });
+
+  Padding _buildUsernameInputField(String labelText,
+      String hint,
+      TextEditingController? controller,
+      FocusNode? focusNode,
+      String? Function(BuildContext, String?)? validator,) =>
       Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
           child: TextFormField(
@@ -313,30 +434,76 @@ class _EditProfileState extends State<EditProfile> {
             textCapitalization: TextCapitalization.words,
             decoration: InputDecoration(
               labelText: labelText,
-              labelStyle: Theme.of(context).textTheme.bodyMedium,
+              labelStyle: Theme
+                  .of(context)
+                  .textTheme
+                  .bodyMedium,
               hintText: hint,
-              hintStyle: Theme.of(context).textTheme.bodyMedium,
+              hintStyle: Theme
+                  .of(context)
+                  .textTheme
+                  .bodyMedium,
               enabledBorder:
-                  outlineInputBorder(Theme.of(context).colorScheme.onPrimary),
+              outlineInputBorder(Theme
+                  .of(context)
+                  .colorScheme
+                  .onPrimary
+                  .withOpacity(.6)),
               focusedBorder: outlineInputBorder(AppThemes.infoColor),
               errorBorder:
-                  outlineInputBorder(Theme.of(context).colorScheme.error),
+              outlineInputBorder(Theme
+                  .of(context)
+                  .colorScheme
+                  .error),
               focusedErrorBorder: outlineInputBorder(AppThemes.infoColor),
               contentPadding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
             ),
             keyboardType: TextInputType.name,
-            cursorColor: Theme.of(context).colorScheme.onPrimary,
-            style: Theme.of(context).textTheme.bodyMedium,
+            cursorColor: Theme
+                .of(context)
+                .colorScheme
+                .onPrimary,
+            style: Theme
+                .of(context)
+                .textTheme
+                .bodyMedium,
             validator: validator.asValidator(context),
           ));
 
-  void _openPasswordModalBottomSheet() => showModalBottomSheet(
+  Padding _buildChangePassword() =>
+      Padding(
+          padding: const EdgeInsetsDirectional.all(12),
+          child: InkWell(
+              onTap: () {
+                _openChangePasswordBottomSheet();
+              },
+              child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Change Password',
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .titleMedium,
+                    ),
+                    Icon(
+                      CupertinoIcons.chevron_right,
+                      color: Theme
+                          .of(context)
+                          .colorScheme
+                          .onPrimary,
+                      size: 14,
+                    )
+                  ])));
+
+  void _openChangePasswordBottomSheet() =>
+      showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         shape: modalRectangleBorder(),
-        builder: (
-          BuildContext context,
-        ) {
+        builder: (BuildContext context,) {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setModalState) {
               return Padding(
@@ -372,7 +539,7 @@ class _EditProfileState extends State<EditProfile> {
                       children: [
                         buildModalButton(
                           'Cancel',
-                          () => Navigator.of(context).pop(),
+                              () => Navigator.of(context).pop(),
                           AppThemes.errorColor,
                         ),
                         buildModalButton(
@@ -391,16 +558,14 @@ class _EditProfileState extends State<EditProfile> {
         },
       );
 
-  Padding _buildPasswordInputField(
-    String labelText,
-    String hint,
-    TextEditingController? controller,
-    FocusNode? focusNode,
-    String? Function(BuildContext, String?)? validator,
-    bool passwordVisibility,
-    bool isConfirmedPassword,
-    StateSetter setModalState,
-  ) =>
+  Padding _buildPasswordInputField(String labelText,
+      String hint,
+      TextEditingController? controller,
+      FocusNode? focusNode,
+      String? Function(BuildContext, String?)? validator,
+      bool passwordVisibility,
+      bool isConfirmedPassword,
+      StateSetter setModalState,) =>
       Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
         child: TextFormField(
@@ -410,15 +575,28 @@ class _EditProfileState extends State<EditProfile> {
           obscureText: !passwordVisibility,
           decoration: InputDecoration(
             labelText: labelText,
-            labelStyle: Theme.of(context).textTheme.bodyMedium,
+            labelStyle: Theme
+                .of(context)
+                .textTheme
+                .bodyMedium,
             hintText: hint,
-            hintStyle: Theme.of(context).textTheme.bodyMedium,
+            hintStyle: Theme
+                .of(context)
+                .textTheme
+                .bodyMedium,
             enabledBorder: outlineInputBorder(
-              Theme.of(context).colorScheme.onPrimary,
+              Theme
+                  .of(context)
+                  .colorScheme
+                  .onPrimary
+                  .withOpacity(.6),
             ),
             focusedBorder: outlineInputBorder(AppThemes.infoColor),
             errorBorder: outlineInputBorder(
-              Theme.of(context).colorScheme.error,
+              Theme
+                  .of(context)
+                  .colorScheme
+                  .error,
             ),
             focusedErrorBorder: outlineInputBorder(AppThemes.infoColor),
             contentPadding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
@@ -437,14 +615,23 @@ class _EditProfileState extends State<EditProfile> {
                 passwordVisibility
                     ? CupertinoIcons.eye_solid
                     : CupertinoIcons.eye_slash_fill,
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: Theme
+                    .of(context)
+                    .colorScheme
+                    .onPrimary,
                 size: 18,
               ),
             ),
           ),
           keyboardType: TextInputType.visiblePassword,
-          cursorColor: Theme.of(context).colorScheme.onPrimary,
-          style: Theme.of(context).textTheme.bodyMedium,
+          cursorColor: Theme
+              .of(context)
+              .colorScheme
+              .onPrimary,
+          style: Theme
+              .of(context)
+              .textTheme
+              .bodyMedium,
         ),
       );
 }

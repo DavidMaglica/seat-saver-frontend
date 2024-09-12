@@ -35,8 +35,8 @@ class _AuthenticationState extends State<Authentication>
       length: 2,
       initialIndex: 0,
     )..addListener(() => setState(() {}));
-    _model.nameAndSurnameSignupTextController ??= TextEditingController();
-    _model.nameAndSurnameSignupFocusNode ??= FocusNode();
+    _model.usernameSignupTextController ??= TextEditingController();
+    _model.usernameSignupFocusNode ??= FocusNode();
 
     _model.emailAddressSignupTextController ??= TextEditingController();
     _model.emailAddressSignupFocusNode ??= FocusNode();
@@ -118,7 +118,7 @@ class _AuthenticationState extends State<Authentication>
 
       case SignupMethod.custom:
         _customSignup(
-            _model.nameAndSurnameSignupTextController.text,
+            _model.usernameSignupTextController.text,
             _model.emailAddressSignupTextController.text,
             _model.passwordSignupTextController.text,
             _model.passwordConfirmTextController.text);
@@ -154,7 +154,7 @@ class _AuthenticationState extends State<Authentication>
   }
 
   void _customSignup(
-    String nameAndSurname,
+    String username,
     String userEmail,
     String password,
     String confirmedPassword,
@@ -169,7 +169,7 @@ class _AuthenticationState extends State<Authentication>
       return;
     }
 
-    BasicResponse response = await signup(nameAndSurname, userEmail, password);
+    BasicResponse response = await signup(username, userEmail, password);
 
     if (response.success) {
       if (!mounted) return;
@@ -281,7 +281,7 @@ class _AuthenticationState extends State<Authentication>
       TextFormField(
         controller: controller,
         focusNode: focusNode,
-        autofocus: true,
+        autofocus: false,
         autofillHints: const [AutofillHints.password],
         obscureText: !passwordVisibility,
         decoration: InputDecoration(
@@ -340,7 +340,7 @@ class _AuthenticationState extends State<Authentication>
   TextFormField _buildRetypePasswordField() => TextFormField(
         controller: _model.passwordConfirmTextController,
         focusNode: _model.passwordConfirmFocusNode,
-        autofocus: true,
+        autofocus: false,
         autofillHints: const [AutofillHints.password],
         obscureText: !_model.passwordConfirmVisibility,
         decoration: InputDecoration(
@@ -404,7 +404,7 @@ class _AuthenticationState extends State<Authentication>
       TextFormField(
         controller: controller,
         focusNode: focusNode,
-        autofocus: true,
+        autofocus: false,
         autofillHints: const [AutofillHints.email],
         obscureText: false,
         decoration: InputDecoration(
@@ -447,7 +447,7 @@ class _AuthenticationState extends State<Authentication>
         validator: validator.asValidator(context),
       );
 
-  TextFormField _buildNameAndSurnameField(
+  TextFormField _buildUsernameField(
     TextEditingController? controller,
     FocusNode? focusNode,
     String? Function(BuildContext, String?)? validator,
@@ -455,7 +455,7 @@ class _AuthenticationState extends State<Authentication>
       TextFormField(
         controller: controller,
         focusNode: focusNode,
-        autofocus: true,
+        autofocus: false,
         autofillHints: const [AutofillHints.name, AutofillHints.familyName],
         obscureText: false,
         decoration: InputDecoration(
@@ -556,10 +556,10 @@ class _AuthenticationState extends State<Authentication>
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
                   child: SizedBox(
                     width: double.infinity,
-                    child: _buildNameAndSurnameField(
-                      _model.nameAndSurnameSignupTextController,
-                      _model.nameAndSurnameSignupFocusNode,
-                      _model.nameAndSurnameSignupTextControllerValidator,
+                    child: _buildUsernameField(
+                      _model.usernameSignupTextController,
+                      _model.usernameSignupFocusNode,
+                      _model.usernameSignupTextControllerValidator,
                     ),
                   ),
                 ),

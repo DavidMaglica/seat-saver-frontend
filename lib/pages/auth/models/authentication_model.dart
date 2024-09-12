@@ -12,10 +12,10 @@ class AuthenticationModel extends FlutterFlowModel<Authentication> {
       tabBarController != null ? tabBarController!.index : 0;
 
   // Signup
-  FocusNode? nameAndSurnameSignupFocusNode;
-  TextEditingController? nameAndSurnameSignupTextController;
+  FocusNode? usernameSignupFocusNode;
+  TextEditingController? usernameSignupTextController;
   String? Function(BuildContext, String?)?
-      nameAndSurnameSignupTextControllerValidator;
+      usernameSignupTextControllerValidator;
 
   FocusNode? emailAddressSignupFocusNode;
   TextEditingController? emailAddressSignupTextController;
@@ -57,8 +57,8 @@ class AuthenticationModel extends FlutterFlowModel<Authentication> {
     unfocusNode.dispose();
     tabBarController?.dispose();
 
-    nameAndSurnameSignupFocusNode?.dispose();
-    nameAndSurnameSignupTextController?.dispose();
+    usernameSignupFocusNode?.dispose();
+    usernameSignupTextController?.dispose();
 
     emailAddressSignupFocusNode?.dispose();
     emailAddressSignupTextController?.dispose();

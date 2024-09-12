@@ -91,15 +91,15 @@ class _VenuePageState extends State<VenuePage> {
   }
 
   void _showToast(String message) => showToast(
-    message,
-    context: context,
-    backgroundColor: AppThemes.errorColor,
-    textStyle: const TextStyle(color: Colors.white, fontSize: 16.0),
-    borderRadius: BorderRadius.circular(8),
-    textPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-    alignment: Alignment.bottomLeft,
-    duration: const Duration(seconds: 4),
-  );
+        message,
+        context: context,
+        backgroundColor: AppThemes.errorColor,
+        textStyle: const TextStyle(color: Colors.white, fontSize: 16.0),
+        borderRadius: BorderRadius.circular(8),
+        textPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+        alignment: Alignment.bottomLeft,
+        duration: const Duration(seconds: 4),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -330,25 +330,23 @@ class _VenuePageState extends State<VenuePage> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 250,
+          height: 264,
           color: Theme.of(context).colorScheme.background,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 200,
-                child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.date,
-                    initialDateTime: DateTime.now(),
-                    minimumDate:
-                        DateTime.now().subtract(const Duration(days: 1)),
-                    maximumDate: DateTime(2100),
-                    onDateTimeChanged: (DateTime newDate) {
-                      setState(() {
-                        _selectedDate = newDate;
-                      });
-                    }),
-              ),
-              SizedBox(
+          child: Column(children: [
+            SizedBox(
+              height: 196,
+              child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.date,
+                  initialDateTime: DateTime.now(),
+                  minimumDate: DateTime.now().subtract(const Duration(days: 1)),
+                  maximumDate: DateTime(2100),
+                  onDateTimeChanged: (DateTime newDate) {
+                    setState(() {
+                      _selectedDate = newDate;
+                    });
+                  }),
+            ),
+            SizedBox(
                 height: 50,
                 child: CupertinoButton(
                   child: Text(
@@ -360,10 +358,8 @@ class _VenuePageState extends State<VenuePage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                ),
-              ),
-            ],
-          ),
+                )),
+          ]),
         );
       },
     );
@@ -391,12 +387,12 @@ class _VenuePageState extends State<VenuePage> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 250,
+          height: 264,
           color: Theme.of(context).colorScheme.background,
           child: Column(
             children: [
               SizedBox(
-                height: 200,
+                height: 196,
                 child: CupertinoPicker(
                   itemExtent: 32,
                   onSelectedItemChanged: (int selectedIndex) {
@@ -464,12 +460,12 @@ class _VenuePageState extends State<VenuePage> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 250,
+          height: 264,
           color: Theme.of(context).colorScheme.background,
           child: Column(
             children: [
               SizedBox(
-                height: 200,
+                height: 196,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

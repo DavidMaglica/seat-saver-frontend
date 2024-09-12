@@ -86,6 +86,8 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
           duration: const Duration(seconds: 4));
     }
 
+    updateUserLocationByEmail(widget.userEmail, userLocation);
+
     if (!mounted) return;
     Navigator.popAndPushNamed(context, Routes.HOMEPAGE, arguments: {
       'userEmail': widget.userEmail,
