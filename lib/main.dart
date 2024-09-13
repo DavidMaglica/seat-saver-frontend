@@ -4,6 +4,7 @@ import 'pages/auth/authentication.dart';
 import 'pages/helpers/successful_reservation.dart';
 import 'pages/settings/edit_profile.dart';
 import 'pages/settings/notification_settings.dart';
+import 'pages/settings/reservation_history.dart';
 import 'pages/settings/support.dart';
 import 'pages/settings/terms_of_service.dart';
 import 'pages/views/account.dart';
@@ -57,6 +58,12 @@ class MyApp extends StatelessWidget {
               userLocation: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userLocation'],
             ),
+        Routes.RESERVATION_HISTORY: (context) => ReservationHistory(
+              user: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['user'],
+              userLocation: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['userLocation'],
+            ),
         Routes.NOTIFICATION_SETTINGS: (context) => NotificationSettings(
               user: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['user'],
@@ -83,8 +90,8 @@ class MyApp extends StatelessWidget {
             ),
         Routes.AUTHENTICATION: (context) => const Authentication(),
         Routes.VENUE: (context) => VenuePage(
-              name: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['name'],
+              venueName: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['venueName'],
               location: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['location'],
               workingHours: (ModalRoute.of(context)!.settings.arguments
@@ -103,12 +110,10 @@ class MyApp extends StatelessWidget {
         Routes.SUCCESSFUL_RESERVATION: (context) => SuccessfulReservation(
               venueName: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['venueName'],
-              numberOfPeople: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['numberOfPeople'],
-              reservationDate: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['reservationDate'],
-              reservationTime: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['reservationTime'],
+              numberOfGuests: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['numberOfGuests'],
+              reservationDateTime: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['reservationDateTime'],
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
               userLocation: (ModalRoute.of(context)!.settings.arguments

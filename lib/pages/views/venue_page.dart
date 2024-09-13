@@ -1,5 +1,7 @@
+import 'package:TableReserver/api/reservation_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_credit_card/extension.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
@@ -13,7 +15,7 @@ import '../../utils/constants.dart';
 import '../../utils/full_image_view.dart';
 
 class VenuePage extends StatefulWidget {
-  final String name;
+  final String venueName;
   final String location;
   final String workingHours;
   final double rating;
@@ -24,7 +26,7 @@ class VenuePage extends StatefulWidget {
 
   const VenuePage({
     Key? key,
-    required this.name,
+    required this.venueName,
     required this.location,
     required this.workingHours,
     required this.rating,
@@ -59,7 +61,10 @@ class _VenuePageState extends State<VenuePage> {
   }
 
   void _reserveSpot() {
-    DateFormat dateFormat = DateFormat('dd-MM-yyyy');
+    if (widget.userEmail.isNullOrEmpty) {
+      _showToast('Please log in to reserve a spot');
+      return;
+    }
 
     if (_selectedDate == null) {
       _showToast('Please select a date');
@@ -76,15 +81,21 @@ class _VenuePageState extends State<VenuePage> {
       return;
     }
 
-    String date = dateFormat.format(_selectedDate!).toString();
-    String minutes = _selectedMinute == 0 ? '00' : '30';
-    String time = '$_selectedHour:$minutes';
+    DateTime reservationDateTime = DateTime(
+      _selectedDate!.year,
+      _selectedDate!.month,
+      _selectedDate!.day,
+      _selectedHour!,
+      _selectedMinute == 0 ? 0 : 30,
+    );
+
+    addReservation(widget.userEmail!, widget.venueName,
+        _selectedNumberOfGuests!, reservationDateTime);
 
     Navigator.pushNamed(context, Routes.SUCCESSFUL_RESERVATION, arguments: {
-      'venueName': widget.name,
-      'numberOfPeople': _selectedNumberOfGuests,
-      'reservationDate': date,
-      'reservationTime': time,
+      'venueName': widget.venueName,
+      'numberOfGuests': _selectedNumberOfGuests,
+      'reservationDateTime': reservationDateTime,
       'userEmail': widget.userEmail,
       'userLocation': widget.userLocation,
     });
@@ -109,7 +120,7 @@ class _VenuePageState extends State<VenuePage> {
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: CustomAppbar(
-          title: widget.name,
+          title: widget.venueName,
           routeToPush: Routes.HOMEPAGE,
           args: {
             'userEmail': widget.userEmail,
@@ -142,7 +153,7 @@ class _VenuePageState extends State<VenuePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       _buildHeadingImage(images[0]),
-                      _buildObjectDetails(widget.name, widget.location,
+                      _buildObjectDetails(widget.venueName, widget.location,
                           widget.workingHours, widget.rating),
                       _buildObjectType(widget.type),
                       _buildObjectDescription(widget.description),

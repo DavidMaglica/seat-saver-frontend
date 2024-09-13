@@ -25,7 +25,7 @@ Align buildActionButton(BuildContext context, String title,
                 ))));
 
 OutlineInputBorder outlineInputBorder(Color colour) => OutlineInputBorder(
-      borderSide: BorderSide(color: colour, width: 2),
+      borderSide: BorderSide(color: colour, width: .5),
       borderRadius: BorderRadius.circular(8),
     );
 

@@ -6,6 +6,7 @@ class Routes {
   static const String SEARCH = '/search';
   static const String NEARBY = '/nearby';
   static const String ACCOUNT = '/account';
+  static const String RESERVATION_HISTORY = '/reservationHistory';
   static const String NOTIFICATION_SETTINGS = '/notificationSettings';
   static const String SUPPORT = '/support';
   static const String EDIT_PROFILE = '/editProfile';

@@ -460,7 +460,7 @@ class _AuthenticationState extends State<Authentication>
         obscureText: false,
         decoration: InputDecoration(
           isDense: false,
-          labelText: 'Name and Surname',
+          labelText: 'Username',
           labelStyle: Theme.of(context).textTheme.bodyMedium,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(

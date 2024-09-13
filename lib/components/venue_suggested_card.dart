@@ -9,7 +9,7 @@ import '../themes/theme.dart';
 import '../utils/constants.dart';
 
 class VenueSuggestedCard extends StatefulWidget {
-  final String name;
+  final String venueName;
   final String location;
   final String workingHours;
   final double rating;
@@ -20,7 +20,7 @@ class VenueSuggestedCard extends StatefulWidget {
 
   const VenueSuggestedCard({
     Key? key,
-    required this.name,
+    required this.venueName,
     required this.location,
     required this.workingHours,
     required this.rating,
@@ -51,7 +51,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
   }
 
   void _onTap() => Navigator.pushNamed(context, Routes.VENUE, arguments: {
-        'name': widget.name,
+        'venueName': widget.venueName,
         'location': widget.location,
         'workingHours': widget.workingHours,
         'rating': widget.rating,
@@ -94,7 +94,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildImage(),
-                    _buildNameAndType(widget.name, widget.type),
+                    _buildNameAndType(widget.venueName, widget.type),
                     _buildLocationAndWorkingHours(
                         widget.location, widget.workingHours),
                     _buildRatingBar(widget.rating),

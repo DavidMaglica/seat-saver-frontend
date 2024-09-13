@@ -69,6 +69,7 @@ class _HomepageState extends State<Homepage> {
     } else {
       if (loggedInUser != null &&
           loggedInUser.notificationOptions.locationServicesTurnedOn) {
+        setState(() => currentUserLocation = loggedInUser!.lastKnownLocation);
         _getNearbyCities(loggedInUser.lastKnownLocation);
       }
     }
@@ -196,8 +197,12 @@ class _HomepageState extends State<Homepage> {
                 bottomNavigationBar: NavBar(
                   currentIndex: pageIndex,
                   context: context,
-                  onTap: (index, context) => onNavbarItemTapped(pageIndex,
-                      index, context, widget.userEmail, widget.userLocation),
+                  onTap: (index, context) => onNavbarItemTapped(
+                      pageIndex,
+                      index,
+                      context,
+                      widget.userEmail,
+                      currentUserLocation ?? widget.userLocation),
                 ))));
   }
 
@@ -318,7 +323,7 @@ class _HomepageState extends State<Homepage> {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: VenueCard(
-                    name: venue.name,
+                    venueName: venue.name,
                     location: venue.location,
                     workingHours: venue.workingHours,
                     rating: venue.rating,
@@ -341,7 +346,7 @@ class _HomepageState extends State<Homepage> {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: VenueSuggestedCard(
-                    name: venue.name,
+                    venueName: venue.name,
                     location: venue.location,
                     workingHours: venue.workingHours,
                     rating: venue.rating,

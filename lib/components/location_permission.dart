@@ -53,7 +53,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
 
     if (locationPermission == LocationPermission.deniedForever) return false;
 
-    updateLocationServicesByEmail(widget.userEmail, true);
+    updateLocationServices(widget.userEmail, true);
 
     return true;
   }
@@ -86,7 +86,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
           duration: const Duration(seconds: 4));
     }
 
-    updateUserLocationByEmail(widget.userEmail, userLocation);
+    updateUserLocation(widget.userEmail, userLocation);
 
     if (!mounted) return;
     Navigator.popAndPushNamed(context, Routes.HOMEPAGE, arguments: {

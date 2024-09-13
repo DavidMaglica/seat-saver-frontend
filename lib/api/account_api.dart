@@ -8,7 +8,7 @@ Map<String, User> userStore = {};
 
 User? findUser(String email) => userStore[email];
 
-Future<UserResponse?> getUserByEmail(String email) async {
+Future<UserResponse?> getUser(String email) async {
   if (!userStore.containsKey(email)) {
     return null;
   }
@@ -64,7 +64,7 @@ Future<BasicResponse> login(String email, String password) async {
   }
 }
 
-Future<NotificationSettingsResponse> getNotificationSettingsByEmail(
+Future<NotificationSettingsResponse> getNotificationSettings(
     String email) async {
   if (!userStore.containsKey(email)) {
     return NotificationSettingsResponse(
@@ -82,7 +82,7 @@ Future<NotificationSettingsResponse> getNotificationSettingsByEmail(
   );
 }
 
-Future<UserResponse> getLastKnownLocationByEmail(String email) async {
+Future<UserResponse> getLastKnownLocation(String email) async {
   if (!userStore.containsKey(email)) {
     return UserResponse(success: false, message: 'User not found', user: null);
   }
@@ -124,7 +124,7 @@ Future<BasicResponse> updateUserNotificationOptions(
       success: true, message: 'Notification settings updated successfully');
 }
 
-Future<BasicResponse> updateUserLocationByEmail(
+Future<BasicResponse> updateUserLocation(
     String userEmail, Position? position) async {
   if (!userStore.containsKey(userEmail)) {
     return BasicResponse(success: false, message: 'User not found');
@@ -144,7 +144,7 @@ Future<BasicResponse> updateUserLocationByEmail(
   return BasicResponse(success: true, message: 'Location updated successfully');
 }
 
-Future<BasicResponse> updateLocationServicesByEmail(
+Future<BasicResponse> updateLocationServices(
     String email, bool locationServicesTurnedOn) async {
   if (!userStore.containsKey(email)) {
     return BasicResponse(success: false, message: 'User not found');
@@ -171,7 +171,7 @@ Future<BasicResponse> updateLocationServicesByEmail(
       success: true, message: 'Location services updated successfully');
 }
 
-Future<BasicResponse> changePasswordByEmail(
+Future<BasicResponse> changePassword(
     String email, String newPassword) async {
   User? user = findUser(email);
 
@@ -207,6 +207,26 @@ Future<BasicResponse> changeUsername(String email, String newUsername) async {
 
     return BasicResponse(
         success: true, message: 'Name and surname successfully updated');
+  } else {
+    return BasicResponse(success: false, message: 'User not found');
+  }
+}
+
+Future<BasicResponse> changeEmail(String email, String newEmail) async {
+  User? user = findUser(email);
+
+  if (user != null) {
+    User updatedUser = User(
+      username: user.username,
+      email: newEmail,
+      password: user.password,
+      notificationOptions: user.notificationOptions,
+      lastKnownLocation: user.lastKnownLocation,
+    );
+    userStore.remove(email);
+    userStore[newEmail] = updatedUser;
+
+    return BasicResponse(success: true, message: 'Email successfully updated');
   } else {
     return BasicResponse(success: false, message: 'User not found');
   }

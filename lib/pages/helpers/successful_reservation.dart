@@ -8,19 +8,17 @@ import 'package:geolocator/geolocator.dart';
 
 class SuccessfulReservation extends StatefulWidget {
   final String venueName;
-  final int numberOfPeople;
-  final String reservationDate;
-  final String reservationTime;
-  final String? userEmail;
+  final int numberOfGuests;
+  final DateTime reservationDateTime;
+  final String userEmail;
   final Position? userLocation;
 
   const SuccessfulReservation({
     Key? key,
     required this.venueName,
-    required this.numberOfPeople,
-    required this.reservationDate,
-    required this.reservationTime,
-    this.userEmail,
+    required this.numberOfGuests,
+    required this.reservationDateTime,
+    required this.userEmail,
     this.userLocation,
   }) : super(key: key);
 
@@ -48,8 +46,6 @@ class _SuccessfulReservationState extends State<SuccessfulReservation> {
             }
           : setState(() => _start--);
     });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -74,8 +70,8 @@ class _SuccessfulReservationState extends State<SuccessfulReservation> {
                     children: [
                       _buildTitle(),
                       _buildIcon(),
-                      _buildText(widget.venueName, widget.numberOfPeople,
-                          widget.reservationDate, widget.reservationTime),
+                      _buildText(widget.venueName, widget.numberOfGuests,
+                          widget.reservationDateTime),
                       _buildCountdown(),
                       _buildBackButton()
                     ],
@@ -92,21 +88,27 @@ class _SuccessfulReservationState extends State<SuccessfulReservation> {
   Padding _buildText(
     String venueName,
     int numberOfPeople,
-    String reservationDate,
-    String reservationTime,
-  ) =>
-      Padding(
-        padding: const EdgeInsets.all(16), // Adjust the padding as needed
-        child: Align(
-          alignment: const AlignmentDirectional(0, -1),
-          child: Text(
-            'Your reservation was successfully placed.\n\n'
-            '$venueName will be preparing a table for $numberOfPeople at $reservationTime on $reservationDate.',
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.center,
-          ),
+    DateTime reservationDateTime,
+  ) {
+    DateFormat dateFormat = DateFormat('dd-MM-yyyy');
+    DateFormat timeFormat = DateFormat('HH:mm');
+
+    String formattedDate = dateFormat.format(reservationDateTime);
+    String formattedTime = timeFormat.format(reservationDateTime);
+
+    return Padding(
+      padding: const EdgeInsets.all(16), // Adjust the padding as needed
+      child: Align(
+        alignment: const AlignmentDirectional(0, -1),
+        child: Text(
+          'Your reservation was successfully placed.\n\n'
+          '$venueName will be preparing a table for $numberOfPeople at $formattedTime hours on date $formattedDate.',
+          style: Theme.of(context).textTheme.bodyLarge,
+          textAlign: TextAlign.center,
         ),
-      );
+      ),
+    );
+  }
 
   Align _buildIcon() => Align(
         alignment: const AlignmentDirectional(0, -1),
@@ -157,6 +159,9 @@ class _SuccessfulReservationState extends State<SuccessfulReservation> {
           padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
           child: FFButtonWidget(
             onPressed: () {
+              setState(() {
+                timer?.cancel();
+              });
               Navigator.pop(context);
             },
             text: 'Back',

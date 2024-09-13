@@ -45,7 +45,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
 
   Future<void> _getNotificationSettingsByEmail() async {
     NotificationSettingsResponse response =
-        await getNotificationSettingsByEmail(widget.user.email);
+        await getNotificationSettings(widget.user.email);
 
     if (response.notificationSettings != null) {
       setState(() {

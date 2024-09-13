@@ -46,7 +46,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
   }
 
   Future<void> _getUserByEmail(String email) async {
-    UserResponse? response = await getUserByEmail(email);
+    UserResponse? response = await getUser(email);
     if (response != null && response.success) {
       setState(() => user = response.user);
     }
@@ -69,6 +69,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                   const Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 96, 0, 0)),
                   _buildAccountDetails(user),
+                  _buildHistorySettings(user),
                   _buildAccountSettings(user),
                   _buildApplicationSettings(user),
                   _buildLogOutButton(user?.email, () async {
@@ -86,6 +87,21 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                       pageIndex, index, context, widget.userEmail, widget.userLocation);
                 })));
   }
+
+  Padding _buildHistoryTitle(String title) => Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 0),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.titleMedium,
+      ));
+
+  Column _buildHistorySettings(User? user) =>
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _buildHistoryTitle('Reservations'),
+        _buildSettingsItem(CupertinoIcons.doc_on_clipboard, 'Reservation history',
+            Routes.RESERVATION_HISTORY, user),
+      ]);
+
 
   Padding _buildSettingsTitle(String title) => Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 0),
