@@ -45,6 +45,8 @@ class MyApp extends StatelessWidget {
                   as Map<String, dynamic>)['userEmail'],
               userLocation: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userLocation'],
+              selectedChip: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['selectedChip'],
             ),
         Routes.NEARBY: (context) => Nearby(
               userEmail: (ModalRoute.of(context)!.settings.arguments

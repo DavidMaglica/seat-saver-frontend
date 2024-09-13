@@ -134,7 +134,7 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildBanner(
+  Padding _buildBanner(
     String title,
     IconData icon,
   ) =>
@@ -179,7 +179,7 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
         ),
       );
 
-  Widget _buildInputField(
+  TextFormField _buildInputField(
     TextEditingController? controller,
     FocusNode? focusNode,
     String? Function(BuildContext, String?)? validator,

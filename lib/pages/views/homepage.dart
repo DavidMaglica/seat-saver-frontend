@@ -142,23 +142,29 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  void _openNearbyVenues() =>
-      Navigator.pushNamed(context, Routes.SEARCH, arguments: {
-        'userEmail': widget.userEmail,
-        'userLocation': widget.userLocation
-      });
+  void _openNearbyVenues() {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Currently unavailable'),
+      backgroundColor: AppThemes.infoColor,
+    ));
+    return;
+  }
 
-  void _openNewVenues() =>
-      Navigator.pushNamed(context, Routes.SEARCH, arguments: {
-        'userEmail': widget.userEmail,
-        'userLocation': widget.userLocation
-      });
+  void _openNewVenues() {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Currently unavailable'),
+      backgroundColor: AppThemes.infoColor,
+    ));
+    return;
+  }
 
-  void _openTrendingVenues() =>
-      Navigator.pushNamed(context, Routes.SEARCH, arguments: {
-        'userEmail': widget.userEmail,
-        'userLocation': widget.userLocation
-      });
+  void _openTrendingVenues() {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Currently unavailable'),
+      backgroundColor: AppThemes.infoColor,
+    ));
+    return;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -397,9 +403,9 @@ class _HomepageState extends State<Homepage> {
 
   InkWell _buildCategoryCard(VenueType category) => InkWell(
       onTap: () => Navigator.pushNamed(context, Routes.SEARCH, arguments: {
-            'type': category,
             'userEmail': widget.userEmail,
-            'userLocation': widget.userLocation
+            'userLocation': widget.userLocation,
+            'selectedChip': category.toString(),
           }),
       child: Align(
           alignment: AlignmentDirectional.center,

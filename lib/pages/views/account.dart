@@ -186,7 +186,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                         Icon(
                           CupertinoIcons.chevron_forward,
                           color: Theme.of(context).colorScheme.onPrimary,
-                          size: 24,
+                          size: 14,
                         )
                       ])))));
 

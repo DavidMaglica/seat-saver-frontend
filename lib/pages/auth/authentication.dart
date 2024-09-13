@@ -214,9 +214,6 @@ class _AuthenticationState extends State<Authentication>
                       constraints: const BoxConstraints(
                         maxWidth: 530,
                       ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
                       child: Padding(
                         padding:
                             const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
@@ -290,28 +287,28 @@ class _AuthenticationState extends State<Authentication>
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.onPrimary,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
               color: AppThemes.infoColor,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           errorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.error,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.error,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -349,28 +346,28 @@ class _AuthenticationState extends State<Authentication>
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.onPrimary,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
               color: AppThemes.infoColor,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           errorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.error,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.error,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -414,28 +411,28 @@ class _AuthenticationState extends State<Authentication>
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.onPrimary,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
               color: AppThemes.infoColor,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           errorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.error,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.error,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -465,28 +462,28 @@ class _AuthenticationState extends State<Authentication>
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.onPrimary,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
               color: AppThemes.infoColor,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           errorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.error,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.error,
-              width: 1,
+              width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
           ),

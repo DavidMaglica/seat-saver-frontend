@@ -226,38 +226,36 @@ class _EditProfileState extends State<EditProfile> {
             )));
   }
 
-  Widget _buildChangeDetailGroup() {
-    return Padding(
-      padding: const EdgeInsetsDirectional.all(16),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 3,
-              color: Theme.of(context).colorScheme.onPrimary.withOpacity(.5),
-              offset: const Offset(0, 1),
-            )
-          ],
-          borderRadius: BorderRadius.circular(8),
-          shape: BoxShape.rectangle,
+  Padding _buildChangeDetailGroup() => Padding(
+        padding: const EdgeInsetsDirectional.all(16),
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 3,
+                color: Theme.of(context).colorScheme.onPrimary.withOpacity(.5),
+                offset: const Offset(0, 1),
+              )
+            ],
+            borderRadius: BorderRadius.circular(8),
+            shape: BoxShape.rectangle,
+          ),
+          child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  _buildChangeUsername(),
+                  _buildDivider(),
+                  _buildChangeEmail(),
+                  _buildDivider(),
+                  _buildChangePassword(),
+                ],
+              )),
         ),
-        child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                _buildChangeUsername(),
-                _buildDivider(),
-                _buildChangeEmail(),
-                _buildDivider(),
-                _buildChangePassword(),
-              ],
-            )),
-      ),
-    );
-  }
+      );
 
   Divider _buildDivider() {
     return Divider(

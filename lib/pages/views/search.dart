@@ -5,7 +5,6 @@ import 'package:geolocator/geolocator.dart';
 
 import '../../api/data/venue.dart';
 import '../../api/venue_api.dart';
-import '../../components/custom_choice_chips.dart';
 import '../../components/navbar.dart';
 import '../../utils/constants.dart';
 import '../../utils/routing_utils.dart';
@@ -13,11 +12,13 @@ import '../../utils/routing_utils.dart';
 class Search extends StatefulWidget {
   final String? userEmail;
   final Position? userLocation;
+  final String? selectedChip;
 
   const Search({
     Key? key,
     this.userEmail,
     this.userLocation,
+    this.selectedChip,
   }) : super(key: key);
 
   @override
@@ -30,25 +31,29 @@ class _SearchState extends State<Search> {
   final int pageIndex = 1;
 
   List<String> _chipsOptions = [];
-  FormFieldController<List<String>>? choiceChipsValueController;
-
-  List<String>? get choiceChipsValues => choiceChipsValueController?.value;
-
-  set choiceChipsValues(List<String>? val) =>
-      choiceChipsValueController?.value = val;
 
   TextEditingController? searchBarController;
 
   List<Venue> _allVenues = [];
+  List<bool>? selectedChips = [];
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
 
   @override
   void initState() {
     super.initState();
     _getChipsChoice();
     _getAllVenues();
+
+    if (widget.selectedChip != null) {
+      final index = _chipsOptions.indexOf(widget.selectedChip!);
+      selectedChips = List.generate(_chipsOptions.length, (index) => false);
+      selectedChips![index] = true;
+    }
+
+    if (selectedChips != null) {
+      _filterVenues(selectedChips);
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -59,11 +64,36 @@ class _SearchState extends State<Search> {
     super.dispose();
   }
 
+  void _filterVenues(List<bool>? selectedChips) async {
+    if (selectedChips == null) {
+      return;
+    }
+
+    final selectedTypes = <VenueType>[];
+    for (var i = 0; i < selectedChips.length; i++) {
+      if (selectedChips[i]) {
+        selectedTypes.add(VenueType.values[i]);
+      }
+    }
+
+    if (selectedTypes.isEmpty) {
+      _getAllVenues();
+      return;
+    }
+
+    List<Venue> filteredVenues = await getVenuesByType(selectedTypes);
+
+    safeSetState(() {
+      _allVenues = filteredVenues;
+    });
+  }
+
   void _getChipsChoice() {
     List<String> options =
         VenueType.values.map((type) => type.toString()).toList();
     setState(() {
       _chipsOptions = options;
+      selectedChips = List.generate(options.length, (index) => false);
     });
   }
 
@@ -72,12 +102,24 @@ class _SearchState extends State<Search> {
       }));
 
   void _search(String value) {
-    debugPrint("Searching for: $value");
+    if (value.isEmpty) {
+      _getAllVenues();
+      return;
+    }
+
+    List<Venue> filteredVenues = _allVenues
+        .where(
+            (venue) => venue.name.toLowerCase().contains(value.toLowerCase()))
+        .toList();
+
+    safeSetState(() {
+      _allVenues = filteredVenues;
+    });
   }
 
   Function() _onTap(Venue venue) =>
       () => Navigator.pushNamed(context, Routes.VENUE, arguments: {
-            'name': venue.name,
+            'venueName': venue.name,
             'location': venue.location,
             'workingHours': venue.workingHours,
             'rating': venue.rating,
@@ -103,35 +145,50 @@ class _SearchState extends State<Search> {
               children: [
                 _buildSearchBar(searchBarController),
                 Flexible(
-                  child: CustomChoiceChips(
-                    options: _chipsOptions,
-                    initialValues: const [],
-                  ),
+                  child: _buildChoiceChips(_chipsOptions),
                 ),
                 Flexible(
                   child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
-                    child: _allVenues.isNotEmpty
-                        ? ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: _allVenues.length,
-                            itemBuilder: (context, index) {
-                              return Column(
-                                children: [
-                                  _buildListTitle(_allVenues[index]),
-                                  if (index < _allVenues.length - 1)
-                                    _buildDivider(),
-                                ],
-                              );
-                            },
+                    padding: const EdgeInsetsDirectional.all(12),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.background,
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 3,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimary
+                                .withOpacity(.2),
+                            offset: const Offset(0, 1),
                           )
-                        : const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Text('No venues available'),
-                            ),
-                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(8),
+                        shape: BoxShape.rectangle,
+                      ),
+                      child: Padding(
+                          padding: const EdgeInsetsDirectional.symmetric(
+                              vertical: 12),
+                          child: _allVenues.isNotEmpty
+                              ? ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: _allVenues.length,
+                                  itemBuilder: (context, index) {
+                                    return Column(children: [
+                                      _buildListTitle(_allVenues[index]),
+                                      if (index < _allVenues.length - 1)
+                                        _buildDivider(),
+                                    ]);
+                                  })
+                              : const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: Text('No venues available'),
+                                  ),
+                                )),
+                    ),
                   ),
                 ),
               ],
@@ -141,8 +198,8 @@ class _SearchState extends State<Search> {
         bottomNavigationBar: NavBar(
           currentIndex: pageIndex,
           context: context,
-          onTap: (index, context) =>
-              onNavbarItemTapped(pageIndex, index, context, widget.userEmail, widget.userLocation),
+          onTap: (index, context) => onNavbarItemTapped(
+              pageIndex, index, context, widget.userEmail, widget.userLocation),
         ),
       ),
     );
@@ -183,19 +240,27 @@ class _SearchState extends State<Search> {
       );
 
   Padding _buildListTitle(Venue venue) => Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+        padding:
+            const EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 6),
         child: ListTile(
           onTap: _onTap(venue),
           title: Text(
             venue.name,
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          subtitle: Text(
+            venue.type.toString(),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color:
+                      Theme.of(context).colorScheme.onPrimary.withOpacity(.6),
+                ),
           ),
           trailing: Icon(
             Icons.arrow_forward_ios,
             color: Theme.of(context).colorScheme.onPrimary,
-            size: 20,
+            size: 14,
           ),
-          tileColor: Theme.of(context).colorScheme.surfaceVariant,
+          // tileColor: Theme.of(context).colorScheme.surfaceVariant,
           dense: true,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -210,6 +275,31 @@ class _SearchState extends State<Search> {
           endIndent: 36,
           thickness: .5,
           color: Theme.of(context).colorScheme.onBackground,
+        ),
+      );
+
+  Padding _buildChoiceChips(List<String> chipsOptions) => Padding(
+        padding:
+            const EdgeInsetsDirectional.symmetric(vertical: 12, horizontal: 2),
+        child: Wrap(
+          alignment: WrapAlignment.spaceEvenly,
+          spacing: 8,
+          runSpacing: 8,
+          children: List<Widget>.generate(chipsOptions.length, (index) {
+            return FilterChip(
+              label: Text(chipsOptions[index]),
+              elevation: 3,
+              selectedColor: Theme.of(context).colorScheme.primary,
+              showCheckmark: false,
+              selected: selectedChips == null ? false : selectedChips![index],
+              onSelected: (bool selected) {
+                setState(() {
+                  selectedChips?[index] = selected;
+                });
+                _filterVenues(selectedChips);
+              },
+            );
+          }),
         ),
       );
 }

@@ -10,22 +10,18 @@ void onNavbarItemTapped(int pageIndex, int index, BuildContext context,
   }
   switch (index) {
     case 0:
-      debugPrint('Opening homepage with args: $userEmail, $userLocation');
       Navigator.pushNamed(context, Routes.HOMEPAGE,
           arguments: {'userEmail': userEmail, 'userLocation': userLocation});
       break;
     case 1:
-      debugPrint('Opening search with args: $userEmail, $userLocation');
       Navigator.pushNamed(context, Routes.SEARCH,
           arguments: {'userEmail': userEmail, 'userLocation': userLocation});
       break;
     case 2:
-      debugPrint('Opening nearby with args: $userEmail, $userLocation');
       Navigator.pushNamed(context, Routes.NEARBY,
           arguments: {'userEmail': userEmail, 'userLocation': userLocation});
       break;
     case 3:
-      debugPrint('Opening account page with args: $userEmail, $userLocation');
       Navigator.pushNamed(context, Routes.ACCOUNT,
           arguments: {'userEmail': userEmail, 'userLocation': userLocation});
       break;

@@ -74,34 +74,32 @@ class _ReservationHistoryState extends State<ReservationHistory> {
             )));
   }
 
-  Widget _buildReservationHistoryGroup() {
-    return Padding(
-      padding: const EdgeInsetsDirectional.all(16),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 3,
-              color: Theme.of(context).colorScheme.onPrimary.withOpacity(.5),
-              offset: const Offset(0, 1),
-            )
-          ],
-          borderRadius: BorderRadius.circular(8),
-          shape: BoxShape.rectangle,
+  Padding _buildReservationHistoryGroup() => Padding(
+        padding: const EdgeInsetsDirectional.all(16),
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 3,
+                color: Theme.of(context).colorScheme.onPrimary.withOpacity(.5),
+                offset: const Offset(0, 1),
+              )
+            ],
+            borderRadius: BorderRadius.circular(8),
+            shape: BoxShape.rectangle,
+          ),
+          child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  _buildReservationDetails(reservations),
+                ],
+              )),
         ),
-        child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                _buildReservationDetails(reservations),
-              ],
-            )),
-      ),
-    );
-  }
+      );
 
   Divider _buildDivider() {
     return Divider(
@@ -135,52 +133,53 @@ class _ReservationHistoryState extends State<ReservationHistory> {
           return Column(
             children: [
               InkWell(
-                onTap: () {
-                  _openReservationDetailsBottomSheet(
-                      reservation.venueName,
-                      reservation.numberOfGuests,
-                      reservation.reservationDateTime);
-                },
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.symmetric(vertical: 12),
-                  child:Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      // Format and display reservation date
-                      DateFormat('dd-MM-yyyy HH:mm')
-                          .format(reservation.reservationDateTime),
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    Row(
+                  onTap: () {
+                    _openReservationDetailsBottomSheet(
+                        reservation.venueName,
+                        reservation.numberOfGuests,
+                        reservation.reservationDateTime);
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsetsDirectional.symmetric(vertical: 12),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-                          child: Text(
-                            'view details',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimary
-                                      .withOpacity(.6),
-                                ),
-                          ),
+                        Text(
+                          // Format and display reservation date
+                          DateFormat('dd-MM-yyyy HH:mm')
+                              .format(reservation.reservationDateTime),
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        Icon(
-                          CupertinoIcons.chevron_right,
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          size: 14,
-                        )
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0, 0, 8, 0),
+                              child: Text(
+                                'view details',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary
+                                          .withOpacity(.6),
+                                    ),
+                              ),
+                            ),
+                            Icon(
+                              CupertinoIcons.chevron_right,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              size: 14,
+                            )
+                          ],
+                        ),
                       ],
                     ),
-                  ],
-                ),)
-              ),
+                  )),
               if (index < reservations.length - 1) _buildDivider(),
             ],
           );
@@ -212,7 +211,9 @@ class _ReservationHistoryState extends State<ReservationHistory> {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            buildModalButton('Done', () => {Navigator.pop(context)},
+                            buildModalButton(
+                                'Done',
+                                () => {Navigator.pop(context)},
                                 Theme.of(context).colorScheme.onPrimary),
                           ])),
                   const SizedBox(height: 36),

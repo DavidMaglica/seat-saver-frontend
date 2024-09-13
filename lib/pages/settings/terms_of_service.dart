@@ -86,19 +86,19 @@ class _TermsOfServiceState extends State<TermsOfService> {
     );
   }
 
-  Widget _buildDivider() => Divider(
+  Divider _buildDivider() => Divider(
         thickness: .3,
         color: Theme.of(context).colorScheme.onBackground,
       );
 
-  Widget _buildBodyText(String text) => Padding(
+  Padding _buildBodyText(String text) => Padding(
         padding: const EdgeInsetsDirectional.only(bottom: 8),
         child: Text(text,
             style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.center),
       );
 
-  Widget _buildSection(String title, String bodyText) => Padding(
+  Padding _buildSection(String title, String bodyText) => Padding(
         padding: const EdgeInsetsDirectional.only(top: 12, bottom: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
