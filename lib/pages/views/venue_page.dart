@@ -1,4 +1,3 @@
-import 'package:TableReserver/api/reservation_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/extension.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../api/reservation_api.dart';
 import '../../api/venue_api.dart';
 import '../../components/custom_appbar.dart';
 import '../../themes/theme.dart';

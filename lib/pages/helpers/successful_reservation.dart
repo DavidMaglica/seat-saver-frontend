@@ -1,10 +1,11 @@
 import 'dart:async';
 
-import 'package:TableReserver/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
+
+import '../../utils/constants.dart';
 
 class SuccessfulReservation extends StatefulWidget {
   final String venueName;
