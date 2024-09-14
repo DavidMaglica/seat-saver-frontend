@@ -1,13 +1,23 @@
-import 'package:diplomski/pages/settings/utils/settings_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:geolocator/geolocator.dart';
 
-import '../../components/appbar.dart';
+import '../../api/data/user.dart';
+import '../../components/custom_appbar.dart';
 import '../../themes/theme.dart';
+import '../../utils/constants.dart';
+import 'utils/settings_utils.dart';
 
 class Support extends StatefulWidget {
-  const Support({super.key});
+  final User user;
+  final Position? userLocation;
+
+  const Support({
+    Key? key,
+    required this.user,
+    this.userLocation,
+  }) : super(key: key);
 
   @override
   State<Support> createState() => _SupportWidgetState();
@@ -17,10 +27,9 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
   final _unfocusNode = FocusNode();
   FocusNode? _ticketTitleFocusNode;
   TextEditingController? _ticketTitleController;
-  String? Function(BuildContext, String?)? _ticketTitleValidator;
+
   FocusNode? _ticketDescriptionFocusNode;
   TextEditingController? _ticketDescriptionController;
-  String? Function(BuildContext, String?)? _ticketDescriptionValidator;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -53,7 +62,13 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: const CustomAppbar(title: 'Support'),
+        appBar: CustomAppbar(
+            title: 'Support',
+            routeToPush: Routes.ACCOUNT,
+            args: {
+              'userEmail': widget.user.email,
+              'userLocation': widget.userLocation
+            }),
         body: SafeArea(
           top: true,
           child: Padding(
@@ -92,7 +107,6 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                         _buildInputField(
                           _ticketTitleController,
                           _ticketTitleFocusNode,
-                          _ticketTitleValidator,
                           'Ticket title',
                           'Enter a title for your ticket.',
                           null,
@@ -101,7 +115,6 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                         _buildInputField(
                           _ticketDescriptionController,
                           _ticketDescriptionFocusNode,
-                          _ticketDescriptionValidator,
                           'Short description',
                           'Short description of what is going on...',
                           16,
@@ -121,7 +134,7 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildBanner(
+  Padding _buildBanner(
     String title,
     IconData icon,
   ) =>
@@ -166,10 +179,9 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
         ),
       );
 
-  Widget _buildInputField(
+  TextFormField _buildInputField(
     TextEditingController? controller,
     FocusNode? focusNode,
-    String? Function(BuildContext, String?)? validator,
     String labelText,
     String hintText,
     int? maxLines,
@@ -178,47 +190,23 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
       TextFormField(
         controller: controller,
         focusNode: focusNode,
-        autofocus: true,
+        autofocus: false,
         obscureText: false,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: Theme.of(context).textTheme.bodyLarge,
-          hintStyle: Theme.of(context).textTheme.bodyMedium,
+          labelStyle: Theme.of(context).textTheme.bodyMedium,
+          hintStyle: Theme.of(context).textTheme.bodySmall,
           hintText: hintText,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onPrimary,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: AppThemes.infoColor,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.error,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.error,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
+          enabledBorder:
+              outlineInputBorder(Theme.of(context).colorScheme.onPrimary),
+          focusedBorder: outlineInputBorder(AppThemes.infoColor),
+          errorBorder: outlineInputBorder(Theme.of(context).colorScheme.error),
+          focusedErrorBorder: outlineInputBorder(AppThemes.infoColor),
           contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),
         ),
         style: Theme.of(context).textTheme.bodyMedium,
         maxLines: maxLines,
         minLines: minLines,
         cursorColor: Theme.of(context).colorScheme.onPrimary,
-        validator: validator.asValidator(context),
       );
 }

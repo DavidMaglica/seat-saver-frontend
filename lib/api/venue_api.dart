@@ -126,3 +126,11 @@ Future<List<Venue>> getSuggestedVenues() async {
   allVenues.sort((a, b) => a.name.compareTo(b.name));
   return allVenues.toList();
 }
+
+Future<List<Venue>> getVenuesByType(List<VenueType> types) async {
+  List<Venue> allVenues = await getAllVenues();
+  List<Venue> filteredVenues = allVenues
+      .where((venue) => types.contains(venue.type))
+      .toList();
+  return filteredVenues;
+}

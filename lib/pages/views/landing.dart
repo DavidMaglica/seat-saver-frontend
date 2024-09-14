@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
+import '../../utils/constants.dart';
+
 class Landing extends StatefulWidget {
   const Landing({super.key});
 
@@ -68,15 +70,18 @@ class _LandingState extends State<Landing> {
                   ),
                 ),
                 Text(
-                  'Welcome to Our App',
+                  'Welcome to TableReserver',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 FFButtonWidget(
                   onPressed: () async {
                     await Future.delayed(const Duration(seconds: 1));
+
+                    if (!mounted) return;
                     Navigator.pushNamed(
                       context,
-                      '/homepage',
+                      Routes.HOMEPAGE,
+                      arguments: {'userEmail': ''},
                     );
                   },
                   text: 'Get Started',

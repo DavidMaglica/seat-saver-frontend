@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
-import '../../components/appbar.dart';
+import '../../components/custom_appbar.dart';
+import '../../utils/constants.dart';
 
 class TermsOfService extends StatefulWidget {
-  const TermsOfService({Key? key}) : super(key: key);
+  final String? userEmail;
+  final Position? userLocation;
+
+  const TermsOfService({
+    Key? key,
+    this.userEmail,
+    this.userLocation,
+  }) : super(key: key);
 
   @override
   State<TermsOfService> createState() => _TermsOfServiceState();
@@ -27,7 +36,11 @@ class _TermsOfServiceState extends State<TermsOfService> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: const CustomAppbar(title: 'Terms of Service'),
+        appBar: CustomAppbar(
+          title: 'Terms of Service',
+          routeToPush: Routes.ACCOUNT,
+          args: {'userEmail': widget.userEmail, 'userLocation': widget.userLocation},
+        ),
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.background,
         body: SafeArea(
@@ -73,19 +86,19 @@ class _TermsOfServiceState extends State<TermsOfService> {
     );
   }
 
-  Widget _buildDivider() => Divider(
+  Divider _buildDivider() => Divider(
         thickness: .3,
         color: Theme.of(context).colorScheme.onBackground,
       );
 
-  Widget _buildBodyText(String text) => Padding(
+  Padding _buildBodyText(String text) => Padding(
         padding: const EdgeInsetsDirectional.only(bottom: 8),
         child: Text(text,
             style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.center),
       );
 
-  Widget _buildSection(String title, String bodyText) => Padding(
+  Padding _buildSection(String title, String bodyText) => Padding(
         padding: const EdgeInsetsDirectional.only(top: 12, bottom: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

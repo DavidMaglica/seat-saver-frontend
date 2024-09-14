@@ -4,10 +4,14 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final String routeToPush;
+  final Object? args;
 
   const CustomAppbar({
     Key? key,
     required this.title,
+    required this.routeToPush,
+    this.args,
   }) : super(key: key);
 
   @override
@@ -24,13 +28,13 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
         borderRadius: 30,
         borderWidth: 1,
         buttonSize: 60,
-        icon: const Icon(
-          CupertinoIcons.chevron_back,
-          color: Colors.white,
-          size: 30,
+        icon: Icon(
+          CupertinoIcons.chevron_left,
+          color: Theme.of(context).colorScheme.background,
+          size: 24,
         ),
         onPressed: () async {
-          Navigator.of(context).pop();
+          Navigator.pushNamed(context, routeToPush, arguments: args);
         },
       ),
       centerTitle: false,

@@ -2,26 +2,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../api/data/venue.dart';
 import '../themes/theme.dart';
+import '../utils/constants.dart';
 
 class VenueCard extends StatefulWidget {
-  final String name;
+  final String venueName;
   final String location;
   final String workingHours;
   final double rating;
   final VenueType type;
   final String description;
+  final String? userEmail;
+  final Position? userLocation;
 
   const VenueCard({
     Key? key,
-    required this.name,
+    required this.venueName,
     required this.location,
     required this.workingHours,
     required this.rating,
     required this.type,
     required this.description,
+    this.userEmail,
+    this.userLocation,
   }) : super(key: key);
 
   @override
@@ -44,13 +50,15 @@ class _VenueCardState extends State<VenueCard> {
     super.dispose();
   }
 
-  void _onTap() => Navigator.pushNamed(context, '/venue', arguments: {
-        'name': widget.name,
+  void _onTap() => Navigator.pushNamed(context, Routes.VENUE, arguments: {
+        'venueName': widget.venueName,
         'location': widget.location,
         'workingHours': widget.workingHours,
         'rating': widget.rating,
         'type': widget.type.toString(),
         'description': widget.description,
+        'userEmail': widget.userEmail,
+        'userLocation': widget.userLocation,
       });
 
   @override
@@ -92,7 +100,7 @@ class _VenueCardState extends State<VenueCard> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildName(widget.name),
+                        _buildName(widget.venueName),
                         _buildLocation(widget.location),
                         _buildRatingBar(widget.rating),
                       ],

@@ -1,20 +1,30 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:diplomski/api/venue_api.dart';
-import 'package:diplomski/components/venue_suggested_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_credit_card/extension.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:geolocator/geolocator.dart';
 
+import '../../api/account_api.dart';
+import '../../api/data/user.dart';
 import '../../api/data/venue.dart';
+import '../../api/geolocation_api.dart';
+import '../../api/venue_api.dart';
 import '../../components/carousel_item.dart';
 import '../../components/location_permission.dart';
 import '../../components/navbar.dart';
 import '../../components/venue_card.dart';
+import '../../components/venue_suggested_card.dart';
 import '../../themes/theme.dart';
+import '../../utils/constants.dart';
 import '../../utils/routing_utils.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+  final String? userEmail;
+  final Position? userLocation;
+
+  const Homepage({Key? key, this.userEmail, this.userLocation})
+      : super(key: key);
 
   @override
   State<Homepage> createState() => _HomepageState();
@@ -24,32 +34,62 @@ class _HomepageState extends State<Homepage> {
   final unfocusNode = FocusNode();
 
   final int pageIndex = 0;
-  String? _currentCity;
-  List<String>? _nearbyCities;
   List<Venue>? _nearbyVenues;
   List<Venue>? _newVenues;
   List<Venue>? _trendingVenues;
   List<Venue>? _suggestedVenues;
   CarouselController? _carouselController;
-  int _carouselCurrentIndex = 1;
+  int carouselCurrentIndex = 1;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  List<String>? _nearbyCities;
+  Position? currentUserLocation;
 
   @override
   void initState() {
     super.initState();
+    int locationPopUpCounter = 0;
+
+    User? loggedInUser;
+    if (widget.userEmail.isNotNullAndNotEmpty) {
+      loggedInUser = findUser(widget.userEmail!);
+    }
+
+    if (locationPopUpCounter <= 1) {
+      if (loggedInUser != null &&
+          loggedInUser.notificationOptions.locationServicesTurnedOn == false) {
+        _activateLocationPopUp(loggedInUser.email);
+      }
+      locationPopUpCounter++;
+    }
+
+    if (widget.userLocation != null) {
+      _getNearbyCities(widget.userLocation);
+    } else {
+      if (loggedInUser != null &&
+          loggedInUser.notificationOptions.locationServicesTurnedOn) {
+        setState(() => currentUserLocation = loggedInUser!.lastKnownLocation);
+        _getNearbyCities(loggedInUser.lastKnownLocation);
+      }
+    }
+
     _getNearbyVenues();
     _getNewVenues();
     _getTrendingVenues();
     _getSuggestedVenues();
-
-    _activateLocationPopUp();
   }
 
   @override
   void dispose() {
     unfocusNode.dispose();
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
+  }
+
+  void _getNearbyCities(Position? position) async {
+    List<String> cities = await getNearbyCities(position!);
+    setState(() => _nearbyCities = cities);
   }
 
   void _getNearbyVenues() async {
@@ -80,45 +120,55 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  void _activateLocationPopUp() {
+  void _activateLocationPopUp(String userEmail) {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await showModalBottomSheet(
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        barrierColor: Theme.of(context).colorScheme.onSecondary,
-        enableDrag: false,
-        context: context,
-        builder: (context) {
-          return GestureDetector(
-            onTap: () => unfocusNode.canRequestFocus
-                ? FocusScope.of(context).requestFocus(unfocusNode)
-                : FocusScope.of(context).unfocus(),
-            child: Padding(
-              padding: MediaQuery.viewInsetsOf(context),
-              child: const SizedBox(
-                height: 568,
-                child: LocationPermissionPopUp(),
-              ),
-            ),
-          );
-        },
-      ).then((locationPopUpState) => {
-            if (locationPopUpState != null)
-              {
-                safeSetState(() {
-                  _currentCity = locationPopUpState[0];
-                  _nearbyCities = locationPopUpState[1];
-                })
-              }
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          barrierColor: Theme.of(context).colorScheme.onSecondary,
+          enableDrag: false,
+          context: context,
+          builder: (context) {
+            return GestureDetector(
+                onTap: () => unfocusNode.canRequestFocus
+                    ? FocusScope.of(context).requestFocus(unfocusNode)
+                    : FocusScope.of(context).unfocus(),
+                child: Padding(
+                    padding: MediaQuery.viewInsetsOf(context),
+                    child: SizedBox(
+                      height: 568,
+                      child: LocationPermissionPopUp(userEmail: userEmail),
+                    )));
           });
     });
   }
 
-  void _openNearbyVenues() => Navigator.pushNamed(context, '/search');
+  void _openNearbyVenues() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Currently unavailable'),
+      backgroundColor: AppThemes.infoColor,
+    ));
+    return;
+  }
 
-  void _openNewVenues() => Navigator.pushNamed(context, '/search');
+  void _openNewVenues() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Currently unavailable'),
+      backgroundColor: AppThemes.infoColor,
+    ));
+    return;
+  }
 
-  void _openTrendingVenues() => Navigator.pushNamed(context, '/search');
+  void _openTrendingVenues() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Currently unavailable'),
+      backgroundColor: AppThemes.infoColor,
+    ));
+    return;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,8 +190,7 @@ class _HomepageState extends State<Homepage> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           _buildHeader(),
-                          _buildCarouselComponent(
-                              _nearbyCities ?? ['undefined']),
+                          _buildCarouselComponent(_nearbyCities ?? []),
                           _buildVenues('Nearby Venues', _openNearbyVenues,
                               _nearbyVenues ?? []),
                           _buildVenues(
@@ -158,12 +207,19 @@ class _HomepageState extends State<Homepage> {
                 bottomNavigationBar: NavBar(
                   currentIndex: pageIndex,
                   context: context,
-                  onTap: (index, context) =>
-                      onNavbarItemTapped(pageIndex, index, context),
+                  onTap: (index, context) => onNavbarItemTapped(
+                      pageIndex,
+                      index,
+                      context,
+                      widget.userEmail,
+                      currentUserLocation ?? widget.userLocation),
                 ))));
   }
 
   Row _buildCarouselComponent(List<String> nearbyCities) {
+    if (nearbyCities.isEmpty) {
+      return const Row();
+    }
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
@@ -190,7 +246,7 @@ class _HomepageState extends State<Homepage> {
                   autoPlayInterval: const Duration(seconds: 5),
                   autoPlayCurve: Curves.linear,
                   pauseAutoPlayInFiniteScroll: true,
-                  onPageChanged: (index, _) => _carouselCurrentIndex = index,
+                  onPageChanged: (index, _) => carouselCurrentIndex = index,
                 ),
               ),
             ),
@@ -237,8 +293,7 @@ class _HomepageState extends State<Homepage> {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            // Optional: Add padding inside the Container
+            padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 0, 24),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -277,12 +332,14 @@ class _HomepageState extends State<Homepage> {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: VenueCard(
-                    name: venue.name,
+                    venueName: venue.name,
                     location: venue.location,
                     workingHours: venue.workingHours,
                     rating: venue.rating,
                     type: venue.type,
                     description: venue.description,
+                    userEmail: widget.userEmail,
+                    userLocation: widget.userLocation,
                   ),
                 );
               }).toList())));
@@ -298,12 +355,14 @@ class _HomepageState extends State<Homepage> {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: VenueSuggestedCard(
-                    name: venue.name,
+                    venueName: venue.name,
                     location: venue.location,
                     workingHours: venue.workingHours,
                     rating: venue.rating,
                     type: venue.type,
                     description: venue.description,
+                    userEmail: widget.userEmail,
+                    userLocation: widget.userLocation,
                   ),
                 );
               }).toList())));
@@ -346,8 +405,10 @@ class _HomepageState extends State<Homepage> {
           ]));
 
   InkWell _buildCategoryCard(VenueType category) => InkWell(
-      onTap: () => Navigator.pushNamed(context, '/search', arguments: {
-            'type': category,
+      onTap: () => Navigator.pushNamed(context, Routes.SEARCH, arguments: {
+            'userEmail': widget.userEmail,
+            'userLocation': widget.userLocation,
+            'selectedChip': category.toString(),
           }),
       child: Align(
           alignment: AlignmentDirectional.center,
@@ -432,30 +493,30 @@ class _HomepageState extends State<Homepage> {
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
-                          Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  0, 0, 12, 0),
-                              child: FFButtonWidget(
-                                  onPressed: () {},
-                                  text: 'Help',
-                                  options: FFButtonOptions(
-                                    width: 80,
-                                    height: 24,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .background,
-                                    textStyle: const TextStyle(
-                                      color: AppThemes.infoColor,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    elevation: 3,
-                                    borderSide: const BorderSide(
-                                      color: AppThemes.infoColor,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  )))
+                          // Padding(
+                          //     padding: const EdgeInsetsDirectional.fromSTEB(
+                          //         0, 0, 12, 0),
+                          //     child: FFButtonWidget(
+                          //         onPressed: () {},
+                          //         text: 'Help',
+                          //         options: FFButtonOptions(
+                          //           width: 80,
+                          //           height: 24,
+                          //           color: Theme.of(context)
+                          //               .colorScheme
+                          //               .background,
+                          //           textStyle: const TextStyle(
+                          //             color: AppThemes.infoColor,
+                          //             fontSize: 12,
+                          //             fontWeight: FontWeight.w500,
+                          //           ),
+                          //           elevation: 3,
+                          //           borderSide: const BorderSide(
+                          //             color: AppThemes.infoColor,
+                          //             width: 1,
+                          //           ),
+                          //           borderRadius: BorderRadius.circular(8),
+                          //         ))),
                         ])))
           ]);
 }

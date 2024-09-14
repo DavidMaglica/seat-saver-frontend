@@ -1,30 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_credit_card/extension.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:geolocator/geolocator.dart';
 
+import '../../api/reservation_api.dart';
 import '../../api/venue_api.dart';
-import '../../components/appbar.dart';
+import '../../components/custom_appbar.dart';
 import '../../themes/theme.dart';
+import '../../utils/constants.dart';
 import '../../utils/full_image_view.dart';
 
 class VenuePage extends StatefulWidget {
-  final String name;
+  final String venueName;
   final String location;
   final String workingHours;
   final double rating;
   final String type;
   final String description;
+  final String? userEmail;
+  final Position? userLocation;
 
   const VenuePage({
     Key? key,
-    required this.name,
+    required this.venueName,
     required this.location,
     required this.workingHours,
     required this.rating,
     required this.type,
     required this.description,
+    this.userEmail,
+    this.userLocation,
   }) : super(key: key);
 
   @override
@@ -33,7 +41,6 @@ class VenuePage extends StatefulWidget {
 
 class _VenuePageState extends State<VenuePage> {
   late Future<List<String>> _images;
-  double? _mockRating;
   DateTime? _selectedDate;
   int? _selectedHour;
   int? _selectedMinute;
@@ -49,12 +56,53 @@ class _VenuePageState extends State<VenuePage> {
 
   @override
   void dispose() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
   }
 
-  void _reserveSpot() => debugPrint('Reserve your spot now');
+  void _reserveSpot() {
+    if (widget.userEmail.isNullOrEmpty) {
+      _showSnackBar('Please log in to reserve a spot', AppThemes.errorColor);
+      return;
+    }
 
-  void _mockRatingUpdate() => setState(() => _mockRating = 4.5);
+    if (_selectedDate == null) {
+      _showSnackBar('Please select a date', AppThemes.errorColor);
+      return;
+    }
+
+    if (_selectedHour == null || _selectedMinute == null) {
+      _showSnackBar('Please select a time', AppThemes.errorColor);
+      return;
+    }
+
+    if (_selectedNumberOfGuests == null) {
+      _showSnackBar('Please select the number of guests', AppThemes.errorColor);
+      return;
+    }
+
+    DateTime reservationDateTime = DateTime(
+      _selectedDate!.year,
+      _selectedDate!.month,
+      _selectedDate!.day,
+      _selectedHour!,
+      _selectedMinute == 0 ? 0 : 30,
+    );
+
+    addReservation(widget.userEmail!, widget.venueName,
+        _selectedNumberOfGuests!, reservationDateTime);
+
+    Navigator.pushNamed(context, Routes.SUCCESSFUL_RESERVATION, arguments: {
+      'venueName': widget.venueName,
+      'numberOfGuests': _selectedNumberOfGuests,
+      'reservationDateTime': reservationDateTime,
+      'userEmail': widget.userEmail,
+      'userLocation': widget.userLocation,
+    });
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    return;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +111,14 @@ class _VenuePageState extends State<VenuePage> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: CustomAppbar(title: widget.name),
+        appBar: CustomAppbar(
+          title: widget.venueName,
+          routeToPush: Routes.HOMEPAGE,
+          args: {
+            'userEmail': widget.userEmail,
+            'userLocation': widget.userLocation
+          },
+        ),
         body: FutureBuilder<List<String>>(
           future: _images,
           builder: (context, snapshot) {
@@ -90,7 +145,7 @@ class _VenuePageState extends State<VenuePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       _buildHeadingImage(images[0]),
-                      _buildObjectDetails(widget.name, widget.location,
+                      _buildObjectDetails(widget.venueName, widget.location,
                           widget.workingHours, widget.rating),
                       _buildObjectType(widget.type),
                       _buildObjectDescription(widget.description),
@@ -110,6 +165,7 @@ class _VenuePageState extends State<VenuePage> {
                           _buildTimePickerButton(),
                         ],
                       ),
+                      _buildLeaveRatingButton(),
                       _buildDivider(),
                       _buildMasonryView(images.skip(1).toList()),
                     ],
@@ -175,6 +231,49 @@ class _VenuePageState extends State<VenuePage> {
         ),
       );
 
+  Flexible _buildLeaveRatingButton() => Flexible(
+        child: Align(
+          alignment: const AlignmentDirectional(-1, 0),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 0, 8),
+            child: FFButtonWidget(
+              onPressed: () => {
+                _showSnackBar(
+                    'Feature not implemented yet', AppThemes.infoColor)
+              },
+              text: 'Leave a rating',
+              options: FFButtonOptions(
+                width: 128,
+                height: 30,
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                color: Theme.of(context).colorScheme.background,
+                textStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontSize: 12,
+                ),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  width: 1,
+                ),
+                elevation: 3,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        ),
+      );
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _showSnackBar(
+      String text, Color colour) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text, style: const TextStyle(color: Colors.white)),
+        backgroundColor: colour,
+      ),
+    );
+  }
+
   Padding _buildObjectDetails(
           String name, String location, String workingHours, double rating) =>
       Padding(
@@ -204,7 +303,7 @@ class _VenuePageState extends State<VenuePage> {
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
               child: RatingBar.builder(
-                onRatingUpdate: (value) => _mockRatingUpdate(),
+                onRatingUpdate: (value) => {},
                 itemBuilder: (context, index) => Icon(
                   CupertinoIcons.star_fill,
                   color: Theme.of(context).colorScheme.onTertiary,
@@ -248,26 +347,23 @@ class _VenuePageState extends State<VenuePage> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 250,
+          height: 264,
           color: Theme.of(context).colorScheme.background,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 200,
-                child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.date,
-                    initialDateTime: DateTime.now(),
-                    minimumDate:
-                        DateTime.now().subtract(const Duration(days: 1)),
-                    maximumDate: DateTime(2100),
-                    onDateTimeChanged: (DateTime newDate) {
-                      setState(() {
-                        _selectedDate = newDate;
-                      });
-                      debugPrint('Selected date: $_selectedDate');
-                    }),
-              ),
-              SizedBox(
+          child: Column(children: [
+            SizedBox(
+              height: 196,
+              child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.date,
+                  initialDateTime: DateTime.now(),
+                  minimumDate: DateTime.now().subtract(const Duration(days: 1)),
+                  maximumDate: DateTime(2100),
+                  onDateTimeChanged: (DateTime newDate) {
+                    setState(() {
+                      _selectedDate = newDate;
+                    });
+                  }),
+            ),
+            SizedBox(
                 height: 50,
                 child: CupertinoButton(
                   child: Text(
@@ -279,10 +375,8 @@ class _VenuePageState extends State<VenuePage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                ),
-              ),
-            ],
-          ),
+                )),
+          ]),
         );
       },
     );
@@ -310,12 +404,12 @@ class _VenuePageState extends State<VenuePage> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 250,
+          height: 264,
           color: Theme.of(context).colorScheme.background,
           child: Column(
             children: [
               SizedBox(
-                height: 200,
+                height: 196,
                 child: CupertinoPicker(
                   itemExtent: 32,
                   onSelectedItemChanged: (int selectedIndex) {
@@ -378,16 +472,17 @@ class _VenuePageState extends State<VenuePage> {
   }
 
   Future<dynamic> _buildTimePicker() {
+    _selectedMinute ??= 0;
     return showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 250,
+          height: 264,
           color: Theme.of(context).colorScheme.background,
           child: Column(
             children: [
               SizedBox(
-                height: 200,
+                height: 196,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -460,8 +555,6 @@ class _VenuePageState extends State<VenuePage> {
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    debugPrint(
-                        'Selected time: $_selectedHour:$_selectedMinute');
                   },
                 ),
               ),
@@ -473,15 +566,14 @@ class _VenuePageState extends State<VenuePage> {
   }
 
   Padding _buildReserveSpotButton(Function() onPressed) => Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 36),
+        padding: const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 48),
         child: FFButtonWidget(
           onPressed: onPressed,
           text: 'Reserve your spot now',
           options: FFButtonOptions(
             width: double.infinity,
             height: 60,
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-            iconPadding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+            padding: const EdgeInsetsDirectional.all(0),
             color: Theme.of(context).colorScheme.onPrimary,
             splashColor: Theme.of(context).colorScheme.surfaceVariant,
             textStyle: TextStyle(
@@ -555,7 +647,7 @@ class _VenuePageState extends State<VenuePage> {
         elevation: 3,
         borderSide: BorderSide(
           color: Theme.of(context).colorScheme.onPrimary,
-          width: 1,
+          width: .5,
         ),
         borderRadius: BorderRadius.circular(8),
       );
