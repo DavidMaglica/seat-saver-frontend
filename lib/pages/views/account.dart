@@ -96,7 +96,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildHistoryTitle('Reservations'),
         _buildSettingsItem(CupertinoIcons.doc_on_clipboard,
-            'Reservation history', Routes.RESERVATION_HISTORY, user),
+            'Reservation history', Routes.RESERVATION_HISTORY, user, 'view your reservation history'),
       ]);
 
   Padding _buildSettingsTitle(String title) => Padding(
@@ -110,22 +110,22 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildSettingsTitle('Account Settings'),
         _buildSettingsItem(CupertinoIcons.person_circle_fill, 'Edit profile',
-            Routes.EDIT_PROFILE, user),
+            Routes.EDIT_PROFILE, user, 'edit your profile'),
         _buildSettingsItem(CupertinoIcons.bell_circle_fill,
-            'Notification settings', Routes.NOTIFICATION_SETTINGS, user),
+            'Notification settings', Routes.NOTIFICATION_SETTINGS, user, 'edit notification settings'),
       ]);
 
   Column _buildApplicationSettings(User? user) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildSettingsTitle('Application Settings'),
         _buildSettingsItem(CupertinoIcons.question_circle_fill, 'Support',
-            Routes.SUPPORT, user),
+            Routes.SUPPORT, user, 'access support'),
         _buildSettingsItem(CupertinoIcons.exclamationmark_shield_fill,
-            'Terms of service', Routes.TERMS_OF_SERVICE, user),
+            'Terms of service', Routes.TERMS_OF_SERVICE, user, null),
       ]);
 
-  Padding _buildSettingsItem(
-          IconData icon, String text, String route, User? user) =>
+  Padding _buildSettingsItem(IconData icon, String text, String route,
+          User? user, String? action) =>
       Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
           child: Container(
@@ -138,7 +138,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                     blurRadius: 3,
                     color:
                         Theme.of(context).colorScheme.onPrimary.withOpacity(.3),
-                    offset: const Offset(0, 3),
+                    offset: const Offset(0, 0),
                   )
                 ],
                 borderRadius: BorderRadius.circular(8),
@@ -157,11 +157,9 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                         }
                         if (user == null) {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content:
-                                      Text('Please log in to access this page'),
-                                  backgroundColor: AppThemes.infoColor));
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('Please log in to $action.'),
+                              backgroundColor: AppThemes.infoColor));
                           return;
                         }
                         Navigator.pushNamed(context, route, arguments: {
@@ -211,7 +209,8 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
 
   Widget _buildOpenAuthentication(String? userEmail) {
     return Padding(
-        padding: const EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 48),
+        padding:
+            const EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 48),
         child: Container(
             width: double.infinity,
             height: 60,
@@ -253,7 +252,9 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                       const Spacer(),
                       Icon(
                         CupertinoIcons.chevron_forward,
-                        color: Theme.of(context).colorScheme.onPrimary,
+                        color: userEmail != null
+                            ? Theme.of(context).colorScheme.error
+                            : AppThemes.successColor,
                         size: 14,
                       )
                     ])))));

@@ -162,10 +162,30 @@ class _AuthenticationState extends State<Authentication>
     String confirmedPassword,
   ) async {
     if (!mounted) return;
+    RegExp emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+
+    if (password.length < 8) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Password must be at least 8 characters long'),
+        backgroundColor: AppThemes.errorColor,
+      ));
+      return;
+    }
 
     if (password != confirmedPassword) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Passwords do not match'),
+        backgroundColor: AppThemes.errorColor,
+      ));
+      return;
+    }
+
+    if (!emailRegex.hasMatch(userEmail)) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Invalid email address'),
         backgroundColor: AppThemes.errorColor,
       ));
       return;

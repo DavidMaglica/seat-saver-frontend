@@ -8,6 +8,7 @@ class Venue {
   final double rating;
   final VenueType type;
   final String description;
+  final List<String> imageLinks;
 
   Venue({
     required this.id,
@@ -17,6 +18,7 @@ class Venue {
     required this.rating,
     required this.type,
     required this.description,
+    required this.imageLinks,
   });
 
   factory Venue.fromMap(Map<String, dynamic> map) {
@@ -28,6 +30,7 @@ class Venue {
       rating: map['rating'],
       type: map['type'],
       description: map['description'],
+      imageLinks: map['imageLinks'],
     );
   }
 
@@ -40,6 +43,7 @@ class Venue {
       'rating': rating,
       'type': type,
       'description': description,
+      'imageLinks': imageLinks,
     };
   }
 
@@ -94,7 +98,11 @@ enum VenueType {
   indian,
   chinese,
   pizza,
-  ice_cream;
+  ice_cream,
+  bar,
+  beach_bar,
+  wine_bar,
+  ;
 
   @override
   String toString() {

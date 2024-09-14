@@ -1,3 +1,4 @@
+import 'package:TableReserver/api/carousel_api.dart';
 import 'package:flutter/material.dart';
 
 import '../themes/theme.dart';
@@ -12,6 +13,8 @@ class CarouselItem extends StatefulWidget {
 }
 
 class _CarouselItemState extends State<CarouselItem> {
+  String? _imageLink;
+
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
@@ -20,6 +23,14 @@ class _CarouselItemState extends State<CarouselItem> {
   @override
   void initState() {
     super.initState();
+    _getCityImage();
+  }
+
+  void _getCityImage() {
+    String imageLink = getImage(widget.currentCity);
+    setState(() {
+      _imageLink = imageLink;
+    });
   }
 
   @override
@@ -30,21 +41,32 @@ class _CarouselItemState extends State<CarouselItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 256,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _buildImage(),
-          _buildText(),
-        ],
-      ),
-    );
+        height: 256,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: InkWell(
+          onTap: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                backgroundColor: AppThemes.infoColor,
+                content: Text('Searching by location currently unavailable'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildImage(),
+              _buildText(),
+            ],
+          ),
+        ));
   }
 
   Padding _buildText() => Padding(
@@ -74,8 +96,8 @@ class _CarouselItemState extends State<CarouselItem> {
         topLeft: Radius.circular(8),
         topRight: Radius.circular(8),
       ),
-      child: Image.network(
-        'https://images.unsplash.com/photo-1617644558945-ea1c43e5d0a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHw1fHxQdWxhfGVufDB8fHx8MTcxOTUxNjIyMXww&ixlib=rb-4.0.3&q=80&w=1080',
+      child: Image.asset(
+        _imageLink!,
         width: double.infinity,
         height: 128,
         fit: BoxFit.cover,

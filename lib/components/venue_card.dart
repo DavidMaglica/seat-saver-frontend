@@ -5,6 +5,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../api/data/venue.dart';
+import '../api/venue_api.dart';
 import '../themes/theme.dart';
 import '../utils/constants.dart';
 
@@ -35,6 +36,8 @@ class VenueCard extends StatefulWidget {
 }
 
 class _VenueCardState extends State<VenueCard> {
+  List<String>? _venueImages;
+
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
@@ -42,6 +45,8 @@ class _VenueCardState extends State<VenueCard> {
 
   @override
   void initState() {
+    List<String> venueImages = getVenueImages(widget.venueName);
+    setState(() => _venueImages = venueImages);
     super.initState();
   }
 
@@ -57,6 +62,7 @@ class _VenueCardState extends State<VenueCard> {
         'rating': widget.rating,
         'type': widget.type.toString(),
         'description': widget.description,
+        'imageLinks': _venueImages,
         'userEmail': widget.userEmail,
         'userLocation': widget.userLocation,
       });
@@ -123,8 +129,8 @@ class _VenueCardState extends State<VenueCard> {
             topLeft: Radius.circular(8),
             topRight: Radius.circular(8),
           ),
-          child: Image.network(
-            'https://images.unsplash.com/photo-1528114039593-4366cc08227d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8aXRhbHl8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60',
+          child: Image.asset(
+            _venueImages!.first,
             width: double.infinity,
             height: 80,
             fit: BoxFit.cover,
