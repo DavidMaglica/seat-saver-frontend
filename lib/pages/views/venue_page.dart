@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/extension.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -57,27 +56,28 @@ class _VenuePageState extends State<VenuePage> {
 
   @override
   void dispose() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
   }
 
   void _reserveSpot() {
     if (widget.userEmail.isNullOrEmpty) {
-      _showToast('Please log in to reserve a spot');
+      _showSnackBar('Please log in to reserve a spot', AppThemes.errorColor);
       return;
     }
 
     if (_selectedDate == null) {
-      _showToast('Please select a date');
+      _showSnackBar('Please select a date', AppThemes.errorColor);
       return;
     }
 
     if (_selectedHour == null || _selectedMinute == null) {
-      _showToast('Please select a time');
+      _showSnackBar('Please select a time', AppThemes.errorColor);
       return;
     }
 
     if (_selectedNumberOfGuests == null) {
-      _showToast('Please select the number of guests');
+      _showSnackBar('Please select the number of guests', AppThemes.errorColor);
       return;
     }
 
@@ -99,18 +99,10 @@ class _VenuePageState extends State<VenuePage> {
       'userEmail': widget.userEmail,
       'userLocation': widget.userLocation,
     });
-  }
 
-  void _showToast(String message) => showToast(
-        message,
-        context: context,
-        backgroundColor: AppThemes.errorColor,
-        textStyle: const TextStyle(color: Colors.white, fontSize: 16.0),
-        borderRadius: BorderRadius.circular(8),
-        textPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        alignment: Alignment.bottomLeft,
-        duration: const Duration(seconds: 4),
-      );
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    return;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +149,6 @@ class _VenuePageState extends State<VenuePage> {
                           widget.workingHours, widget.rating),
                       _buildObjectType(widget.type),
                       _buildObjectDescription(widget.description),
-                      _buildLeaveRatingButton(),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -174,6 +165,7 @@ class _VenuePageState extends State<VenuePage> {
                           _buildTimePickerButton(),
                         ],
                       ),
+                      _buildLeaveRatingButton(),
                       _buildDivider(),
                       _buildMasonryView(images.skip(1).toList()),
                     ],
@@ -245,7 +237,10 @@ class _VenuePageState extends State<VenuePage> {
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 0, 8),
             child: FFButtonWidget(
-              onPressed: () => {},
+              onPressed: () => {
+                _showSnackBar(
+                    'Feature not implemented yet', AppThemes.infoColor)
+              },
               text: 'Leave a rating',
               options: FFButtonOptions(
                 width: 128,
@@ -267,6 +262,17 @@ class _VenuePageState extends State<VenuePage> {
           ),
         ),
       );
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _showSnackBar(
+      String text, Color colour) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text, style: const TextStyle(color: Colors.white)),
+        backgroundColor: colour,
+      ),
+    );
+  }
 
   Padding _buildObjectDetails(
           String name, String location, String workingHours, double rating) =>
@@ -560,15 +566,14 @@ class _VenuePageState extends State<VenuePage> {
   }
 
   Padding _buildReserveSpotButton(Function() onPressed) => Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 36),
+        padding: const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 48),
         child: FFButtonWidget(
           onPressed: onPressed,
           text: 'Reserve your spot now',
           options: FFButtonOptions(
             width: double.infinity,
             height: 60,
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-            iconPadding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+            padding: const EdgeInsetsDirectional.all(0),
             color: Theme.of(context).colorScheme.onPrimary,
             splashColor: Theme.of(context).colorScheme.surfaceVariant,
             textStyle: TextStyle(
@@ -642,7 +647,7 @@ class _VenuePageState extends State<VenuePage> {
         elevation: 3,
         borderSide: BorderSide(
           color: Theme.of(context).colorScheme.onPrimary,
-          width: 1,
+          width: .5,
         ),
         borderRadius: BorderRadius.circular(8),
       );

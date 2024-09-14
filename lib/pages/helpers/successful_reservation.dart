@@ -97,7 +97,7 @@ class _SuccessfulReservationState extends State<SuccessfulReservation> {
     String formattedTime = timeFormat.format(reservationDateTime);
 
     return Padding(
-      padding: const EdgeInsets.all(16), // Adjust the padding as needed
+      padding: const EdgeInsets.all(16),
       child: Align(
         alignment: const AlignmentDirectional(0, -1),
         child: Text(

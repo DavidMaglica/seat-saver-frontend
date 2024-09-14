@@ -147,7 +147,6 @@ class _ReservationHistoryState extends State<ReservationHistory> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          // Format and display reservation date
                           DateFormat('dd-MM-yyyy HH:mm')
                               .format(reservation.reservationDateTime),
                           style: Theme.of(context).textTheme.titleMedium,

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -59,6 +60,7 @@ class _AuthenticationState extends State<Authentication>
   @override
   void dispose() {
     _model.dispose();
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
   }
 
@@ -186,7 +188,11 @@ class _AuthenticationState extends State<Authentication>
   }
 
   void _forgotPassword() {
-    debugPrint('Forgot password button pressed ...');
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Not implemented yet'),
+      backgroundColor: AppThemes.infoColor,
+    ));
   }
 
   @override
@@ -210,7 +216,7 @@ class _AuthenticationState extends State<Authentication>
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                     child: Container(
                       width: double.infinity,
-                      height: MediaQuery.sizeOf(context).height * .8,
+                      height: MediaQuery.sizeOf(context).height,
                       constraints: const BoxConstraints(
                         maxWidth: 530,
                       ),
@@ -228,6 +234,28 @@ class _AuthenticationState extends State<Authentication>
                                 ],
                               ),
                             ),
+                            MediaQuery.of(context).viewInsets.bottom == 0
+                                ? Padding(
+                                    padding:
+                                        const EdgeInsetsDirectional.symmetric(
+                                            horizontal: 0, vertical: 36),
+                                    child: CupertinoButton(
+                                        child: const Text(
+                                          'Continue without account.',
+                                          style: TextStyle(
+                                            color: AppThemes.infoColor,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                        ),
+                                        onPressed: () => Navigator.pushNamed(
+                                                context, Routes.HOMEPAGE,
+                                                arguments: {
+                                                  'userEmail': null,
+                                                  'userLocation': null
+                                                })),
+                                  )
+                                : const SizedBox(),
                             Align(
                               alignment: const Alignment(0, 0),
                               child: TabBar(
@@ -250,6 +278,8 @@ class _AuthenticationState extends State<Authentication>
                                 ],
                                 controller: _model.tabBarController,
                                 onTap: (i) async {
+                                  SystemChannels.textInput
+                                      .invokeMethod('TextInput.hide');
                                   [() async {}, () async {}][i]();
                                 },
                               ),
@@ -271,7 +301,6 @@ class _AuthenticationState extends State<Authentication>
   TextFormField _buildPasswordField(
     TextEditingController? controller,
     FocusNode? focusNode,
-    String? Function(BuildContext, String?)? validator,
     bool passwordVisibility,
     int tabIndex,
   ) =>
@@ -331,7 +360,6 @@ class _AuthenticationState extends State<Authentication>
         ),
         style: Theme.of(context).textTheme.bodyMedium,
         cursorColor: Theme.of(context).colorScheme.onPrimary,
-        validator: validator.asValidator(context),
       );
 
   TextFormField _buildRetypePasswordField() => TextFormField(
@@ -389,14 +417,11 @@ class _AuthenticationState extends State<Authentication>
         ),
         style: Theme.of(context).textTheme.bodyMedium,
         cursorColor: Theme.of(context).colorScheme.onPrimary,
-        validator:
-            _model.passwordConfirmTextControllerValidator.asValidator(context),
       );
 
   TextFormField _buildEmailField(
     TextEditingController? controller,
     FocusNode? focusNode,
-    String? Function(BuildContext, String?)? validator,
   ) =>
       TextFormField(
         controller: controller,
@@ -441,13 +466,11 @@ class _AuthenticationState extends State<Authentication>
         style: Theme.of(context).textTheme.bodyLarge,
         keyboardType: TextInputType.emailAddress,
         cursorColor: Theme.of(context).colorScheme.onPrimary,
-        validator: validator.asValidator(context),
       );
 
   TextFormField _buildUsernameField(
     TextEditingController? controller,
     FocusNode? focusNode,
-    String? Function(BuildContext, String?)? validator,
   ) =>
       TextFormField(
         controller: controller,
@@ -492,7 +515,6 @@ class _AuthenticationState extends State<Authentication>
         style: Theme.of(context).textTheme.bodyLarge,
         keyboardType: TextInputType.name,
         cursorColor: Theme.of(context).colorScheme.onPrimary,
-        validator: validator.asValidator(context),
       );
 
   Padding _buildForgotPassword(Function() onPressed) => Padding(
@@ -503,9 +525,8 @@ class _AuthenticationState extends State<Authentication>
           'Forgot password? Reset here.',
           style: TextStyle(
             fontSize: 12,
-            color: Colors.blue, // Change to your preferred color
-            decoration:
-                TextDecoration.underline, // Underline to resemble a link
+            color: AppThemes.infoColor,
+            decoration: TextDecoration.underline,
           ),
         ),
       ));
@@ -545,7 +566,6 @@ class _AuthenticationState extends State<Authentication>
                     child: _buildEmailField(
                       _model.emailAddressSignupTextController,
                       _model.emailAddressSignupFocusNode,
-                      _model.emailAddressSignupTextControllerValidator,
                     ),
                   ),
                 ),
@@ -556,7 +576,6 @@ class _AuthenticationState extends State<Authentication>
                     child: _buildUsernameField(
                       _model.usernameSignupTextController,
                       _model.usernameSignupFocusNode,
-                      _model.usernameSignupTextControllerValidator,
                     ),
                   ),
                 ),
@@ -567,7 +586,6 @@ class _AuthenticationState extends State<Authentication>
                     child: _buildPasswordField(
                       _model.passwordSignupTextController,
                       _model.passwordSignupFocusNode,
-                      _model.passwordSignupTextControllerValidator,
                       _model.passwordSignupVisibility,
                       _model.tabBarCurrentIndex,
                     ),
@@ -730,7 +748,6 @@ class _AuthenticationState extends State<Authentication>
                     child: _buildEmailField(
                       _model.emailAddressLoginTextController,
                       _model.emailAddressLoginFocusNode,
-                      _model.emailAddressLoginTextControllerValidator,
                     ),
                   ),
                 ),
@@ -741,7 +758,6 @@ class _AuthenticationState extends State<Authentication>
                     child: _buildPasswordField(
                       _model.passwordLoginTextController,
                       _model.passwordLoginFocusNode,
-                      _model.passwordLoginTextControllerValidator,
                       _model.passwordLoginVisibility,
                       _model.tabBarCurrentIndex,
                     ),

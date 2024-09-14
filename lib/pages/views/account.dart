@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../api/account_api.dart';
@@ -42,6 +41,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
   @override
   void dispose() {
     unfocusNode.dispose();
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
   }
 
@@ -72,10 +72,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                   _buildHistorySettings(user),
                   _buildAccountSettings(user),
                   _buildApplicationSettings(user),
-                  _buildLogOutButton(user?.email, () async {
-                    if (!mounted) return;
-                    Navigator.pushNamed(context, Routes.AUTHENTICATION);
-                  }),
+                  _buildOpenAuthentication(user?.email)
                 ],
               ),
             ),
@@ -83,8 +80,8 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                 context: context,
                 currentIndex: pageIndex,
                 onTap: (index, context) {
-                  onNavbarItemTapped(
-                      pageIndex, index, context, widget.userEmail, widget.userLocation);
+                  onNavbarItemTapped(pageIndex, index, context,
+                      widget.userEmail, widget.userLocation);
                 })));
   }
 
@@ -98,10 +95,9 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
   Column _buildHistorySettings(User? user) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildHistoryTitle('Reservations'),
-        _buildSettingsItem(CupertinoIcons.doc_on_clipboard, 'Reservation history',
-            Routes.RESERVATION_HISTORY, user),
+        _buildSettingsItem(CupertinoIcons.doc_on_clipboard,
+            'Reservation history', Routes.RESERVATION_HISTORY, user),
       ]);
-
 
   Padding _buildSettingsTitle(String title) => Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 0),
@@ -141,8 +137,8 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                   BoxShadow(
                     blurRadius: 3,
                     color:
-                        Theme.of(context).colorScheme.onPrimary.withOpacity(.5),
-                    offset: const Offset(0, 1),
+                        Theme.of(context).colorScheme.onPrimary.withOpacity(.3),
+                    offset: const Offset(0, 3),
                   )
                 ],
                 borderRadius: BorderRadius.circular(8),
@@ -153,11 +149,14 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                   child: InkWell(
                       onTap: () async {
                         if (route == Routes.TERMS_OF_SERVICE) {
-                          Navigator.pushNamed(context, route,
-                              arguments: {'userEmail': user?.email, 'userLocation': widget.userLocation});
+                          Navigator.pushNamed(context, route, arguments: {
+                            'userEmail': user?.email,
+                            'userLocation': widget.userLocation
+                          });
                           return;
                         }
                         if (user == null) {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content:
@@ -165,8 +164,10 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                                   backgroundColor: AppThemes.infoColor));
                           return;
                         }
-                        Navigator.pushNamed(context, route,
-                            arguments: {'user': user, 'userLocation': widget.userLocation});
+                        Navigator.pushNamed(context, route, arguments: {
+                          'user': user,
+                          'userLocation': widget.userLocation
+                        });
                       },
                       child: Row(mainAxisSize: MainAxisSize.max, children: [
                         Icon(
@@ -208,24 +209,53 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
         )
       ]);
 
-  Align _buildLogOutButton(String? email, Function() onPressed) => Align(
-      alignment: const AlignmentDirectional(0, 0),
-      child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-          child: FFButtonWidget(
-              onPressed: onPressed,
-              text: email != null ? 'Log out' : 'Log in',
-              options: FFButtonOptions(
-                width: 270,
-                height: 44,
-                color: email != null
-                    ? AppThemes.errorColor
-                    : AppThemes.successColor,
-                textStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-                elevation: 3,
-                borderRadius: BorderRadius.circular(8),
-              ))));
+  Widget _buildOpenAuthentication(String? userEmail) {
+    return Padding(
+        padding: const EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 48),
+        child: Container(
+            width: double.infinity,
+            height: 60,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.background,
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 10,
+                  color: userEmail != null
+                      ? Theme.of(context).colorScheme.error.withOpacity(.5)
+                      : AppThemes.successColor.withOpacity(.5),
+                  offset: const Offset(0, 0),
+                )
+              ],
+              borderRadius: BorderRadius.circular(8),
+              shape: BoxShape.rectangle,
+            ),
+            child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: InkWell(
+                    onTap: () async {
+                      if (!mounted) return;
+                      Navigator.pushNamed(context, Routes.AUTHENTICATION);
+                    },
+                    child: Row(mainAxisSize: MainAxisSize.max, children: [
+                      Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                        child: Text(
+                          userEmail != null ? 'Log out' : 'Log in',
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: userEmail != null
+                                        ? Theme.of(context).colorScheme.error
+                                        : AppThemes.successColor,
+                                  ),
+                        ),
+                      ),
+                      const Spacer(),
+                      Icon(
+                        CupertinoIcons.chevron_forward,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        size: 14,
+                      )
+                    ])))));
+  }
 }

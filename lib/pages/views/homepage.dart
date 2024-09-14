@@ -83,6 +83,7 @@ class _HomepageState extends State<Homepage> {
   @override
   void dispose() {
     unfocusNode.dispose();
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
   }
 
@@ -143,6 +144,7 @@ class _HomepageState extends State<Homepage> {
   }
 
   void _openNearbyVenues() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('Currently unavailable'),
       backgroundColor: AppThemes.infoColor,
@@ -151,6 +153,7 @@ class _HomepageState extends State<Homepage> {
   }
 
   void _openNewVenues() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('Currently unavailable'),
       backgroundColor: AppThemes.infoColor,
@@ -159,6 +162,7 @@ class _HomepageState extends State<Homepage> {
   }
 
   void _openTrendingVenues() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('Currently unavailable'),
       backgroundColor: AppThemes.infoColor,
@@ -289,8 +293,7 @@ class _HomepageState extends State<Homepage> {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            // Optional: Add padding inside the Container
+            padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 0, 24),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -490,30 +493,30 @@ class _HomepageState extends State<Homepage> {
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
-                          Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  0, 0, 12, 0),
-                              child: FFButtonWidget(
-                                  onPressed: () {},
-                                  text: 'Help',
-                                  options: FFButtonOptions(
-                                    width: 80,
-                                    height: 24,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .background,
-                                    textStyle: const TextStyle(
-                                      color: AppThemes.infoColor,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    elevation: 3,
-                                    borderSide: const BorderSide(
-                                      color: AppThemes.infoColor,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  )))
+                          // Padding(
+                          //     padding: const EdgeInsetsDirectional.fromSTEB(
+                          //         0, 0, 12, 0),
+                          //     child: FFButtonWidget(
+                          //         onPressed: () {},
+                          //         text: 'Help',
+                          //         options: FFButtonOptions(
+                          //           width: 80,
+                          //           height: 24,
+                          //           color: Theme.of(context)
+                          //               .colorScheme
+                          //               .background,
+                          //           textStyle: const TextStyle(
+                          //             color: AppThemes.infoColor,
+                          //             fontSize: 12,
+                          //             fontWeight: FontWeight.w500,
+                          //           ),
+                          //           elevation: 3,
+                          //           borderSide: const BorderSide(
+                          //             color: AppThemes.infoColor,
+                          //             width: 1,
+                          //           ),
+                          //           borderRadius: BorderRadius.circular(8),
+                          //         ))),
                         ])))
           ]);
 }

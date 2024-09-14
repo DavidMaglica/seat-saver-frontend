@@ -27,10 +27,9 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
   final _unfocusNode = FocusNode();
   FocusNode? _ticketTitleFocusNode;
   TextEditingController? _ticketTitleController;
-  String? Function(BuildContext, String?)? _ticketTitleValidator;
+
   FocusNode? _ticketDescriptionFocusNode;
   TextEditingController? _ticketDescriptionController;
-  String? Function(BuildContext, String?)? _ticketDescriptionValidator;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -66,7 +65,10 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
         appBar: CustomAppbar(
             title: 'Support',
             routeToPush: Routes.ACCOUNT,
-            args: {'userEmail': widget.user.email, 'userLocation': widget.userLocation}),
+            args: {
+              'userEmail': widget.user.email,
+              'userLocation': widget.userLocation
+            }),
         body: SafeArea(
           top: true,
           child: Padding(
@@ -105,7 +107,6 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                         _buildInputField(
                           _ticketTitleController,
                           _ticketTitleFocusNode,
-                          _ticketTitleValidator,
                           'Ticket title',
                           'Enter a title for your ticket.',
                           null,
@@ -114,7 +115,6 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                         _buildInputField(
                           _ticketDescriptionController,
                           _ticketDescriptionFocusNode,
-                          _ticketDescriptionValidator,
                           'Short description',
                           'Short description of what is going on...',
                           16,
@@ -182,7 +182,6 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
   TextFormField _buildInputField(
     TextEditingController? controller,
     FocusNode? focusNode,
-    String? Function(BuildContext, String?)? validator,
     String labelText,
     String hintText,
     int? maxLines,
@@ -209,6 +208,5 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
         maxLines: maxLines,
         minLines: minLines,
         cursorColor: Theme.of(context).colorScheme.onPrimary,
-        validator: validator.asValidator(context),
       );
 }

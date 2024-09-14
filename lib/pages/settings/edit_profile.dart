@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_credit_card/extension.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../api/account_api.dart';
@@ -31,22 +30,17 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile> {
   FocusNode? _newUsernameFocusNode;
   TextEditingController? _newUsernameTextController;
-  String? Function(BuildContext, String?)? _newUsernameTextControllerValidator;
 
   FocusNode? _newEmailFocusNode;
   TextEditingController? _newEmailTextController;
-  String? Function(BuildContext, String?)? _newEmailTextControllerValidator;
 
   FocusNode? _newPasswordFocusNode;
   TextEditingController? _newPasswordTextController;
   bool _newPasswordVisibility = false;
-  String? Function(BuildContext, String?)? _newPasswordTextControllerValidator;
 
   FocusNode? _confirmNewPasswordFocusNode;
   TextEditingController? _confirmNewPasswordTextController;
   bool _confirmNewPasswordVisibility = false;
-  String? Function(BuildContext, String?)?
-      _confirmNewPasswordTextControllerValidator;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -318,7 +312,6 @@ class _EditProfileState extends State<EditProfile> {
                 'Enter a new username',
                 _newUsernameTextController,
                 _newUsernameFocusNode,
-                _newUsernameTextControllerValidator,
               ),
               const SizedBox(height: 24),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -336,7 +329,6 @@ class _EditProfileState extends State<EditProfile> {
     String hint,
     TextEditingController? controller,
     FocusNode? focusNode,
-    String? Function(BuildContext, String?)? validator,
   ) =>
       Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
@@ -361,7 +353,6 @@ class _EditProfileState extends State<EditProfile> {
             keyboardType: TextInputType.name,
             cursorColor: Theme.of(context).colorScheme.onPrimary,
             style: Theme.of(context).textTheme.bodyMedium,
-            validator: validator.asValidator(context),
           ));
 
   Padding _buildChangeEmail() => Padding(
@@ -418,7 +409,6 @@ class _EditProfileState extends State<EditProfile> {
                 'Enter your new email',
                 _newEmailTextController,
                 _newEmailFocusNode,
-                _newEmailTextControllerValidator,
               ),
               const SizedBox(height: 16),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -435,7 +425,6 @@ class _EditProfileState extends State<EditProfile> {
     String hint,
     TextEditingController? controller,
     FocusNode? focusNode,
-    String? Function(BuildContext, String?)? validator,
   ) =>
       Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
@@ -460,7 +449,6 @@ class _EditProfileState extends State<EditProfile> {
             keyboardType: TextInputType.emailAddress,
             cursorColor: Theme.of(context).colorScheme.onPrimary,
             style: Theme.of(context).textTheme.bodyMedium,
-            validator: validator.asValidator(context),
           ));
 
   Padding _buildChangePassword() => Padding(
@@ -505,7 +493,6 @@ class _EditProfileState extends State<EditProfile> {
                       'Enter a new password',
                       _newPasswordTextController,
                       _newPasswordFocusNode,
-                      _newPasswordTextControllerValidator,
                       _newPasswordVisibility,
                       false,
                       setModalState,
@@ -515,7 +502,6 @@ class _EditProfileState extends State<EditProfile> {
                       'Confirm new password',
                       _confirmNewPasswordTextController,
                       _confirmNewPasswordFocusNode,
-                      _confirmNewPasswordTextControllerValidator,
                       _confirmNewPasswordVisibility,
                       true,
                       setModalState,
@@ -550,7 +536,6 @@ class _EditProfileState extends State<EditProfile> {
     String hint,
     TextEditingController? controller,
     FocusNode? focusNode,
-    String? Function(BuildContext, String?)? validator,
     bool passwordVisibility,
     bool isConfirmedPassword,
     StateSetter setModalState,

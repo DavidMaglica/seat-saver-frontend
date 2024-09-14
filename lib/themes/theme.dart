@@ -12,6 +12,8 @@ const Color lightPrimaryBackgroundColor = Color(0xFFFFFFFF);
 const Color lightSecondaryBackgroundColor = Color(0xFFE0DDDD);
 const Color mutedLightSecondaryBackgroundColor = Color(0x40E0DDDD);
 
+const Color lightErrorColor = Color(0xFF800020);
+
 // Dark theme colors
 const Color darkPrimaryColor = Color(0xFF4CAF50);
 const Color darkSecondaryColor = Color(0xFFFFB74D);
@@ -23,6 +25,8 @@ const Color darkSecondaryTextColor = Color(0xFFBDBDBD);
 const Color darkPrimaryBackgroundColor = Color(0xFF212121);
 const Color darkSecondaryBackgroundColor = Color(0xFF424242);
 const Color mutedDarkSecondaryBackgroundColor = Color(0xB3424242);
+
+const Color darkErrorColor = Color(0xFFB70031);
 
 class AppThemes {
 
@@ -52,7 +56,7 @@ class AppThemes {
       surfaceVariant: mutedLightSecondaryBackgroundColor,
       background: lightPrimaryBackgroundColor,
       onBackground: lightPrimaryTextColor,
-      error: errorColor,
+      error: lightErrorColor,
       onError: errorColor,
 
     ),
@@ -80,11 +84,11 @@ class AppThemes {
       surface: darkSecondaryBackgroundColor,
       surfaceVariant: mutedDarkSecondaryBackgroundColor,
       background: darkPrimaryBackgroundColor,
-      error: errorColor,
       onPrimary: darkPrimaryTextColor,
       onSecondary: darkSecondaryTextColor,
       onSurface: darkPrimaryTextColor,
       onBackground: darkPrimaryTextColor,
+      error: darkErrorColor,
       onError: darkPrimaryBackgroundColor,
     ),
     textTheme: const TextTheme(

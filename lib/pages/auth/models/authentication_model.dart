@@ -14,36 +14,25 @@ class AuthenticationModel extends FlutterFlowModel<Authentication> {
   // Signup
   FocusNode? usernameSignupFocusNode;
   TextEditingController? usernameSignupTextController;
-  String? Function(BuildContext, String?)?
-      usernameSignupTextControllerValidator;
 
   FocusNode? emailAddressSignupFocusNode;
   TextEditingController? emailAddressSignupTextController;
-  String? Function(BuildContext, String?)?
-      emailAddressSignupTextControllerValidator;
 
   FocusNode? passwordSignupFocusNode;
   TextEditingController? passwordSignupTextController;
   late bool passwordSignupVisibility;
-  String? Function(BuildContext, String?)?
-      passwordSignupTextControllerValidator;
 
   FocusNode? passwordConfirmFocusNode;
   TextEditingController? passwordConfirmTextController;
   late bool passwordConfirmVisibility;
-  String? Function(BuildContext, String?)?
-      passwordConfirmTextControllerValidator;
 
   // Login
   FocusNode? emailAddressLoginFocusNode;
   TextEditingController? emailAddressLoginTextController;
-  String? Function(BuildContext, String?)?
-      emailAddressLoginTextControllerValidator;
 
   FocusNode? passwordLoginFocusNode;
   TextEditingController? passwordLoginTextController;
   late bool passwordLoginVisibility;
-  String? Function(BuildContext, String?)? passwordLoginTextControllerValidator;
 
   @override
   void initState(BuildContext context) {

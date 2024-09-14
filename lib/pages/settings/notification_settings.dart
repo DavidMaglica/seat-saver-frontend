@@ -40,6 +40,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
 
   @override
   void dispose() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
   }
 

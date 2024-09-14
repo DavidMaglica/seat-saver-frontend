@@ -206,7 +206,7 @@ Future<BasicResponse> changeUsername(String email, String newUsername) async {
     userStore[email] = updatedUser;
 
     return BasicResponse(
-        success: true, message: 'Name and surname successfully updated');
+        success: true, message: 'Username successfully updated');
   } else {
     return BasicResponse(success: false, message: 'User not found');
   }

@@ -250,7 +250,7 @@ class _SearchState extends State<Search> {
           ),
           subtitle: Text(
             venue.type.toString(),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color:
                       Theme.of(context).colorScheme.onPrimary.withOpacity(.6),
                 ),
@@ -260,7 +260,6 @@ class _SearchState extends State<Search> {
             color: Theme.of(context).colorScheme.onPrimary,
             size: 14,
           ),
-          // tileColor: Theme.of(context).colorScheme.surfaceVariant,
           dense: true,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
