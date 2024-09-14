@@ -20,6 +20,7 @@ class VenuePage extends StatefulWidget {
   final double rating;
   final String type;
   final String description;
+  final List<String>? imageLinks;
   final String? userEmail;
   final Position? userLocation;
 
@@ -31,6 +32,7 @@ class VenuePage extends StatefulWidget {
     required this.rating,
     required this.type,
     required this.description,
+    this.imageLinks,
     this.userEmail,
     this.userLocation,
   }) : super(key: key);
@@ -45,6 +47,7 @@ class _VenuePageState extends State<VenuePage> {
   int? _selectedHour;
   int? _selectedMinute;
   int? _selectedNumberOfGuests;
+  List<String>? _venueImages;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -52,6 +55,9 @@ class _VenuePageState extends State<VenuePage> {
   void initState() {
     super.initState();
     _images = getImages();
+    if (widget.imageLinks == null) {
+      _venueImages = getVenueImages(widget.venueName);
+    }
   }
 
   @override
@@ -134,7 +140,6 @@ class _VenuePageState extends State<VenuePage> {
               return const Center(child: Text('No images available'));
             }
 
-            final images = snapshot.data!;
             return Stack(
               alignment: const AlignmentDirectional(0, 1),
               children: [
@@ -144,7 +149,7 @@ class _VenuePageState extends State<VenuePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      _buildHeadingImage(images[0]),
+                      _buildHeadingImage(widget.imageLinks != null ? widget.imageLinks![0] : _venueImages![0]),
                       _buildObjectDetails(widget.venueName, widget.location,
                           widget.workingHours, widget.rating),
                       _buildObjectType(widget.type),
@@ -167,7 +172,7 @@ class _VenuePageState extends State<VenuePage> {
                       ),
                       _buildLeaveRatingButton(),
                       _buildDivider(),
-                      _buildMasonryView(images.skip(1).toList()),
+                      _buildMasonryView(widget.imageLinks!= null ? widget.imageLinks!.skip(1).toList() : _venueImages!.skip(1).toList()),
                     ],
                   ),
                 ),
@@ -195,7 +200,7 @@ class _VenuePageState extends State<VenuePage> {
           },
           child: Hero(
             tag: 'headerImageTag',
-            child: Image.network(
+            child: Image.asset(
               image,
               width: double.infinity,
               height: 320,
@@ -614,7 +619,7 @@ class _VenuePageState extends State<VenuePage> {
                 transitionOnUserGestures: true,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
+                  child: Image.asset(
                     imageUrl,
                     width: 160,
                     height: 170,

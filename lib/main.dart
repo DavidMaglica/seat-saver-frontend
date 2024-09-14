@@ -104,6 +104,8 @@ class MyApp extends StatelessWidget {
                   as Map<String, dynamic>)['type'],
               description: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['description'],
+              imageLinks: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['imageLinks'],
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
               userLocation: (ModalRoute.of(context)!.settings.arguments

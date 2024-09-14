@@ -13,25 +13,118 @@ Future<List<String>> getImages() async {
   return mocked;
 }
 
+final List<String> mockedPlaceholderImages = [
+  'assets/images/carousel/placeholder.jpg',
+  'assets/images/carousel/placeholder.jpg',
+  'assets/images/carousel/placeholder.jpg',
+  'assets/images/carousel/placeholder.jpg'
+];
+
+Map<String, List<String>> mockedImages = {
+  'Spinnaker': [
+    'assets/images/venue_images/spinnaker_1.jpg',
+    'assets/images/venue_images/spinnaker_2.jpg',
+    'assets/images/venue_images/spinnaker_3.jpg',
+    'assets/images/venue_images/spinnaker_4.jpg',
+    'assets/images/venue_images/spinnaker_5.jpg',
+    'assets/images/venue_images/spinnaker_6.jpg',
+    'assets/images/venue_images/spinnaker_7.jpg',
+  ],
+  'Tequila': [
+    'assets/images/venue_images/tequila_1.jpg',
+    'assets/images/venue_images/tequila_2.jpg',
+    'assets/images/venue_images/tequila_3.jpg',
+    'assets/images/venue_images/tequila_4.jpg',
+    'assets/images/venue_images/tequila_5.jpg',
+    'assets/images/venue_images/tequila_6.jpg',
+    'assets/images/venue_images/tequila_7.jpg',
+    'assets/images/venue_images/tequila_8.jpg',
+  ],
+  'Gelateria La Carraia': [
+    'assets/images/venue_images/laCarraia_1.jpg',
+    'assets/images/venue_images/laCarraia_2.jpg',
+    'assets/images/venue_images/laCarraia_3.jpg',
+    'assets/images/venue_images/laCarraia_4.jpg',
+  ],
+  'Gelateria Dei Neri': [
+    'assets/images/venue_images/deiNeri_1.jpg',
+    'assets/images/venue_images/deiNeri_2.jpg',
+    'assets/images/venue_images/deiNeri_3.jpg',
+    'assets/images/venue_images/deiNeri_4.jpg',
+    'assets/images/venue_images/deiNeri_5.jpg',
+  ],
+  'Chang': [
+    'assets/images/venue_images/chang_1.png',
+    'assets/images/venue_images/chang_2.jpg',
+    'assets/images/venue_images/chang_3.jpg',
+    'assets/images/venue_images/chang_4.jpg',
+    'assets/images/venue_images/chang_5.jpg',
+    'assets/images/venue_images/chang_6.jpg',
+    'assets/images/venue_images/chang_7.jpg',
+    'assets/images/venue_images/chang_8.jpg',
+    'assets/images/venue_images/chang_9.jpg',
+    'assets/images/venue_images/chang_10.jpg',
+  ],
+  'Umi': [
+    'assets/images/venue_images/umi_1.jpg',
+    'assets/images/venue_images/umi_2.jpg',
+    'assets/images/venue_images/umi_3.jpg',
+    'assets/images/venue_images/umi_4.jpg',
+    'assets/images/venue_images/umi_5.jpg',
+    'assets/images/venue_images/umi_6.jpg',
+    'assets/images/venue_images/umi_7.jpg',
+    'assets/images/venue_images/umi_8.jpg'
+  ],
+  'Tsuki': [
+    'assets/images/venue_images/tsuki_1.jpg',
+    'assets/images/venue_images/tsuki_2.jpg',
+    'assets/images/venue_images/tsuki_3.jpg',
+    'assets/images/venue_images/tsuki_4.jpg',
+    'assets/images/venue_images/tsuki_5.jpg',
+  ],
+  'Bacchus': [
+    'assets/images/venue_images/bacchus_1.jpg',
+    'assets/images/venue_images/bacchus_2.jpg',
+    'assets/images/venue_images/bacchus_3.jpg',
+    'assets/images/venue_images/bacchus_4.jpg',
+    'assets/images/venue_images/bacchus_5.jpg',
+    'assets/images/venue_images/bacchus_6.jpg',
+    'assets/images/venue_images/bacchus_7.jpg',
+  ],
+};
+
+List<String> getVenueImages(String venueName) {
+  if (mockedImages.containsKey(venueName)) {
+    if (mockedImages[venueName]!.isEmpty) {
+      return mockedPlaceholderImages;
+    }
+    return mockedImages[venueName]!;
+  } else {
+    return mockedPlaceholderImages;
+  }
+}
+
 Future<List<Venue>> getAllVenues() async {
   final List<Venue> allVenues = [
     Venue(
       id: 1,
-      name: 'Mele Melinda',
+      name: 'Spinnaker',
       location: 'Poreč',
       workingHours: '8:00 AM - 10:00 PM',
       rating: 5,
-      type: VenueType.italian,
+      type: VenueType.fine_dining,
       description: 'A lovely place to eat.',
+      imageLinks: [],
     ),
     Venue(
       id: 2,
-      name: 'Pizzeria Da Giacomo',
-      location: 'Rovinj',
+      name: 'Tequila',
+      location: 'Poreč',
       workingHours: '8:00 AM - 10:00 PM',
       rating: 2,
-      type: VenueType.pizza,
+      type: VenueType.beach_bar,
       description: 'A lovely place to eat.',
+      imageLinks: [],
     ),
     Venue(
       id: 3,
@@ -41,6 +134,7 @@ Future<List<Venue>> getAllVenues() async {
       rating: 3.5,
       type: VenueType.ice_cream,
       description: 'A lovely place to eat.',
+      imageLinks: [],
     ),
     Venue(
       id: 4,
@@ -50,6 +144,7 @@ Future<List<Venue>> getAllVenues() async {
       rating: 3,
       type: VenueType.ice_cream,
       description: 'A lovely place to eat.',
+      imageLinks: [],
     ),
     Venue(
       id: 5,
@@ -59,6 +154,7 @@ Future<List<Venue>> getAllVenues() async {
       rating: 5,
       type: VenueType.chinese,
       description: 'A lovely place to eat.',
+      imageLinks: [],
     ),
     Venue(
       id: 6,
@@ -68,6 +164,7 @@ Future<List<Venue>> getAllVenues() async {
       rating: 4.5,
       type: VenueType.asian,
       description: 'A lovely place to eat.',
+      imageLinks: [],
     ),
     Venue(
       id: 7,
@@ -77,15 +174,17 @@ Future<List<Venue>> getAllVenues() async {
       rating: 3,
       type: VenueType.japanese,
       description: 'A lovely place to eat.',
+      imageLinks: [],
     ),
     Venue(
       id: 8,
-      name: 'Pizzeria Da Michele',
+      name: 'Bacchus',
       location: 'Pula',
       workingHours: '8:00 AM - 10:00 PM',
       rating: 4,
-      type: VenueType.pizza,
+      type: VenueType.wine_bar,
       description: 'A lovely place to eat.',
+      imageLinks: [],
     ),
   ];
   return allVenues.toList();
@@ -129,8 +228,7 @@ Future<List<Venue>> getSuggestedVenues() async {
 
 Future<List<Venue>> getVenuesByType(List<VenueType> types) async {
   List<Venue> allVenues = await getAllVenues();
-  List<Venue> filteredVenues = allVenues
-      .where((venue) => types.contains(venue.type))
-      .toList();
+  List<Venue> filteredVenues =
+      allVenues.where((venue) => types.contains(venue.type)).toList();
   return filteredVenues;
 }
