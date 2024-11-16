@@ -1,24 +1,25 @@
+import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'data/basic_response.dart';
 import 'data/notification_settings.dart';
 import 'data/user.dart';
+import 'dio_setup.dart';
 
 Map<String, User> userStore = {};
+
+final dio = setupDio('/user');
 
 User? findUser(String email) => userStore[email];
 
 Future<UserResponse?> getUser(String email) async {
-  if (!userStore.containsKey(email)) {
-    return null;
+  try {
+    Response response = await dio.get('/get-user?email=$email');
+    User user = User.fromMap(response.data);
+    return UserResponse(success: true, message: 'User found', user: user);
+  } catch (e) {
+    return UserResponse(success: false, message: 'User not found', user: null);
   }
-
-  User user = userStore[email]!;
-  return UserResponse(
-    success: true,
-    message: 'User retrieved successfully',
-    user: user,
-  );
 }
 
 Future<BasicResponse> signup(
@@ -171,8 +172,7 @@ Future<BasicResponse> updateLocationServices(
       success: true, message: 'Location services updated successfully');
 }
 
-Future<BasicResponse> changePassword(
-    String email, String newPassword) async {
+Future<BasicResponse> changePassword(String email, String newPassword) async {
   User? user = findUser(email);
 
   if (user != null) {
