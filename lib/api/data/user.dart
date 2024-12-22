@@ -6,7 +6,7 @@ class User {
   final String username;
   final String email;
   final String password;
-  final NotificationSettings notificationOptions;
+  final NotificationOptions notificationOptions;
   final Position? lastKnownLocation;
 
   User({
@@ -23,7 +23,7 @@ class User {
       email: json['email'],
       password: json['password'],
       notificationOptions:
-          NotificationSettings.fromMap(json['notificationOptions']),
+          NotificationOptions.fromMap(json['notificationOptions']),
       lastKnownLocation: json['lastKnownLocation'] != null
           ? Position.fromMap(json['lastKnownLocation'])
           : null,

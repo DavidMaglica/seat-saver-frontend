@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'data/api_user.dart';
 import 'data/basic_response.dart';
 import 'data/notification_settings.dart';
 import 'data/user.dart';
@@ -10,42 +11,63 @@ Map<String, User> userStore = {};
 
 final dio = setupDio('/user');
 
-User? findUser(String email) => userStore[email];
-
 Future<UserResponse?> getUser(String email) async {
   try {
     Response response = await dio.get('/get-user?email=$email');
-    User user = User.fromMap(response.data);
-    return UserResponse(success: true, message: 'User found', user: user);
+    APIUser apiUser = APIUser.fromMap(response.data);
+    if (apiUser.lastKnownLatitude != null &&
+        apiUser.lastKnownLongitude != null) {
+      Position position = Position(
+        latitude: apiUser.lastKnownLatitude!,
+        longitude: apiUser.lastKnownLongitude!,
+        timestamp: DateTime.now(),
+        accuracy: 0,
+        altitude: 0,
+        altitudeAccuracy: 0,
+        heading: 0,
+        headingAccuracy: 0,
+        speed: 0,
+        speedAccuracy: 0,
+      );
+      User user = User(
+          username: apiUser.username,
+          email: apiUser.email,
+          password: apiUser.password,
+          notificationOptions: apiUser.notificationOptions,
+          lastKnownLocation: position);
+      return UserResponse(success: true, message: 'User found', user: user);
+    } else {
+      return UserResponse(
+          success: true,
+          message: 'User found',
+          user: User(
+              username: apiUser.username,
+              email: apiUser.email,
+              password: apiUser.password,
+              notificationOptions: apiUser.notificationOptions,
+              lastKnownLocation: null));
+    }
   } catch (e) {
     return UserResponse(success: false, message: 'User not found', user: null);
   }
 }
 
 Future<BasicResponse> signup(
-    String username, String email, String password) async {
+  String username,
+  String email,
+  String password,
+) async {
   if (username.isEmpty || email.isEmpty || password.isEmpty) {
     return BasicResponse(success: false, message: 'Please fill in all fields');
   }
 
-  if (userStore.containsKey(email)) {
-    return BasicResponse(success: false, message: 'User already exists');
+  try {
+    final response = await dio
+        .post('/signup?email=$email&username=$username&password=$password');
+    return BasicResponse.fromJson(response.data);
+  } catch (e) {
+    return BasicResponse(success: false, message: e.toString());
   }
-
-  User newUser = User(
-    username: username,
-    email: email,
-    password: password,
-    notificationOptions: NotificationSettings(
-      pushNotificationsTurnedOn: false,
-      emailNotificationsTurnedOn: false,
-      locationServicesTurnedOn: false,
-    ),
-    lastKnownLocation: null,
-  );
-
-  userStore[email] = newUser;
-  return BasicResponse(success: true, message: 'Signup successful');
 }
 
 Future<BasicResponse> login(String email, String password) async {
@@ -53,15 +75,11 @@ Future<BasicResponse> login(String email, String password) async {
     return BasicResponse(success: false, message: 'Please fill in all fields');
   }
 
-  if (!userStore.containsKey(email)) {
-    return BasicResponse(success: false, message: 'User not found');
-  }
-
-  User user = userStore[email]!;
-  if (user.password == password) {
-    return BasicResponse(success: true, message: 'Login successful');
-  } else {
-    return BasicResponse(success: false, message: 'Invalid password');
+  try {
+    final response = await dio.get('/login?email=$email&password=$password');
+    return BasicResponse.fromJson(response.data);
+  } catch (e) {
+    return BasicResponse(success: false, message: e.toString());
   }
 }
 
@@ -112,7 +130,7 @@ Future<BasicResponse> updateUserNotificationOptions(
     username: existingUser.username,
     email: existingUser.email,
     password: existingUser.password,
-    notificationOptions: NotificationSettings(
+    notificationOptions: NotificationOptions(
       pushNotificationsTurnedOn: pushNotificationsTurnedOn,
       emailNotificationsTurnedOn: emailNotificationsTurnedOn,
       locationServicesTurnedOn: locationServicesTurnedOn,
@@ -157,7 +175,7 @@ Future<BasicResponse> updateLocationServices(
     username: existingUser.username,
     email: existingUser.email,
     password: existingUser.password,
-    notificationOptions: NotificationSettings(
+    notificationOptions: NotificationOptions(
       pushNotificationsTurnedOn:
           existingUser.notificationOptions.pushNotificationsTurnedOn,
       emailNotificationsTurnedOn:
@@ -173,61 +191,22 @@ Future<BasicResponse> updateLocationServices(
 }
 
 Future<BasicResponse> changePassword(String email, String newPassword) async {
-  User? user = findUser(email);
-
-  if (user != null) {
-    User updatedUser = User(
-      username: user.username,
-      email: user.email,
-      password: newPassword,
-      notificationOptions: user.notificationOptions,
-    );
-
-    userStore[email] = updatedUser;
-
-    return BasicResponse(
-        success: true, message: 'Password updated successfully');
-  } else {
-    return BasicResponse(success: false, message: 'User not found');
-  }
+  Response response = await dio
+      .patch('/update-user-password?email=$email&newPassword=$newPassword');
+  BasicResponse basicResponse = BasicResponse.fromJson(response.data);
+  return basicResponse;
 }
 
 Future<BasicResponse> changeUsername(String email, String newUsername) async {
-  User? user = findUser(email);
-
-  if (user != null) {
-    User updatedUser = User(
-      username: newUsername,
-      email: user.email,
-      password: user.password,
-      notificationOptions: user.notificationOptions,
-      lastKnownLocation: user.lastKnownLocation,
-    );
-    userStore[email] = updatedUser;
-
-    return BasicResponse(
-        success: true, message: 'Username successfully updated');
-  } else {
-    return BasicResponse(success: false, message: 'User not found');
-  }
+  Response response = await dio
+      .patch('/update-user-username?email=$email&newUsername=$newUsername');
+  BasicResponse basicResponse = BasicResponse.fromJson(response.data);
+  return basicResponse;
 }
 
 Future<BasicResponse> changeEmail(String email, String newEmail) async {
-  User? user = findUser(email);
-
-  if (user != null) {
-    User updatedUser = User(
-      username: user.username,
-      email: newEmail,
-      password: user.password,
-      notificationOptions: user.notificationOptions,
-      lastKnownLocation: user.lastKnownLocation,
-    );
-    userStore.remove(email);
-    userStore[newEmail] = updatedUser;
-
-    return BasicResponse(success: true, message: 'Email successfully updated');
-  } else {
-    return BasicResponse(success: false, message: 'User not found');
-  }
+  Response response =
+      await dio.patch('/update-user-email?email=$email&newEmail=$newEmail');
+  BasicResponse basicResponse = BasicResponse.fromJson(response.data);
+  return basicResponse;
 }

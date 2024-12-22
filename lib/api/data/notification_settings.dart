@@ -1,16 +1,16 @@
-class NotificationSettings {
+class NotificationOptions {
   bool pushNotificationsTurnedOn;
   bool emailNotificationsTurnedOn;
   bool locationServicesTurnedOn;
 
-  NotificationSettings({
+  NotificationOptions({
     required this.pushNotificationsTurnedOn,
     required this.emailNotificationsTurnedOn,
     required this.locationServicesTurnedOn,
   });
 
-  factory NotificationSettings.fromMap(Map<String, dynamic> json) {
-    return NotificationSettings(
+  factory NotificationOptions.fromMap(Map<String, dynamic> json) {
+    return NotificationOptions(
       pushNotificationsTurnedOn: json['pushNotificationsTurnedOn'],
       emailNotificationsTurnedOn: json['emailNotificationsTurnedOn'],
       locationServicesTurnedOn: json['locationServicesTurnedOn'],
@@ -21,7 +21,7 @@ class NotificationSettings {
 class NotificationSettingsResponse {
   bool success;
   String message;
-  NotificationSettings? notificationSettings;
+  NotificationOptions? notificationSettings;
 
   NotificationSettingsResponse({
     required this.success,
@@ -34,7 +34,7 @@ class NotificationSettingsResponse {
       success: json['success'],
       message: json['message'],
       notificationSettings:
-          NotificationSettings.fromMap(json['notificationSettings']),
+          NotificationOptions.fromMap(json['notificationSettings']),
     );
   }
 }
