@@ -45,19 +45,14 @@ class _NotificationSettingsState extends State<NotificationSettings> {
   }
 
   Future<void> _getNotificationSettingsByEmail() async {
-    NotificationSettingsResponse response =
-        await getNotificationSettings(widget.user.email);
+    NotificationOptions response =
+        await getNotificationOptions(widget.user.email);
 
-    if (response.notificationSettings != null) {
-      setState(() {
-        _isActivePushNotifications =
-            response.notificationSettings!.pushNotificationsTurnedOn;
-        _isActiveEmailNotifications =
-            response.notificationSettings!.emailNotificationsTurnedOn;
-        _isActiveLocationServices =
-            response.notificationSettings!.locationServicesTurnedOn;
-      });
-    }
+    setState(() {
+      _isActivePushNotifications = response.pushNotificationsTurnedOn;
+      _isActiveEmailNotifications = response.emailNotificationsTurnedOn;
+      _isActiveLocationServices = response.locationServicesTurnedOn;
+    });
   }
 
   Future<void> _saveChanges() async {
@@ -85,7 +80,10 @@ class _NotificationSettingsState extends State<NotificationSettings> {
       appBar: CustomAppbar(
         title: 'Notification settings',
         routeToPush: Routes.ACCOUNT,
-        args: {'userEmail': widget.user.email, 'userLocation': widget.userLocation},
+        args: {
+          'userEmail': widget.user.email,
+          'userLocation': widget.userLocation
+        },
       ),
       body: SafeArea(
         top: true,

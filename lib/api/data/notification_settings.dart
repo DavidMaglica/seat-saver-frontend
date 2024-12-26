@@ -17,24 +17,3 @@ class NotificationOptions {
     );
   }
 }
-
-class NotificationSettingsResponse {
-  bool success;
-  String message;
-  NotificationOptions? notificationSettings;
-
-  NotificationSettingsResponse({
-    required this.success,
-    required this.message,
-    this.notificationSettings,
-  });
-
-  factory NotificationSettingsResponse.fromJson(Map<String, dynamic> json) {
-    return NotificationSettingsResponse(
-      success: json['success'],
-      message: json['message'],
-      notificationSettings:
-          NotificationOptions.fromMap(json['notificationSettings']),
-    );
-  }
-}

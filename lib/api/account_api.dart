@@ -14,6 +14,7 @@ final dio = setupDio('/user');
 Future<UserResponse?> getUser(String email) async {
   try {
     Response response = await dio.get('/get-user?email=$email');
+
     APIUser apiUser = APIUser.fromMap(response.data);
     if (apiUser.lastKnownLatitude != null &&
         apiUser.lastKnownLongitude != null) {
@@ -29,6 +30,7 @@ Future<UserResponse?> getUser(String email) async {
         speed: 0,
         speedAccuracy: 0,
       );
+
       User user = User(
           username: apiUser.username,
           email: apiUser.email,
@@ -83,22 +85,11 @@ Future<BasicResponse> login(String email, String password) async {
   }
 }
 
-Future<NotificationSettingsResponse> getNotificationSettings(
+Future<NotificationOptions> getNotificationOptions(
     String email) async {
-  if (!userStore.containsKey(email)) {
-    return NotificationSettingsResponse(
-      success: false,
-      message: 'User not found',
-      notificationSettings: null,
-    );
-  }
+  final response = await dio.get('/get-user-notification-options?email=$email');
 
-  User user = userStore[email]!;
-  return NotificationSettingsResponse(
-    success: true,
-    message: 'Notification settings retrieved successfully',
-    notificationSettings: user.notificationOptions,
-  );
+  return NotificationOptions.fromMap(response.data);
 }
 
 Future<UserResponse> getLastKnownLocation(String email) async {
@@ -120,27 +111,10 @@ Future<BasicResponse> updateUserNotificationOptions(
   bool emailNotificationsTurnedOn,
   bool locationServicesTurnedOn,
 ) async {
-  if (!userStore.containsKey(email)) {
-    return BasicResponse(success: false, message: 'User not found');
-  }
+  final response = await dio.patch(
+      '/update-user-notification-options?email=$email&pushNotificationsTurnedOn=$pushNotificationsTurnedOn&emailNotificationsTurnedOn=$emailNotificationsTurnedOn&locationServicesTurnedOn=$locationServicesTurnedOn');
 
-  User existingUser = userStore[email]!;
-
-  User updatedUser = User(
-    username: existingUser.username,
-    email: existingUser.email,
-    password: existingUser.password,
-    notificationOptions: NotificationOptions(
-      pushNotificationsTurnedOn: pushNotificationsTurnedOn,
-      emailNotificationsTurnedOn: emailNotificationsTurnedOn,
-      locationServicesTurnedOn: locationServicesTurnedOn,
-    ),
-    lastKnownLocation: existingUser.lastKnownLocation,
-  );
-
-  userStore[email] = updatedUser;
-  return BasicResponse(
-      success: true, message: 'Notification settings updated successfully');
+  return BasicResponse.fromJson(response.data);
 }
 
 Future<BasicResponse> updateUserLocation(
@@ -187,7 +161,9 @@ Future<BasicResponse> updateLocationServices(
 
   userStore[email] = updatedUser;
   return BasicResponse(
-      success: true, message: 'Location services updated successfully');
+    success: true,
+    message: 'Location services updated successfully',
+  );
 }
 
 Future<BasicResponse> changePassword(String email, String newPassword) async {

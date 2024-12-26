@@ -34,7 +34,9 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    if (widget.userEmail != null) _getUserByEmail(widget.userEmail!);
+    if (widget.userEmail != null && widget.userEmail != '') {
+      _getUserByEmail(widget.userEmail!);
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -95,8 +97,12 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
   Column _buildHistorySettings(User? user) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildHistoryTitle('Reservations'),
-        _buildSettingsItem(CupertinoIcons.doc_on_clipboard,
-            'Reservation history', Routes.RESERVATION_HISTORY, user, 'view your reservation history'),
+        _buildSettingsItem(
+            CupertinoIcons.doc_on_clipboard,
+            'Reservation history',
+            Routes.RESERVATION_HISTORY,
+            user,
+            'view your reservation history'),
       ]);
 
   Padding _buildSettingsTitle(String title) => Padding(
@@ -111,8 +117,12 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
         _buildSettingsTitle('Account Settings'),
         _buildSettingsItem(CupertinoIcons.person_circle_fill, 'Edit profile',
             Routes.EDIT_PROFILE, user, 'edit your profile'),
-        _buildSettingsItem(CupertinoIcons.bell_circle_fill,
-            'Notification settings', Routes.NOTIFICATION_SETTINGS, user, 'edit notification settings'),
+        _buildSettingsItem(
+            CupertinoIcons.bell_circle_fill,
+            'Notification settings',
+            Routes.NOTIFICATION_SETTINGS,
+            user,
+            'edit notification settings'),
       ]);
 
   Column _buildApplicationSettings(User? user) =>
