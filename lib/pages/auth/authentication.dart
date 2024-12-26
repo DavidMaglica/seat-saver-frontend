@@ -142,15 +142,9 @@ class _AuthenticationState extends State<Authentication>
     BasicResponse response = await login(userEmail, password);
 
     if (response.success) {
-      if (!mounted) return;
-      Navigator.pushNamed(context, Routes.HOMEPAGE,
-          arguments: {'userEmail': userEmail, 'userLocation': null});
+      _goToHomepage(userEmail);
     } else {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(response.message),
-        backgroundColor: AppThemes.errorColor,
-      ));
+      _showSnackBar(response);
       return;
     }
   }
@@ -162,7 +156,8 @@ class _AuthenticationState extends State<Authentication>
     String confirmedPassword,
   ) async {
     if (!mounted) return;
-    RegExp emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    RegExp emailRegex =
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
     if (password.length < 8) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -193,16 +188,11 @@ class _AuthenticationState extends State<Authentication>
 
     BasicResponse response = await signup(username, userEmail, password);
 
+    debugPrint(response.message);
     if (response.success) {
-      if (!mounted) return;
-      Navigator.pushNamed(context, Routes.HOMEPAGE,
-          arguments: {'userEmail': userEmail, 'userLocation': null});
+      _goToHomepage(userEmail);
     } else {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(response.message),
-        backgroundColor: AppThemes.errorColor,
-      ));
+      _showSnackBar(response);
       return;
     }
   }
@@ -214,6 +204,18 @@ class _AuthenticationState extends State<Authentication>
       backgroundColor: AppThemes.infoColor,
     ));
   }
+
+  void _showSnackBar(BasicResponse response) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(response.message),
+      backgroundColor: AppThemes.errorColor,
+    ));
+  }
+
+  void _goToHomepage(String userEmail) =>
+      Navigator.pushNamed(context, Routes.HOMEPAGE,
+          arguments: {'userEmail': userEmail, 'userLocation': null});
 
   @override
   Widget build(BuildContext context) {

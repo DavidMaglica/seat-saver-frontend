@@ -53,13 +53,16 @@ class _HomepageState extends State<Homepage> {
 
     User? loggedInUser;
     if (widget.userEmail.isNotNullAndNotEmpty) {
-      loggedInUser = findUser(widget.userEmail!);
+      getUser(widget.userEmail!).then((response) => {
+            if (response != null && response.success)
+              loggedInUser = response.user
+          });
     }
 
     if (locationPopUpCounter <= 1) {
       if (loggedInUser != null &&
-          loggedInUser.notificationOptions.locationServicesTurnedOn == false) {
-        _activateLocationPopUp(loggedInUser.email);
+          loggedInUser?.notificationOptions.locationServicesTurnedOn == false) {
+        _activateLocationPopUp(loggedInUser!.email);
       }
       locationPopUpCounter++;
     }
@@ -68,9 +71,9 @@ class _HomepageState extends State<Homepage> {
       _getNearbyCities(widget.userLocation);
     } else {
       if (loggedInUser != null &&
-          loggedInUser.notificationOptions.locationServicesTurnedOn) {
+          loggedInUser?.notificationOptions.locationServicesTurnedOn == true) {
         setState(() => currentUserLocation = loggedInUser!.lastKnownLocation);
-        _getNearbyCities(loggedInUser.lastKnownLocation);
+        _getNearbyCities(loggedInUser!.lastKnownLocation);
       }
     }
 
