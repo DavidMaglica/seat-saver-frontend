@@ -6,6 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../api/account_api.dart';
+import '../api/data/notification_settings.dart';
 import '../themes/theme.dart';
 import '../utils/constants.dart';
 
@@ -23,9 +24,17 @@ class LocationPermissionPopUp extends StatefulWidget {
 }
 
 class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
+  NotificationOptions? notificationOptions;
+
   @override
   void initState() {
     super.initState();
+
+    getNotificationOptions(widget.userEmail).then((value) {
+      setState(() {
+        notificationOptions = value;
+      });
+    });
   }
 
   @override
@@ -53,7 +62,12 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
 
     if (locationPermission == LocationPermission.deniedForever) return false;
 
-    updateLocationServices(widget.userEmail, true);
+    updateUserNotificationOptions(
+      widget.userEmail,
+      notificationOptions!.pushNotificationsTurnedOn,
+      notificationOptions!.emailNotificationsTurnedOn,
+      true,
+    );
 
     return true;
   }

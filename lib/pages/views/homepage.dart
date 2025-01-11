@@ -45,24 +45,30 @@ class _HomepageState extends State<Homepage> {
 
   List<String>? _nearbyCities;
   Position? currentUserLocation;
+  User? loggedInUser;
 
   @override
   void initState() {
     super.initState();
     int locationPopUpCounter = 0;
 
-    User? loggedInUser;
     if (widget.userEmail.isNotNullAndNotEmpty) {
       getUser(widget.userEmail!).then((response) => {
             if (response != null && response.success)
-              loggedInUser = response.user
+              setState(() {
+                loggedInUser = response.user;
+              })
           });
     }
 
     if (locationPopUpCounter <= 1) {
-      if (loggedInUser != null &&
-          loggedInUser?.notificationOptions.locationServicesTurnedOn == false) {
-        _activateLocationPopUp(loggedInUser!.email);
+      if (widget.userEmail != null) {
+        getNotificationOptions(widget.userEmail!).then((value) => {
+              if (!value.locationServicesTurnedOn)
+                {
+                  _activateLocationPopUp(loggedInUser!.email),
+                }
+            });
       }
       locationPopUpCounter++;
     }

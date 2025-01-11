@@ -119,51 +119,10 @@ Future<BasicResponse> updateUserNotificationOptions(
 
 Future<BasicResponse> updateUserLocation(
     String userEmail, Position? position) async {
-  if (!userStore.containsKey(userEmail)) {
-    return BasicResponse(success: false, message: 'User not found');
-  }
+  final response = await dio.patch(
+      '/update-user-location?email=$userEmail&latitude=${position!.latitude}&longitude=${position.longitude}');
 
-  User existingUser = userStore[userEmail]!;
-
-  User updatedUser = User(
-    username: existingUser.username,
-    email: existingUser.email,
-    password: existingUser.password,
-    notificationOptions: existingUser.notificationOptions,
-    lastKnownLocation: position,
-  );
-
-  userStore[userEmail] = updatedUser;
-  return BasicResponse(success: true, message: 'Location updated successfully');
-}
-
-Future<BasicResponse> updateLocationServices(
-    String email, bool locationServicesTurnedOn) async {
-  if (!userStore.containsKey(email)) {
-    return BasicResponse(success: false, message: 'User not found');
-  }
-
-  User existingUser = userStore[email]!;
-
-  User updatedUser = User(
-    username: existingUser.username,
-    email: existingUser.email,
-    password: existingUser.password,
-    notificationOptions: NotificationOptions(
-      pushNotificationsTurnedOn:
-          existingUser.notificationOptions.pushNotificationsTurnedOn,
-      emailNotificationsTurnedOn:
-          existingUser.notificationOptions.emailNotificationsTurnedOn,
-      locationServicesTurnedOn: locationServicesTurnedOn,
-    ),
-    lastKnownLocation: existingUser.lastKnownLocation,
-  );
-
-  userStore[email] = updatedUser;
-  return BasicResponse(
-    success: true,
-    message: 'Location services updated successfully',
-  );
+  return BasicResponse.fromJson(response.data);
 }
 
 Future<BasicResponse> changePassword(String email, String newPassword) async {
