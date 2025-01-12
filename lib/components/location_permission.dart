@@ -88,7 +88,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
     if (!await _handleLocationPermission()) return;
 
     Position? userLocation = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.best);
 
     String? currentCity = await _getCityFromLatLng(userLocation);
     if (currentCity == null || currentCity.isEmpty) {

@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 
 import '../../api/account_api.dart';
 import '../../api/data/user.dart';
+import '../../api/data/user_response.dart';
 import '../../components/navbar.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';

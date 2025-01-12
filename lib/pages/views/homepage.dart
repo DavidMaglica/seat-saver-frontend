@@ -66,8 +66,17 @@ class _HomepageState extends State<Homepage> {
         getNotificationOptions(widget.userEmail!).then((value) => {
               if (!value.locationServicesTurnedOn)
                 {
-                  _activateLocationPopUp(loggedInUser!.email),
+                  _activateLocationPopUp(widget.userEmail!),
                 }
+              else {
+                getLastKnownLocation(widget.userEmail!).then((value) => {
+                  getNearbyCities(value).then((cities) => {
+                    setState(() {
+                      _nearbyCities = cities;
+                    }),
+                  }),
+                }),
+              }
             });
       }
       locationPopUpCounter++;
@@ -97,8 +106,8 @@ class _HomepageState extends State<Homepage> {
   }
 
   void _getNearbyCities(Position? position) async {
-    List<String> cities = await getNearbyCities(position!);
-    setState(() => _nearbyCities = cities);
+    // List<String> cities = await getNearbyCities(position!);
+    // setState(() => _nearbyCities = cities);
   }
 
   void _getNearbyVenues() async {

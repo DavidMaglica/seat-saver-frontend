@@ -5,9 +5,9 @@ import 'data/api_user.dart';
 import 'data/basic_response.dart';
 import 'data/notification_settings.dart';
 import 'data/user.dart';
+import 'data/user_location.dart';
+import 'data/user_response.dart';
 import 'dio_setup.dart';
-
-Map<String, User> userStore = {};
 
 final dio = setupDio('/user');
 
@@ -85,24 +85,16 @@ Future<BasicResponse> login(String email, String password) async {
   }
 }
 
-Future<NotificationOptions> getNotificationOptions(
-    String email) async {
+Future<NotificationOptions> getNotificationOptions(String email) async {
   final response = await dio.get('/get-user-notification-options?email=$email');
 
   return NotificationOptions.fromMap(response.data);
 }
 
-Future<UserResponse> getLastKnownLocation(String email) async {
-  if (!userStore.containsKey(email)) {
-    return UserResponse(success: false, message: 'User not found', user: null);
-  }
+Future<UserLocation> getLastKnownLocation(String email) async {
+  final response = await dio.get('/get-user-location?email=$email');
 
-  User user = userStore[email]!;
-  return UserResponse(
-    success: true,
-    message: 'Last known location retrieved successfully',
-    user: user,
-  );
+  return UserLocation.fromMap(response.data);
 }
 
 Future<BasicResponse> updateUserNotificationOptions(
