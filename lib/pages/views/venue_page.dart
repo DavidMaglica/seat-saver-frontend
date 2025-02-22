@@ -12,6 +12,7 @@ import '../../components/custom_appbar.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
 import '../../utils/full_image_view.dart';
+import '../../utils/toaster.dart';
 
 class VenuePage extends StatefulWidget {
   final String venueName;
@@ -68,22 +69,22 @@ class _VenuePageState extends State<VenuePage> {
 
   void _reserveSpot() {
     if (widget.userEmail.isNullOrEmpty) {
-      _showSnackBar('Please log in to reserve a spot', AppThemes.errorColor);
+      Toaster.displayError(context, 'Please log in to reserve a spot');
       return;
     }
 
     if (_selectedDate == null) {
-      _showSnackBar('Please select a date', AppThemes.errorColor);
+      Toaster.displayError(context, 'Please select a date');
       return;
     }
 
     if (_selectedHour == null || _selectedMinute == null) {
-      _showSnackBar('Please select a time', AppThemes.errorColor);
+      Toaster.displayError(context, 'Please select a time');
       return;
     }
 
     if (_selectedNumberOfGuests == null) {
-      _showSnackBar('Please select the number of guests', AppThemes.errorColor);
+      Toaster.displayError(context, 'Please select the number of guests');
       return;
     }
 
@@ -110,13 +111,17 @@ class _VenuePageState extends State<VenuePage> {
     return;
   }
 
+  void _rateVenue() {
+    Toaster.displayWarning(context, 'Feature not implemented yet');
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppbar(
           title: widget.venueName,
           routeToPush: Routes.HOMEPAGE,
@@ -150,9 +155,8 @@ class _VenuePageState extends State<VenuePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       _buildHeadingImage(widget.imageLinks != null ? widget.imageLinks![0] : _venueImages![0]),
-                      _buildObjectDetails(widget.venueName, widget.location,
+                      _buildObjectDetails(widget.venueName, widget.type, widget.location,
                           widget.workingHours, widget.rating),
-                      _buildObjectType(widget.type),
                       _buildObjectDescription(widget.description),
                       Row(
                         mainAxisSize: MainAxisSize.min,
@@ -210,27 +214,16 @@ class _VenuePageState extends State<VenuePage> {
         ),
       );
 
-  Flexible _buildObjectType(String type) => Flexible(
-        child: Align(
-          alignment: const AlignmentDirectional(-1, 0),
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 0),
-            child: Text(
-              'Type: $type',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-          ),
-        ),
-      );
-
   Flexible _buildObjectDescription(String description) => Flexible(
         child: Align(
           alignment: const AlignmentDirectional(-1, 0),
           child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 0, 16),
+            padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 16),
             child: Text(
               description,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
         ),
@@ -242,10 +235,7 @@ class _VenuePageState extends State<VenuePage> {
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 0, 8),
             child: FFButtonWidget(
-              onPressed: () => {
-                _showSnackBar(
-                    'Feature not implemented yet', AppThemes.infoColor)
-              },
+              onPressed: () => _rateVenue,
               text: 'Leave a rating',
               options: FFButtonOptions(
                 width: 128,
@@ -268,32 +258,32 @@ class _VenuePageState extends State<VenuePage> {
         ),
       );
 
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _showSnackBar(
-      String text, Color colour) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    return ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(text, style: const TextStyle(color: Colors.white)),
-        backgroundColor: colour,
-      ),
-    );
-  }
-
   Padding _buildObjectDetails(
-          String name, String location, String workingHours, double rating) =>
+          String name, String type, String location, String workingHours, double rating) =>
       Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
         child: Column(
           children: [
             Text(
-              name,
+              name.toUpperCase(),
               style: Theme.of(context).textTheme.titleLarge,
             ),
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
               child: Text(
+                type,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.6),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+              child: Text(
                 location,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.6),
+                ),
               ),
             ),
             Padding(
@@ -313,7 +303,7 @@ class _VenuePageState extends State<VenuePage> {
                   CupertinoIcons.star_fill,
                   color: Theme.of(context).colorScheme.onTertiary,
                 ),
-                unratedColor: Theme.of(context).colorScheme.onPrimary,
+                unratedColor: const Color(0xFF57636C).withOpacity(0.5),
                 direction: Axis.horizontal,
                 glow: false,
                 ignoreGestures: true,

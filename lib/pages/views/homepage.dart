@@ -18,6 +18,7 @@ import '../../components/venue_suggested_card.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
 import '../../utils/routing_utils.dart';
+import '../../utils/toaster.dart';
 
 class Homepage extends StatefulWidget {
   final String? userEmail;
@@ -68,15 +69,16 @@ class _HomepageState extends State<Homepage> {
                 {
                   _activateLocationPopUp(widget.userEmail!),
                 }
-              else {
-                getLastKnownLocation(widget.userEmail!).then((value) => {
-                  getNearbyCities(value).then((cities) => {
-                    setState(() {
-                      _nearbyCities = cities;
-                    }),
-                  }),
-                }),
-              }
+              else
+                {
+                  getLastKnownLocation(widget.userEmail!).then((value) => {
+                        getNearbyCities(value).then((cities) => {
+                              setState(() {
+                                _nearbyCities = cities;
+                              }),
+                            }),
+                      }),
+                }
             });
       }
       locationPopUpCounter++;
@@ -162,31 +164,26 @@ class _HomepageState extends State<Homepage> {
   }
 
   void _openNearbyVenues() {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Currently unavailable'),
-      backgroundColor: AppThemes.infoColor,
-    ));
+    Toaster.displayInfo(context, 'Currently unavailable');
     return;
   }
 
   void _openNewVenues() {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Currently unavailable'),
-      backgroundColor: AppThemes.infoColor,
-    ));
+    Toaster.displayInfo(context, 'Currently unavailable');
     return;
   }
 
   void _openTrendingVenues() {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Currently unavailable'),
-      backgroundColor: AppThemes.infoColor,
-    ));
+    Toaster.displayInfo(context, 'Currently unavailable');
     return;
   }
+
+  Future<void> _searchByCategory(VenueType category) =>
+      Navigator.pushNamed(context, Routes.SEARCH, arguments: {
+        'userEmail': widget.userEmail,
+        'userLocation': widget.userLocation,
+        'selectedChip': category.toString(),
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +195,7 @@ class _HomepageState extends State<Homepage> {
             onWillPop: () async => false,
             child: Scaffold(
                 key: scaffoldKey,
-                backgroundColor: Theme.of(context).colorScheme.background,
+                backgroundColor: Theme.of(context).colorScheme.surface,
                 body: SafeArea(
                   top: true,
                   child: Padding(
@@ -348,7 +345,8 @@ class _HomepageState extends State<Homepage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: venues.map((venue) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   child: VenueCard(
                     venueName: venue.name,
                     location: venue.location,
@@ -371,7 +369,8 @@ class _HomepageState extends State<Homepage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: venues.map((venue) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   child: VenueSuggestedCard(
                     venueName: venue.name,
                     location: venue.location,
@@ -423,11 +422,7 @@ class _HomepageState extends State<Homepage> {
           ]));
 
   InkWell _buildCategoryCard(VenueType category) => InkWell(
-      onTap: () => Navigator.pushNamed(context, Routes.SEARCH, arguments: {
-            'userEmail': widget.userEmail,
-            'userLocation': widget.userLocation,
-            'selectedChip': category.toString(),
-          }),
+      onTap: () => _searchByCategory(category),
       child: Align(
           alignment: AlignmentDirectional.center,
           child: Padding(
@@ -435,7 +430,7 @@ class _HomepageState extends State<Homepage> {
               child: SizedBox(
                   width: 140,
                   child: Card(
-                      elevation: 3,
+                      elevation: 5,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                         side: BorderSide(
@@ -508,7 +503,7 @@ class _HomepageState extends State<Homepage> {
                                 12, 0, 0, 0),
                             child: Text(
                               'Welcome',
-                              style: Theme.of(context).textTheme.titleMedium,
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
                           ),
                           // Padding(

@@ -1,3 +1,4 @@
+import 'package:TableReserver/utils/toaster.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -69,10 +70,7 @@ class _AuthenticationState extends State<Authentication>
 
     if (!active) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Currently unavailable'),
-        backgroundColor: AppThemes.infoColor,
-      ));
+      Toaster.displayInfo(context, 'Currently unavailable');
       return;
     }
 
@@ -92,20 +90,14 @@ class _AuthenticationState extends State<Authentication>
 
       default:
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Unknown sign up method'),
-          backgroundColor: AppThemes.warningColor,
-        ));
+        Toaster.displayWarning(context, 'Unknown sign up method');
     }
   }
 
   Future<void> _signup(SignupMethod? signupMethod, bool active) async {
     if (!active) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Currently unavailable'),
-        backgroundColor: AppThemes.infoColor,
-      ));
+      Toaster.displayInfo(context, 'Currently unavailable');
       return;
     }
 
@@ -128,10 +120,7 @@ class _AuthenticationState extends State<Authentication>
 
       default:
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Unknown sign up method'),
-          backgroundColor: AppThemes.warningColor,
-        ));
+        Toaster.displayWarning(context, 'Unknown sign up method');
     }
     return;
   }
@@ -144,7 +133,8 @@ class _AuthenticationState extends State<Authentication>
     if (response.success) {
       _goToHomepage(userEmail);
     } else {
-      _showSnackBar(response);
+      if (!mounted) return;
+      Toaster.displayError(context, response.message);
       return;
     }
   }
@@ -160,29 +150,17 @@ class _AuthenticationState extends State<Authentication>
         RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
     if (password.length < 8) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Password must be at least 8 characters long'),
-        backgroundColor: AppThemes.errorColor,
-      ));
+      Toaster.displayError(context, 'Password must be at least 8 characters long');
       return;
     }
 
     if (password != confirmedPassword) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Passwords do not match'),
-        backgroundColor: AppThemes.errorColor,
-      ));
+      Toaster.displayError(context, 'Passwords do not match');
       return;
     }
 
     if (!emailRegex.hasMatch(userEmail)) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Invalid email address'),
-        backgroundColor: AppThemes.errorColor,
-      ));
+      Toaster.displayError(context, 'Invalid email address');
       return;
     }
 
@@ -192,25 +170,14 @@ class _AuthenticationState extends State<Authentication>
     if (response.success) {
       _goToHomepage(userEmail);
     } else {
-      _showSnackBar(response);
+      if (!mounted) return;
+      Toaster.displayError(context, response.message);
       return;
     }
   }
 
   void _forgotPassword() {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Not implemented yet'),
-      backgroundColor: AppThemes.infoColor,
-    ));
-  }
-
-  void _showSnackBar(BasicResponse response) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(response.message),
-      backgroundColor: AppThemes.errorColor,
-    ));
+    Toaster.displayInfo(context, 'Not implemented yet');
   }
 
   void _goToHomepage(String userEmail) =>
@@ -225,7 +192,7 @@ class _AuthenticationState extends State<Authentication>
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: SafeArea(
           top: true,
           child: Column(
@@ -568,17 +535,12 @@ class _AuthenticationState extends State<Authentication>
                   tablet: false,
                 ))
                   const SizedBox(width: 230, height: 16),
-                Text(
-                  'Create Account',
-                  textAlign: TextAlign.start,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 24),
                   child: Text(
-                    "Let's get started by filling out the form below.",
+                    'Create Account',
                     textAlign: TextAlign.start,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
                 Padding(
@@ -707,7 +669,7 @@ class _AuthenticationState extends State<Authentication>
                   ? icon != null
                       ? Theme.of(context).colorScheme.background
                       : Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.surface,
+                  : Theme.of(context).colorScheme.surfaceVariant,
               textStyle: TextStyle(
                 color: active
                     ? icon != null

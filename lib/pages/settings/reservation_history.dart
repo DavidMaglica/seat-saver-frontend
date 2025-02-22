@@ -53,7 +53,7 @@ class _ReservationHistoryState extends State<ReservationHistory> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppbar(
           title: 'Reservation History',
           routeToPush: Routes.ACCOUNT,

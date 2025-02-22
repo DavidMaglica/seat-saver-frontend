@@ -61,7 +61,7 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppbar(
             title: 'Support',
             routeToPush: Routes.ACCOUNT,

@@ -1,4 +1,5 @@
 import 'package:TableReserver/api/carousel_api.dart';
+import 'package:TableReserver/utils/toaster.dart';
 import 'package:flutter/material.dart';
 
 import '../themes/theme.dart';
@@ -48,14 +49,7 @@ class _CarouselItemState extends State<CarouselItem> {
         ),
         child: InkWell(
           onTap: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                backgroundColor: AppThemes.infoColor,
-                content: Text('Searching by location currently unavailable'),
-                duration: Duration(seconds: 2),
-              ),
-            );
+            Toaster.displayInfo(context, 'Searching by location currently unavailable');
           },
           child: Column(
             mainAxisSize: MainAxisSize.max,

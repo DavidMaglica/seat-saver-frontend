@@ -87,8 +87,14 @@ class _VenueCardState extends State<VenueCard> {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: Theme.of(context).colorScheme.onPrimary,
-              width: .2,
+              width: 0.2,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+                blurRadius: 6,
+              )
+            ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -136,20 +142,22 @@ class _VenueCardState extends State<VenueCard> {
             fit: BoxFit.cover,
           )));
 
-  Text _buildName(String name) => Text(name,
-      style: Theme.of(context)
-          .textTheme
-          .titleSmall
-          ?.copyWith(color: AppThemes.infoColor, fontSize: 12));
+  Text _buildName(String name) => Text(
+        name.toUpperCase(),
+        style: Theme.of(context)
+            .textTheme
+            .titleSmall
+            ?.copyWith(color: AppThemes.warningColor, fontSize: 12),
+      );
 
   Padding _buildLocation(String location) => Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
       child: Row(mainAxisSize: MainAxisSize.max, children: [
         Text(location,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
               fontWeight: FontWeight.w800,
-              fontSize: 10,
+              fontSize: 9,
             )),
       ]));
 
@@ -163,7 +171,7 @@ class _VenueCardState extends State<VenueCard> {
           ),
           direction: Axis.horizontal,
           rating: rating,
-          unratedColor: const Color(0xFF57636C),
+          unratedColor: const Color(0xFF57636C).withOpacity(0.5),
           itemCount: 5,
           itemSize: 12,
         )

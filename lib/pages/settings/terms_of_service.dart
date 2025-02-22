@@ -42,7 +42,7 @@ class _TermsOfServiceState extends State<TermsOfService> {
           args: {'userEmail': widget.userEmail, 'userLocation': widget.userLocation},
         ),
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: SafeArea(
           top: true,
           child: Center(

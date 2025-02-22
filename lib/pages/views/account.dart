@@ -1,3 +1,4 @@
+import 'package:TableReserver/utils/toaster.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -55,6 +56,22 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
     }
   }
 
+  void _openSettingsItem(String route, String? action) {
+    if (route == Routes.TERMS_OF_SERVICE) {
+      Navigator.pushNamed(context, route, arguments: {
+        'userEmail': user?.email,
+        'userLocation': widget.userLocation
+      });
+      return;
+    }
+    if (user == null) {
+      Toaster.displayInfo(context, 'Please log in to $action.');
+      return;
+    }
+    Navigator.pushNamed(context, route,
+        arguments: {'user': user, 'userLocation': widget.userLocation});
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -63,7 +80,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
             : FocusScope.of(context).unfocus(),
         child: Scaffold(
             key: scaffoldKey,
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             body: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -146,10 +163,9 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                 color: Theme.of(context).colorScheme.background,
                 boxShadow: [
                   BoxShadow(
-                    blurRadius: 3,
+                    blurRadius: 5,
                     color:
-                        Theme.of(context).colorScheme.onPrimary.withOpacity(.3),
-                    offset: const Offset(0, 0),
+                        Theme.of(context).colorScheme.onPrimary.withOpacity(.5),
                   )
                 ],
                 borderRadius: BorderRadius.circular(8),
@@ -158,26 +174,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
               child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: InkWell(
-                      onTap: () async {
-                        if (route == Routes.TERMS_OF_SERVICE) {
-                          Navigator.pushNamed(context, route, arguments: {
-                            'userEmail': user?.email,
-                            'userLocation': widget.userLocation
-                          });
-                          return;
-                        }
-                        if (user == null) {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text('Please log in to $action.'),
-                              backgroundColor: AppThemes.infoColor));
-                          return;
-                        }
-                        Navigator.pushNamed(context, route, arguments: {
-                          'user': user,
-                          'userLocation': widget.userLocation
-                        });
-                      },
+                      onTap: () async => _openSettingsItem(route, action),
                       child: Row(mainAxisSize: MainAxisSize.max, children: [
                         Icon(
                           icon,
@@ -231,9 +228,8 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                 BoxShadow(
                   blurRadius: 10,
                   color: userEmail != null
-                      ? Theme.of(context).colorScheme.error.withOpacity(.5)
-                      : AppThemes.successColor.withOpacity(.5),
-                  offset: const Offset(0, 0),
+                      ? Theme.of(context).colorScheme.error.withOpacity(.8)
+                      : AppThemes.successColor.withOpacity(.8),
                 )
               ],
               borderRadius: BorderRadius.circular(8),
