@@ -40,13 +40,13 @@ Map<String, List<String>> mockedImages = {
     'assets/images/venue_images/tequila_7.jpg',
     'assets/images/venue_images/tequila_8.jpg',
   ],
-  'Gelateria La Carraia': [
+  'La Carraia': [
     'assets/images/venue_images/laCarraia_1.jpg',
     'assets/images/venue_images/laCarraia_2.jpg',
     'assets/images/venue_images/laCarraia_3.jpg',
     'assets/images/venue_images/laCarraia_4.jpg',
   ],
-  'Gelateria Dei Neri': [
+  'Dei Neri': [
     'assets/images/venue_images/deiNeri_1.jpg',
     'assets/images/venue_images/deiNeri_2.jpg',
     'assets/images/venue_images/deiNeri_3.jpg',
@@ -128,7 +128,7 @@ Future<List<Venue>> getAllVenues() async {
     ),
     Venue(
       id: 3,
-      name: 'Gelateria La Carraia',
+      name: 'La Carraia',
       location: 'Pula',
       workingHours: '8:00 AM - 10:00 PM',
       rating: 3.5,
@@ -138,7 +138,7 @@ Future<List<Venue>> getAllVenues() async {
     ),
     Venue(
       id: 4,
-      name: 'Gelateria Dei Neri',
+      name: 'Dei Neri',
       location: 'Rovinj',
       workingHours: '8:00 AM - 10:00 PM',
       rating: 3,

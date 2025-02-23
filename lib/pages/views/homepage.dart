@@ -63,7 +63,7 @@ class _HomepageState extends State<Homepage> {
     }
 
     if (locationPopUpCounter <= 1) {
-      if (widget.userEmail != null) {
+      if (widget.userEmail != null && widget.userEmail!.isNotEmpty) {
         getNotificationOptions(widget.userEmail!).then((value) => {
               if (!value.locationServicesTurnedOn)
                 {
@@ -243,9 +243,9 @@ class _HomepageState extends State<Homepage> {
             padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
             child: SizedBox(
               width: double.infinity,
-              height: 196,
+              height: 212,
               child: CarouselSlider(
-                items: nearbyCities.map((city) => CarouselItem(city)).toList(),
+                items: nearbyCities.map((city) => Padding(padding: const EdgeInsetsDirectional.symmetric(vertical: 12), child: CarouselItem(city))).toList(),
                 carouselController: _carouselController ??=
                     CarouselController(),
                 options: CarouselOptions(
@@ -502,7 +502,9 @@ class _HomepageState extends State<Homepage> {
                             padding: const EdgeInsetsDirectional.fromSTEB(
                                 12, 0, 0, 0),
                             child: Text(
-                              'Welcome',
+                              loggedInUser != null
+                                  ? 'Welcome, ${loggedInUser!.username}'
+                                  : 'Welcome',
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
                           ),

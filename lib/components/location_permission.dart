@@ -78,7 +78,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
         .then((List<Placemark> placemarks) {
       currentCity = placemarks[0].locality;
     }).catchError((e) {
-      debugPrint(e);
+      debugPrint(e.toString());
     });
 
     return currentCity;
@@ -127,7 +127,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 24),
                 child: Icon(CupertinoIcons.location_solid,
-                    color: AppThemes.warningColor, size: 64),
+                    color: AppThemes.accent1, size: 64),
               ),
             ),
             Align(

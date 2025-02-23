@@ -147,7 +147,7 @@ class _VenueCardState extends State<VenueCard> {
         style: Theme.of(context)
             .textTheme
             .titleSmall
-            ?.copyWith(color: AppThemes.warningColor, fontSize: 12),
+            ?.copyWith(color: AppThemes.accent1, fontSize: 12),
       );
 
   Padding _buildLocation(String location) => Padding(

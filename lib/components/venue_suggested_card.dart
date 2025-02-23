@@ -55,7 +55,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
     super.dispose();
   }
 
-  void _onTap() => Navigator.pushNamed(context, Routes.VENUE, arguments: {
+  void _openVenue() => Navigator.pushNamed(context, Routes.VENUE, arguments: {
         'venueName': widget.venueName,
         'location': widget.location,
         'workingHours': widget.workingHours,
@@ -76,9 +76,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
         focusColor: Colors.transparent,
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        onTap: () async {
-          _onTap();
-        },
+        onTap: () async => _openVenue(),
         child: Container(
           width: 224,
           height: 196,
@@ -87,9 +85,8 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
-                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
-                blurRadius: 4,
-                offset: const Offset(-4, 4),
+                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+                blurRadius: 6,
               )
             ],
           ),
@@ -141,12 +138,13 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
               style: Theme.of(context)
                   .textTheme
                   .titleSmall
-                  ?.copyWith(color: AppThemes.warningColor)),
-          Text(type.toString(), style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary,
-            fontWeight: FontWeight.w800,
-            fontSize: 10,
-          )),
+                  ?.copyWith(color: AppThemes.accent1)),
+          Text(type.toString(),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontWeight: FontWeight.w800,
+                fontSize: 10,
+              )),
         ],
       ));
 
@@ -157,11 +155,12 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(location,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
-              fontWeight: FontWeight.w800,
-              fontSize: 10,
-            )),
+                style: TextStyle(
+                  color:
+                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
+                  fontWeight: FontWeight.w800,
+                  fontSize: 10,
+                )),
             Text(workingHours,
                 style: Theme.of(context)
                     .textTheme

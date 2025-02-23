@@ -475,7 +475,8 @@ class _EditProfileState extends State<EditProfile> {
   void _openChangePasswordBottomSheet() => showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        shape: modalRectangleBorder(),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
         builder: (
           BuildContext context,
         ) {

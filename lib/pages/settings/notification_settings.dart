@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -106,7 +107,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                   'Receive Push notifications from our application on a semi regular basis.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                tileColor: Theme.of(context).colorScheme.background,
+                tileColor: Theme.of(context).colorScheme.surface,
                 activeTrackColor: Theme.of(context).colorScheme.primary,
                 inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
                 dense: false,
@@ -126,7 +127,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                   'Receive email notifications from our marketing team about new features.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                tileColor: Theme.of(context).colorScheme.background,
+                tileColor: Theme.of(context).colorScheme.surface,
                 activeTrackColor: Theme.of(context).colorScheme.primary,
                 inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
                 dense: false,
@@ -146,7 +147,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                   'Allow us to track your location, this helps keep track of spending and keeps you safe.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                tileColor: Theme.of(context).colorScheme.background,
+                tileColor: Theme.of(context).colorScheme.surface,
                 activeTrackColor: Theme.of(context).colorScheme.primary,
                 inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
                 dense: false,
@@ -154,7 +155,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                 contentPadding:
                     const EdgeInsetsDirectional.fromSTEB(24, 12, 24, 12),
               ),
-              buildActionButton(context, 'Save Changes', _saveChanges, null),
+              ActionButton(title: 'Save Changes', onPressed: _saveChanges),
             ],
           ),
         ),

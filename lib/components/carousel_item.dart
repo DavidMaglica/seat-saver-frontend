@@ -44,8 +44,18 @@ class _CarouselItemState extends State<CarouselItem> {
     return Container(
         height: 256,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: Theme.of(context).colorScheme.background,
           borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.onPrimary,
+            width: 0.2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+              blurRadius: 6,
+            )
+          ],
         ),
         child: InkWell(
           onTap: () {
@@ -74,7 +84,7 @@ class _CarouselItemState extends State<CarouselItem> {
                     style: const TextStyle(
                       color: AppThemes.accent1,
                       fontSize: 18,
-                      fontFamily: 'Oswald',
+                      fontWeight: FontWeight.bold,
                     )))),
         Align(
             alignment: const AlignmentDirectional(-1, 0),

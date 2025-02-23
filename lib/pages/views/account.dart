@@ -105,16 +105,9 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                 })));
   }
 
-  Padding _buildHistoryTitle(String title) => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 0),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.titleMedium,
-      ));
-
   Column _buildHistorySettings(User? user) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildHistoryTitle('Reservations'),
+        _buildTitle('Reservations'),
         _buildSettingsItem(
             CupertinoIcons.doc_on_clipboard,
             'Reservation history',
@@ -123,16 +116,9 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
             'view your reservation history'),
       ]);
 
-  Padding _buildSettingsTitle(String title) => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 0),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.titleMedium,
-      ));
-
   Column _buildAccountSettings(User? user) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildSettingsTitle('Account Settings'),
+        _buildTitle('Account Settings'),
         _buildSettingsItem(CupertinoIcons.person_circle_fill, 'Edit profile',
             Routes.EDIT_PROFILE, user, 'edit your profile'),
         _buildSettingsItem(
@@ -145,12 +131,19 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
 
   Column _buildApplicationSettings(User? user) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildSettingsTitle('Application Settings'),
+        _buildTitle('Application Settings'),
         _buildSettingsItem(CupertinoIcons.question_circle_fill, 'Support',
             Routes.SUPPORT, user, 'access support'),
         _buildSettingsItem(CupertinoIcons.exclamationmark_shield_fill,
             'Terms of service', Routes.TERMS_OF_SERVICE, user, null),
       ]);
+
+  Padding _buildTitle(String title) => Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 0),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.titleMedium,
+      ));
 
   Padding _buildSettingsItem(IconData icon, String text, String route,
           User? user, String? action) =>
