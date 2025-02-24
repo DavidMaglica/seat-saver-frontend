@@ -1,3 +1,5 @@
+import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/api/email_sender.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
@@ -54,23 +56,6 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _sendEmail() async {
-    final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'dmaglica@unipu.hr');
-    debugPrint('url: $emailLaunchUri');
-    try {
-      if (!await canLaunchUrl(emailLaunchUri)) {
-        if (!mounted) return;
-        Toaster.displayError(context,
-            'Could not launch default browser app. Please try again later.');
-      }
-      await launchUrl(emailLaunchUri);
-    } catch (e) {
-      if (!mounted) return;
-      Toaster.displayError(context,
-          'Could not open default browser app. Please try again later.');
-    }
-  }
-
   void _openFAQs() async {
     final Uri url = Uri.parse('https://flutter.dev');
     try {
@@ -88,26 +73,17 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
   }
 
   Future<void> _submitTicket(String subject, String body) async {
-    final Uri emailLaunchUri = Uri(
-      scheme: 'mailto',
-      path: 'dmaglica@unipu.hr',
-      queryParameters: {
-        'subject': subject,
-        'body': body,
-      },
-    );
-    debugPrint('url: $emailLaunchUri');
-    try {
-      if (!await canLaunchUrl(emailLaunchUri)) {
-        if (!mounted) return;
-        Toaster.displayError(context,
-            'Could not launch default browser app. Please try again later.');
-      }
-      await launchUrl(emailLaunchUri);
-    } catch (e) {
+    if (subject.isEmpty || body.isEmpty) {
+      Toaster.displayError(context, 'Please fill in all fields.');
+      return;
+    }
+
+    BasicResponse response = await sendEmail(widget.user.email, subject, body);
+
+    if (!response.success) {
       if (!mounted) return;
-      Toaster.displayError(context,
-          'Could not open default browser app. Please try again later.');
+      Toaster.displayError(context, response.message);
+      return;
     }
   }
 
@@ -140,23 +116,13 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                     padding:
                         const EdgeInsetsDirectional.symmetric(vertical: 24),
                     child: Text(
-                      'Have you encountered an issue with the application? Click on the buttons below to contact us or search for answers in our FAQs.',
+                      'Have you encountered an issue with the application? Search for answers in our FAQs or submit a ticket in the form below to contact us.',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: () async => _sendEmail(),
-                          child: SupportBanner(
-                            context: context,
-                            title: 'Email Us',
-                            icon: CupertinoIcons.mail_solid,
-                          ),
-                        ),
-                      ),
                       Expanded(
                         child: InkWell(
                           onTap: () => _openFAQs(),
@@ -203,10 +169,11 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Padding(
-                          padding: const EdgeInsetsDirectional.symmetric(
-                              vertical: 8),
-                          child: Text('Submit a Ticket',
-                              style: Theme.of(context).textTheme.bodyLarge),
+                          padding: const EdgeInsetsDirectional.only(bottom: 12),
+                          child: Text(
+                            'Submit a Ticket',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
                         ),
                         _buildInputField(
                           _ticketTitleController,
