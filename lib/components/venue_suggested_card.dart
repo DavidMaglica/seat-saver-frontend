@@ -38,6 +38,8 @@ class VenueSuggestedCard extends StatefulWidget {
 class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
   List<String>? _venueImages;
 
+  VenueApi venueApi = VenueApi();
+
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
@@ -45,7 +47,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   @override
   void initState() {
-    List<String> venueImages = getVenueImages(widget.venueName);
+    List<String> venueImages = venueApi.getVenueImages(widget.venueName);
     setState(() => _venueImages = venueImages);
     super.initState();
   }

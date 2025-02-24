@@ -48,6 +48,8 @@ class _EditProfileState extends State<EditProfile> {
   String? updatedPassword;
   String? updatedEmail;
 
+  AccountApi accountApi = AccountApi();
+
   @override
   void initState() {
     super.initState();
@@ -85,7 +87,7 @@ class _EditProfileState extends State<EditProfile> {
       return;
     }
 
-    changeUsername(widget.user.email, newName!).then((response) {
+    accountApi.changeUsername(widget.user.email, newName!).then((response) {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast(response.message,
           response.success ? AppThemes.successColor : AppThemes.errorColor);
@@ -113,7 +115,7 @@ class _EditProfileState extends State<EditProfile> {
       return;
     }
 
-    changeEmail(widget.user.email, newEmail!).then((response) {
+    accountApi.changeEmail(widget.user.email, newEmail!).then((response) {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast(response.message,
           response.success ? AppThemes.successColor : AppThemes.errorColor);
@@ -162,7 +164,7 @@ class _EditProfileState extends State<EditProfile> {
     }
 
     String email = updatedEmail ?? widget.user.email;
-    changePassword(email, newPassword).then((response) async {
+    accountApi.changePassword(email, newPassword).then((response) async {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast(response.message,
           response.success ? AppThemes.successColor : AppThemes.errorColor);

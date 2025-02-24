@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -32,6 +31,8 @@ class _NotificationSettingsState extends State<NotificationSettings> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  AccountApi accountApi = AccountApi();
+
   @override
   void initState() {
     super.initState();
@@ -46,7 +47,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
 
   Future<void> _getNotificationSettingsByEmail() async {
     NotificationOptions response =
-        await getNotificationOptions(widget.user.email);
+        await accountApi.getNotificationOptions(widget.user.email);
 
     setState(() {
       _isActivePushNotifications = response.pushNotificationsTurnedOn;
@@ -56,7 +57,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
   }
 
   Future<void> _saveChanges() async {
-    BasicResponse response = await updateUserNotificationOptions(
+    BasicResponse response = await accountApi.updateUserNotificationOptions(
       widget.user.email,
       _isActivePushNotifications,
       _isActiveEmailNotifications,

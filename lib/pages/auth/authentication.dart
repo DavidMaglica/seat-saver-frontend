@@ -27,6 +27,8 @@ class _AuthenticationState extends State<Authentication>
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  AccountApi accountApi = AccountApi();
+
   @override
   void initState() {
     super.initState();
@@ -128,7 +130,7 @@ class _AuthenticationState extends State<Authentication>
   void _customLogin(String userEmail, String password) async {
     if (!mounted) return;
 
-    BasicResponse response = await login(userEmail, password);
+    BasicResponse response = await accountApi.login(userEmail, password);
 
     if (response.success) {
       _goToHomepage(userEmail);
@@ -164,7 +166,7 @@ class _AuthenticationState extends State<Authentication>
       return;
     }
 
-    BasicResponse response = await signup(username, userEmail, password);
+    BasicResponse response = await accountApi.signup(username, userEmail, password);
 
     debugPrint(response.message);
     if (response.success) {

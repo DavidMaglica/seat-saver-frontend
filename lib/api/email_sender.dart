@@ -3,19 +3,21 @@ import 'dio_setup.dart';
 
 final dio = setupDio('/email-sender');
 
-Future<BasicResponse> sendEmail(
-  String userEmail,
-  String subject,
-  String message,
-) async {
-  var response = await dio.post(
-    '/send-email',
-    data: {
-      'userEmail': userEmail,
-      'subject': subject,
-      'message': message,
-    },
-  );
+class EmailSender {
+  Future<BasicResponse> sendEmail(
+    String userEmail,
+    String subject,
+    String message,
+  ) async {
+    var response = await dio.post(
+      '/send-email',
+      data: {
+        'userEmail': userEmail,
+        'subject': subject,
+        'message': message,
+      },
+    );
 
-  return BasicResponse.fromJson(response.data);
+    return BasicResponse.fromJson(response.data);
+  }
 }

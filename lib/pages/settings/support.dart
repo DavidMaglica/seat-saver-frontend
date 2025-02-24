@@ -38,6 +38,8 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  EmailSender emailSender = EmailSender();
+
   @override
   void initState() {
     super.initState();
@@ -78,7 +80,7 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
       return;
     }
 
-    BasicResponse response = await sendEmail(widget.user.email, subject, body);
+    BasicResponse response = await emailSender.sendEmail(widget.user.email, subject, body);
 
     if (!response.success) {
       if (!mounted) return;

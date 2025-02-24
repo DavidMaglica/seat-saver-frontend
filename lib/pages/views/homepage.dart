@@ -48,13 +48,17 @@ class _HomepageState extends State<Homepage> {
   Position? currentUserLocation;
   User? loggedInUser;
 
+  AccountApi accountApi = AccountApi();
+  GeolocationApi geolocationApi = GeolocationApi();
+  VenueApi venueApi = VenueApi();
+
   @override
   void initState() {
     super.initState();
     int locationPopUpCounter = 0;
 
     if (widget.userEmail.isNotNullAndNotEmpty) {
-      getUser(widget.userEmail!).then((response) => {
+      accountApi.getUser(widget.userEmail!).then((response) => {
             if (response != null && response.success)
               setState(() {
                 loggedInUser = response.user;
@@ -64,20 +68,24 @@ class _HomepageState extends State<Homepage> {
 
     if (locationPopUpCounter <= 1) {
       if (widget.userEmail != null && widget.userEmail!.isNotEmpty) {
-        getNotificationOptions(widget.userEmail!).then((value) => {
+        accountApi.getNotificationOptions(widget.userEmail!).then((value) => {
               if (!value.locationServicesTurnedOn)
                 {
                   _activateLocationPopUp(widget.userEmail!),
                 }
               else
                 {
-                  getLastKnownLocation(widget.userEmail!).then((value) => {
-                        getNearbyCities(value).then((cities) => {
-                              setState(() {
-                                _nearbyCities = cities;
-                              }),
-                            }),
-                      }),
+                  accountApi
+                      .getLastKnownLocation(widget.userEmail!)
+                      .then((value) => {
+                            geolocationApi
+                                .getNearbyCities(value)
+                                .then((cities) => {
+                                      setState(() {
+                                        _nearbyCities = cities;
+                                      }),
+                                    }),
+                          }),
                 }
             });
       }
@@ -113,28 +121,28 @@ class _HomepageState extends State<Homepage> {
   }
 
   void _getNearbyVenues() async {
-    List<Venue> list = await getNearbyVenues();
+    List<Venue> list = await venueApi.getNearbyVenues();
     setState(() {
       _nearbyVenues = list;
     });
   }
 
   void _getNewVenues() async {
-    List<Venue> list = await getNewVenues();
+    List<Venue> list = await venueApi.getNewVenues();
     setState(() {
       _newVenues = list;
     });
   }
 
   void _getTrendingVenues() async {
-    List<Venue> list = await getTrendingVenues();
+    List<Venue> list = await venueApi.getTrendingVenues();
     setState(() {
       _trendingVenues = list;
     });
   }
 
   void _getSuggestedVenues() async {
-    List<Venue> list = await getSuggestedVenues();
+    List<Venue> list = await venueApi.getSuggestedVenues();
     setState(() {
       _suggestedVenues = list;
     });
@@ -245,7 +253,12 @@ class _HomepageState extends State<Homepage> {
               width: double.infinity,
               height: 212,
               child: CarouselSlider(
-                items: nearbyCities.map((city) => Padding(padding: const EdgeInsetsDirectional.symmetric(vertical: 12), child: CarouselItem(city))).toList(),
+                items: nearbyCities
+                    .map((city) => Padding(
+                        padding:
+                            const EdgeInsetsDirectional.symmetric(vertical: 12),
+                        child: CarouselItem(city)))
+                    .toList(),
                 carouselController: _carouselController ??=
                     CarouselController(),
                 options: CarouselOptions(

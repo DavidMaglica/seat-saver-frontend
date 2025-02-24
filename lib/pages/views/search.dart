@@ -39,6 +39,8 @@ class _SearchState extends State<Search> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  VenueApi venueApi = VenueApi();
+
   @override
   void initState() {
     super.initState();
@@ -81,7 +83,7 @@ class _SearchState extends State<Search> {
       return;
     }
 
-    List<Venue> filteredVenues = await getVenuesByType(selectedTypes);
+    List<Venue> filteredVenues = await venueApi.getVenuesByType(selectedTypes);
 
     safeSetState(() {
       _allVenues = filteredVenues;
@@ -97,7 +99,7 @@ class _SearchState extends State<Search> {
     });
   }
 
-  void _getAllVenues() => getSortedVenues().then((value) => safeSetState(() {
+  void _getAllVenues() => venueApi.getSortedVenues().then((value) => safeSetState(() {
         _allVenues = value;
       }));
 

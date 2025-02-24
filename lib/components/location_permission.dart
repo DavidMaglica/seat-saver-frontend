@@ -26,11 +26,13 @@ class LocationPermissionPopUp extends StatefulWidget {
 class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
   NotificationOptions? notificationOptions;
 
+  AccountApi accountApi = AccountApi();
+
   @override
   void initState() {
     super.initState();
 
-    getNotificationOptions(widget.userEmail).then((value) {
+    accountApi.getNotificationOptions(widget.userEmail).then((value) {
       setState(() {
         notificationOptions = value;
       });
@@ -62,7 +64,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
 
     if (locationPermission == LocationPermission.deniedForever) return false;
 
-    updateUserNotificationOptions(
+    accountApi.updateUserNotificationOptions(
       widget.userEmail,
       notificationOptions!.pushNotificationsTurnedOn,
       notificationOptions!.emailNotificationsTurnedOn,
@@ -100,7 +102,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
           duration: const Duration(seconds: 4));
     }
 
-    updateUserLocation(widget.userEmail, userLocation);
+    accountApi.updateUserLocation(widget.userEmail, userLocation);
 
     if (!mounted) return;
     Navigator.popAndPushNamed(context, Routes.HOMEPAGE, arguments: {

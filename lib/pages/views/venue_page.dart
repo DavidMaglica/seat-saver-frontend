@@ -52,12 +52,15 @@ class _VenuePageState extends State<VenuePage> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  ReservationApi reservationApi = ReservationApi();
+  VenueApi venueApi = VenueApi();
+
   @override
   void initState() {
     super.initState();
-    _images = getImages();
+    _images = venueApi.getImages();
     if (widget.imageLinks == null) {
-      _venueImages = getVenueImages(widget.venueName);
+      _venueImages = venueApi.getVenueImages(widget.venueName);
     }
   }
 
@@ -96,7 +99,7 @@ class _VenuePageState extends State<VenuePage> {
       _selectedMinute == 0 ? 0 : 30,
     );
 
-    addReservation(widget.userEmail!, widget.venueName,
+    reservationApi.addReservation(widget.userEmail!, widget.venueName,
         _selectedNumberOfGuests!, reservationDateTime);
 
     Navigator.pushNamed(context, Routes.SUCCESSFUL_RESERVATION, arguments: {

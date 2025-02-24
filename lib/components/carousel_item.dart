@@ -16,6 +16,8 @@ class CarouselItem extends StatefulWidget {
 class _CarouselItemState extends State<CarouselItem> {
   String? _imageLink;
 
+  CarouselApi carouselApi = CarouselApi();
+
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
@@ -28,7 +30,7 @@ class _CarouselItemState extends State<CarouselItem> {
   }
 
   void _getCityImage() {
-    String imageLink = getImage(widget.currentCity);
+    String imageLink = carouselApi.getImage(widget.currentCity);
     setState(() {
       _imageLink = imageLink;
     });

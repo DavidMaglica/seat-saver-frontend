@@ -32,6 +32,8 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  AccountApi accountApi = AccountApi();
+
   @override
   void initState() {
     super.initState();
@@ -50,7 +52,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
   }
 
   Future<void> _getUserByEmail(String email) async {
-    UserResponse? response = await getUser(email);
+    UserResponse? response = await accountApi.getUser(email);
     if (response != null && response.success) {
       setState(() => user = response.user);
     }
