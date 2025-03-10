@@ -7,6 +7,8 @@ import 'package:geolocator/geolocator.dart';
 
 import '../../api/account_api.dart';
 import '../../api/data/user.dart';
+import '../../api/data/user_location.dart';
+import '../../api/data/user_response.dart';
 import '../../api/data/venue.dart';
 import '../../api/geolocation_api.dart';
 import '../../api/venue_api.dart';
@@ -57,50 +59,13 @@ class _HomepageState extends State<Homepage> {
     super.initState();
     int locationPopUpCounter = 0;
 
-    if (widget.userEmail.isNotNullAndNotEmpty) {
-      accountApi.getUser(widget.userEmail!).then((response) => {
-            if (response != null && response.success)
-              setState(() {
-                loggedInUser = response.user;
-              })
-          });
+    _checkLogin();
+
+    if (locationPopUpCounter < 1) {
+      _displayLocationPermissionPopUp(locationPopUpCounter);
     }
 
-    if (locationPopUpCounter <= 1) {
-      if (widget.userEmail != null && widget.userEmail!.isNotEmpty) {
-        accountApi.getNotificationOptions(widget.userEmail!).then((value) => {
-              if (!value.locationServicesTurnedOn)
-                {
-                  _activateLocationPopUp(widget.userEmail!),
-                }
-              else
-                {
-                  accountApi
-                      .getLastKnownLocation(widget.userEmail!)
-                      .then((value) => {
-                            geolocationApi
-                                .getNearbyCities(value)
-                                .then((cities) => {
-                                      setState(() {
-                                        _nearbyCities = cities;
-                                      }),
-                                    }),
-                          }),
-                }
-            });
-      }
-      locationPopUpCounter++;
-    }
-
-    if (widget.userLocation != null) {
-      _getNearbyCities(widget.userLocation);
-    } else {
-      if (loggedInUser != null &&
-          loggedInUser?.notificationOptions.locationServicesTurnedOn == true) {
-        setState(() => currentUserLocation = loggedInUser!.lastKnownLocation);
-        _getNearbyCities(loggedInUser!.lastKnownLocation);
-      }
-    }
+    _resolveNearbyCities();
 
     _getNearbyVenues();
     _getNewVenues();
@@ -108,16 +73,66 @@ class _HomepageState extends State<Homepage> {
     _getSuggestedVenues();
   }
 
+  void _resolveNearbyCities() {
+    if (widget.userLocation != null) {
+      geolocationApi.getNearbyCities(
+        UserLocation(
+            latitude: widget.userLocation!.latitude,
+            longitude: widget.userLocation!.longitude),
+      );
+    } else {
+      if (loggedInUser != null &&
+          loggedInUser?.notificationOptions.locationServicesTurnedOn == true) {
+        setState(() => currentUserLocation = loggedInUser!.lastKnownLocation);
+        geolocationApi.getNearbyCities(
+          UserLocation(
+              latitude: currentUserLocation!.latitude,
+              longitude: currentUserLocation!.longitude),
+        );
+      }
+    }
+  }
+
+  void _displayLocationPermissionPopUp(int locationPopUpCounter) {
+    if (widget.userEmail != null && widget.userEmail!.isNotEmpty) {
+      locationPopUpCounter++;
+      bool? isLocationServicesTurnedOn;
+      accountApi.getNotificationOptions(widget.userEmail!).then((value) =>
+          isLocationServicesTurnedOn = value.locationServicesTurnedOn);
+      if (isLocationServicesTurnedOn != null &&
+          isLocationServicesTurnedOn == false) {
+        _openPopUp(widget.userEmail!);
+      } else {
+        if (widget.userLocation == null) {
+          _openPopUp(widget.userEmail!);
+        }
+        accountApi.getLastKnownLocation(widget.userEmail!).then((value) => {
+              geolocationApi.getNearbyCities(value).then((cities) => {
+                    setState(() {
+                      _nearbyCities = cities;
+                    }),
+                  }),
+            });
+      }
+    }
+  }
+
+  void _checkLogin() async {
+    if (widget.userEmail.isNotNullAndNotEmpty) {
+      UserResponse? user = await accountApi.getUser(widget.userEmail!);
+      if (user != null && user.success) {
+        setState(() {
+          loggedInUser = user.user;
+        });
+      }
+    }
+  }
+
   @override
   void dispose() {
     unfocusNode.dispose();
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
-  }
-
-  void _getNearbyCities(Position? position) async {
-    // List<String> cities = await getNearbyCities(position!);
-    // setState(() => _nearbyCities = cities);
   }
 
   void _getNearbyVenues() async {
@@ -148,7 +163,7 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  void _activateLocationPopUp(String userEmail) {
+  void _openPopUp(String userEmail) {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await showModalBottomSheet(
           isScrollControlled: true,

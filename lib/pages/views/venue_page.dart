@@ -70,24 +70,25 @@ class _VenuePageState extends State<VenuePage> {
     super.dispose();
   }
 
+  bool _validateInput() {
+    final validationErrors = [
+      if (widget.userEmail.isNullOrEmpty) 'Please log in to reserve a spot',
+      if (_selectedDate == null) 'Please select a date',
+      if (_selectedHour == null || _selectedMinute == null)
+        'Please select a time',
+      if (_selectedNumberOfGuests == null) 'Please select the number of guests',
+    ];
+
+    if (validationErrors.isNotEmpty) {
+      Toaster.displayError(context, validationErrors.first);
+      return false;
+    }
+
+    return true;
+  }
+
   void _reserveSpot() {
-    if (widget.userEmail.isNullOrEmpty) {
-      Toaster.displayError(context, 'Please log in to reserve a spot');
-      return;
-    }
-
-    if (_selectedDate == null) {
-      Toaster.displayError(context, 'Please select a date');
-      return;
-    }
-
-    if (_selectedHour == null || _selectedMinute == null) {
-      Toaster.displayError(context, 'Please select a time');
-      return;
-    }
-
-    if (_selectedNumberOfGuests == null) {
-      Toaster.displayError(context, 'Please select the number of guests');
+    if (!_validateInput()) {
       return;
     }
 
@@ -102,6 +103,8 @@ class _VenuePageState extends State<VenuePage> {
     reservationApi.addReservation(widget.userEmail!, widget.venueName,
         _selectedNumberOfGuests!, reservationDateTime);
 
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
     Navigator.pushNamed(context, Routes.SUCCESSFUL_RESERVATION, arguments: {
       'venueName': widget.venueName,
       'numberOfGuests': _selectedNumberOfGuests,
@@ -110,7 +113,6 @@ class _VenuePageState extends State<VenuePage> {
       'userLocation': widget.userLocation,
     });
 
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     return;
   }
 
@@ -157,9 +159,11 @@ class _VenuePageState extends State<VenuePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      _buildHeadingImage(widget.imageLinks != null ? widget.imageLinks![0] : _venueImages![0]),
-                      _buildObjectDetails(widget.venueName, widget.type, widget.location,
-                          widget.workingHours, widget.rating),
+                      _buildHeadingImage(widget.imageLinks != null
+                          ? widget.imageLinks![0]
+                          : _venueImages![0]),
+                      _buildObjectDetails(widget.venueName, widget.type,
+                          widget.location, widget.workingHours, widget.rating),
                       _buildObjectDescription(widget.description),
                       Row(
                         mainAxisSize: MainAxisSize.min,
@@ -179,7 +183,9 @@ class _VenuePageState extends State<VenuePage> {
                       ),
                       _buildLeaveRatingButton(),
                       _buildDivider(),
-                      _buildMasonryView(widget.imageLinks!= null ? widget.imageLinks!.skip(1).toList() : _venueImages!.skip(1).toList()),
+                      _buildMasonryView(widget.imageLinks != null
+                          ? widget.imageLinks!.skip(1).toList()
+                          : _venueImages!.skip(1).toList()),
                     ],
                   ),
                 ),
@@ -225,8 +231,8 @@ class _VenuePageState extends State<VenuePage> {
             child: Text(
               description,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontStyle: FontStyle.italic,
-              ),
+                    fontStyle: FontStyle.italic,
+                  ),
             ),
           ),
         ),
@@ -261,8 +267,8 @@ class _VenuePageState extends State<VenuePage> {
         ),
       );
 
-  Padding _buildObjectDetails(
-          String name, String type, String location, String workingHours, double rating) =>
+  Padding _buildObjectDetails(String name, String type, String location,
+          String workingHours, double rating) =>
       Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
         child: Column(
@@ -276,8 +282,11 @@ class _VenuePageState extends State<VenuePage> {
               child: Text(
                 type,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.6),
-                ),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onPrimary
+                          .withOpacity(0.6),
+                    ),
               ),
             ),
             Padding(
@@ -285,8 +294,11 @@ class _VenuePageState extends State<VenuePage> {
               child: Text(
                 location,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.6),
-                ),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onPrimary
+                          .withOpacity(0.6),
+                    ),
               ),
             ),
             Padding(

@@ -57,7 +57,8 @@ class _VenueCardState extends State<VenueCard> {
     super.dispose();
   }
 
-  void _onTap() => Navigator.pushNamed(context, Routes.VENUE, arguments: {
+  void _openVenuePage() =>
+      Navigator.pushNamed(context, Routes.VENUE, arguments: {
         'venueName': widget.venueName,
         'location': widget.location,
         'workingHours': widget.workingHours,
@@ -71,45 +72,38 @@ class _VenueCardState extends State<VenueCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-      child: InkWell(
-        splashColor: Colors.transparent,
-        focusColor: Colors.transparent,
-        hoverColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        onTap: () async {
-          _onTap();
-        },
-        child: Container(
-          width: 148,
-          height: 148,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.onPrimary,
-              width: 0.2,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
-                blurRadius: 6,
-              )
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _buildImage(),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 16, 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Column(
+    return Container(
+      width: 148,
+      height: 148,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.background,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+            blurRadius: 6,
+          )
+        ],
+      ),
+      child: Flex(
+        direction: Axis.vertical,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: InkWell(
+              splashColor: Colors.transparent,
+              focusColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onTap: () async {
+                _openVenuePage();
+              },
+              child: Column(
+                children: [
+                  _buildImage(),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(4, 6, 16, 0),
+                    child: Column(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,12 +113,12 @@ class _VenueCardState extends State<VenueCard> {
                         _buildRatingBar(widget.rating),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -146,6 +140,8 @@ class _VenueCardState extends State<VenueCard> {
 
   Text _buildName(String name) => Text(
         name.toUpperCase(),
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
         style: Theme.of(context)
             .textTheme
             .titleSmall

@@ -9,8 +9,8 @@ import '../../api/account_api.dart';
 import '../../api/data/basic_response.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
-import '../../utils/data.dart';
 import 'models/authentication_model.dart';
+import 'signup_methods.dart';
 
 export 'models/authentication_model.dart';
 
@@ -152,7 +152,8 @@ class _AuthenticationState extends State<Authentication>
         RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
     if (password.length < 8) {
-      Toaster.displayError(context, 'Password must be at least 8 characters long');
+      Toaster.displayError(
+          context, 'Password must be at least 8 characters long');
       return;
     }
 
@@ -166,7 +167,8 @@ class _AuthenticationState extends State<Authentication>
       return;
     }
 
-    BasicResponse response = await accountApi.signup(username, userEmail, password);
+    BasicResponse response =
+        await accountApi.signup(username, userEmail, password);
 
     debugPrint(response.message);
     if (response.success) {

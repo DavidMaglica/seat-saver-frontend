@@ -57,7 +57,8 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
     super.dispose();
   }
 
-  void _openVenue() => Navigator.pushNamed(context, Routes.VENUE, arguments: {
+  void _openVenuePage() =>
+      Navigator.pushNamed(context, Routes.VENUE, arguments: {
         'venueName': widget.venueName,
         'location': widget.location,
         'workingHours': widget.workingHours,
@@ -71,35 +72,33 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-      child: InkWell(
-        splashColor: Colors.transparent,
-        focusColor: Colors.transparent,
-        hoverColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        onTap: () async => _openVenue(),
-        child: Container(
-          width: 224,
-          height: 196,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
-                blurRadius: 6,
-              )
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
+    return Container(
+      width: 248,
+      height: 196,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.background,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+            blurRadius: 6,
+          )
+        ],
+      ),
+      child: Flex(
+        direction: Axis.vertical,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: InkWell(
+                splashColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: () async {
+                  _openVenuePage();
+                },
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildImage(),
                     _buildNameAndType(widget.venueName, widget.type),
@@ -107,11 +106,9 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
                         widget.location, widget.workingHours),
                     _buildRatingBar(widget.rating),
                   ],
-                ),
-              ),
-            ],
+                )),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -137,6 +134,8 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(name.toUpperCase(),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
               style: Theme.of(context)
                   .textTheme
                   .titleSmall
