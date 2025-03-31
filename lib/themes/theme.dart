@@ -9,7 +9,7 @@ const Color lightAlternateColor = Color(0xFFFFC107);
 const Color lightPrimaryTextColor = Color(0xFF212121);
 const Color lightSecondaryTextColor = Color(0xFF757575);
 const Color lightPrimaryBackgroundColor = Color(0xFFFFFFFF);
-const Color lightSecondaryBackgroundColor = Color(0xFFE0DDDD);
+const Color lightSecondaryBackgroundColor = Color(0xFFFFFBF4);
 const Color mutedLightSecondaryBackgroundColor = Color(0x40E0DDDD);
 
 const Color lightErrorColor = Color(0xFF800020);
@@ -23,7 +23,7 @@ const Color darkAlternateColor = Color(0xFFFFD54F);
 const Color darkPrimaryTextColor = Color(0xFFE0E0E0);
 const Color darkSecondaryTextColor = Color(0xFFBDBDBD);
 const Color darkPrimaryBackgroundColor = Color(0xFF212121);
-const Color darkSecondaryBackgroundColor = Color(0xFF424242);
+const Color darkSecondaryBackgroundColor = Color(0xFF282828);
 const Color mutedDarkSecondaryBackgroundColor = Color(0xB3424242);
 
 const Color darkErrorColor = Color(0xFFB70031);
@@ -35,7 +35,7 @@ class AppThemes {
   static const Color successColor = Color(0xFF2E7D32);
   static const Color errorColor = Color(0xFF800020);
   static const Color warningColor = Color(0xFFFF8F00);
-  static const Color infoColor = Color(0xFF1976D2);
+  static const Color infoColor = Color(0xFF4392E1);
 
   static const Color accent1 = Color(0xFFFF5722);
   static const Color accent2 = Color(0xFFE91E63);
@@ -68,8 +68,9 @@ class AppThemes {
       titleMedium: TextStyle(color: lightPrimaryTextColor, fontSize: 18, fontFamily: 'Oswald', fontWeight: FontWeight.bold),
       titleLarge: TextStyle(color: lightPrimaryTextColor, fontSize: 24, fontFamily: 'Oswald', fontWeight: FontWeight.bold),
       labelLarge: TextStyle(color: lightPrimaryBackgroundColor, fontSize: 22, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
-      headlineSmall: TextStyle(color: lightPrimaryTextColor, fontSize: 16, fontFamily: 'Roboto'),
+      headlineSmall: TextStyle(color: lightPrimaryTextColor, fontSize: 14, fontFamily: 'Roboto'),
       headlineMedium: TextStyle(color: lightPrimaryBackgroundColor, fontSize: 16, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
+
     ),
     scaffoldBackgroundColor: lightPrimaryBackgroundColor,
   );
@@ -92,12 +93,12 @@ class AppThemes {
       onError: darkPrimaryBackgroundColor,
     ),
     textTheme: const TextTheme(
-      bodySmall: TextStyle(color: darkPrimaryTextColor, fontSize: 12, fontFamily: 'Roboto'),
-      bodyMedium: TextStyle(color: darkPrimaryTextColor, fontSize: 14, fontFamily: 'Roboto'),
-      bodyLarge: TextStyle(color: darkPrimaryTextColor, fontSize: 18, fontFamily: 'Roboto'),
-      titleSmall: TextStyle(color: darkPrimaryTextColor, fontSize: 14, fontFamily: 'Oswald', fontWeight: FontWeight.bold),
-      titleMedium: TextStyle(color: darkPrimaryTextColor, fontSize: 18, fontFamily: 'Oswald', fontWeight: FontWeight.bold),
-      titleLarge: TextStyle(color: darkPrimaryTextColor, fontSize: 24, fontFamily: 'Oswald', fontWeight: FontWeight.bold),
+      bodySmall: TextStyle(color: darkPrimaryTextColor, fontSize: 8, fontFamily: 'Roboto'),
+      bodyMedium: TextStyle(color: darkPrimaryTextColor, fontSize: 12, fontFamily: 'Roboto'),
+      bodyLarge: TextStyle(color: darkPrimaryTextColor, fontSize: 16, fontFamily: 'Roboto'),
+      titleSmall: TextStyle(color: darkPrimaryTextColor, fontSize: 14, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
+      titleMedium: TextStyle(color: darkPrimaryTextColor, fontSize: 18, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
+      titleLarge: TextStyle(color: darkPrimaryTextColor, fontSize: 24, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
       labelLarge: TextStyle(color: darkPrimaryBackgroundColor, fontSize: 22, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
       headlineSmall: TextStyle(color: darkPrimaryTextColor, fontSize: 16, fontFamily: 'Roboto'),
       headlineMedium: TextStyle(color: lightPrimaryBackgroundColor, fontSize: 16, fontFamily: 'Roboto', fontWeight: FontWeight.bold),

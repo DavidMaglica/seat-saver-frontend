@@ -6,7 +6,10 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../api/account_api.dart';
+import '../../api/data/notification_settings.dart';
 import '../../api/data/user.dart';
+import '../../api/data/user_location.dart';
+import '../../api/data/user_response.dart';
 import '../../api/data/venue.dart';
 import '../../api/geolocation_api.dart';
 import '../../api/venue_api.dart';
@@ -18,6 +21,7 @@ import '../../components/venue_suggested_card.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
 import '../../utils/routing_utils.dart';
+import '../../utils/toaster.dart';
 
 class Homepage extends StatefulWidget {
   final String? userEmail;
@@ -45,42 +49,98 @@ class _HomepageState extends State<Homepage> {
 
   List<String>? _nearbyCities;
   Position? currentUserLocation;
+  User? loggedInUser;
+
+  AccountApi accountApi = AccountApi();
+  GeolocationApi geolocationApi = GeolocationApi();
+  VenueApi venueApi = VenueApi();
 
   @override
   void initState() {
     super.initState();
     int locationPopUpCounter = 0;
 
-    User? loggedInUser;
-    if (widget.userEmail.isNotNullAndNotEmpty) {
-      getUser(widget.userEmail!).then((response) => {
-            if (response != null && response.success)
-              loggedInUser = response.user
-          });
+    _checkLogin();
+
+    if (locationPopUpCounter < 1) {
+      _displayLocationPermissionPopUp(locationPopUpCounter);
     }
 
-    if (locationPopUpCounter <= 1) {
-      if (loggedInUser != null &&
-          loggedInUser?.notificationOptions.locationServicesTurnedOn == false) {
-        _activateLocationPopUp(loggedInUser!.email);
-      }
-      locationPopUpCounter++;
+    if (widget.userEmail != null && widget.userEmail?.isNotEmpty == true) {
+      _updateUserLocation(widget.userEmail!);
     }
 
-    if (widget.userLocation != null) {
-      _getNearbyCities(widget.userLocation);
-    } else {
-      if (loggedInUser != null &&
-          loggedInUser?.notificationOptions.locationServicesTurnedOn == true) {
-        setState(() => currentUserLocation = loggedInUser!.lastKnownLocation);
-        _getNearbyCities(loggedInUser!.lastKnownLocation);
-      }
-    }
+    _resolveNearbyCities();
 
     _getNearbyVenues();
     _getNewVenues();
     _getTrendingVenues();
     _getSuggestedVenues();
+  }
+
+  void _resolveNearbyCities() {
+    if (widget.userLocation != null) {
+      geolocationApi.getNearbyCities(
+        UserLocation(
+            latitude: widget.userLocation!.latitude,
+            longitude: widget.userLocation!.longitude),
+      );
+    } else {
+      if (loggedInUser != null &&
+          loggedInUser?.notificationOptions.locationServicesTurnedOn == true) {
+        setState(() => currentUserLocation = loggedInUser!.lastKnownLocation);
+        geolocationApi.getNearbyCities(
+          UserLocation(
+              latitude: currentUserLocation!.latitude,
+              longitude: currentUserLocation!.longitude),
+        );
+      }
+    }
+  }
+
+  void _displayLocationPermissionPopUp(int locationPopUpCounter) {
+    if (widget.userEmail != null && widget.userEmail!.isNotEmpty) {
+      locationPopUpCounter++;
+      bool? isLocationServicesTurnedOn;
+      accountApi.getNotificationOptions(widget.userEmail!).then((value) =>
+          isLocationServicesTurnedOn = value.locationServicesTurnedOn);
+      if (isLocationServicesTurnedOn != null &&
+          isLocationServicesTurnedOn == false) {
+        _openPopUp(widget.userEmail!);
+      } else {
+        if (widget.userLocation == null) {
+          _openPopUp(widget.userEmail!);
+        }
+        accountApi.getLastKnownLocation(widget.userEmail!).then((value) => {
+              geolocationApi.getNearbyCities(value).then((cities) => {
+                    setState(() {
+                      _nearbyCities = cities;
+                    }),
+                  }),
+            });
+      }
+    }
+  }
+
+  void _updateUserLocation(String userEmail) async {
+    NotificationOptions options =
+        await accountApi.getNotificationOptions(userEmail);
+    if (options.locationServicesTurnedOn) {
+      Position userLocation = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+      accountApi.updateUserLocation(userEmail, userLocation);
+    }
+  }
+
+  void _checkLogin() async {
+    if (widget.userEmail.isNotNullAndNotEmpty) {
+      UserResponse? user = await accountApi.getUser(widget.userEmail!);
+      if (user != null && user.success) {
+        setState(() {
+          loggedInUser = user.user;
+        });
+      }
+    }
   }
 
   @override
@@ -90,40 +150,35 @@ class _HomepageState extends State<Homepage> {
     super.dispose();
   }
 
-  void _getNearbyCities(Position? position) async {
-    List<String> cities = await getNearbyCities(position!);
-    setState(() => _nearbyCities = cities);
-  }
-
   void _getNearbyVenues() async {
-    List<Venue> list = await getNearbyVenues();
+    List<Venue> list = await venueApi.getNearbyVenues();
     setState(() {
       _nearbyVenues = list;
     });
   }
 
   void _getNewVenues() async {
-    List<Venue> list = await getNewVenues();
+    List<Venue> list = await venueApi.getNewVenues();
     setState(() {
       _newVenues = list;
     });
   }
 
   void _getTrendingVenues() async {
-    List<Venue> list = await getTrendingVenues();
+    List<Venue> list = await venueApi.getTrendingVenues();
     setState(() {
       _trendingVenues = list;
     });
   }
 
   void _getSuggestedVenues() async {
-    List<Venue> list = await getSuggestedVenues();
+    List<Venue> list = await venueApi.getSuggestedVenues();
     setState(() {
       _suggestedVenues = list;
     });
   }
 
-  void _activateLocationPopUp(String userEmail) {
+  void _openPopUp(String userEmail) {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await showModalBottomSheet(
           isScrollControlled: true,
@@ -147,31 +202,26 @@ class _HomepageState extends State<Homepage> {
   }
 
   void _openNearbyVenues() {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Currently unavailable'),
-      backgroundColor: AppThemes.infoColor,
-    ));
+    Toaster.displayInfo(context, 'Currently unavailable');
     return;
   }
 
   void _openNewVenues() {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Currently unavailable'),
-      backgroundColor: AppThemes.infoColor,
-    ));
+    Toaster.displayInfo(context, 'Currently unavailable');
     return;
   }
 
   void _openTrendingVenues() {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Currently unavailable'),
-      backgroundColor: AppThemes.infoColor,
-    ));
+    Toaster.displayInfo(context, 'Currently unavailable');
     return;
   }
+
+  Future<void> _searchByCategory(VenueType category) =>
+      Navigator.pushNamed(context, Routes.SEARCH, arguments: {
+        'userEmail': widget.userEmail,
+        'userLocation': widget.userLocation,
+        'selectedChip': category.toString(),
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +233,7 @@ class _HomepageState extends State<Homepage> {
             onWillPop: () async => false,
             child: Scaffold(
                 key: scaffoldKey,
-                backgroundColor: Theme.of(context).colorScheme.background,
+                backgroundColor: Theme.of(context).colorScheme.surface,
                 body: SafeArea(
                   top: true,
                   child: Padding(
@@ -231,9 +281,14 @@ class _HomepageState extends State<Homepage> {
             padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
             child: SizedBox(
               width: double.infinity,
-              height: 196,
+              height: 212,
               child: CarouselSlider(
-                items: nearbyCities.map((city) => CarouselItem(city)).toList(),
+                items: nearbyCities
+                    .map((city) => Padding(
+                        padding:
+                            const EdgeInsetsDirectional.symmetric(vertical: 12),
+                        child: CarouselItem(city)))
+                    .toList(),
                 carouselController: _carouselController ??=
                     CarouselController(),
                 options: CarouselOptions(
@@ -333,7 +388,8 @@ class _HomepageState extends State<Homepage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: venues.map((venue) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   child: VenueCard(
                     venueName: venue.name,
                     location: venue.location,
@@ -356,7 +412,8 @@ class _HomepageState extends State<Homepage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: venues.map((venue) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   child: VenueSuggestedCard(
                     venueName: venue.name,
                     location: venue.location,
@@ -408,11 +465,7 @@ class _HomepageState extends State<Homepage> {
           ]));
 
   InkWell _buildCategoryCard(VenueType category) => InkWell(
-      onTap: () => Navigator.pushNamed(context, Routes.SEARCH, arguments: {
-            'userEmail': widget.userEmail,
-            'userLocation': widget.userLocation,
-            'selectedChip': category.toString(),
-          }),
+      onTap: () => _searchByCategory(category),
       child: Align(
           alignment: AlignmentDirectional.center,
           child: Padding(
@@ -420,7 +473,7 @@ class _HomepageState extends State<Homepage> {
               child: SizedBox(
                   width: 140,
                   child: Card(
-                      elevation: 3,
+                      elevation: 5,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                         side: BorderSide(
@@ -492,8 +545,10 @@ class _HomepageState extends State<Homepage> {
                             padding: const EdgeInsetsDirectional.fromSTEB(
                                 12, 0, 0, 0),
                             child: Text(
-                              'Welcome',
-                              style: Theme.of(context).textTheme.titleMedium,
+                              loggedInUser != null
+                                  ? 'Welcome, ${loggedInUser!.username}'
+                                  : 'Welcome',
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
                           ),
                           // Padding(

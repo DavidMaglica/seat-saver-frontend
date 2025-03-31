@@ -26,6 +26,17 @@ class _LandingState extends State<Landing> {
     super.dispose();
   }
 
+  Future<void> _sendToMainPage() async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (!mounted) return;
+    Navigator.pushNamed(
+      context,
+      Routes.HOMEPAGE,
+      arguments: {'userEmail': ''},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -34,7 +45,7 @@ class _LandingState extends State<Landing> {
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: SafeArea(
           top: true,
           child: Align(
@@ -74,16 +85,7 @@ class _LandingState extends State<Landing> {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 FFButtonWidget(
-                  onPressed: () async {
-                    await Future.delayed(const Duration(seconds: 1));
-
-                    if (!mounted) return;
-                    Navigator.pushNamed(
-                      context,
-                      Routes.HOMEPAGE,
-                      arguments: {'userEmail': ''},
-                    );
-                  },
+                  onPressed: _sendToMainPage,
                   text: 'Get Started',
                   options: FFButtonOptions(
                     width: 270,
@@ -93,7 +95,7 @@ class _LandingState extends State<Landing> {
                       color: Theme.of(context).colorScheme.background,
                       fontSize: 16,
                     ),
-                    elevation: 3,
+                    elevation: 5,
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),

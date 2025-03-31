@@ -48,6 +48,8 @@ class _EditProfileState extends State<EditProfile> {
   String? updatedPassword;
   String? updatedEmail;
 
+  AccountApi accountApi = AccountApi();
+
   @override
   void initState() {
     super.initState();
@@ -85,7 +87,7 @@ class _EditProfileState extends State<EditProfile> {
       return;
     }
 
-    changeUsername(widget.user.email, newName!).then((response) {
+    accountApi.changeUsername(widget.user.email, newName!).then((response) {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast(response.message,
           response.success ? AppThemes.successColor : AppThemes.errorColor);
@@ -113,7 +115,7 @@ class _EditProfileState extends State<EditProfile> {
       return;
     }
 
-    changeEmail(widget.user.email, newEmail!).then((response) {
+    accountApi.changeEmail(widget.user.email, newEmail!).then((response) {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast(response.message,
           response.success ? AppThemes.successColor : AppThemes.errorColor);
@@ -162,7 +164,7 @@ class _EditProfileState extends State<EditProfile> {
     }
 
     String email = updatedEmail ?? widget.user.email;
-    changePassword(email, newPassword).then((response) async {
+    accountApi.changePassword(email, newPassword).then((response) async {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
       _showToast(response.message,
           response.success ? AppThemes.successColor : AppThemes.errorColor);
@@ -199,7 +201,7 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppbar(
           title: 'Edit Profile',
           routeToPush: Routes.ACCOUNT,
@@ -475,7 +477,8 @@ class _EditProfileState extends State<EditProfile> {
   void _openChangePasswordBottomSheet() => showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        shape: modalRectangleBorder(),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
         builder: (
           BuildContext context,
         ) {

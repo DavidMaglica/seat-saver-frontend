@@ -1,4 +1,5 @@
 import 'package:TableReserver/api/carousel_api.dart';
+import 'package:TableReserver/utils/toaster.dart';
 import 'package:flutter/material.dart';
 
 import '../themes/theme.dart';
@@ -15,6 +16,8 @@ class CarouselItem extends StatefulWidget {
 class _CarouselItemState extends State<CarouselItem> {
   String? _imageLink;
 
+  CarouselApi carouselApi = CarouselApi();
+
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
@@ -27,7 +30,7 @@ class _CarouselItemState extends State<CarouselItem> {
   }
 
   void _getCityImage() {
-    String imageLink = getImage(widget.currentCity);
+    String imageLink = carouselApi.getImage(widget.currentCity);
     setState(() {
       _imageLink = imageLink;
     });
@@ -43,19 +46,22 @@ class _CarouselItemState extends State<CarouselItem> {
     return Container(
         height: 256,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: Theme.of(context).colorScheme.background,
           borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.onPrimary,
+            width: 0.2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+              blurRadius: 6,
+            )
+          ],
         ),
         child: InkWell(
           onTap: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                backgroundColor: AppThemes.infoColor,
-                content: Text('Searching by location currently unavailable'),
-                duration: Duration(seconds: 2),
-              ),
-            );
+            Toaster.displayInfo(context, 'Searching by location currently unavailable');
           },
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -80,7 +86,7 @@ class _CarouselItemState extends State<CarouselItem> {
                     style: const TextStyle(
                       color: AppThemes.accent1,
                       fontSize: 18,
-                      fontFamily: 'Oswald',
+                      fontWeight: FontWeight.bold,
                     )))),
         Align(
             alignment: const AlignmentDirectional(-1, 0),

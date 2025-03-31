@@ -38,6 +38,8 @@ class VenueSuggestedCard extends StatefulWidget {
 class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
   List<String>? _venueImages;
 
+  VenueApi venueApi = VenueApi();
+
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
@@ -45,7 +47,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   @override
   void initState() {
-    List<String> venueImages = getVenueImages(widget.venueName);
+    List<String> venueImages = venueApi.getVenueImages(widget.venueName);
     setState(() => _venueImages = venueImages);
     super.initState();
   }
@@ -55,7 +57,8 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
     super.dispose();
   }
 
-  void _onTap() => Navigator.pushNamed(context, Routes.VENUE, arguments: {
+  void _openVenuePage() =>
+      Navigator.pushNamed(context, Routes.VENUE, arguments: {
         'venueName': widget.venueName,
         'location': widget.location,
         'workingHours': widget.workingHours,
@@ -69,35 +72,33 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-      child: InkWell(
-        splashColor: Colors.transparent,
-        focusColor: Colors.transparent,
-        hoverColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        onTap: () async {
-          _onTap();
-        },
-        child: Container(
-          width: 224,
-          height: 196,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.onPrimary,
-              width: .2,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
+    return Container(
+      width: 248,
+      height: 196,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.background,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+            blurRadius: 6,
+          )
+        ],
+      ),
+      child: Flex(
+        direction: Axis.vertical,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: InkWell(
+                splashColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: () async {
+                  _openVenuePage();
+                },
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildImage(),
                     _buildNameAndType(widget.venueName, widget.type),
@@ -105,11 +106,9 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
                         widget.location, widget.workingHours),
                     _buildRatingBar(widget.rating),
                   ],
-                ),
-              ),
-            ],
+                )),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -134,16 +133,19 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(name,
+          Text(name.toUpperCase(),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
               style: Theme.of(context)
                   .textTheme
                   .titleSmall
-                  ?.copyWith(color: AppThemes.infoColor)),
+                  ?.copyWith(color: AppThemes.accent1)),
           Text(type.toString(),
-              style: Theme.of(context)
-                  .textTheme
-                  .titleSmall
-                  ?.copyWith(color: AppThemes.infoColor)),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontWeight: FontWeight.w800,
+                fontSize: 10,
+              )),
         ],
       ));
 
@@ -154,10 +156,17 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(location,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    )),
-            Text(workingHours, style: Theme.of(context).textTheme.bodyMedium),
+                style: TextStyle(
+                  color:
+                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
+                  fontWeight: FontWeight.w800,
+                  fontSize: 10,
+                )),
+            Text(workingHours,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(fontSize: 9)),
           ],
         ),
       );
@@ -172,7 +181,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
           ),
           direction: Axis.horizontal,
           rating: rating,
-          unratedColor: const Color(0xFF57636C),
+          unratedColor: const Color(0xFF57636C).withOpacity(0.5),
           itemCount: 5,
           itemSize: 14,
         )

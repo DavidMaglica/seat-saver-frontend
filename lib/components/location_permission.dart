@@ -6,6 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../api/account_api.dart';
+import '../api/data/notification_settings.dart';
 import '../themes/theme.dart';
 import '../utils/constants.dart';
 
@@ -23,9 +24,19 @@ class LocationPermissionPopUp extends StatefulWidget {
 }
 
 class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
+  NotificationOptions? notificationOptions;
+
+  AccountApi accountApi = AccountApi();
+
   @override
   void initState() {
     super.initState();
+
+    accountApi.getNotificationOptions(widget.userEmail).then((value) {
+      setState(() {
+        notificationOptions = value;
+      });
+    });
   }
 
   @override
@@ -53,7 +64,12 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
 
     if (locationPermission == LocationPermission.deniedForever) return false;
 
-    updateLocationServices(widget.userEmail, true);
+    accountApi.updateUserNotificationOptions(
+      widget.userEmail,
+      notificationOptions!.pushNotificationsTurnedOn,
+      notificationOptions!.emailNotificationsTurnedOn,
+      true,
+    );
 
     return true;
   }
@@ -64,7 +80,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
         .then((List<Placemark> placemarks) {
       currentCity = placemarks[0].locality;
     }).catchError((e) {
-      debugPrint(e);
+      debugPrint(e.toString());
     });
 
     return currentCity;
@@ -74,7 +90,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
     if (!await _handleLocationPermission()) return;
 
     Position? userLocation = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.best);
 
     String? currentCity = await _getCityFromLatLng(userLocation);
     if (currentCity == null || currentCity.isEmpty) {
@@ -86,7 +102,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
           duration: const Duration(seconds: 4));
     }
 
-    updateUserLocation(widget.userEmail, userLocation);
+    accountApi.updateUserLocation(widget.userEmail, userLocation);
 
     if (!mounted) return;
     Navigator.popAndPushNamed(context, Routes.HOMEPAGE, arguments: {
@@ -113,7 +129,7 @@ class _LocationPermissionPopUpState extends State<LocationPermissionPopUp> {
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 24),
                 child: Icon(CupertinoIcons.location_solid,
-                    color: AppThemes.warningColor, size: 64),
+                    color: AppThemes.accent1, size: 64),
               ),
             ),
             Align(

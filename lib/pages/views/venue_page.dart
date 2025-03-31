@@ -12,6 +12,7 @@ import '../../components/custom_appbar.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
 import '../../utils/full_image_view.dart';
+import '../../utils/toaster.dart';
 
 class VenuePage extends StatefulWidget {
   final String venueName;
@@ -51,12 +52,15 @@ class _VenuePageState extends State<VenuePage> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  ReservationApi reservationApi = ReservationApi();
+  VenueApi venueApi = VenueApi();
+
   @override
   void initState() {
     super.initState();
-    _images = getImages();
+    _images = venueApi.getImages();
     if (widget.imageLinks == null) {
-      _venueImages = getVenueImages(widget.venueName);
+      _venueImages = venueApi.getVenueImages(widget.venueName);
     }
   }
 
@@ -66,24 +70,25 @@ class _VenuePageState extends State<VenuePage> {
     super.dispose();
   }
 
+  bool _validateInput() {
+    final validationErrors = [
+      if (widget.userEmail.isNullOrEmpty) 'Please log in to reserve a spot',
+      if (_selectedDate == null) 'Please select a date',
+      if (_selectedHour == null || _selectedMinute == null)
+        'Please select a time',
+      if (_selectedNumberOfGuests == null) 'Please select the number of guests',
+    ];
+
+    if (validationErrors.isNotEmpty) {
+      Toaster.displayError(context, validationErrors.first);
+      return false;
+    }
+
+    return true;
+  }
+
   void _reserveSpot() {
-    if (widget.userEmail.isNullOrEmpty) {
-      _showSnackBar('Please log in to reserve a spot', AppThemes.errorColor);
-      return;
-    }
-
-    if (_selectedDate == null) {
-      _showSnackBar('Please select a date', AppThemes.errorColor);
-      return;
-    }
-
-    if (_selectedHour == null || _selectedMinute == null) {
-      _showSnackBar('Please select a time', AppThemes.errorColor);
-      return;
-    }
-
-    if (_selectedNumberOfGuests == null) {
-      _showSnackBar('Please select the number of guests', AppThemes.errorColor);
+    if (!_validateInput()) {
       return;
     }
 
@@ -95,8 +100,10 @@ class _VenuePageState extends State<VenuePage> {
       _selectedMinute == 0 ? 0 : 30,
     );
 
-    addReservation(widget.userEmail!, widget.venueName,
+    reservationApi.addReservation(widget.userEmail!, widget.venueName,
         _selectedNumberOfGuests!, reservationDateTime);
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
     Navigator.pushNamed(context, Routes.SUCCESSFUL_RESERVATION, arguments: {
       'venueName': widget.venueName,
@@ -106,8 +113,11 @@ class _VenuePageState extends State<VenuePage> {
       'userLocation': widget.userLocation,
     });
 
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     return;
+  }
+
+  void _rateVenue() {
+    Toaster.displayWarning(context, 'Feature not implemented yet');
   }
 
   @override
@@ -116,7 +126,7 @@ class _VenuePageState extends State<VenuePage> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppbar(
           title: widget.venueName,
           routeToPush: Routes.HOMEPAGE,
@@ -149,10 +159,11 @@ class _VenuePageState extends State<VenuePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      _buildHeadingImage(widget.imageLinks != null ? widget.imageLinks![0] : _venueImages![0]),
-                      _buildObjectDetails(widget.venueName, widget.location,
-                          widget.workingHours, widget.rating),
-                      _buildObjectType(widget.type),
+                      _buildHeadingImage(widget.imageLinks != null
+                          ? widget.imageLinks![0]
+                          : _venueImages![0]),
+                      _buildObjectDetails(widget.venueName, widget.type,
+                          widget.location, widget.workingHours, widget.rating),
                       _buildObjectDescription(widget.description),
                       Row(
                         mainAxisSize: MainAxisSize.min,
@@ -172,7 +183,9 @@ class _VenuePageState extends State<VenuePage> {
                       ),
                       _buildLeaveRatingButton(),
                       _buildDivider(),
-                      _buildMasonryView(widget.imageLinks!= null ? widget.imageLinks!.skip(1).toList() : _venueImages!.skip(1).toList()),
+                      _buildMasonryView(widget.imageLinks != null
+                          ? widget.imageLinks!.skip(1).toList()
+                          : _venueImages!.skip(1).toList()),
                     ],
                   ),
                 ),
@@ -210,27 +223,16 @@ class _VenuePageState extends State<VenuePage> {
         ),
       );
 
-  Flexible _buildObjectType(String type) => Flexible(
-        child: Align(
-          alignment: const AlignmentDirectional(-1, 0),
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 0),
-            child: Text(
-              'Type: $type',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-          ),
-        ),
-      );
-
   Flexible _buildObjectDescription(String description) => Flexible(
         child: Align(
           alignment: const AlignmentDirectional(-1, 0),
           child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 0, 16),
+            padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 16),
             child: Text(
               description,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontStyle: FontStyle.italic,
+                  ),
             ),
           ),
         ),
@@ -242,10 +244,7 @@ class _VenuePageState extends State<VenuePage> {
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 0, 8),
             child: FFButtonWidget(
-              onPressed: () => {
-                _showSnackBar(
-                    'Feature not implemented yet', AppThemes.infoColor)
-              },
+              onPressed: () => _rateVenue,
               text: 'Leave a rating',
               options: FFButtonOptions(
                 width: 128,
@@ -268,32 +267,38 @@ class _VenuePageState extends State<VenuePage> {
         ),
       );
 
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _showSnackBar(
-      String text, Color colour) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    return ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(text, style: const TextStyle(color: Colors.white)),
-        backgroundColor: colour,
-      ),
-    );
-  }
-
-  Padding _buildObjectDetails(
-          String name, String location, String workingHours, double rating) =>
+  Padding _buildObjectDetails(String name, String type, String location,
+          String workingHours, double rating) =>
       Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
         child: Column(
           children: [
             Text(
-              name,
+              name.toUpperCase(),
               style: Theme.of(context).textTheme.titleLarge,
             ),
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
               child: Text(
+                type,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onPrimary
+                          .withOpacity(0.6),
+                    ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+              child: Text(
                 location,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onPrimary
+                          .withOpacity(0.6),
+                    ),
               ),
             ),
             Padding(
@@ -313,7 +318,7 @@ class _VenuePageState extends State<VenuePage> {
                   CupertinoIcons.star_fill,
                   color: Theme.of(context).colorScheme.onTertiary,
                 ),
-                unratedColor: Theme.of(context).colorScheme.onPrimary,
+                unratedColor: const Color(0xFF57636C).withOpacity(0.5),
                 direction: Axis.horizontal,
                 glow: false,
                 ignoreGestures: true,

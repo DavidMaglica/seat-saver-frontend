@@ -30,6 +30,8 @@ class _ReservationHistoryState extends State<ReservationHistory> {
 
   List<ReservationDetails>? reservations;
 
+  ReservationApi reservationApi = ReservationApi();
+
   @override
   void initState() {
     super.initState();
@@ -43,7 +45,7 @@ class _ReservationHistoryState extends State<ReservationHistory> {
   }
 
   void _getUsersReservations(String userEmail) async {
-    ReservationResponse response = await getReservations(userEmail);
+    ReservationResponse response = await reservationApi.getReservations(userEmail);
     if (response.success) {
       setState(() => reservations = response.reservations);
     }
@@ -53,7 +55,7 @@ class _ReservationHistoryState extends State<ReservationHistory> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppbar(
           title: 'Reservation History',
           routeToPush: Routes.ACCOUNT,

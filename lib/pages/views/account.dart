@@ -1,9 +1,11 @@
+import 'package:TableReserver/utils/toaster.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../api/account_api.dart';
 import '../../api/data/user.dart';
+import '../../api/data/user_response.dart';
 import '../../components/navbar.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
@@ -30,6 +32,8 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  AccountApi accountApi = AccountApi();
+
   @override
   void initState() {
     super.initState();
@@ -48,10 +52,26 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
   }
 
   Future<void> _getUserByEmail(String email) async {
-    UserResponse? response = await getUser(email);
+    UserResponse? response = await accountApi.getUser(email);
     if (response != null && response.success) {
       setState(() => user = response.user);
     }
+  }
+
+  void _openSettingsItem(String route, String? action) {
+    if (route == Routes.TERMS_OF_SERVICE) {
+      Navigator.pushNamed(context, route, arguments: {
+        'userEmail': user?.email,
+        'userLocation': widget.userLocation
+      });
+      return;
+    }
+    if (user == null) {
+      Toaster.displayInfo(context, 'Please log in to $action.');
+      return;
+    }
+    Navigator.pushNamed(context, route,
+        arguments: {'user': user, 'userLocation': widget.userLocation});
   }
 
   @override
@@ -62,7 +82,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
             : FocusScope.of(context).unfocus(),
         child: Scaffold(
             key: scaffoldKey,
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             body: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -87,16 +107,9 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                 })));
   }
 
-  Padding _buildHistoryTitle(String title) => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 0),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.titleMedium,
-      ));
-
   Column _buildHistorySettings(User? user) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildHistoryTitle('Reservations'),
+        _buildTitle('Reservations'),
         _buildSettingsItem(
             CupertinoIcons.doc_on_clipboard,
             'Reservation history',
@@ -105,16 +118,9 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
             'view your reservation history'),
       ]);
 
-  Padding _buildSettingsTitle(String title) => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 0),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.titleMedium,
-      ));
-
   Column _buildAccountSettings(User? user) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildSettingsTitle('Account Settings'),
+        _buildTitle('Account Settings'),
         _buildSettingsItem(CupertinoIcons.person_circle_fill, 'Edit profile',
             Routes.EDIT_PROFILE, user, 'edit your profile'),
         _buildSettingsItem(
@@ -127,12 +133,19 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
 
   Column _buildApplicationSettings(User? user) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildSettingsTitle('Application Settings'),
+        _buildTitle('Application Settings'),
         _buildSettingsItem(CupertinoIcons.question_circle_fill, 'Support',
             Routes.SUPPORT, user, 'access support'),
         _buildSettingsItem(CupertinoIcons.exclamationmark_shield_fill,
             'Terms of service', Routes.TERMS_OF_SERVICE, user, null),
       ]);
+
+  Padding _buildTitle(String title) => Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 0),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.titleMedium,
+      ));
 
   Padding _buildSettingsItem(IconData icon, String text, String route,
           User? user, String? action) =>
@@ -145,10 +158,9 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                 color: Theme.of(context).colorScheme.background,
                 boxShadow: [
                   BoxShadow(
-                    blurRadius: 3,
+                    blurRadius: 5,
                     color:
-                        Theme.of(context).colorScheme.onPrimary.withOpacity(.3),
-                    offset: const Offset(0, 0),
+                        Theme.of(context).colorScheme.onPrimary.withOpacity(.5),
                   )
                 ],
                 borderRadius: BorderRadius.circular(8),
@@ -157,26 +169,7 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
               child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: InkWell(
-                      onTap: () async {
-                        if (route == Routes.TERMS_OF_SERVICE) {
-                          Navigator.pushNamed(context, route, arguments: {
-                            'userEmail': user?.email,
-                            'userLocation': widget.userLocation
-                          });
-                          return;
-                        }
-                        if (user == null) {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text('Please log in to $action.'),
-                              backgroundColor: AppThemes.infoColor));
-                          return;
-                        }
-                        Navigator.pushNamed(context, route, arguments: {
-                          'user': user,
-                          'userLocation': widget.userLocation
-                        });
-                      },
+                      onTap: () async => _openSettingsItem(route, action),
                       child: Row(mainAxisSize: MainAxisSize.max, children: [
                         Icon(
                           icon,
@@ -230,9 +223,8 @@ class _AccountState extends State<Account> with TickerProviderStateMixin {
                 BoxShadow(
                   blurRadius: 10,
                   color: userEmail != null
-                      ? Theme.of(context).colorScheme.error.withOpacity(.5)
-                      : AppThemes.successColor.withOpacity(.5),
-                  offset: const Offset(0, 0),
+                      ? Theme.of(context).colorScheme.error.withOpacity(.8)
+                      : AppThemes.successColor.withOpacity(.8),
                 )
               ],
               borderRadius: BorderRadius.circular(8),

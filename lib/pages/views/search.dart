@@ -39,6 +39,8 @@ class _SearchState extends State<Search> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  VenueApi venueApi = VenueApi();
+
   @override
   void initState() {
     super.initState();
@@ -81,7 +83,7 @@ class _SearchState extends State<Search> {
       return;
     }
 
-    List<Venue> filteredVenues = await getVenuesByType(selectedTypes);
+    List<Venue> filteredVenues = await venueApi.getVenuesByType(selectedTypes);
 
     safeSetState(() {
       _allVenues = filteredVenues;
@@ -97,7 +99,7 @@ class _SearchState extends State<Search> {
     });
   }
 
-  void _getAllVenues() => getSortedVenues().then((value) => safeSetState(() {
+  void _getAllVenues() => venueApi.getSortedVenues().then((value) => safeSetState(() {
         _allVenues = value;
       }));
 
@@ -117,7 +119,7 @@ class _SearchState extends State<Search> {
     });
   }
 
-  Function() _onTap(Venue venue) =>
+  Function() _goToVenuePage(Venue venue) =>
       () => Navigator.pushNamed(context, Routes.VENUE, arguments: {
             'venueName': venue.name,
             'location': venue.location,
@@ -136,7 +138,7 @@ class _SearchState extends State<Search> {
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: SafeArea(
           top: true,
           child: SingleChildScrollView(
@@ -156,12 +158,11 @@ class _SearchState extends State<Search> {
                         color: Theme.of(context).colorScheme.background,
                         boxShadow: [
                           BoxShadow(
-                            blurRadius: 3,
+                            blurRadius: 10,
                             color: Theme.of(context)
                                 .colorScheme
                                 .onPrimary
-                                .withOpacity(.2),
-                            offset: const Offset(0, 1),
+                                .withOpacity(0.6),
                           )
                         ],
                         borderRadius: BorderRadius.circular(8),
@@ -243,7 +244,7 @@ class _SearchState extends State<Search> {
         padding:
             const EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 6),
         child: ListTile(
-          onTap: _onTap(venue),
+          onTap: _goToVenuePage(venue),
           title: Text(
             venue.name,
             style: Theme.of(context).textTheme.titleMedium,
@@ -286,9 +287,18 @@ class _SearchState extends State<Search> {
           runSpacing: 8,
           children: List<Widget>.generate(chipsOptions.length, (index) {
             return FilterChip(
-              label: Text(chipsOptions[index]),
-              elevation: 3,
+              label: Text(
+                chipsOptions[index],
+                style: TextStyle(
+                  color: selectedChips![index]
+                      ? Theme.of(context).colorScheme.background
+                      : Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
+              elevation: 5,
               selectedColor: Theme.of(context).colorScheme.primary,
+              backgroundColor:
+                  Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
               showCheckmark: false,
               selected: selectedChips == null ? false : selectedChips![index],
               onSelected: (bool selected) {

@@ -36,10 +36,13 @@ class _NearbyState extends State<Nearby> {
     super.initState();
     if (widget.userEmail != null) setState(() => email = widget.userEmail);
 
+    debugPrint(
+        'User location: ${widget.userLocation?.latitude}, ${widget.userLocation?.longitude}');
     osmMapController = MapController(
       initPosition: GeoPoint(
-          latitude: widget.userLocation?.latitude ?? 0,
-          longitude: widget.userLocation?.longitude ?? 0),
+        latitude: widget.userLocation?.latitude ?? 45.815399,
+        longitude: widget.userLocation?.longitude ?? 15.966568,
+      ),
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
@@ -73,35 +76,21 @@ class _NearbyState extends State<Nearby> {
                           isPicker: false,
                           showContributorBadgeForOSM: true,
                           userTrackingOption: const UserTrackingOption(
-                              enableTracking: true, unFollowUser: false),
+                            enableTracking: true,
+                            unFollowUser: false,
+                          ),
                           zoomOption: const ZoomOption(
                             initZoom: 16,
                             minZoomLevel: 2,
                             maxZoomLevel: 19,
                             stepZoom: 10,
                           ),
-                          userLocationMarker: UserLocationMaker(
-                              personMarker: const MarkerIcon(
-                                  icon: Icon(
-                                CupertinoIcons.location_solid,
-                                color: AppThemes.accent1,
-                                size: 32,
-                              )),
-                              directionArrowMarker: const MarkerIcon(
-                                  icon: Icon(
-                                CupertinoIcons.location_solid,
-                                color: AppThemes.accent1,
-                                size: 32,
-                              ))),
-                          roadConfiguration: const RoadOption(
-                            roadColor: Colors.yellowAccent,
-                          ),
                           markerOption: MarkerOption(
                               defaultMarker: const MarkerIcon(
                                   icon: Icon(
-                            CupertinoIcons.person_circle,
-                            color: Colors.blue,
-                            size: 56,
+                            CupertinoIcons.location_solid,
+                            color: AppThemes.accent1,
+                            size: 32,
                           )))),
                     ),
                   )

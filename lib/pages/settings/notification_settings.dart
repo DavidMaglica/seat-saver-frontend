@@ -31,6 +31,8 @@ class _NotificationSettingsState extends State<NotificationSettings> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  AccountApi accountApi = AccountApi();
+
   @override
   void initState() {
     super.initState();
@@ -40,13 +42,12 @@ class _NotificationSettingsState extends State<NotificationSettings> {
 
   @override
   void dispose() {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
   }
 
   Future<void> _getNotificationSettingsByEmail() async {
     NotificationOptions response =
-        await getNotificationOptions(widget.user.email);
+        await accountApi.getNotificationOptions(widget.user.email);
 
     setState(() {
       _isActivePushNotifications = response.pushNotificationsTurnedOn;
@@ -56,7 +57,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
   }
 
   Future<void> _saveChanges() async {
-    BasicResponse response = await updateUserNotificationOptions(
+    BasicResponse response = await accountApi.updateUserNotificationOptions(
       widget.user.email,
       _isActivePushNotifications,
       _isActiveEmailNotifications,
@@ -76,7 +77,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: CustomAppbar(
         title: 'Notification settings',
         routeToPush: Routes.ACCOUNT,
@@ -106,7 +107,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                   'Receive Push notifications from our application on a semi regular basis.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                tileColor: Theme.of(context).colorScheme.background,
+                tileColor: Theme.of(context).colorScheme.surface,
                 activeTrackColor: Theme.of(context).colorScheme.primary,
                 inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
                 dense: false,
@@ -126,7 +127,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                   'Receive email notifications from our marketing team about new features.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                tileColor: Theme.of(context).colorScheme.background,
+                tileColor: Theme.of(context).colorScheme.surface,
                 activeTrackColor: Theme.of(context).colorScheme.primary,
                 inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
                 dense: false,
@@ -146,7 +147,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                   'Allow us to track your location, this helps keep track of spending and keeps you safe.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                tileColor: Theme.of(context).colorScheme.background,
+                tileColor: Theme.of(context).colorScheme.surface,
                 activeTrackColor: Theme.of(context).colorScheme.primary,
                 inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
                 dense: false,
@@ -154,7 +155,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                 contentPadding:
                     const EdgeInsetsDirectional.fromSTEB(24, 12, 24, 12),
               ),
-              buildActionButton(context, 'Save Changes', _saveChanges, null),
+              ActionButton(title: 'Save Changes', onPressed: _saveChanges),
             ],
           ),
         ),
