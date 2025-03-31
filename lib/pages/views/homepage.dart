@@ -6,6 +6,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../api/account_api.dart';
+import '../../api/data/notification_settings.dart';
 import '../../api/data/user.dart';
 import '../../api/data/user_location.dart';
 import '../../api/data/user_response.dart';
@@ -65,6 +66,10 @@ class _HomepageState extends State<Homepage> {
       _displayLocationPermissionPopUp(locationPopUpCounter);
     }
 
+    if (widget.userEmail != null && widget.userEmail?.isNotEmpty == true) {
+      _updateUserLocation(widget.userEmail!);
+    }
+
     _resolveNearbyCities();
 
     _getNearbyVenues();
@@ -114,6 +119,16 @@ class _HomepageState extends State<Homepage> {
                   }),
             });
       }
+    }
+  }
+
+  void _updateUserLocation(String userEmail) async {
+    NotificationOptions options =
+        await accountApi.getNotificationOptions(userEmail);
+    if (options.locationServicesTurnedOn) {
+      Position userLocation = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+      accountApi.updateUserLocation(userEmail, userLocation);
     }
   }
 
