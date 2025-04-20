@@ -1,14 +1,12 @@
-// ignore_for_file: constant_identifier_names
-
 class Venue {
   final int id;
   final String name;
   final String location;
   final String workingHours;
   final double rating;
-  final VenueType type;
-  final String description;
-  final List<String> imageLinks;
+  final int typeId;
+  String? description;
+  // final List<String> imageLinks;
 
   Venue({
     required this.id,
@@ -16,9 +14,9 @@ class Venue {
     required this.location,
     required this.workingHours,
     required this.rating,
-    required this.type,
-    required this.description,
-    required this.imageLinks,
+    required this.typeId,
+    this.description,
+    // required this.imageLinks,
   });
 
   factory Venue.fromMap(Map<String, dynamic> map) {
@@ -27,10 +25,10 @@ class Venue {
       name: map['name'],
       location: map['location'],
       workingHours: map['workingHours'],
-      rating: map['rating'],
-      type: map['type'],
+      rating: map['averageRating'],
+      typeId: map['venueTypeId'],
       description: map['description'],
-      imageLinks: map['imageLinks'],
+      // imageLinks: map['imageLinks'],
     );
   }
 
@@ -41,15 +39,15 @@ class Venue {
       'location': location,
       'workingHours': workingHours,
       'rating': rating,
-      'type': type,
+      'type': typeId,
       'description': description,
-      'imageLinks': imageLinks,
+      // 'imageLinks': imageLinks,
     };
   }
 
   @override
   String toString() {
-    return 'Venue(id: $id, name: $name, location: $location, workingHours: $workingHours, rating: $rating, type: $type, description: $description)';
+    return 'Venue(id: $id, name: $name, location: $location, workingHours: $workingHours, rating: $rating, type: $typeId, description: $description)';
   }
 
   @override
@@ -62,7 +60,7 @@ class Venue {
         other.location == location &&
         other.workingHours == workingHours &&
         other.rating == rating &&
-        other.type == type &&
+        other.typeId == typeId &&
         other.description == description;
   }
 
@@ -73,12 +71,12 @@ class Venue {
         location.hashCode ^
         workingHours.hashCode ^
         rating.hashCode ^
-        type.hashCode ^
+        typeId.hashCode ^
         description.hashCode;
   }
 }
 
-enum VenueType {
+enum VenueTypeEnum {
   italian,
   asian,
   gluten_free,

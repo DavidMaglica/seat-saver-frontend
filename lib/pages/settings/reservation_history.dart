@@ -137,7 +137,7 @@ class _ReservationHistoryState extends State<ReservationHistory> {
               InkWell(
                   onTap: () {
                     _openReservationDetailsBottomSheet(
-                        reservation.venueName,
+                        reservation.venueId,
                         reservation.numberOfGuests,
                         reservation.reservationDateTime);
                   },
@@ -190,7 +190,7 @@ class _ReservationHistoryState extends State<ReservationHistory> {
   }
 
   void _openReservationDetailsBottomSheet(
-          String venueName, int numberOfGuests, DateTime reservationDateTime) =>
+          int venueId, int numberOfGuests, DateTime reservationDateTime) =>
       showModalBottomSheet(
           context: context,
           isScrollControlled: true,
@@ -205,7 +205,7 @@ class _ReservationHistoryState extends State<ReservationHistory> {
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                   buildModalTitle('Reservation detail', context),
                   const SizedBox(height: 16),
-                  _buildDetails(venueName, numberOfGuests, reservationDateTime),
+                  _buildDetails(venueId, numberOfGuests, reservationDateTime),
                   Padding(
                       padding:
                           const EdgeInsetsDirectional.symmetric(horizontal: 24),
@@ -222,7 +222,7 @@ class _ReservationHistoryState extends State<ReservationHistory> {
           });
 
   Padding _buildDetails(
-    String venueName,
+    int venueId,
     int numberOfGuests,
     DateTime reservationDateTime,
   ) =>
@@ -230,7 +230,7 @@ class _ReservationHistoryState extends State<ReservationHistory> {
           padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
           child: Column(
             children: [
-              _buildDetailRow('Venue', venueName),
+              _buildDetailRow('Venue', venueId.toString()),
               _buildDivider(),
               _buildDetailRow('Number of guests', numberOfGuests.toString()),
               _buildDivider(),

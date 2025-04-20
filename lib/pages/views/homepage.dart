@@ -216,11 +216,11 @@ class _HomepageState extends State<Homepage> {
     return;
   }
 
-  Future<void> _searchByCategory(VenueType category) =>
+  Future<void> _searchByCategory(VenueTypeEnum category) =>
       Navigator.pushNamed(context, Routes.SEARCH, arguments: {
         'userEmail': widget.userEmail,
         'userLocation': widget.userLocation,
-        'selectedChip': category.toString(),
+        'selectedVenueType': null,
       });
 
   @override
@@ -391,12 +391,7 @@ class _HomepageState extends State<Homepage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   child: VenueCard(
-                    venueName: venue.name,
-                    location: venue.location,
-                    workingHours: venue.workingHours,
-                    rating: venue.rating,
-                    type: venue.type,
-                    description: venue.description,
+                    venue: venue,
                     userEmail: widget.userEmail,
                     userLocation: widget.userLocation,
                   ),
@@ -415,12 +410,7 @@ class _HomepageState extends State<Homepage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   child: VenueSuggestedCard(
-                    venueName: venue.name,
-                    location: venue.location,
-                    workingHours: venue.workingHours,
-                    rating: venue.rating,
-                    type: venue.type,
-                    description: venue.description,
+                    venue: venue,
                     userEmail: widget.userEmail,
                     userLocation: widget.userLocation,
                   ),
@@ -457,14 +447,14 @@ class _HomepageState extends State<Homepage> {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
-                            children: VenueType.values
+                            children: VenueTypeEnum.values
                                 .map((category) => _buildCategoryCard(category))
                                 .toList(),
                           )))
                 ]))
           ]));
 
-  InkWell _buildCategoryCard(VenueType category) => InkWell(
+  InkWell _buildCategoryCard(VenueTypeEnum category) => InkWell(
       onTap: () => _searchByCategory(category),
       child: Align(
           alignment: AlignmentDirectional.center,

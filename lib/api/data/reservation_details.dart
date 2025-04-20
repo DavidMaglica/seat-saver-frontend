@@ -1,17 +1,17 @@
 class ReservationDetails {
-  final String venueName;
+  final int venueId;
   final int numberOfGuests;
   final DateTime reservationDateTime;
 
   ReservationDetails({
-    required this.venueName,
+    required this.venueId,
     required this.numberOfGuests,
     required this.reservationDateTime,
   });
 
   factory ReservationDetails.fromMap(Map<String, dynamic> json) {
     return ReservationDetails(
-      venueName: json['venueName'],
+      venueId: json['venueId'],
       numberOfGuests: json['numberOfGuests'],
       reservationDateTime: DateTime.parse(json['reservationDate']),
     );

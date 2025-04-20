@@ -1,3 +1,5 @@
+import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/extension.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../api/data/venue.dart';
 import '../../api/reservation_api.dart';
 import '../../api/venue_api.dart';
 import '../../components/custom_appbar.dart';
@@ -15,24 +18,14 @@ import '../../utils/full_image_view.dart';
 import '../../utils/toaster.dart';
 
 class VenuePage extends StatefulWidget {
-  final String venueName;
-  final String location;
-  final String workingHours;
-  final double rating;
-  final String type;
-  final String description;
+  final int venueId;
   final List<String>? imageLinks;
   final String? userEmail;
   final Position? userLocation;
 
   const VenuePage({
     Key? key,
-    required this.venueName,
-    required this.location,
-    required this.workingHours,
-    required this.rating,
-    required this.type,
-    required this.description,
+    required this.venueId,
     this.imageLinks,
     this.userEmail,
     this.userLocation,
@@ -49,6 +42,16 @@ class _VenuePageState extends State<VenuePage> {
   int? _selectedMinute;
   int? _selectedNumberOfGuests;
   List<String>? _venueImages;
+  String _venueType = '';
+  Venue _venue = Venue(
+    id: 0,
+    name: '',
+    typeId: 0,
+    location: '',
+    description: '',
+    workingHours: '',
+    rating: 0.0,
+  );
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -58,16 +61,28 @@ class _VenuePageState extends State<VenuePage> {
   @override
   void initState() {
     super.initState();
-    _images = venueApi.getImages();
-    if (widget.imageLinks == null) {
-      _venueImages = venueApi.getVenueImages(widget.venueName);
-    }
+    _loadVenueDetails(widget.venueId);
   }
 
   @override
   void dispose() {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
+  }
+
+  void _loadVenueDetails(int venueId) async {
+    Venue venue = await venueApi.getVenue(venueId);
+    safeSetState(() {
+      _venue = venue;
+    });
+
+    venueApi.getVenueType(venue.typeId).then((value) => safeSetState(() {
+          _venueType = value;
+        }));
+
+    _images = venueApi.getImages();
+    if (widget.imageLinks == null) {
+      _venueImages = venueApi.getVenueImages(_venue.name);
+    }
   }
 
   bool _validateInput() {
@@ -100,13 +115,13 @@ class _VenuePageState extends State<VenuePage> {
       _selectedMinute == 0 ? 0 : 30,
     );
 
-    reservationApi.addReservation(widget.userEmail!, widget.venueName,
+    reservationApi.addReservation(widget.userEmail!, _venue.id,
         _selectedNumberOfGuests!, reservationDateTime);
 
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
     Navigator.pushNamed(context, Routes.SUCCESSFUL_RESERVATION, arguments: {
-      'venueName': widget.venueName,
+      'venueName': _venue.name,
       'numberOfGuests': _selectedNumberOfGuests,
       'reservationDateTime': reservationDateTime,
       'userEmail': widget.userEmail,
@@ -116,8 +131,20 @@ class _VenuePageState extends State<VenuePage> {
     return;
   }
 
-  void _rateVenue() {
-    Toaster.displayWarning(context, 'Feature not implemented yet');
+  void _rateVenue(double newRating) async {
+    BasicResponse response =
+        await venueApi.rateVenue(widget.venueId, newRating);
+    if (response.success) {
+      if (!mounted) {
+        return;
+      }
+      Toaster.displaySuccess(context, 'Rating submitted successfully');
+    } else {
+      if (!mounted) {
+        return;
+      }
+      Toaster.displayError(context, 'Failed to submit rating');
+    }
   }
 
   @override
@@ -128,7 +155,7 @@ class _VenuePageState extends State<VenuePage> {
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppbar(
-          title: widget.venueName,
+          title: _venue.name,
           routeToPush: Routes.HOMEPAGE,
           args: {
             'userEmail': widget.userEmail,
@@ -162,9 +189,8 @@ class _VenuePageState extends State<VenuePage> {
                       _buildHeadingImage(widget.imageLinks != null
                           ? widget.imageLinks![0]
                           : _venueImages![0]),
-                      _buildObjectDetails(widget.venueName, widget.type,
-                          widget.location, widget.workingHours, widget.rating),
-                      _buildObjectDescription(widget.description),
+                      _buildObjectDetails(_venue, _venueType),
+                      _buildObjectDescription(_venue.description),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -202,6 +228,7 @@ class _VenuePageState extends State<VenuePage> {
         padding: const EdgeInsetsDirectional.fromSTEB(32, 0, 0, 0),
         child: InkWell(
           onTap: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => FullScreenImageView(
@@ -223,13 +250,13 @@ class _VenuePageState extends State<VenuePage> {
         ),
       );
 
-  Flexible _buildObjectDescription(String description) => Flexible(
+  Flexible _buildObjectDescription(String? description) => Flexible(
         child: Align(
           alignment: const AlignmentDirectional(-1, 0),
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 16),
             child: Text(
-              description,
+              description ?? 'No description available',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontStyle: FontStyle.italic,
                   ),
@@ -244,7 +271,7 @@ class _VenuePageState extends State<VenuePage> {
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 0, 8),
             child: FFButtonWidget(
-              onPressed: () => _rateVenue,
+              onPressed: () => _buildRatingModal(),
               text: 'Leave a rating',
               options: FFButtonOptions(
                 width: 128,
@@ -267,20 +294,69 @@ class _VenuePageState extends State<VenuePage> {
         ),
       );
 
-  Padding _buildObjectDetails(String name, String type, String location,
-          String workingHours, double rating) =>
-      Padding(
+  Future<dynamic> _buildRatingModal() {
+    return showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 264,
+          width: double.infinity,
+          color: Theme.of(context).colorScheme.background,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                  height: 172,
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.only(top: 72),
+                    child: RatingBar.builder(
+                      onRatingUpdate: (newRating) => _rateVenue(newRating),
+                      itemBuilder: (context, index) => Icon(
+                        CupertinoIcons.star_fill,
+                        color: Theme.of(context).colorScheme.onTertiary,
+                      ),
+                      unratedColor: const Color(0xFF57636C).withOpacity(0.5),
+                      direction: Axis.horizontal,
+                      glow: false,
+                      ignoreGestures: false,
+                      initialRating: 0,
+                      itemSize: 48,
+                      allowHalfRating: true,
+                    ),
+                  )),
+              SizedBox(
+                height: 50,
+                child: CupertinoButton(
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Padding _buildObjectDetails(Venue venue, String type) => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
         child: Column(
           children: [
             Text(
-              name.toUpperCase(),
+              venue.name.toUpperCase(),
               style: Theme.of(context).textTheme.titleLarge,
             ),
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
               child: Text(
-                type,
+                type.toFormattedUpperCase(),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context)
                           .colorScheme
@@ -292,7 +368,7 @@ class _VenuePageState extends State<VenuePage> {
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
               child: Text(
-                location,
+                venue.location,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context)
                           .colorScheme
@@ -304,7 +380,7 @@ class _VenuePageState extends State<VenuePage> {
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
               child: Text(
-                'Working hours: $workingHours',
+                'Working hours: ${venue.workingHours}',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       decoration: TextDecoration.underline,
                     ),
@@ -313,7 +389,9 @@ class _VenuePageState extends State<VenuePage> {
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
               child: RatingBar.builder(
-                onRatingUpdate: (value) => {},
+                onRatingUpdate: (value) => {
+                  debugPrint('Rating: $value'),
+                },
                 itemBuilder: (context, index) => Icon(
                   CupertinoIcons.star_fill,
                   color: Theme.of(context).colorScheme.onTertiary,
@@ -322,7 +400,7 @@ class _VenuePageState extends State<VenuePage> {
                 direction: Axis.horizontal,
                 glow: false,
                 ignoreGestures: true,
-                initialRating: rating,
+                initialRating: venue.rating,
                 itemSize: 24,
                 allowHalfRating: true,
               ),
@@ -610,6 +688,7 @@ class _VenuePageState extends State<VenuePage> {
             final imageUrl = imageUrls[index];
             return InkWell(
               onTap: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => FullScreenImageView(
