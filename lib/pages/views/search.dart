@@ -43,8 +43,7 @@ class _SearchState extends State<Search> {
   @override
   void initState() {
     super.initState();
-    _loadVenueTypes();
-    _getAllVenues();
+    _loadVenues();
   }
 
   @override
@@ -53,7 +52,7 @@ class _SearchState extends State<Search> {
     super.dispose();
   }
 
-  Future<void> _loadVenueTypes() async {
+  Future<void> _loadVenues() async {
     final venueTypes = await venueApi.getAllVenueTypes();
 
     setState(() {
@@ -62,13 +61,23 @@ class _SearchState extends State<Search> {
       };
       _venueTypeOptions = _venueTypeMap.values.toList();
     });
+
+    await _getAllVenues();
+
+    if (widget.selectedVenueType != null) {
+      final selectedType = _venueTypeMap[widget.selectedVenueType];
+      if (selectedType != null) {
+        _selectedTypes.add(selectedType);
+        _filterVenues(_selectedTypes);
+      }
+    }
   }
 
-  void _getAllVenues() {
-    venueApi.getAllVenuesFromApi().then((venues) {
-      venues.sort((a, b) => a.name.compareTo(b.name));
-      safeSetState(() => _allVenues = venues);
-    });
+  Future<void> _getAllVenues() async {
+    final venues = await venueApi.getAllVenuesFromApi();
+    venues.sort((a, b) => a.name.compareTo(b.name));
+
+    safeSetState(() => _allVenues = venues);
   }
 
   void _search(String value) {

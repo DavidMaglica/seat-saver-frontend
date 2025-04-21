@@ -1,3 +1,4 @@
+import 'package:TableReserver/utils/utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -55,10 +56,21 @@ class _HomepageState extends State<Homepage> {
   GeolocationApi geolocationApi = GeolocationApi();
   VenueApi venueApi = VenueApi();
 
+  Map<int, String> _venueTypeMap = {};
+
+  @override
+  void dispose() {
+    unfocusNode.dispose();
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
     int locationPopUpCounter = 0;
+
+    _loadVenueTypes();
 
     _checkLogin();
 
@@ -76,6 +88,16 @@ class _HomepageState extends State<Homepage> {
     _getNewVenues();
     _getTrendingVenues();
     _getSuggestedVenues();
+  }
+
+  Future<void> _loadVenueTypes() async {
+    final venueTypes = await venueApi.getAllVenueTypes();
+
+    setState(() {
+      _venueTypeMap = {
+        for (var type in venueTypes) type.id: type.type.toTitleCase(),
+      };
+    });
   }
 
   void _resolveNearbyCities() {
@@ -141,13 +163,6 @@ class _HomepageState extends State<Homepage> {
         });
       }
     }
-  }
-
-  @override
-  void dispose() {
-    unfocusNode.dispose();
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    super.dispose();
   }
 
   void _getNearbyVenues() async {
@@ -216,11 +231,11 @@ class _HomepageState extends State<Homepage> {
     return;
   }
 
-  Future<void> _searchByCategory(VenueTypeEnum category) =>
+  Future<void> _searchByVenueType(int venueTypeId) =>
       Navigator.pushNamed(context, Routes.SEARCH, arguments: {
         'userEmail': widget.userEmail,
         'userLocation': widget.userLocation,
-        'selectedVenueType': null,
+        'selectedVenueType': venueTypeId,
       });
 
   @override
@@ -419,77 +434,58 @@ class _HomepageState extends State<Homepage> {
 
   Padding _buildCategories() => Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 72),
-      child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-                child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 12),
-                        child: Text('Categories',
-                            style: Theme.of(context).textTheme.titleMedium),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: VenueTypeEnum.values
-                                .map((category) => _buildCategoryCard(category))
-                                .toList(),
-                          )))
-                ]))
-          ]));
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 12),
+          child: Text('Categories',
+              style: Theme.of(context).textTheme.titleMedium),
+        ),
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: _venueTypeMap.entries
+                      .map(
+                          (entry) => _buildCategoryCard(entry.key, entry.value))
+                      .toList(),
+                ))),
+      ]));
 
-  InkWell _buildCategoryCard(VenueTypeEnum category) => InkWell(
-      onTap: () => _searchByCategory(category),
-      child: Align(
-          alignment: AlignmentDirectional.center,
-          child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                  width: 140,
-                  child: Card(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        side: BorderSide(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          width: 2,
+  InkWell _buildCategoryCard(int id, String label) => InkWell(
+      onTap: () => _searchByVenueType(id),
+      child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+              width: 140,
+              child: Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      width: 2,
+                    ),
+                  ),
+                  child: Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      Container(
+                        width: 128,
+                        height: 128,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.background,
+                          borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      child: Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: [
-                          Container(
-                            width: 128,
-                            height: 128,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.background,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          Center(
-                              child: Text(
-                            category.toString(),
-                            style: Theme.of(context).textTheme.titleSmall,
-                            textAlign: TextAlign.center,
-                          ))
-                        ],
-                      ))))));
+                      Center(
+                          child: Text(
+                        label.toTitleCase(),
+                        style: Theme.of(context).textTheme.titleSmall,
+                        textAlign: TextAlign.center,
+                      ))
+                    ],
+                  )))));
 
   Padding _buildTitle(String title) => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
