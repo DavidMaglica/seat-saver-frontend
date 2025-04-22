@@ -1,3 +1,4 @@
+import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -10,23 +11,13 @@ import '../themes/theme.dart';
 import '../utils/constants.dart';
 
 class VenueSuggestedCard extends StatefulWidget {
-  final String venueName;
-  final String location;
-  final String workingHours;
-  final double rating;
-  final VenueType type;
-  final String description;
+  final Venue venue;
   final String? userEmail;
   final Position? userLocation;
 
   const VenueSuggestedCard({
     Key? key,
-    required this.venueName,
-    required this.location,
-    required this.workingHours,
-    required this.rating,
-    required this.type,
-    required this.description,
+    required this.venue,
     this.userEmail,
     this.userLocation,
   }) : super(key: key);
@@ -37,6 +28,7 @@ class VenueSuggestedCard extends StatefulWidget {
 
 class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
   List<String>? _venueImages;
+  String _venueType = '';
 
   VenueApi venueApi = VenueApi();
 
@@ -47,8 +39,11 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   @override
   void initState() {
-    List<String> venueImages = venueApi.getVenueImages(widget.venueName);
+    List<String> venueImages = venueApi.getVenueImages(widget.venue.name);
     setState(() => _venueImages = venueImages);
+    venueApi.getVenueType(widget.venue.typeId).then((value) => setState(() {
+          _venueType = value;
+        }));
     super.initState();
   }
 
@@ -59,13 +54,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   void _openVenuePage() =>
       Navigator.pushNamed(context, Routes.VENUE, arguments: {
-        'venueName': widget.venueName,
-        'location': widget.location,
-        'workingHours': widget.workingHours,
-        'rating': widget.rating,
-        'type': widget.type.toString(),
-        'description': widget.description,
-        'imageLinks': _venueImages,
+        'venueId': widget.venue.id,
         'userEmail': widget.userEmail,
         'userLocation': widget.userLocation,
       });
@@ -101,10 +90,10 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
                 child: Column(
                   children: [
                     _buildImage(),
-                    _buildNameAndType(widget.venueName, widget.type),
+                    _buildNameAndType(widget.venue.name, _venueType),
                     _buildLocationAndWorkingHours(
-                        widget.location, widget.workingHours),
-                    _buildRatingBar(widget.rating),
+                        widget.venue.location, widget.venue.workingHours),
+                    _buildRatingBar(widget.venue.rating),
                   ],
                 )),
           ),
@@ -128,7 +117,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
             fit: BoxFit.cover,
           )));
 
-  Padding _buildNameAndType(String name, VenueType type) => Padding(
+  Padding _buildNameAndType(String name, String type) => Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -140,7 +129,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
                   .textTheme
                   .titleSmall
                   ?.copyWith(color: AppThemes.accent1)),
-          Text(type.toString(),
+          Text(type.isNotEmpty ? type.toTitleCase() : '',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onPrimary,
                 fontWeight: FontWeight.w800,

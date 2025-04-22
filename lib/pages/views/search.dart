@@ -1,3 +1,4 @@
+import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
@@ -6,19 +7,20 @@ import 'package:geolocator/geolocator.dart';
 import '../../api/data/venue.dart';
 import '../../api/venue_api.dart';
 import '../../components/navbar.dart';
+import '../../themes/theme.dart';
 import '../../utils/constants.dart';
 import '../../utils/routing_utils.dart';
 
 class Search extends StatefulWidget {
   final String? userEmail;
   final Position? userLocation;
-  final String? selectedChip;
+  final int? selectedVenueType;
 
   const Search({
     Key? key,
     this.userEmail,
     this.userLocation,
-    this.selectedChip,
+    this.selectedVenueType,
   }) : super(key: key);
 
   @override
@@ -27,81 +29,59 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   final unfocusNode = FocusNode();
-
   final int pageIndex = 1;
 
-  List<String> _chipsOptions = [];
-
-  TextEditingController? searchBarController;
-
+  List<String> _venueTypeOptions = [];
+  List<String> _selectedTypes = [];
   List<Venue> _allVenues = [];
-  List<bool>? selectedChips = [];
+  late final TextEditingController searchBarController = TextEditingController();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final VenueApi venueApi = VenueApi();
 
-  VenueApi venueApi = VenueApi();
+  Map<int, String> _venueTypeMap = {};
 
   @override
   void initState() {
     super.initState();
-    _getChipsChoice();
-    _getAllVenues();
-
-    if (widget.selectedChip != null) {
-      final index = _chipsOptions.indexOf(widget.selectedChip!);
-      selectedChips = List.generate(_chipsOptions.length, (index) => false);
-      selectedChips![index] = true;
-    }
-
-    if (selectedChips != null) {
-      _filterVenues(selectedChips);
-    }
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    _loadVenues();
   }
 
   @override
   void dispose() {
+    searchBarController.dispose();
     unfocusNode.dispose();
     super.dispose();
   }
 
-  void _filterVenues(List<bool>? selectedChips) async {
-    if (selectedChips == null) {
-      return;
-    }
+  Future<void> _loadVenues() async {
+    final venueTypes = await venueApi.getAllVenueTypes();
+    final venues = await venueApi.getAllVenuesFromApi();
+    venues.sort((a, b) => a.name.compareTo(b.name));
 
-    final selectedTypes = <VenueType>[];
-    for (var i = 0; i < selectedChips.length; i++) {
-      if (selectedChips[i]) {
-        selectedTypes.add(VenueType.values[i]);
-      }
-    }
-
-    if (selectedTypes.isEmpty) {
-      _getAllVenues();
-      return;
-    }
-
-    List<Venue> filteredVenues = await venueApi.getVenuesByType(selectedTypes);
-
-    safeSetState(() {
-      _allVenues = filteredVenues;
-    });
-  }
-
-  void _getChipsChoice() {
-    List<String> options =
-        VenueType.values.map((type) => type.toString()).toList();
     setState(() {
-      _chipsOptions = options;
-      selectedChips = List.generate(options.length, (index) => false);
+      _venueTypeMap = {
+        for (var type in venueTypes) type.id: type.type.toTitleCase(),
+      };
+      _venueTypeOptions = _venueTypeMap.values.toList();
+      _allVenues = venues;
+
+      final selectedType = _venueTypeMap[widget.selectedVenueType];
+      if (selectedType != null) {
+        _selectedTypes.add(selectedType);
+        _allVenues = venues
+            .where((venue) => venue.typeId == widget.selectedVenueType)
+            .toList();
+      }
     });
   }
 
-  void _getAllVenues() => venueApi.getSortedVenues().then((value) => safeSetState(() {
-        _allVenues = value;
-      }));
+  Future<void> _getAllVenues() async {
+    final venues = await venueApi.getAllVenuesFromApi();
+    venues.sort((a, b) => a.name.compareTo(b.name));
+
+    safeSetState(() => _allVenues = venues);
+  }
 
   void _search(String value) {
     if (value.isEmpty) {
@@ -109,25 +89,37 @@ class _SearchState extends State<Search> {
       return;
     }
 
-    List<Venue> filteredVenues = _allVenues
+    final filtered = _allVenues
         .where(
             (venue) => venue.name.toLowerCase().contains(value.toLowerCase()))
         .toList();
 
-    safeSetState(() {
-      _allVenues = filteredVenues;
-    });
+    safeSetState(() => _allVenues = filtered);
+  }
+
+  void _filterVenues(List<String> selectedTypeLabels) {
+    if (selectedTypeLabels.isEmpty) {
+      _getAllVenues();
+      return;
+    }
+
+    final selectedTypeIds = _venueTypeMap.entries
+        .where((e) => selectedTypeLabels.contains(e.value))
+        .map((e) => e.key)
+        .toList();
+
+    final filteredVenues = _allVenues
+        .where((venue) => selectedTypeIds.contains(venue.typeId))
+        .toList();
+
+    safeSetState(() => _allVenues = filteredVenues);
   }
 
   Function() _goToVenuePage(Venue venue) =>
       () => Navigator.pushNamed(context, Routes.VENUE, arguments: {
-            'venueName': venue.name,
-            'location': venue.location,
-            'workingHours': venue.workingHours,
-            'rating': venue.rating,
-            'type': venue.type.toString(),
-            'description': venue.description,
+            'venueId': venue.id,
             'userEmail': widget.userEmail,
+            'userLocation': widget.userLocation,
           });
 
   @override
@@ -146,49 +138,53 @@ class _SearchState extends State<Search> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _buildSearchBar(searchBarController),
-                Flexible(
-                  child: _buildChoiceChips(_chipsOptions),
-                ),
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.all(12),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 10,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimary
-                                .withOpacity(0.6),
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(8),
-                        shape: BoxShape.rectangle,
-                      ),
-                      child: Padding(
-                          padding: const EdgeInsetsDirectional.symmetric(
-                              vertical: 12),
-                          child: _allVenues.isNotEmpty
-                              ? ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: _allVenues.length,
-                                  itemBuilder: (context, index) {
-                                    return Column(children: [
-                                      _buildListTitle(_allVenues[index]),
-                                      if (index < _allVenues.length - 1)
-                                        _buildDivider(),
-                                    ]);
-                                  })
-                              : const Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: Text('No venues available'),
-                                  ),
-                                )),
+                _buildFilterDropdown(),
+                Padding(
+                  padding: const EdgeInsetsDirectional.all(12),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 10,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onPrimary
+                              .withOpacity(0.6),
+                        )
+                      ],
+                      borderRadius: BorderRadius.circular(8),
+                      shape: BoxShape.rectangle,
+                    ),
+                    child: Padding(
+                      padding:
+                          const EdgeInsetsDirectional.symmetric(vertical: 12),
+                      child: _allVenues.isNotEmpty
+                          ? ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: _allVenues.length,
+                              itemBuilder: (context, index) {
+                                Venue venue = _allVenues[index];
+                                String venueType =
+                                    _venueTypeMap[venue.typeId] ?? 'Loading...';
+
+                                return Column(
+                                  children: [
+                                    _buildListTitle(venue, venueType),
+                                    if (index < _allVenues.length - 1)
+                                      _buildDivider(),
+                                  ],
+                                );
+                              },
+                            )
+                          : const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text('No venues available'),
+                              ),
+                            ),
                     ),
                   ),
                 ),
@@ -218,7 +214,11 @@ class _SearchState extends State<Search> {
                   controller: controller,
                   decoration: InputDecoration(
                     hintText: 'Search',
-                    hintStyle: Theme.of(context).textTheme.bodyLarge,
+                    hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onPrimary
+                            .withOpacity(0.5)),
                     prefixIcon: const Icon(CupertinoIcons.search),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
@@ -240,7 +240,7 @@ class _SearchState extends State<Search> {
         ),
       );
 
-  Padding _buildListTitle(Venue venue) => Padding(
+  Padding _buildListTitle(Venue venue, String? venueType) => Padding(
         padding:
             const EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 6),
         child: ListTile(
@@ -250,7 +250,7 @@ class _SearchState extends State<Search> {
             style: Theme.of(context).textTheme.titleMedium,
           ),
           subtitle: Text(
-            venue.type.toString(),
+            venueType != null ? venueType.toTitleCase() : 'Loading...',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color:
                       Theme.of(context).colorScheme.onPrimary.withOpacity(.6),
@@ -278,37 +278,188 @@ class _SearchState extends State<Search> {
         ),
       );
 
-  Padding _buildChoiceChips(List<String> chipsOptions) => Padding(
-        padding:
-            const EdgeInsetsDirectional.symmetric(vertical: 12, horizontal: 2),
-        child: Wrap(
-          alignment: WrapAlignment.spaceEvenly,
-          spacing: 8,
-          runSpacing: 8,
-          children: List<Widget>.generate(chipsOptions.length, (index) {
-            return FilterChip(
-              label: Text(
-                chipsOptions[index],
-                style: TextStyle(
-                  color: selectedChips![index]
-                      ? Theme.of(context).colorScheme.background
-                      : Theme.of(context).colorScheme.onPrimary,
+  Widget _buildFilterDropdown() => Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: GestureDetector(
+          onTap: _showTypeFilter,
+          child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceVariant,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildDropdownText(),
+                    _buildDropdownIcon(),
+                  ]))));
+
+  Icon _buildDropdownIcon() =>
+      const Icon(CupertinoIcons.chevron_down, size: 16);
+
+  Expanded _buildDropdownText() => Expanded(
+        child: Text(
+          _selectedTypes.isEmpty ? 'Filter by type' : _selectedTypes.join(', '),
+          style: TextStyle(
+            color: _selectedTypes.isEmpty
+                ? Theme.of(context).colorScheme.onSecondary
+                : Theme.of(context).colorScheme.onPrimary,
+            fontWeight:
+                _selectedTypes.isEmpty ? FontWeight.w200 : FontWeight.w400,
+          ),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+      );
+
+  void _showTypeFilter() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        List<String> tempSelected = [..._selectedTypes];
+
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              height: 456,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.background,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
                 ),
               ),
-              elevation: 5,
-              selectedColor: Theme.of(context).colorScheme.primary,
-              backgroundColor:
-                  Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-              showCheckmark: false,
-              selected: selectedChips == null ? false : selectedChips![index],
-              onSelected: (bool selected) {
-                setState(() {
-                  selectedChips?[index] = selected;
-                });
-                _filterVenues(selectedChips);
-              },
+              child: Column(
+                children: [
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: CupertinoScrollbar(
+                      child: ListView(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        children: _venueTypeOptions.map((type) {
+                          final isSelected = tempSelected.contains(type);
+                          return GestureDetector(
+                            onTap: () {
+                              setModalState(() {
+                                isSelected
+                                    ? tempSelected.remove(type)
+                                    : tempSelected.add(type);
+                              });
+                            },
+                            child: _buildDropdownItem(
+                              type,
+                              isSelected,
+                              setModalState,
+                              tempSelected,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      _buildBorderedButton('Apply', AppThemes.successColor, () {
+                        Navigator.pop(context);
+                        setState(() {
+                          _selectedTypes = tempSelected;
+                        });
+                        _filterVenues(_selectedTypes);
+                      }),
+                      _buildBorderedButton('Clear', AppThemes.errorColor, () {
+                        Navigator.pop(context);
+                        setState(() {
+                          _selectedTypes.clear();
+                        });
+                        _getAllVenues();
+                      })
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      _buildBorderedButton(
+                        'Cancel',
+                        Theme.of(context).colorScheme.onPrimary,
+                        () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32)
+                ],
+              ),
             );
-          }),
+          },
+        );
+      },
+    );
+  }
+
+  Expanded _buildBorderedButton(
+          String text, Color colour, VoidCallback action) =>
+      Expanded(
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: colour,
+                  width: 1.5,
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: CupertinoButton(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.transparent,
+                onPressed: action,
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    color: colour,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            )),
+      );
+
+  Container _buildDropdownItem(
+    String type,
+    bool isSelected,
+    StateSetter setModalState,
+    List<String> tempSelected,
+  ) =>
+      Container(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 24),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              type,
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: Theme.of(context).colorScheme.onPrimary),
+            ),
+            Transform.scale(
+              scale: 0.8,
+              child: CupertinoSwitch(
+                value: isSelected,
+                onChanged: (bool value) {
+                  setModalState(() {
+                    value ? tempSelected.add(type) : tempSelected.remove(type);
+                  });
+                },
+              ),
+            )
+          ],
         ),
       );
 }

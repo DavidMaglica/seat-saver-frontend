@@ -1,3 +1,4 @@
+import 'package:TableReserver/api/api_routes.dart';
 import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -9,12 +10,12 @@ import 'data/user_location.dart';
 import 'data/user_response.dart';
 import 'dio_setup.dart';
 
-final dio = setupDio('/user');
+final dio = setupDio(ApiRoutes.USER);
 
 class AccountApi {
   Future<UserResponse?> getUser(String email) async {
     try {
-      Response response = await dio.get('/get-user?email=$email');
+      Response response = await dio.get('${ApiRoutes.GET_USER}?email=$email');
 
       APIUser apiUser = APIUser.fromMap(response.data);
       if (apiUser.lastKnownLatitude != null &&
@@ -67,8 +68,8 @@ class AccountApi {
     }
 
     try {
-      final response = await dio
-          .post('/signup?email=$email&username=$username&password=$password');
+      final response = await dio.post(
+          '${ApiRoutes.SIGNUP}?email=$email&username=$username&password=$password');
       return BasicResponse.fromJson(response.data);
     } catch (e) {
       return BasicResponse(success: false, message: e.toString());
@@ -82,7 +83,8 @@ class AccountApi {
     }
 
     try {
-      final response = await dio.get('/login?email=$email&password=$password');
+      final response =
+          await dio.get('${ApiRoutes.LOGIN}?email=$email&password=$password');
       return BasicResponse.fromJson(response.data);
     } catch (e) {
       return BasicResponse(success: false, message: e.toString());
@@ -90,14 +92,15 @@ class AccountApi {
   }
 
   Future<NotificationOptions> getNotificationOptions(String email) async {
-    final response =
-        await dio.get('/get-user-notification-options?email=$email');
+    final response = await dio
+        .get('${ApiRoutes.GET_NOTIFICATION_OPTIONS}?email=$email');
 
     return NotificationOptions.fromMap(response.data);
   }
 
   Future<UserLocation> getLastKnownLocation(String email) async {
-    final response = await dio.get('/get-user-location?email=$email');
+    final response =
+        await dio.get('${ApiRoutes.GET_LOCATION}?email=$email');
 
     return UserLocation.fromMap(response.data);
   }
@@ -109,7 +112,7 @@ class AccountApi {
     bool locationServicesTurnedOn,
   ) async {
     final response = await dio.patch(
-        '/update-user-notification-options?email=$email&pushNotificationsTurnedOn=$pushNotificationsTurnedOn&emailNotificationsTurnedOn=$emailNotificationsTurnedOn&locationServicesTurnedOn=$locationServicesTurnedOn');
+        '${ApiRoutes.UPDATE_NOTIFICATION_OPTIONS}?email=$email&pushNotificationsTurnedOn=$pushNotificationsTurnedOn&emailNotificationsTurnedOn=$emailNotificationsTurnedOn&locationServicesTurnedOn=$locationServicesTurnedOn');
 
     return BasicResponse.fromJson(response.data);
   }
@@ -117,28 +120,28 @@ class AccountApi {
   Future<BasicResponse> updateUserLocation(
       String userEmail, Position? position) async {
     final response = await dio.patch(
-        '/update-user-location?email=$userEmail&latitude=${position!.latitude}&longitude=${position.longitude}');
+        '${ApiRoutes.UPDATE_LOCATION}?email=$userEmail&latitude=${position!.latitude}&longitude=${position.longitude}');
 
     return BasicResponse.fromJson(response.data);
   }
 
   Future<BasicResponse> changePassword(String email, String newPassword) async {
-    Response response = await dio
-        .patch('/update-user-password?email=$email&newPassword=$newPassword');
+    Response response = await dio.patch(
+        '${ApiRoutes.UPDATE_PASSWORD}?email=$email&newPassword=$newPassword');
     BasicResponse basicResponse = BasicResponse.fromJson(response.data);
     return basicResponse;
   }
 
   Future<BasicResponse> changeUsername(String email, String newUsername) async {
-    Response response = await dio
-        .patch('/update-user-username?email=$email&newUsername=$newUsername');
+    Response response = await dio.patch(
+        '${ApiRoutes.UPDATE_USERNAME}?email=$email&newUsername=$newUsername');
     BasicResponse basicResponse = BasicResponse.fromJson(response.data);
     return basicResponse;
   }
 
   Future<BasicResponse> changeEmail(String email, String newEmail) async {
-    Response response =
-        await dio.patch('/update-user-email?email=$email&newEmail=$newEmail');
+    Response response = await dio.patch(
+        '${ApiRoutes.UPDATE_EMAIL}?email=$email&newEmail=$newEmail');
     BasicResponse basicResponse = BasicResponse.fromJson(response.data);
     return basicResponse;
   }

@@ -45,8 +45,8 @@ class MyApp extends StatelessWidget {
                   as Map<String, dynamic>)['userEmail'],
               userLocation: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userLocation'],
-              selectedChip: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['selectedChip'],
+              selectedVenueType: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['selectedVenueType'],
             ),
         Routes.NEARBY: (context) => Nearby(
               userEmail: (ModalRoute.of(context)!.settings.arguments
@@ -92,20 +92,8 @@ class MyApp extends StatelessWidget {
             ),
         Routes.AUTHENTICATION: (context) => const Authentication(),
         Routes.VENUE: (context) => VenuePage(
-              venueName: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['venueName'],
-              location: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['location'],
-              workingHours: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['workingHours'],
-              rating: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['rating'],
-              type: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['type'],
-              description: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['description'],
-              imageLinks: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['imageLinks'],
+              venueId: (ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>)['venueId'],
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
               userLocation: (ModalRoute.of(context)!.settings.arguments

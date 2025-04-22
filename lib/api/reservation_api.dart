@@ -20,10 +20,10 @@ class ReservationApi {
     );
   }
 
-  Future<BasicResponse> addReservation(String userEmail, String venueName,
+  Future<BasicResponse> addReservation(String userEmail, int venueId,
       int numberOfPeople, DateTime reservationDate) async {
     ReservationDetails newReservation = ReservationDetails(
-      venueName: venueName,
+      venueId: venueId,
       numberOfGuests: numberOfPeople,
       reservationDateTime: reservationDate,
     );

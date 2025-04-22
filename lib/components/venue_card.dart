@@ -10,23 +10,13 @@ import '../themes/theme.dart';
 import '../utils/constants.dart';
 
 class VenueCard extends StatefulWidget {
-  final String venueName;
-  final String location;
-  final String workingHours;
-  final double rating;
-  final VenueType type;
-  final String description;
+  final Venue venue;
   final String? userEmail;
   final Position? userLocation;
 
   const VenueCard({
     Key? key,
-    required this.venueName,
-    required this.location,
-    required this.workingHours,
-    required this.rating,
-    required this.type,
-    required this.description,
+    required this.venue,
     this.userEmail,
     this.userLocation,
   }) : super(key: key);
@@ -47,7 +37,7 @@ class _VenueCardState extends State<VenueCard> {
 
   @override
   void initState() {
-    List<String> venueImages = venueApi.getVenueImages(widget.venueName);
+    List<String> venueImages = venueApi.getVenueImages(widget.venue.name);
     setState(() => _venueImages = venueImages);
     super.initState();
   }
@@ -59,13 +49,7 @@ class _VenueCardState extends State<VenueCard> {
 
   void _openVenuePage() =>
       Navigator.pushNamed(context, Routes.VENUE, arguments: {
-        'venueName': widget.venueName,
-        'location': widget.location,
-        'workingHours': widget.workingHours,
-        'rating': widget.rating,
-        'type': widget.type.toString(),
-        'description': widget.description,
-        'imageLinks': _venueImages,
+        'venueId': widget.venue.id,
         'userEmail': widget.userEmail,
         'userLocation': widget.userLocation,
       });
@@ -108,9 +92,9 @@ class _VenueCardState extends State<VenueCard> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildName(widget.venueName),
-                        _buildLocation(widget.location),
-                        _buildRatingBar(widget.rating),
+                        _buildName(widget.venue.name),
+                        _buildLocation(widget.venue.location),
+                        _buildRatingBar(widget.venue.rating),
                       ],
                     ),
                   ),

@@ -89,8 +89,10 @@ class _EditProfileState extends State<EditProfile> {
 
     accountApi.changeUsername(widget.user.email, newName!).then((response) {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
-      _showToast(response.message,
-          response.success ? AppThemes.successColor : AppThemes.errorColor);
+      _showToast(
+        response.message,
+        response.success ? AppThemes.successColor : AppThemes.errorColor,
+      );
 
       if (response.success) {
         setState(() {
@@ -101,8 +103,10 @@ class _EditProfileState extends State<EditProfile> {
       }
     }).catchError((error) {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
-      _showToast('Error while changing username. Please try again later.',
-          AppThemes.errorColor);
+      _showToast(
+        'Error while changing username. Please try again later.',
+        AppThemes.errorColor,
+      );
     });
   }
 
