@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import '../../api/data/venue.dart';
 import '../../api/venue_api.dart';
 import '../../components/navbar.dart';
+import '../../themes/theme.dart';
 import '../../utils/constants.dart';
 import '../../utils/routing_utils.dart';
 
@@ -33,7 +34,7 @@ class _SearchState extends State<Search> {
   List<String> _venueTypeOptions = [];
   List<String> _selectedTypes = [];
   List<Venue> _allVenues = [];
-  TextEditingController? searchBarController;
+  late final TextEditingController searchBarController = TextEditingController();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final VenueApi venueApi = VenueApi();
@@ -48,29 +49,31 @@ class _SearchState extends State<Search> {
 
   @override
   void dispose() {
+    searchBarController.dispose();
     unfocusNode.dispose();
     super.dispose();
   }
 
   Future<void> _loadVenues() async {
     final venueTypes = await venueApi.getAllVenueTypes();
+    final venues = await venueApi.getAllVenuesFromApi();
+    venues.sort((a, b) => a.name.compareTo(b.name));
 
     setState(() {
       _venueTypeMap = {
         for (var type in venueTypes) type.id: type.type.toTitleCase(),
       };
       _venueTypeOptions = _venueTypeMap.values.toList();
-    });
+      _allVenues = venues;
 
-    await _getAllVenues();
-
-    if (widget.selectedVenueType != null) {
       final selectedType = _venueTypeMap[widget.selectedVenueType];
       if (selectedType != null) {
         _selectedTypes.add(selectedType);
-        _filterVenues(_selectedTypes);
+        _allVenues = venues
+            .where((venue) => venue.typeId == widget.selectedVenueType)
+            .toList();
       }
-    }
+    });
   }
 
   Future<void> _getAllVenues() async {
@@ -135,58 +138,53 @@ class _SearchState extends State<Search> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _buildSearchBar(searchBarController),
-                Flexible(
-                  child: _buildFilterDropdown(),
-                ),
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.all(12),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 10,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimary
-                                .withOpacity(0.6),
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(8),
-                        shape: BoxShape.rectangle,
-                      ),
-                      child: Padding(
-                        padding:
-                            const EdgeInsetsDirectional.symmetric(vertical: 12),
-                        child: _allVenues.isNotEmpty
-                            ? ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: _allVenues.length,
-                                itemBuilder: (context, index) {
-                                  Venue venue = _allVenues[index];
-                                  String venueType =
-                                      _venueTypeMap[venue.typeId] ??
-                                          'Loading...';
+                _buildFilterDropdown(),
+                Padding(
+                  padding: const EdgeInsetsDirectional.all(12),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 10,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onPrimary
+                              .withOpacity(0.6),
+                        )
+                      ],
+                      borderRadius: BorderRadius.circular(8),
+                      shape: BoxShape.rectangle,
+                    ),
+                    child: Padding(
+                      padding:
+                          const EdgeInsetsDirectional.symmetric(vertical: 12),
+                      child: _allVenues.isNotEmpty
+                          ? ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: _allVenues.length,
+                              itemBuilder: (context, index) {
+                                Venue venue = _allVenues[index];
+                                String venueType =
+                                    _venueTypeMap[venue.typeId] ?? 'Loading...';
 
-                                  return Column(
-                                    children: [
-                                      _buildListTitle(venue, venueType),
-                                      if (index < _allVenues.length - 1)
-                                        _buildDivider(),
-                                    ],
-                                  );
-                                },
-                              )
-                            : const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Text('No venues available'),
-                                ),
+                                return Column(
+                                  children: [
+                                    _buildListTitle(venue, venueType),
+                                    if (index < _allVenues.length - 1)
+                                      _buildDivider(),
+                                  ],
+                                );
+                              },
+                            )
+                          : const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text('No venues available'),
                               ),
-                      ),
+                            ),
                     ),
                   ),
                 ),
@@ -323,36 +321,77 @@ class _SearchState extends State<Search> {
 
         return StatefulBuilder(
           builder: (context, setModalState) {
-            return CupertinoActionSheet(
-              title: const Text('Select a venue type'),
-              message: SizedBox(
-                height: 300,
-                child: CupertinoScrollbar(
-                  child: ListView(
-                    children: _venueTypeOptions.map((type) {
-                      final isSelected = tempSelected.contains(type);
-                      return GestureDetector(
-                        onTap: () {
-                          setModalState(() {
-                            isSelected
-                                ? tempSelected.remove(type)
-                                : tempSelected.add(type);
-                          });
-                        },
-                        child: _buildDropdownItem(type, context, isSelected,
-                            setModalState, tempSelected),
-                      );
-                    }).toList(),
-                  ),
+            return Container(
+              height: 456,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.background,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
                 ),
               ),
-              actions: [
-                _buildApplyButton(tempSelected),
-                _buildClearButton(),
-              ],
-              cancelButton: CupertinoActionSheetAction(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
+              child: Column(
+                children: [
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: CupertinoScrollbar(
+                      child: ListView(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        children: _venueTypeOptions.map((type) {
+                          final isSelected = tempSelected.contains(type);
+                          return GestureDetector(
+                            onTap: () {
+                              setModalState(() {
+                                isSelected
+                                    ? tempSelected.remove(type)
+                                    : tempSelected.add(type);
+                              });
+                            },
+                            child: _buildDropdownItem(
+                              type,
+                              isSelected,
+                              setModalState,
+                              tempSelected,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      _buildBorderedButton('Apply', AppThemes.successColor, () {
+                        Navigator.pop(context);
+                        setState(() {
+                          _selectedTypes = tempSelected;
+                        });
+                        _filterVenues(_selectedTypes);
+                      }),
+                      _buildBorderedButton('Clear', AppThemes.errorColor, () {
+                        Navigator.pop(context);
+                        setState(() {
+                          _selectedTypes.clear();
+                        });
+                        _getAllVenues();
+                      })
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      _buildBorderedButton(
+                        'Cancel',
+                        Theme.of(context).colorScheme.onPrimary,
+                        () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32)
+                ],
               ),
             );
           },
@@ -361,39 +400,44 @@ class _SearchState extends State<Search> {
     );
   }
 
-  CupertinoActionSheetAction _buildClearButton() => CupertinoActionSheetAction(
-        onPressed: () {
-          Navigator.pop(context);
-          setState(() {
-            _selectedTypes.clear();
-          });
-          _getAllVenues();
-        },
-        isDestructiveAction: true,
-        child: const Text('Clear Filters'),
-      );
-
-  CupertinoActionSheetAction _buildApplyButton(List<String> tempSelected) =>
-      CupertinoActionSheetAction(
-        onPressed: () {
-          Navigator.pop(context);
-          setState(() {
-            _selectedTypes = tempSelected;
-          });
-          _filterVenues(_selectedTypes);
-        },
-        child: const Text('Apply'),
+  Expanded _buildBorderedButton(
+          String text, Color colour, VoidCallback action) =>
+      Expanded(
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: colour,
+                  width: 1.5,
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: CupertinoButton(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.transparent,
+                onPressed: action,
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    color: colour,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            )),
       );
 
   Container _buildDropdownItem(
     String type,
-    BuildContext context,
     bool isSelected,
     StateSetter setModalState,
     List<String> tempSelected,
   ) =>
       Container(
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 24),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -401,6 +445,7 @@ class _SearchState extends State<Search> {
               type,
               style: TextStyle(
                   fontWeight: FontWeight.w600,
+                  fontSize: 14,
                   color: Theme.of(context).colorScheme.onPrimary),
             ),
             Transform.scale(

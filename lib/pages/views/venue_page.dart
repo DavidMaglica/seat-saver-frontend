@@ -295,55 +295,106 @@ class _VenuePageState extends State<VenuePage> {
       );
 
   Future<dynamic> _buildRatingModal() {
+    double rating = 0;
+
     return showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          height: 264,
-          width: double.infinity,
-          color: Theme.of(context).colorScheme.background,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                  height: 172,
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.only(top: 72),
-                    child: RatingBar.builder(
-                      onRatingUpdate: (newRating) => _rateVenue(newRating),
-                      itemBuilder: (context, index) => Icon(
-                        CupertinoIcons.star_fill,
-                        color: Theme.of(context).colorScheme.onTertiary,
-                      ),
-                      unratedColor: const Color(0xFF57636C).withOpacity(0.5),
-                      direction: Axis.horizontal,
-                      glow: false,
-                      ignoreGestures: false,
-                      initialRating: 0,
-                      itemSize: 48,
-                      allowHalfRating: true,
-                    ),
-                  )),
-              SizedBox(
-                height: 50,
-                child: CupertinoButton(
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              height: 280,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.background,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
                 ),
               ),
-            ],
-          ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    height: 96,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: RatingBar.builder(
+                        onRatingUpdate: (newRating) {
+                          setModalState(() {
+                            rating = newRating;
+                          });
+                        },
+                        itemBuilder: (context, index) => Icon(
+                          CupertinoIcons.star_fill,
+                          color: Theme.of(context).colorScheme.onTertiary,
+                        ),
+                        unratedColor: const Color(0xFF57636C).withOpacity(0.5),
+                        direction: Axis.horizontal,
+                        glow: false,
+                        ignoreGestures: false,
+                        initialRating: rating,
+                        itemSize: 32,
+                        allowHalfRating: true,
+                      ),
+                    ),
+                  ),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child: rating > 0
+                        ? Text(
+                            'Your rating: ${rating.toStringAsFixed(1)}',
+                            key: ValueKey(rating),
+                            style: Theme.of(context).textTheme.titleMedium,
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildBorderedButton('Give Rating', AppThemes.successColor,
+                      () {
+                    if (rating > 0) _rateVenue(rating);
+                    Navigator.of(context).pop();
+                  }),
+                  const SizedBox(height: 16),
+                  _buildBorderedButton('Cancel', AppThemes.errorColor, () {
+                    Navigator.of(context).pop();
+                  }),
+                ],
+              ),
+            );
+          },
         );
       },
     );
   }
+
+  Widget _buildBorderedButton(String text, Color colour, VoidCallback action) =>
+      Padding(
+          padding: const EdgeInsets.all(0),
+          child: Container(
+            width: 250,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: colour,
+                width: 1.5,
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: CupertinoButton(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.transparent,
+              onPressed: action,
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: colour,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ));
 
   Padding _buildObjectDetails(Venue venue, String type) => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
@@ -662,7 +713,7 @@ class _VenuePageState extends State<VenuePage> {
             width: double.infinity,
             height: 60,
             padding: const EdgeInsetsDirectional.all(0),
-            color: Theme.of(context).colorScheme.onPrimary,
+            color: AppThemes.infoColor,
             splashColor: Theme.of(context).colorScheme.surfaceVariant,
             textStyle: TextStyle(
               color: Theme.of(context).colorScheme.background,
