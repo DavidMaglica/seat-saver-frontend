@@ -208,11 +208,11 @@ class _EditProfileState extends State<EditProfile> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppbar(
           title: 'Edit Profile',
-          routeToPush: Routes.ACCOUNT,
-          args: {
+          onBack: () =>
+              Navigator.of(context).pushNamed(Routes.ACCOUNT, arguments: {
             'userEmail': updatedEmail ?? widget.user.email,
             'userLocation': widget.userLocation
-          },
+          }),
         ),
         body: SafeArea(
             top: true,

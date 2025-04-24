@@ -72,7 +72,7 @@ class _HomepageState extends State<Homepage> {
 
     _loadVenueTypes();
 
-    _checkLogin();
+    _checklogIn();
 
     if (locationPopUpCounter < 1) {
       _displayLocationPermissionPopUp(locationPopUpCounter);
@@ -154,7 +154,7 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
-  void _checkLogin() async {
+  void _checklogIn() async {
     if (widget.userEmail.isNotNullAndNotEmpty) {
       UserResponse? user = await accountApi.getUser(widget.userEmail!);
       if (user != null && user.success) {

@@ -45,7 +45,8 @@ class _ReservationHistoryState extends State<ReservationHistory> {
   }
 
   void _getUsersReservations(String userEmail) async {
-    ReservationResponse response = await reservationApi.getReservations(userEmail);
+    ReservationResponse response =
+        await reservationApi.getReservations(userEmail);
     if (response.success) {
       setState(() => reservations = response.reservations);
     }
@@ -58,11 +59,11 @@ class _ReservationHistoryState extends State<ReservationHistory> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppbar(
           title: 'Reservation History',
-          routeToPush: Routes.ACCOUNT,
-          args: {
-            'userEmail': widget.user.email,
-            'userLocation': widget.userLocation
-          },
+          onBack: () => Navigator.of(context).pushNamed(Routes.ACCOUNT,
+              arguments: {
+                'userEmail': widget.user.email,
+                'userLocation': widget.userLocation
+              }),
         ),
         body: SafeArea(
             top: true,

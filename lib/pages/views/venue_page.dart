@@ -1,4 +1,3 @@
-import 'package:TableReserver/api/data/basic_response.dart';
 import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../api/data/basic_response.dart';
 import '../../api/data/venue.dart';
 import '../../api/reservation_api.dart';
 import '../../api/venue_api.dart';
@@ -156,11 +156,11 @@ class _VenuePageState extends State<VenuePage> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppbar(
           title: _venue.name,
-          routeToPush: Routes.HOMEPAGE,
-          args: {
-            'userEmail': widget.userEmail,
-            'userLocation': widget.userLocation
-          },
+          onBack: () => Navigator.of(context).pushNamed(Routes.HOMEPAGE,
+              arguments: {
+                'userEmail': widget.userEmail,
+                'userLocation': widget.userLocation
+              }),
         ),
         body: FutureBuilder<List<String>>(
           future: _images,

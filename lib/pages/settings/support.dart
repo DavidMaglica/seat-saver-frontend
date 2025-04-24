@@ -80,7 +80,8 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
       return;
     }
 
-    BasicResponse response = await emailSender.sendEmail(widget.user.email, subject, body);
+    BasicResponse response =
+        await emailSender.sendEmail(widget.user.email, subject, body);
 
     if (!response.success) {
       if (!mounted) return;
@@ -99,12 +100,13 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppbar(
-            title: 'Support',
-            routeToPush: Routes.ACCOUNT,
-            args: {
-              'userEmail': widget.user.email,
-              'userLocation': widget.userLocation
-            }),
+          title: 'Support',
+          onBack: () => Navigator.of(context).pushNamed(Routes.ACCOUNT,
+              arguments: {
+                'userEmail': widget.user.email,
+                'userLocation': widget.userLocation
+              }),
+        ),
         body: SafeArea(
           top: true,
           child: Padding(

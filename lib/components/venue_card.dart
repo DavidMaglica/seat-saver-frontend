@@ -42,11 +42,6 @@ class _VenueCardState extends State<VenueCard> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   void _openVenuePage() =>
       Navigator.pushNamed(context, Routes.VENUE, arguments: {
         'venueId': widget.venue.id,

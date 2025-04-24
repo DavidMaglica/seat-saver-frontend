@@ -75,35 +75,3 @@ class Venue {
         description.hashCode;
   }
 }
-
-enum VenueTypeEnum {
-  italian,
-  asian,
-  gluten_free,
-  cafe,
-  traditional,
-  japanese,
-  middle_eastern,
-  barbeque,
-  greek,
-  cocktail_bar,
-  vegetarian,
-  vegan,
-  fine_dining,
-  fast_food,
-  seafood,
-  mexican,
-  indian,
-  chinese,
-  pizza,
-  ice_cream,
-  bar,
-  beach_bar,
-  wine_bar,
-  ;
-
-  @override
-  String toString() {
-    return name[0].toUpperCase() + name.substring(1).replaceAll('_', ' ');
-  }
-}

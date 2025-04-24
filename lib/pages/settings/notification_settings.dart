@@ -80,11 +80,11 @@ class _NotificationSettingsState extends State<NotificationSettings> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: CustomAppbar(
         title: 'Notification settings',
-        routeToPush: Routes.ACCOUNT,
-        args: {
-          'userEmail': widget.user.email,
-          'userLocation': widget.userLocation
-        },
+        onBack: () => Navigator.of(context).pushNamed(Routes.ACCOUNT,
+            arguments: {
+              'userEmail': widget.user.email,
+              'userLocation': widget.userLocation
+            }),
       ),
       body: SafeArea(
         top: true,
