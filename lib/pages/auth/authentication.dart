@@ -6,11 +6,11 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import '../../api/account_api.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
-import 'authentication_model.dart';
+import '../../models/authentication_model.dart';
 import 'login_tab.dart';
 import 'signup_tab.dart';
 
-export 'authentication_model.dart';
+export '../../models/authentication_model.dart';
 
 class Authentication extends StatefulWidget {
   const Authentication({super.key});
@@ -37,23 +37,6 @@ class _AuthenticationState extends State<Authentication>
       length: 2,
       initialIndex: 0,
     )..addListener(() => setState(() {}));
-    _model.usernameSignUpTextController ??= TextEditingController();
-    _model.usernameSignUpFocusNode ??= FocusNode();
-
-    _model.emailAddressSignUpTextController ??= TextEditingController();
-    _model.emailAddressSignUpFocusNode ??= FocusNode();
-
-    _model.passwordSignUpTextController ??= TextEditingController();
-    _model.passwordSignUpFocusNode ??= FocusNode();
-
-    _model.passwordConfirmTextController ??= TextEditingController();
-    _model.passwordConfirmFocusNode ??= FocusNode();
-
-    _model.emailAddressLogInTextController ??= TextEditingController();
-    _model.emailAddressLogInFocusNode ??= FocusNode();
-
-    _model.passwordLoInTextController ??= TextEditingController();
-    _model.passwordLogInFocusNode ??= FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }

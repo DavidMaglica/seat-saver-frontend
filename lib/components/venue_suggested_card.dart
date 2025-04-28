@@ -97,7 +97,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
     );
   }
 
-  Hero _buildImage() => Hero(
+  Widget _buildImage() => Hero(
       tag: 'locationCardImage${randomDouble(0, 100)}',
       transitionOnUserGestures: true,
       child: ClipRRect(
@@ -112,7 +112,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
             fit: BoxFit.cover,
           )));
 
-  Padding _buildNameAndType(String name, String type) => Padding(
+  Widget _buildNameAndType(String name, String type) => Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,7 +133,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
         ],
       ));
 
-  Padding _buildLocationAndWorkingHours(String location, String workingHours) =>
+  Widget _buildLocationAndWorkingHours(String location, String workingHours) =>
       Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
         child: Row(
@@ -155,7 +155,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
         ),
       );
 
-  Padding _buildRatingBar(double rating) => Padding(
+  Widget _buildRatingBar(double rating) => Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(08, 8, 0, 0),
       child: Row(mainAxisSize: MainAxisSize.max, children: [
         RatingBarIndicator(

@@ -3,8 +3,8 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../../api/account_api.dart';
 import '../../api/data/basic_response.dart';
-import 'login_tab.dart';
-import 'signup_methods.dart';
+import '../pages/auth/login_tab.dart';
+import '../utils/signup_methods.dart';
 
 class LogInTabModel extends FlutterFlowModel<LogInTab> {
   final AccountApi accountApi = AccountApi();
@@ -16,9 +16,7 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
   void dispose() {}
 
   @override
-  void initState(BuildContext context) {
-
-  }
+  void initState(BuildContext context) {}
 
   Future<BasicResponse> logIn(SignUpMethodEnum? signUpMethod) async {
     switch (signUpMethod) {

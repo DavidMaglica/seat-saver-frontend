@@ -102,7 +102,7 @@ class _VenueCardState extends State<VenueCard> {
     );
   }
 
-  Hero _buildImage() => Hero(
+  Widget _buildImage() => Hero(
       tag: 'locationCardImage${randomDouble(0, 100)}',
       transitionOnUserGestures: true,
       child: ClipRRect(
@@ -117,7 +117,7 @@ class _VenueCardState extends State<VenueCard> {
             fit: BoxFit.cover,
           )));
 
-  Text _buildName(String name) => Text(
+  Widget _buildName(String name) => Text(
         name.toUpperCase(),
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
@@ -127,7 +127,7 @@ class _VenueCardState extends State<VenueCard> {
             ?.copyWith(color: AppThemes.accent1, fontSize: 12),
       );
 
-  Padding _buildLocation(String location) => Padding(
+  Widget _buildLocation(String location) => Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
       child: Row(mainAxisSize: MainAxisSize.max, children: [
         Text(location,
@@ -138,7 +138,7 @@ class _VenueCardState extends State<VenueCard> {
             )),
       ]));
 
-  Padding _buildRatingBar(double rating) => Padding(
+  Widget _buildRatingBar(double rating) => Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
       child: Row(mainAxisSize: MainAxisSize.max, children: [
         RatingBarIndicator(

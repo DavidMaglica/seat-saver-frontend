@@ -8,9 +8,9 @@ import '../../api/data/basic_response.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
 import '../../utils/toaster.dart';
-import 'authentication_model.dart';
-import 'signup_methods.dart';
-import 'signup_tab_model.dart';
+import '../../models/authentication_model.dart';
+import '../../utils/signup_methods.dart';
+import '../../models/signup_tab_model.dart';
 
 class SignUpTab extends StatefulWidget {
   final AuthenticationModel model;
@@ -22,17 +22,23 @@ class SignUpTab extends StatefulWidget {
 }
 
 class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
-  late SignUpTabModel _signUpTabModel;
+  late SignUpTabModel _model;
   late final AccountApi accountApi = AccountApi();
 
   @override
   void initState() {
     super.initState();
-    _signUpTabModel = createModel(context, () => SignUpTabModel());
+    _model = createModel(context, () => SignUpTabModel());
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+    super.dispose();
   }
 
   void _performSignUp(SignUpMethodEnum signUpMethod) async {
-    BasicResponse response = await _signUpTabModel.signUp(signUpMethod);
+    BasicResponse response = await _model.signUp(signUpMethod);
     if (response.success) {
       _goToHomepage(widget.model.emailAddressSignUpTextController.text);
     } else {
@@ -140,7 +146,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
     );
   }
 
-  TextFormField _buildEmailField() => TextFormField(
+  Widget _buildEmailField() => TextFormField(
         controller: widget.model.emailAddressSignUpTextController,
         focusNode: widget.model.emailAddressSignUpFocusNode,
         autofocus: false,
@@ -185,7 +191,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
         cursorColor: Theme.of(context).colorScheme.onPrimary,
       );
 
-  TextFormField _buildUsernameField() => TextFormField(
+  Widget _buildUsernameField() => TextFormField(
         controller: widget.model.usernameSignUpTextController,
         focusNode: widget.model.usernameSignUpFocusNode,
         autofocus: false,
@@ -230,7 +236,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
         cursorColor: Theme.of(context).colorScheme.onPrimary,
       );
 
-  TextFormField _buildPasswordField() => TextFormField(
+  Widget _buildPasswordField() => TextFormField(
         controller: widget.model.passwordSignUpTextController,
         focusNode: widget.model.passwordSignUpFocusNode,
         autofocus: false,
@@ -269,10 +275,8 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
           ),
           contentPadding: const EdgeInsetsDirectional.fromSTEB(24, 24, 0, 24),
           suffixIcon: InkWell(
-            onTap: () => setState(
-              () => widget.model.passwordSignUpVisibility =
-                      !widget.model.passwordSignUpVisibility
-            ),
+            onTap: () => setState(() => widget.model.passwordSignUpVisibility =
+                !widget.model.passwordSignUpVisibility),
             focusNode: FocusNode(skipTraversal: true),
             child: Icon(
               (widget.model.passwordSignUpVisibility)
@@ -287,7 +291,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
         cursorColor: Theme.of(context).colorScheme.onPrimary,
       );
 
-  TextFormField _buildRetypePasswordField() => TextFormField(
+  Widget _buildRetypePasswordField() => TextFormField(
         controller: widget.model.passwordConfirmTextController,
         focusNode: widget.model.passwordConfirmFocusNode,
         autofocus: false,

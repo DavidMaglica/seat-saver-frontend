@@ -137,7 +137,7 @@ class _SearchState extends State<Search> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildSearchBar(searchBarController),
+                _buildSearchBar(),
                 _buildFilterDropdown(),
                 Padding(
                   padding: const EdgeInsetsDirectional.all(12),
@@ -202,7 +202,7 @@ class _SearchState extends State<Search> {
     );
   }
 
-  Padding _buildSearchBar(TextEditingController? controller) => Padding(
+  Padding _buildSearchBar() => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -211,7 +211,7 @@ class _SearchState extends State<Search> {
               child: Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(36, 36, 36, 0),
                 child: TextField(
-                  controller: controller,
+                  controller: searchBarController,
                   decoration: InputDecoration(
                     hintText: 'Search',
                     hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(

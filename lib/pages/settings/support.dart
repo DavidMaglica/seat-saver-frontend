@@ -1,17 +1,15 @@
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/api/email_sender.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../api/data/user.dart';
+import '../../components/action_button.dart';
+import '../../components/banner.dart';
 import '../../components/custom_appbar.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
-import '../../utils/toaster.dart';
-import 'utils/banner.dart';
+import '../../models/support_model.dart';
 import 'utils/settings_utils.dart';
 
 class Support extends StatefulWidget {
@@ -25,87 +23,43 @@ class Support extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<Support> createState() => _SupportWidgetState();
+  State<Support> createState() => _SupportState();
 }
 
-class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
-  final _unfocusNode = FocusNode();
-  FocusNode? _ticketTitleFocusNode;
-  TextEditingController? _ticketTitleController;
-
-  FocusNode? _ticketDescriptionFocusNode;
-  TextEditingController? _ticketDescriptionController;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  EmailSender emailSender = EmailSender();
+class _SupportState extends State<Support> {
+  late final SupportModel model;
 
   @override
   void initState() {
     super.initState();
+    model = SupportModel(
+        user: widget.user, context: context, position: widget.userLocation);
   }
 
   @override
   void dispose() {
-    _unfocusNode.dispose();
-
-    _ticketTitleFocusNode?.dispose();
-    _ticketTitleController?.dispose();
-
-    _ticketDescriptionFocusNode?.dispose();
-    _ticketDescriptionController?.dispose();
-
+    model.dispose();
     super.dispose();
-  }
-
-  void _openFAQs() async {
-    final Uri url = Uri.parse('https://flutter.dev');
-    try {
-      if (!await canLaunchUrl(url)) {
-        if (!mounted) return;
-        Toaster.displayError(context,
-            'Could not launch default browser app. Please try again later.');
-      }
-      await launchUrl(url);
-    } catch (e) {
-      if (!mounted) return;
-      Toaster.displayError(context,
-          'Could not open default browser app. Please try again later.');
-    }
-  }
-
-  Future<void> _submitTicket(String subject, String body) async {
-    if (subject.isEmpty || body.isEmpty) {
-      Toaster.displayError(context, 'Please fill in all fields.');
-      return;
-    }
-
-    BasicResponse response =
-        await emailSender.sendEmail(widget.user.email, subject, body);
-
-    if (!response.success) {
-      if (!mounted) return;
-      Toaster.displayError(context, response.message);
-      return;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_unfocusNode)
+      onTap: () => model.unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(model.unfocusNode)
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
-        key: scaffoldKey,
+        key: model.scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppbar(
           title: 'Support',
-          onBack: () => Navigator.of(context).pushNamed(Routes.ACCOUNT,
-              arguments: {
-                'userEmail': widget.user.email,
-                'userLocation': widget.userLocation
-              }),
+          onBack: () => Navigator.of(context).pushNamed(
+            Routes.ACCOUNT,
+            arguments: {
+              'userEmail': widget.user.email,
+              'userLocation': widget.userLocation
+            },
+          ),
         ),
         body: SafeArea(
           top: true,
@@ -113,7 +67,6 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
             padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
             child: SingleChildScrollView(
               child: Column(
-                mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
@@ -125,11 +78,10 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                     ),
                   ),
                   Row(
-                    mainAxisSize: MainAxisSize.max,
                     children: [
                       Expanded(
                         child: InkWell(
-                          onTap: () => _openFAQs(),
+                          onTap: model.openFAQs,
                           child: SupportBanner(
                             context: context,
                             title: 'Search FAQs',
@@ -142,7 +94,6 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                   Padding(
                     padding: const EdgeInsetsDirectional.only(top: 16),
                     child: Row(
-                      mainAxisSize: MainAxisSize.max,
                       children: [
                         Expanded(
                           child: Divider(
@@ -170,7 +121,6 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                     child: Column(
-                      mainAxisSize: MainAxisSize.max,
                       children: [
                         Padding(
                           padding: const EdgeInsetsDirectional.only(bottom: 12),
@@ -180,16 +130,16 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                           ),
                         ),
                         _buildInputField(
-                          _ticketTitleController,
-                          _ticketTitleFocusNode,
+                          model.ticketTitleController,
+                          model.ticketTitleFocusNode,
                           'Ticket title',
                           'Enter a title for your ticket.',
                           null,
                           null,
                         ),
                         _buildInputField(
-                          _ticketDescriptionController,
-                          _ticketDescriptionFocusNode,
+                          model.ticketDescriptionController,
+                          model.ticketDescriptionFocusNode,
                           'Short description',
                           'Short description of what is going on...',
                           16,
@@ -199,12 +149,10 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
                     ),
                   ),
                   ActionButton(
-                      title: 'Submit Ticket',
-                      onPressed: () => _submitTicket(
-                            _ticketTitleController.text,
-                            _ticketDescriptionController.text,
-                          ),
-                      iconData: CupertinoIcons.paperplane_fill),
+                    title: 'Submit Ticket',
+                    onPressed: () => model.submitTicket(),
+                    iconData: CupertinoIcons.paperplane_fill,
+                  ),
                 ],
               ),
             ),
@@ -214,7 +162,7 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
     );
   }
 
-  TextFormField _buildInputField(
+  Widget _buildInputField(
     TextEditingController? controller,
     FocusNode? focusNode,
     String labelText,
@@ -225,13 +173,11 @@ class _SupportWidgetState extends State<Support> with TickerProviderStateMixin {
       TextFormField(
         controller: controller,
         focusNode: focusNode,
-        autofocus: false,
-        obscureText: false,
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: Theme.of(context).textTheme.bodyMedium,
-          hintStyle: Theme.of(context).textTheme.bodySmall,
           hintText: hintText,
+          hintStyle: Theme.of(context).textTheme.bodySmall,
           enabledBorder:
               outlineInputBorder(Theme.of(context).colorScheme.onPrimary),
           focusedBorder: outlineInputBorder(AppThemes.infoColor),

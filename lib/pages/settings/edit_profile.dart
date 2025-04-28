@@ -1,19 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_credit_card/extension.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 
-import '../../api/account_api.dart';
 import '../../api/data/user.dart';
 import '../../components/custom_appbar.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
-import 'helpers/edit_profile_helpers.dart';
+import '../../models/edit_profile_model.dart';
 import 'utils/settings_utils.dart';
 
-class EditProfile extends StatefulWidget {
+class EditProfile extends StatelessWidget {
   final User user;
   final Position? userLocation;
 
@@ -24,573 +21,353 @@ class EditProfile extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<EditProfile> createState() => _EditProfileState();
-}
-
-class _EditProfileState extends State<EditProfile> {
-  FocusNode? _newUsernameFocusNode;
-  TextEditingController? _newUsernameTextController;
-
-  FocusNode? _newEmailFocusNode;
-  TextEditingController? _newEmailTextController;
-
-  FocusNode? _newPasswordFocusNode;
-  TextEditingController? _newPasswordTextController;
-  bool _newPasswordVisibility = false;
-
-  FocusNode? _confirmNewPasswordFocusNode;
-  TextEditingController? _confirmNewPasswordTextController;
-  bool _confirmNewPasswordVisibility = false;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  String? updatedUsername;
-  String? updatedPassword;
-  String? updatedEmail;
-
-  AccountApi accountApi = AccountApi();
-
-  @override
-  void initState() {
-    super.initState();
-    _newUsernameTextController = TextEditingController();
-    _newEmailTextController = TextEditingController();
-    _newPasswordTextController = TextEditingController();
-    _confirmNewPasswordTextController = TextEditingController();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
-  }
-
-  @override
-  void dispose() {
-    _newUsernameFocusNode?.dispose();
-    _newUsernameTextController?.dispose();
-
-    _newEmailFocusNode?.dispose();
-    _newEmailTextController?.dispose();
-
-    _newPasswordFocusNode?.dispose();
-    _newPasswordTextController?.dispose();
-
-    _confirmNewPasswordFocusNode?.dispose();
-    _confirmNewPasswordTextController?.dispose();
-
-    super.dispose();
-  }
-
-  void _changeUsername() {
-    String? newName = updatedEmail ?? _newUsernameTextController?.text;
-
-    if (newName.isNullOrEmpty) {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-      _showToast('Please enter a new username', AppThemes.errorColor);
-      return;
-    }
-
-    accountApi.changeUsername(widget.user.email, newName!).then((response) {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-      _showToast(
-        response.message,
-        response.success ? AppThemes.successColor : AppThemes.errorColor,
-      );
-
-      if (response.success) {
-        setState(() {
-          updatedUsername = newName;
-          _newUsernameTextController?.clear();
-        });
-        Navigator.of(context).pop();
-      }
-    }).catchError((error) {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-      _showToast(
-        'Error while changing username. Please try again later.',
-        AppThemes.errorColor,
-      );
-    });
-  }
-
-  void _changeEmail() {
-    String? newEmail = _newEmailTextController?.text;
-
-    if (newEmail.isNullOrEmpty) {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-      _showToast('Please enter a new email', AppThemes.errorColor);
-      return;
-    }
-
-    accountApi.changeEmail(widget.user.email, newEmail!).then((response) {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-      _showToast(response.message,
-          response.success ? AppThemes.successColor : AppThemes.errorColor);
-
-      if (response.success) {
-        setState(() {
-          updatedEmail = newEmail;
-          _newEmailTextController?.clear();
-        });
-        Navigator.of(context).pop();
-      }
-    }).catchError((error) {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-      _showToast('Error while changing email. Please try again later.',
-          AppThemes.errorColor);
-    });
-  }
-
-  void _changePassword() {
-    String? newPassword = _newPasswordTextController?.text;
-    String? confirmNewPassword = _confirmNewPasswordTextController?.text;
-
-    if (newPassword == null || newPassword.isEmpty) {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-      _showToast('Please enter a new password', AppThemes.errorColor);
-      return;
-    }
-
-    if (confirmNewPassword == null || confirmNewPassword.isEmpty) {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-      _showToast("New password hasn't been confirmed", AppThemes.errorColor);
-      return;
-    }
-
-    if (newPassword.length < 8) {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-      _showToast(
-          'Password must be at least 8 characters long', AppThemes.errorColor);
-      return;
-    }
-
-    if (newPassword != confirmNewPassword) {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-      _showToast('Passwords do not match', AppThemes.errorColor);
-      return;
-    }
-
-    String email = updatedEmail ?? widget.user.email;
-    accountApi.changePassword(email, newPassword).then((response) async {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-      _showToast(response.message,
-          response.success ? AppThemes.successColor : AppThemes.errorColor);
-
-      if (response.success) {
-        setState(() {
-          updatedPassword = newPassword;
-          _newPasswordTextController?.clear();
-          _confirmNewPasswordTextController?.clear();
-        });
-        Navigator.of(context).pop();
-      }
-    }).catchError((error) {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-      _showToast('Error while changing password. Please try again later.',
-          AppThemes.errorColor);
-    });
-  }
-
-  void _cancel() => Navigator.of(context).pop();
-
-  void _showToast(String message, Color colour) => showToast(
-        message,
-        context: context,
-        backgroundColor: colour,
-        textStyle: const TextStyle(color: Colors.white, fontSize: 16.0),
-        borderRadius: BorderRadius.circular(8),
-        textPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        alignment: Alignment.bottomLeft,
-        duration: const Duration(seconds: 4),
-      );
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: CustomAppbar(
-          title: 'Edit Profile',
-          onBack: () =>
-              Navigator.of(context).pushNamed(Routes.ACCOUNT, arguments: {
-            'userEmail': updatedEmail ?? widget.user.email,
-            'userLocation': widget.userLocation
-          }),
-        ),
-        body: SafeArea(
-            top: true,
-            child: SingleChildScrollView(
-              child: Column(mainAxisSize: MainAxisSize.max, children: [
-                const Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 36, 0, 0),
+    return ChangeNotifierProvider(
+      create: (_) => EditProfileModel(
+        user: user,
+        context: context,
+        userLocation: userLocation,
+      ),
+      child: Consumer<EditProfileModel>(
+        builder: (context, model, _) {
+          return Scaffold(
+            key: model.scaffoldKey,
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            appBar: CustomAppbar(
+              title: 'Edit Profile',
+              onBack: () => Navigator.of(context).pushNamed(
+                Routes.ACCOUNT,
+                arguments: {
+                  'userEmail': model.updatedEmail ?? user.email,
+                  'userLocation': userLocation,
+                },
+              ),
+            ),
+            body: SafeArea(
+              top: true,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 36),
+                    _buildChangeDetailGroup(context, model),
+                  ],
                 ),
-                _buildChangeDetailGroup(),
-              ]),
-            )));
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
-  Padding _buildChangeDetailGroup() => Padding(
-        padding: const EdgeInsetsDirectional.all(16),
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 3,
-                color: Theme.of(context).colorScheme.onPrimary.withOpacity(.5),
-                offset: const Offset(0, 1),
-              )
-            ],
-            borderRadius: BorderRadius.circular(8),
-            shape: BoxShape.rectangle,
-          ),
-          child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  _buildChangeUsername(),
-                  _buildDivider(),
-                  _buildChangeEmail(),
-                  _buildDivider(),
-                  _buildChangePassword(),
-                ],
-              )),
+  Widget _buildChangeDetailGroup(BuildContext context, EditProfileModel model) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.all(16),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 3,
+              color: Theme.of(context).colorScheme.onPrimary.withOpacity(.5),
+              offset: const Offset(0, 1),
+            )
+          ],
+          borderRadius: BorderRadius.circular(8),
+          shape: BoxShape.rectangle,
         ),
-      );
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              _buildChangeUsername(context, model),
+              _buildDivider(context),
+              _buildChangeEmail(context, model),
+              _buildDivider(context),
+              _buildChangePassword(context, model),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-  Divider _buildDivider() {
+  Widget _buildDivider(BuildContext context) {
     return Divider(
       color: Theme.of(context).colorScheme.onPrimary.withOpacity(.5),
       thickness: .5,
     );
   }
 
-  Padding _buildChangeUsername() => Padding(
+  Widget _buildChangeUsername(BuildContext context, EditProfileModel model) {
+    return Padding(
       padding: const EdgeInsetsDirectional.all(12),
       child: InkWell(
-          onTap: () {
-            _openChangeUsernameBottomSheet();
-          },
-          child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        onTap: () => _openChangeUsernameBottomSheet(context, model),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Change Username',
+                style: Theme.of(context).textTheme.titleMedium),
+            Row(
               children: [
-                Text(
-                  'Change Username',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Row(children: [
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-                    child: Text(
-                      updatedUsername ?? widget.user.username,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimary
-                                .withOpacity(.6),
-                          ),
-                    ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(end: 8),
+                  child: Text(
+                    model.updatedUsername ?? model.user.username,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onPrimary
+                              .withOpacity(.6),
+                        ),
                   ),
-                  Icon(
-                    CupertinoIcons.chevron_right,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    size: 14,
-                  )
-                ])
-              ])));
-
-  void _openChangeUsernameBottomSheet() => showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(16),
-        ),
-      ),
-      builder: (BuildContext context) {
-        return Padding(
-            padding: modalPadding(context),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              buildModalTitle('Change Username', context),
-              const SizedBox(height: 16),
-              _buildUsernameInputField(
-                'New Username',
-                'Enter a new username',
-                _newUsernameTextController,
-                _newUsernameFocusNode,
-              ),
-              const SizedBox(height: 24),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                buildModalButton(
-                    'Cancel', _cancel, Theme.of(context).colorScheme.onPrimary),
-                buildModalButton(
-                    'Save', _changeUsername, AppThemes.successColor),
-              ]),
-              const SizedBox(height: 36),
-            ]));
-      });
-
-  Padding _buildUsernameInputField(
-    String labelText,
-    String hint,
-    TextEditingController? controller,
-    FocusNode? focusNode,
-  ) =>
-      Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
-          child: TextFormField(
-            controller: controller,
-            focusNode: focusNode,
-            textCapitalization: TextCapitalization.none,
-            decoration: InputDecoration(
-              labelText: labelText,
-              labelStyle: Theme.of(context).textTheme.bodyMedium,
-              hintText: hint,
-              hintStyle: Theme.of(context).textTheme.bodyMedium,
-              enabledBorder: outlineInputBorder(
-                Theme.of(context).colorScheme.onPrimary.withOpacity(.4),
-              ),
-              focusedBorder: outlineInputBorder(AppThemes.infoColor),
-              errorBorder:
-                  outlineInputBorder(Theme.of(context).colorScheme.error),
-              focusedErrorBorder: outlineInputBorder(AppThemes.infoColor),
-              contentPadding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-            ),
-            keyboardType: TextInputType.name,
-            cursorColor: Theme.of(context).colorScheme.onPrimary,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ));
-
-  Padding _buildChangeEmail() => Padding(
-      padding: const EdgeInsetsDirectional.all(12),
-      child: InkWell(
-          onTap: () {
-            _openChangeEmailBottomSheet();
-          },
-          child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Change Email',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Row(children: [
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-                    child: Text(
-                      updatedEmail ?? widget.user.email,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimary
-                                .withOpacity(.6),
-                          ),
-                    ),
-                  ),
-                  Icon(
-                    CupertinoIcons.chevron_right,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    size: 14,
-                  )
-                ])
-              ])));
-
-  void _openChangeEmailBottomSheet() => showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(16),
-        ),
-      ),
-      builder: (BuildContext context) {
-        return Padding(
-            padding: modalPadding(context),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              buildModalTitle('Change Email', context),
-              const SizedBox(height: 16),
-              _buildEmailInputField(
-                'New email',
-                'Enter your new email',
-                _newEmailTextController,
-                _newEmailFocusNode,
-              ),
-              const SizedBox(height: 16),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                buildModalButton(
-                    'Cancel', _cancel, Theme.of(context).colorScheme.onPrimary),
-                buildModalButton('Save', _changeEmail, AppThemes.successColor),
-              ]),
-              const SizedBox(height: 36),
-            ]));
-      });
-
-  Padding _buildEmailInputField(
-    String labelText,
-    String hint,
-    TextEditingController? controller,
-    FocusNode? focusNode,
-  ) =>
-      Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
-          child: TextFormField(
-            controller: controller,
-            focusNode: focusNode,
-            textCapitalization: TextCapitalization.none,
-            decoration: InputDecoration(
-              labelText: labelText,
-              labelStyle: Theme.of(context).textTheme.bodyMedium,
-              hintText: hint,
-              hintStyle: Theme.of(context).textTheme.bodyMedium,
-              enabledBorder: outlineInputBorder(
-                Theme.of(context).colorScheme.onPrimary.withOpacity(.4),
-              ),
-              focusedBorder: outlineInputBorder(AppThemes.infoColor),
-              errorBorder:
-                  outlineInputBorder(Theme.of(context).colorScheme.error),
-              focusedErrorBorder: outlineInputBorder(AppThemes.infoColor),
-              contentPadding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-            ),
-            keyboardType: TextInputType.emailAddress,
-            cursorColor: Theme.of(context).colorScheme.onPrimary,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ));
-
-  Padding _buildChangePassword() => Padding(
-      padding: const EdgeInsetsDirectional.all(12),
-      child: InkWell(
-          onTap: () {
-            _openChangePasswordBottomSheet();
-          },
-          child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Change Password',
-                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 Icon(
                   CupertinoIcons.chevron_right,
                   color: Theme.of(context).colorScheme.onPrimary,
                   size: 14,
-                )
-              ])));
-
-  void _openChangePasswordBottomSheet() => showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-        builder: (
-          BuildContext context,
-        ) {
-          return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setModalState) {
-              return Padding(
-                padding: modalPadding(context),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    buildModalTitle('Change Password', context),
-                    const SizedBox(height: 16),
-                    _buildPasswordInputField(
-                      'New password',
-                      'Enter a new password',
-                      _newPasswordTextController,
-                      _newPasswordFocusNode,
-                      _newPasswordVisibility,
-                      false,
-                      setModalState,
-                    ),
-                    _buildPasswordInputField(
-                      'Confirm new password',
-                      'Confirm new password',
-                      _confirmNewPasswordTextController,
-                      _confirmNewPasswordFocusNode,
-                      _confirmNewPasswordVisibility,
-                      true,
-                      setModalState,
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildModalButton(
-                          'Cancel',
-                          () => Navigator.of(context).pop(),
-                          Theme.of(context).colorScheme.onPrimary,
-                        ),
-                        buildModalButton(
-                          'Save',
-                          _changePassword,
-                          AppThemes.successColor,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 36),
-                  ],
                 ),
-              );
-            },
-          );
-        },
-      );
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-  Padding _buildPasswordInputField(
+  Widget _buildChangeEmail(BuildContext context, EditProfileModel model) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.all(12),
+      child: InkWell(
+        onTap: () => _openChangeEmailBottomSheet(context, model),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Change Email',
+                style: Theme.of(context).textTheme.titleMedium),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(end: 8),
+                  child: Text(
+                    model.updatedEmail ?? model.user.email,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onPrimary
+                              .withOpacity(.6),
+                        ),
+                  ),
+                ),
+                Icon(
+                  CupertinoIcons.chevron_right,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  size: 14,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChangePassword(BuildContext context, EditProfileModel model) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.all(12),
+      child: InkWell(
+        onTap: () => _openChangePasswordBottomSheet(context, model),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Change Password',
+                style: Theme.of(context).textTheme.titleMedium),
+            Icon(
+              CupertinoIcons.chevron_right,
+              color: Theme.of(context).colorScheme.onPrimary,
+              size: 14,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _openChangeUsernameBottomSheet(
+    BuildContext context,
+    EditProfileModel model,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      builder: (context) {
+        return Padding(
+          padding: modalPadding(context),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              buildModalTitle('Change Username', context),
+              const SizedBox(height: 16),
+              _buildInputField('New Username', 'Enter a new username',
+                  model.newUsernameTextController, model.newUsernameFocusNode),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  buildModalButton('Cancel', model.cancel,
+                      Theme.of(context).colorScheme.onPrimary),
+                  buildModalButton(
+                      'Save', model.changeUsername, AppThemes.successColor),
+                ],
+              ),
+              const SizedBox(height: 36),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _openChangeEmailBottomSheet(
+    BuildContext context,
+    EditProfileModel model,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      builder: (context) {
+        return Padding(
+          padding: modalPadding(context),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              buildModalTitle('Change Email', context),
+              const SizedBox(height: 16),
+              _buildInputField('New Email', 'Enter your new email',
+                  model.newEmailTextController, model.newEmailFocusNode),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  buildModalButton('Cancel', model.cancel,
+                      Theme.of(context).colorScheme.onPrimary),
+                  buildModalButton(
+                      'Save', model.changeEmail, AppThemes.successColor),
+                ],
+              ),
+              const SizedBox(height: 36),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _openChangePasswordBottomSheet(
+    BuildContext context,
+    EditProfileModel model,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: modalPadding(context),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  buildModalTitle('Change Password', context),
+                  const SizedBox(height: 16),
+                  _buildPasswordInputField(
+                      'New Password',
+                      'Enter a new password',
+                      model.newPasswordTextController,
+                      model.newPasswordFocusNode,
+                      model.newPasswordVisibility, () {
+                    setModalState(() => model.newPasswordVisibility =
+                        !model.newPasswordVisibility);
+                  }),
+                  _buildPasswordInputField(
+                      'Confirm New Password',
+                      'Confirm your password',
+                      model.confirmNewPasswordTextController,
+                      model.confirmNewPasswordFocusNode,
+                      model.confirmNewPasswordVisibility, () {
+                    setModalState(() => model.confirmNewPasswordVisibility =
+                        !model.confirmNewPasswordVisibility);
+                  }),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      buildModalButton('Cancel', model.cancel,
+                          Theme.of(context).colorScheme.onPrimary),
+                      buildModalButton(
+                          'Save', model.changePassword, AppThemes.successColor),
+                    ],
+                  ),
+                  const SizedBox(height: 36),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildInputField(String labelText, String hint,
+      TextEditingController controller, FocusNode focusNode) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
+      child: TextFormField(
+        controller: controller,
+        focusNode: focusNode,
+        decoration: InputDecoration(
+          labelText: labelText,
+          hintText: hint,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordInputField(
     String labelText,
     String hint,
-    TextEditingController? controller,
-    FocusNode? focusNode,
-    bool passwordVisibility,
-    bool isConfirmedPassword,
-    StateSetter setModalState,
-  ) =>
-      Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
-        child: TextFormField(
-          controller: controller,
-          focusNode: focusNode,
-          textCapitalization: TextCapitalization.none,
-          obscureText: !passwordVisibility,
-          decoration: InputDecoration(
-            labelText: labelText,
-            labelStyle: Theme.of(context).textTheme.bodyMedium,
-            hintText: hint,
-            hintStyle: Theme.of(context).textTheme.bodyMedium,
-            enabledBorder: outlineInputBorder(
-              Theme.of(context).colorScheme.onPrimary.withOpacity(.6),
-            ),
-            focusedBorder: outlineInputBorder(AppThemes.infoColor),
-            errorBorder: outlineInputBorder(
-              Theme.of(context).colorScheme.error,
-            ),
-            focusedErrorBorder: outlineInputBorder(AppThemes.infoColor),
-            contentPadding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-            suffixIcon: InkWell(
-              onTap: () {
-                setModalState(() {
-                  if (isConfirmedPassword) {
-                    _confirmNewPasswordVisibility = !passwordVisibility;
-                  } else {
-                    _newPasswordVisibility = !passwordVisibility;
-                  }
-                });
-              },
-              focusNode: FocusNode(skipTraversal: true),
-              child: Icon(
-                passwordVisibility
-                    ? CupertinoIcons.eye_solid
-                    : CupertinoIcons.eye_slash_fill,
-                color: Theme.of(context).colorScheme.onPrimary,
-                size: 18,
-              ),
-            ),
+    TextEditingController controller,
+    FocusNode focusNode,
+    bool isVisible,
+    VoidCallback toggleVisibility,
+  ) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
+      child: TextFormField(
+        controller: controller,
+        focusNode: focusNode,
+        obscureText: !isVisible,
+        decoration: InputDecoration(
+          labelText: labelText,
+          hintText: hint,
+          suffixIcon: IconButton(
+            icon: Icon(isVisible
+                ? CupertinoIcons.eye_solid
+                : CupertinoIcons.eye_slash_fill),
+            onPressed: toggleVisibility,
           ),
-          keyboardType: TextInputType.visiblePassword,
-          cursorColor: Theme.of(context).colorScheme.onPrimary,
-          style: Theme.of(context).textTheme.bodyMedium,
         ),
-      );
+      ),
+    );
+  }
 }

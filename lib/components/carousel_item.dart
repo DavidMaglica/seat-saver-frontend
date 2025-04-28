@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'carousel_item_model.dart';
+import '../models/carousel_item_model.dart';
 import '../themes/theme.dart';
 import '../utils/toaster.dart';
 
@@ -67,7 +67,7 @@ class CarouselItem extends StatelessWidget {
     ),
   );
 
-  Padding _buildText(BuildContext context) => Padding(
+  Widget _buildText(BuildContext context) => Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
       child: Column(mainAxisSize: MainAxisSize.max, children: [
         Align(

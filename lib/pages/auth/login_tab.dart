@@ -7,12 +7,12 @@ import 'package:geolocator/geolocator.dart';
 import '../../api/account_api.dart';
 import '../../api/data/basic_response.dart';
 import '../../api/data/user_response.dart';
+import '../../models/authentication_model.dart';
+import '../../models/login_tab_model.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
+import '../../utils/signup_methods.dart';
 import '../../utils/toaster.dart';
-import 'authentication_model.dart';
-import 'login_tab_model.dart';
-import 'signup_methods.dart';
 
 class LogInTab extends StatefulWidget {
   final AuthenticationModel model;
@@ -24,17 +24,23 @@ class LogInTab extends StatefulWidget {
 }
 
 class _LogInTabState extends State<LogInTab> {
-  late LogInTabModel _logInTabModel;
+  late LogInTabModel _model;
   late final AccountApi accountApi = AccountApi();
 
   @override
   void initState() {
     super.initState();
-    _logInTabModel = createModel(context, () => LogInTabModel());
+    _model = createModel(context, () => LogInTabModel());
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+    super.dispose();
   }
 
   void _performLogIn(SignUpMethodEnum signUpMethod) async {
-    BasicResponse response = await _logInTabModel.logIn(signUpMethod);
+    BasicResponse response = await _model.logIn(signUpMethod);
     if (response.success) {
       String email = widget.model.emailAddressLogInTextController.text;
       UserResponse? userResponse = await accountApi.getUser(email);
@@ -140,7 +146,7 @@ class _LogInTabState extends State<LogInTab> {
     );
   }
 
-  TextFormField _buildPasswordField() => TextFormField(
+  Widget _buildPasswordField() => TextFormField(
         controller: widget.model.passwordLoInTextController,
         focusNode: widget.model.passwordLogInFocusNode,
         autofocus: false,
@@ -197,7 +203,7 @@ class _LogInTabState extends State<LogInTab> {
         cursorColor: Theme.of(context).colorScheme.onPrimary,
       );
 
-  TextFormField _buildEmailField() => TextFormField(
+  Widget _buildEmailField() => TextFormField(
         controller: widget.model.emailAddressLogInTextController,
         focusNode: widget.model.emailAddressLogInFocusNode,
         autofocus: false,
@@ -242,7 +248,7 @@ class _LogInTabState extends State<LogInTab> {
         cursorColor: Theme.of(context).colorScheme.onPrimary,
       );
 
-  Align _buildLogInButton() => Align(
+  Widget _buildLogInButton() => Align(
         child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
           child: FFButtonWidget(
@@ -322,7 +328,7 @@ class _LogInTabState extends State<LogInTab> {
         ),
       );
 
-  Padding _buildForgotPassword() => Padding(
+  Widget _buildForgotPassword() => Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
       child: TextButton(
         onPressed: _forgotPassword,

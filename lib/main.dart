@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'pages/auth/authentication.dart';
-import 'pages/helpers/successful_reservation.dart';
+import 'pages/views/successful_reservation.dart';
 import 'pages/settings/edit_profile.dart';
 import 'pages/settings/notification_settings.dart';
 import 'pages/settings/reservation_history.dart';
