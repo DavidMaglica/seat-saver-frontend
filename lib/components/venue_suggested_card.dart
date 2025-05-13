@@ -1,4 +1,3 @@
-import 'package:TableReserver/utils/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -9,6 +8,7 @@ import '../api/data/venue.dart';
 import '../api/venue_api.dart';
 import '../themes/theme.dart';
 import '../utils/constants.dart';
+import '../utils/extensions.dart';
 
 class VenueSuggestedCard extends StatefulWidget {
   final Venue venue;

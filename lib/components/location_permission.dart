@@ -1,9 +1,9 @@
-import 'package:TableReserver/models/location_permission_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
 
+import '../models/location_permission_model.dart';
 import '../themes/theme.dart';
 import '../utils/constants.dart';
 

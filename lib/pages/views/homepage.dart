@@ -1,4 +1,3 @@
-import 'package:TableReserver/models/homepage_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
@@ -10,6 +9,7 @@ import '../../components/carousel_item.dart';
 import '../../components/navbar.dart';
 import '../../components/venue_card.dart';
 import '../../components/venue_suggested_card.dart';
+import '../../models/homepage_model.dart';
 import '../../themes/theme.dart';
 import '../../utils/extensions.dart';
 import '../../utils/routing_utils.dart';

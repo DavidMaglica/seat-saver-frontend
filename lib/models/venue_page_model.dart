@@ -1,7 +1,7 @@
-import 'package:TableReserver/api/data/basic_response.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../api/data/basic_response.dart';
 import '../api/data/venue.dart';
 import '../api/reservation_api.dart';
 import '../api/venue_api.dart';

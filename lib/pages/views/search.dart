@@ -1,5 +1,3 @@
-import 'package:TableReserver/models/search_model.dart';
-import 'package:TableReserver/utils/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -7,7 +5,9 @@ import 'package:provider/provider.dart';
 
 import '../../api/data/venue.dart';
 import '../../components/navbar.dart';
+import '../../models/search_model.dart';
 import '../../themes/theme.dart';
+import '../../utils/extensions.dart';
 import '../../utils/routing_utils.dart';
 
 class Search extends StatelessWidget {

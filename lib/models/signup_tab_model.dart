@@ -1,10 +1,10 @@
-import 'package:TableReserver/api/data/basic_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 import '../api/account_api.dart';
-import '../utils/signup_methods.dart';
+import '../api/data/basic_response.dart';
 import '../pages/auth/signup_tab.dart';
+import '../utils/signup_methods.dart';
 
 class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
   final AccountApi accountApi = AccountApi();
