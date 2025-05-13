@@ -161,22 +161,22 @@ class ReservationHistory extends StatelessWidget {
     );
   }
 
-  Widget _buildDivider(BuildContext context) {
+  Widget _buildDivider(BuildContext ctx) {
     return Divider(
       height: 1,
       thickness: 0.5,
-      color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
+      color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(0.5),
     );
   }
 
   void _openReservationDetailsBottomSheet(
-    BuildContext context,
+    BuildContext ctx,
     int venueId,
     int numberOfGuests,
     DateTime reservationDateTime,
   ) {
     showModalBottomSheet(
-      context: context,
+      context: ctx,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -187,7 +187,7 @@ class ReservationHistory extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              buildModalTitle('Reservation Detail', context),
+              buildModalTitle(context, 'Reservation Detail'),
               const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),

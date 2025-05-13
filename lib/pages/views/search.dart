@@ -112,7 +112,7 @@ class Search extends StatelessWidget {
                   currentIndex: model.pageIndex,
                   context: context,
                   onTap: (index, context) => onNavbarItemTapped(
-                      model.pageIndex, index, context, userEmail, userLocation),
+                      context, model.pageIndex, index, userEmail, userLocation),
                 ),
               ),
             );

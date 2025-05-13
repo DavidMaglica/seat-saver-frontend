@@ -69,7 +69,7 @@ class CarouselItem extends StatelessWidget {
     );
   }
 
-  Widget _buildText(BuildContext context) {
+  Widget _buildText(BuildContext ctx) {
     return Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
         child: Column(mainAxisSize: MainAxisSize.max, children: [
@@ -88,7 +88,7 @@ class CarouselItem extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                 child: Text('Discover new restaurants in $currentCity!',
-                    style: Theme.of(context).textTheme.bodyMedium),
+                    style: Theme.of(ctx).textTheme.bodyMedium),
               ))
         ]));
   }

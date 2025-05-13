@@ -81,9 +81,9 @@ class Homepage extends StatelessWidget {
                           currentIndex: model.pageIndex,
                           context: context,
                           onTap: (index, context) => onNavbarItemTapped(
+                              context,
                               model.pageIndex,
                               index,
-                              context,
                               userEmail,
                               model.currentUserLocation ?? userLocation),
                         ))));

@@ -6,14 +6,14 @@ OutlineInputBorder outlineInputBorder(Color colour) => OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
     );
 
-EdgeInsets modalPadding(BuildContext context) => EdgeInsets.only(
-      bottom: MediaQuery.of(context).viewInsets.bottom,
+EdgeInsets modalPadding(BuildContext ctx) => EdgeInsets.only(
+      bottom: MediaQuery.of(ctx).viewInsets.bottom,
       left: 16,
       right: 16,
       top: 16,
     );
 
-Widget buildModalTitle(String title, BuildContext context) {
+Widget buildModalTitle(BuildContext ctx, String title) {
   return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 8),
       child: Align(
@@ -21,7 +21,7 @@ Widget buildModalTitle(String title, BuildContext context) {
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.titleMedium,
+              style: Theme.of(ctx).textTheme.titleMedium,
             ),
           ])));
 }

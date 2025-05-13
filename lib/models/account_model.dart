@@ -7,9 +7,9 @@ import '../components/toaster.dart';
 import '../utils/constants.dart';
 
 class AccountModel extends ChangeNotifier {
+  final BuildContext context;
   final String? userEmail;
   final Position? userLocation;
-  final BuildContext context;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final unfocusNode = FocusNode();
