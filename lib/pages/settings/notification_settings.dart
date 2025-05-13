@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import '../../api/data/user.dart';
 import '../../components/action_button.dart';
 import '../../components/custom_appbar.dart';
-import '../../utils/constants.dart';
 import '../../models/notification_settings_model.dart';
+import '../../utils/constants.dart';
 
 class NotificationSettings extends StatelessWidget {
   final User user;
@@ -22,9 +22,9 @@ class NotificationSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<NotificationSettingsModel>(
       create: (_) => NotificationSettingsModel(
+        context: context,
         user: user,
         userLocation: userLocation,
-        context: context,
       )..loadNotificationSettings(),
       builder: (context, _) {
         final model = context.watch<NotificationSettingsModel>();
@@ -87,27 +87,31 @@ class NotificationSettings extends StatelessWidget {
     );
   }
 
-  Widget _buildDescriptionText(BuildContext context) => Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 12, 0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                'Choose what notifications you want to receive below and we will update the settings.',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+  Widget _buildDescriptionText(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 12, 0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              'Choose what notifications you want to receive below and we will update the settings.',
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
-  Widget _buildDivider(BuildContext context) => Divider(
-        height: 1,
-        thickness: 1,
-        color: Theme.of(context).colorScheme.onPrimary,
-        indent: 12,
-        endIndent: 12,
-      );
+  Widget _buildDivider(BuildContext context) {
+    return Divider(
+      height: 1,
+      thickness: 1,
+      color: Theme.of(context).colorScheme.onPrimary,
+      indent: 12,
+      endIndent: 12,
+    );
+  }
 
   Widget _buildSwitchTile({
     required BuildContext context,
@@ -115,18 +119,18 @@ class NotificationSettings extends StatelessWidget {
     required String subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
-  }) =>
-      SwitchListTile.adaptive(
-        value: value,
-        onChanged: onChanged,
-        title: Text(title, style: Theme.of(context).textTheme.titleMedium),
-        subtitle: Text(subtitle, style: Theme.of(context).textTheme.bodyMedium),
-        tileColor: Theme.of(context).colorScheme.surface,
-        activeTrackColor: Theme.of(context).colorScheme.primary,
-        inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
-        dense: false,
-        controlAffinity: ListTileControlAffinity.trailing,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      );
+  }) {
+    return SwitchListTile.adaptive(
+      value: value,
+      onChanged: onChanged,
+      title: Text(title, style: Theme.of(context).textTheme.titleMedium),
+      subtitle: Text(subtitle, style: Theme.of(context).textTheme.bodyMedium),
+      tileColor: Theme.of(context).colorScheme.surface,
+      activeTrackColor: Theme.of(context).colorScheme.primary,
+      inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
+      dense: false,
+      controlAffinity: ListTileControlAffinity.trailing,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+    );
+  }
 }

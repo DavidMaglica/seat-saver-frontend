@@ -5,12 +5,12 @@ import 'package:url_launcher/url_launcher.dart';
 import '../api/data/basic_response.dart';
 import '../api/data/user.dart';
 import '../api/email_sender.dart';
-import '../utils/toaster.dart';
+import '../components/toaster.dart';
 
 class SupportModel extends ChangeNotifier {
+  final BuildContext context;
   final User user;
   final Position? position;
-  final BuildContext context;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final EmailSender emailSender = EmailSender();
@@ -23,8 +23,8 @@ class SupportModel extends ChangeNotifier {
   final TextEditingController ticketDescriptionController = TextEditingController();
 
   SupportModel({
-    required this.user,
     required this.context,
+    required this.user,
     this.position,
   });
 

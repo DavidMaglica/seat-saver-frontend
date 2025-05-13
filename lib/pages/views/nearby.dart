@@ -36,8 +36,6 @@ class _NearbyState extends State<Nearby> {
     super.initState();
     if (widget.userEmail != null) setState(() => email = widget.userEmail);
 
-    debugPrint(
-        'User location: ${widget.userLocation?.latitude}, ${widget.userLocation?.longitude}');
     osmMapController = MapController(
       initPosition: GeoPoint(
         latitude: widget.userLocation?.latitude ?? 45.815399,

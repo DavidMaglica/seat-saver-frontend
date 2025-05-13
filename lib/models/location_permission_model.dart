@@ -8,13 +8,13 @@ import '../api/data/notification_settings.dart';
 import '../utils/constants.dart';
 
 class LocationPermissionPopUpModel extends ChangeNotifier {
-  final String userEmail;
   final BuildContext context;
+  final String userEmail;
   final AccountApi _accountApi = AccountApi();
 
   NotificationOptions? notificationOptions;
 
-  LocationPermissionPopUpModel(this.userEmail, this.context) {
+  LocationPermissionPopUpModel(this.context, this.userEmail) {
     init();
   }
 

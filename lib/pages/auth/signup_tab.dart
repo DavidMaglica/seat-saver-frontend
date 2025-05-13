@@ -5,12 +5,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../api/account_api.dart';
 import '../../api/data/basic_response.dart';
+import '../../components/toaster.dart';
+import '../../models/authentication_model.dart';
+import '../../models/signup_tab_model.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
-import '../../utils/toaster.dart';
-import '../../models/authentication_model.dart';
 import '../../utils/signup_methods.dart';
-import '../../models/signup_tab_model.dart';
 
 class SignUpTab extends StatefulWidget {
   final AuthenticationModel model;
@@ -47,9 +47,10 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
     }
   }
 
-  void _goToHomepage(String userEmail) =>
-      Navigator.pushNamed(context, Routes.HOMEPAGE,
-          arguments: {'userEmail': userEmail, 'userLocation': null});
+  void _goToHomepage(String userEmail) {
+    Navigator.pushNamed(context, Routes.HOMEPAGE,
+        arguments: {'userEmail': userEmail, 'userLocation': null});
+  }
 
   @override
   Widget build(BuildContext context) {

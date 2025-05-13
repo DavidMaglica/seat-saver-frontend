@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/carousel_item_model.dart';
 import '../themes/theme.dart';
-import '../utils/toaster.dart';
+import 'toaster.dart';
 
 class CarouselItem extends StatelessWidget {
   final String currentCity;
@@ -28,15 +28,15 @@ class CarouselItem extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
-                color:
-                Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
                 blurRadius: 6,
               )
             ],
           ),
           child: InkWell(
             onTap: () {
-              Toaster.displayInfo(context, 'Searching by location currently unavailable');
+              Toaster.displayInfo(
+                  context, 'Searching by location currently unavailable');
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -54,38 +54,42 @@ class CarouselItem extends StatelessWidget {
     );
   }
 
-  Widget _buildImage(String imagePath) => ClipRRect(
-    borderRadius: const BorderRadius.only(
-      topLeft: Radius.circular(8),
-      topRight: Radius.circular(8),
-    ),
-    child: Image.asset(
-      imagePath,
-      width: double.infinity,
-      height: 128,
-      fit: BoxFit.cover,
-    ),
-  );
+  Widget _buildImage(String imagePath) {
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(8),
+        topRight: Radius.circular(8),
+      ),
+      child: Image.asset(
+        imagePath,
+        width: double.infinity,
+        height: 128,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
 
-  Widget _buildText(BuildContext context) => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-      child: Column(mainAxisSize: MainAxisSize.max, children: [
-        Align(
-            alignment: const AlignmentDirectional(-1, 0),
-            child: Padding(
+  Widget _buildText(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
+        child: Column(mainAxisSize: MainAxisSize.max, children: [
+          Align(
+              alignment: const AlignmentDirectional(-1, 0),
+              child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                  child: Text(currentCity,
+                      style: const TextStyle(
+                        color: AppThemes.accent1,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      )))),
+          Align(
+              alignment: const AlignmentDirectional(-1, 0),
+              child: Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                child: Text(currentCity,
-                    style: const TextStyle(
-                      color: AppThemes.accent1,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    )))),
-        Align(
-            alignment: const AlignmentDirectional(-1, 0),
-            child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-              child: Text('Discover new restaurants in $currentCity!',
-                  style: Theme.of(context).textTheme.bodyMedium),
-            ))
-      ]));
+                child: Text('Discover new restaurants in $currentCity!',
+                    style: Theme.of(context).textTheme.bodyMedium),
+              ))
+        ]));
+  }
 }

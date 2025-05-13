@@ -8,7 +8,7 @@ import '../../api/data/user.dart';
 import '../../components/custom_appbar.dart';
 import '../../utils/constants.dart';
 import '../../models/reservation_history_model.dart';
-import 'utils/settings_utils.dart';
+import '../../components/modal_widgets.dart';
 
 class ReservationHistory extends StatelessWidget {
   final User user;
@@ -24,8 +24,8 @@ class ReservationHistory extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => ReservationHistoryModel(
-        user: user,
         context: context,
+        user: user,
         userLocation: userLocation,
       )..loadReservations(),
       child: Builder(
@@ -70,102 +70,7 @@ class ReservationHistory extends StatelessWidget {
                           ],
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: model.reservations == null ||
-                                  model.reservations!.isEmpty
-                              ? Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Text(
-                                    'No Reservation History',
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium,
-                                  ),
-                                )
-                              : Column(
-                                  children: model.reservations!
-                                      .asMap()
-                                      .entries
-                                      .map((entry) {
-                                    int index = entry.key;
-                                    var reservation = entry.value;
-
-                                    return Column(
-                                      children: [
-                                        InkWell(
-                                          onTap: () =>
-                                              _openReservationDetailsBottomSheet(
-                                            context,
-                                            reservation.venueId,
-                                            reservation.numberOfGuests,
-                                            reservation.reservationDateTime,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 12),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  DateFormat('dd-MM-yyyy HH:mm')
-                                                      .format(reservation
-                                                          .reservationDateTime),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              right: 8),
-                                                      child: Text(
-                                                        'view details',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyMedium
-                                                            ?.copyWith(
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .colorScheme
-                                                                  .onPrimary
-                                                                  .withOpacity(
-                                                                      .6),
-                                                            ),
-                                                      ),
-                                                    ),
-                                                    Icon(
-                                                      CupertinoIcons
-                                                          .chevron_right,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onPrimary,
-                                                      size: 14,
-                                                    )
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        if (index <
-                                            model.reservations!.length - 1)
-                                          Divider(
-                                            height: 1,
-                                            thickness: 0.5,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary
-                                                .withOpacity(0.5),
-                                          ),
-                                      ],
-                                    );
-                                  }).toList(),
-                                ),
-                        ),
+                        child: _buildReservationHistory(context, model),
                       ),
                     ),
                   ],
@@ -175,6 +80,92 @@ class ReservationHistory extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  Padding _buildReservationHistory(
+    BuildContext ctx,
+    ReservationHistoryModel model,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: model.reservations == null || model.reservations!.isEmpty
+          ? Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                'No Reservation History',
+                style: Theme.of(ctx).textTheme.titleMedium,
+              ),
+            )
+          : _buildReservation(ctx, model),
+    );
+  }
+
+  Widget _buildReservation(
+    BuildContext ctx,
+    ReservationHistoryModel model,
+  ) {
+    return Column(
+      children: model.reservations!.asMap().entries.map((entry) {
+        int index = entry.key;
+        var reservation = entry.value;
+
+        return Column(
+          children: [
+            InkWell(
+              onTap: () => _openReservationDetailsBottomSheet(
+                ctx,
+                reservation.venueId,
+                reservation.numberOfGuests,
+                reservation.reservationDateTime,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      DateFormat('dd-MM-yyyy HH:mm')
+                          .format(reservation.reservationDateTime),
+                      style: Theme.of(ctx).textTheme.titleMedium,
+                    ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: Text(
+                            'view details',
+                            style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                                  color: Theme.of(ctx)
+                                      .colorScheme
+                                      .onPrimary
+                                      .withOpacity(.6),
+                                ),
+                          ),
+                        ),
+                        Icon(
+                          CupertinoIcons.chevron_right,
+                          color: Theme.of(ctx).colorScheme.onPrimary,
+                          size: 14,
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            if (index < model.reservations!.length - 1) _buildDivider(ctx),
+          ],
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildDivider(BuildContext context) {
+    return Divider(
+      height: 1,
+      thickness: 0.5,
+      color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
     );
   }
 
@@ -202,7 +193,7 @@ class ReservationHistory extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
-                    _buildDetailRow('Venue ID', venueId.toString(), context),
+                    _buildDetailRow(context, 'Venue ID', venueId.toString()),
                     Divider(
                       color: Theme.of(context)
                           .colorScheme
@@ -211,7 +202,10 @@ class ReservationHistory extends StatelessWidget {
                       thickness: 0.5,
                     ),
                     _buildDetailRow(
-                        'Number of Guests', numberOfGuests.toString(), context),
+                      context,
+                      'Number of Guests',
+                      numberOfGuests.toString(),
+                    ),
                     Divider(
                       color: Theme.of(context)
                           .colorScheme
@@ -220,10 +214,11 @@ class ReservationHistory extends StatelessWidget {
                       thickness: 0.5,
                     ),
                     _buildDetailRow(
-                        'Date (dd-MM-yyyy HH:mm)',
-                        DateFormat('dd-MM-yyyy HH:mm')
-                            .format(reservationDateTime),
-                        context),
+                      context,
+                      'Date (dd-MM-yyyy HH:mm)',
+                      DateFormat('dd-MM-yyyy HH:mm')
+                          .format(reservationDateTime),
+                    ),
                   ],
                 ),
               ),
@@ -248,7 +243,7 @@ class ReservationHistory extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(String label, String value, BuildContext context) {
+  Widget _buildDetailRow(BuildContext ctx, String label, String value) {
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Row(
@@ -256,11 +251,11 @@ class ReservationHistory extends StatelessWidget {
         children: [
           Text(
             label,
-            style: Theme.of(context).textTheme.titleSmall,
+            style: Theme.of(ctx).textTheme.titleSmall,
           ),
           Text(
             value,
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(ctx).textTheme.bodyMedium,
           ),
         ],
       ),

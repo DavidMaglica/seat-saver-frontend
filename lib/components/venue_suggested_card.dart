@@ -1,4 +1,4 @@
-import 'package:TableReserver/utils/utils.dart';
+import 'package:TableReserver/utils/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -97,77 +97,83 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
     );
   }
 
-  Widget _buildImage() => Hero(
-      tag: 'locationCardImage${randomDouble(0, 100)}',
-      transitionOnUserGestures: true,
-      child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(8),
-            topRight: Radius.circular(8),
-          ),
-          child: Image.asset(
-            _venueImages!.first,
-            width: double.infinity,
-            height: 110,
-            fit: BoxFit.cover,
-          )));
+  Widget _buildImage() {
+    return Hero(
+        tag: 'locationCardImage${randomDouble(0, 100)}',
+        transitionOnUserGestures: true,
+        child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(8),
+              topRight: Radius.circular(8),
+            ),
+            child: Image.asset(
+              _venueImages!.first,
+              width: double.infinity,
+              height: 110,
+              fit: BoxFit.cover,
+            )));
+  }
 
-  Widget _buildNameAndType(String name, String type) => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(name.toUpperCase(),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleSmall
-                  ?.copyWith(color: AppThemes.accent1)),
-          Text(type.isNotEmpty ? type.toTitleCase() : '',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
-                fontWeight: FontWeight.w800,
-                fontSize: 10,
-              )),
-        ],
-      ));
-
-  Widget _buildLocationAndWorkingHours(String location, String workingHours) =>
-      Padding(
+  Widget _buildNameAndType(String name, String type) {
+    return Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(location,
+            Text(name.toUpperCase(),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleSmall
+                    ?.copyWith(color: AppThemes.accent1)),
+            Text(type.isNotEmpty ? type.toTitleCase() : '',
                 style: TextStyle(
-                  color:
-                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
+                  color: Theme.of(context).colorScheme.onPrimary,
                   fontWeight: FontWeight.w800,
                   fontSize: 10,
                 )),
-            Text(workingHours,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(fontSize: 9)),
           ],
-        ),
-      );
+        ));
+  }
 
-  Widget _buildRatingBar(double rating) => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(08, 8, 0, 0),
-      child: Row(mainAxisSize: MainAxisSize.max, children: [
-        RatingBarIndicator(
-          itemBuilder: (context, index) => Icon(
-            CupertinoIcons.star_fill,
-            color: Theme.of(context).colorScheme.onTertiary,
-          ),
-          direction: Axis.horizontal,
-          rating: rating,
-          unratedColor: const Color(0xFF57636C).withOpacity(0.5),
-          itemCount: 5,
-          itemSize: 14,
-        )
-      ]));
+  Widget _buildLocationAndWorkingHours(String location, String workingHours) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(location,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
+                fontWeight: FontWeight.w800,
+                fontSize: 10,
+              )),
+          Text(workingHours,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontSize: 9)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRatingBar(double rating) {
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(08, 8, 0, 0),
+        child: Row(mainAxisSize: MainAxisSize.max, children: [
+          RatingBarIndicator(
+            itemBuilder: (context, index) => Icon(
+              CupertinoIcons.star_fill,
+              color: Theme.of(context).colorScheme.onTertiary,
+            ),
+            direction: Axis.horizontal,
+            rating: rating,
+            unratedColor: const Color(0xFF57636C).withOpacity(0.5),
+            itemCount: 5,
+            itemSize: 14,
+          )
+        ]));
+  }
 }

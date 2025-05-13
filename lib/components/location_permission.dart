@@ -18,7 +18,7 @@ class LocationPermissionPopUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<LocationPermissionPopUpModel>(
-      create: (_) => LocationPermissionPopUpModel(userEmail, context)..init(),
+      create: (_) => LocationPermissionPopUpModel(context, userEmail)..init(),
       builder: (context, _) {
         final model = Provider.of<LocationPermissionPopUpModel>(context);
 
@@ -33,101 +33,115 @@ class LocationPermissionPopUp extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Align(
-                  alignment: AlignmentDirectional(0, -1),
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 24),
-                    child: Icon(CupertinoIcons.location_solid,
-                        color: AppThemes.accent1, size: 64),
-                  ),
-                ),
-                Align(
-                  alignment: const AlignmentDirectional(0, 0),
-                  child: Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 12),
-                    child: Text(
-                      'Our app works best with location enabled',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: const AlignmentDirectional(0, 0),
-                  child: Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 96),
-                    child: Text(
-                        'Find your favourite spots! Activate location services to easily locate venues near you!',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyMedium),
-                  ),
-                ),
+                _buildIcon(),
+                _buildTitle(context),
+                _buildSubTitle(context),
                 Align(
                   alignment: const AlignmentDirectional(0, 1),
                   child: Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                    child: FFButtonWidget(
-                      onPressed: () => model.getCurrentPosition(),
-                      text: 'Enable location',
-                      options: FFButtonOptions(
-                        width: 270,
-                        height: 40,
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-                        iconPadding:
-                            const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                        color: Theme.of(context).colorScheme.primary,
-                        textStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.background,
-                          fontSize: 16,
-                        ),
-                        elevation: 3,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
+                    child: _buildEnableButton(context, model),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 24),
-                  child: FFButtonWidget(
-                    onPressed: () {
-                      Navigator.of(context).popAndPushNamed(
-                        Routes.HOMEPAGE,
-                        arguments: {
-                          'userEmail': userEmail,
-                          'userLocation': null
-                        },
-                      );
-                    },
-                    text: 'No, thanks',
-                    options: FFButtonOptions(
-                      width: 270,
-                      height: 40,
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-                      iconPadding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                      color: Theme.of(context).colorScheme.background,
-                      textStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        fontSize: 16,
-                      ),
-                      elevation: 3,
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
+                  child: _buildDenyButton(context),
                 ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildSubTitle(BuildContext ctx) {
+    return Align(
+      alignment: const AlignmentDirectional(0, 0),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 96),
+        child: Text(
+            'Find your favourite spots! Activate location services to easily locate venues near you!',
+            textAlign: TextAlign.center,
+            style: Theme.of(ctx).textTheme.bodyMedium),
+      ),
+    );
+  }
+
+  Widget _buildTitle(BuildContext ctx) {
+    return Align(
+      alignment: const AlignmentDirectional(0, 0),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 12),
+        child: Text(
+          'Our app works best with location enabled',
+          textAlign: TextAlign.center,
+          style: Theme.of(ctx).textTheme.titleLarge,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIcon() {
+    return const Align(
+      alignment: AlignmentDirectional(0, -1),
+      child: Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 24),
+        child: Icon(CupertinoIcons.location_solid,
+            color: AppThemes.accent1, size: 64),
+      ),
+    );
+  }
+
+  Widget _buildDenyButton(BuildContext ctx) {
+    return FFButtonWidget(
+      onPressed: () {
+        Navigator.of(ctx).popAndPushNamed(
+          Routes.HOMEPAGE,
+          arguments: {'userEmail': userEmail, 'userLocation': null},
+        );
+      },
+      text: 'No, thanks',
+      options: FFButtonOptions(
+        width: 270,
+        height: 40,
+        padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+        iconPadding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+        color: Theme.of(ctx).colorScheme.background,
+        textStyle: TextStyle(
+          color: Theme.of(ctx).colorScheme.onPrimary,
+          fontSize: 16,
+        ),
+        elevation: 3,
+        borderSide: BorderSide(
+          color: Theme.of(ctx).colorScheme.onPrimary,
+          width: 2,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+    );
+  }
+
+  Widget _buildEnableButton(
+    BuildContext ctx,
+    LocationPermissionPopUpModel model,
+  ) {
+    return FFButtonWidget(
+      onPressed: () => model.getCurrentPosition(),
+      text: 'Enable location',
+      options: FFButtonOptions(
+        width: 270,
+        height: 40,
+        padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+        iconPadding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+        color: Theme.of(ctx).colorScheme.primary,
+        textStyle: TextStyle(
+          color: Theme.of(ctx).colorScheme.background,
+          fontSize: 16,
+        ),
+        elevation: 3,
+        borderRadius: BorderRadius.circular(8),
+      ),
     );
   }
 }

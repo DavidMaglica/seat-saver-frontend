@@ -5,12 +5,12 @@ import 'package:geolocator/geolocator.dart';
 
 import '../../api/data/user.dart';
 import '../../components/action_button.dart';
-import '../../components/banner.dart';
+import '../../components/support_banner.dart';
 import '../../components/custom_appbar.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
 import '../../models/support_model.dart';
-import 'utils/settings_utils.dart';
+import '../../components/modal_widgets.dart';
 
 class Support extends StatefulWidget {
   final User user;
@@ -33,7 +33,10 @@ class _SupportState extends State<Support> {
   void initState() {
     super.initState();
     model = SupportModel(
-        user: widget.user, context: context, position: widget.userLocation);
+      context: context,
+      user: widget.user,
+      position: widget.userLocation,
+    );
   }
 
   @override
@@ -169,25 +172,26 @@ class _SupportState extends State<Support> {
     String hintText,
     int? maxLines,
     int? minLines,
-  ) =>
-      TextFormField(
-        controller: controller,
-        focusNode: focusNode,
-        decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: Theme.of(context).textTheme.bodyMedium,
-          hintText: hintText,
-          hintStyle: Theme.of(context).textTheme.bodySmall,
-          enabledBorder:
-              outlineInputBorder(Theme.of(context).colorScheme.onPrimary),
-          focusedBorder: outlineInputBorder(AppThemes.infoColor),
-          errorBorder: outlineInputBorder(Theme.of(context).colorScheme.error),
-          focusedErrorBorder: outlineInputBorder(AppThemes.infoColor),
-          contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),
-        ),
-        style: Theme.of(context).textTheme.bodyMedium,
-        maxLines: maxLines,
-        minLines: minLines,
-        cursorColor: Theme.of(context).colorScheme.onPrimary,
-      );
+  ) {
+    return TextFormField(
+      controller: controller,
+      focusNode: focusNode,
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: Theme.of(context).textTheme.bodyMedium,
+        hintText: hintText,
+        hintStyle: Theme.of(context).textTheme.bodySmall,
+        enabledBorder:
+            outlineInputBorder(Theme.of(context).colorScheme.onPrimary),
+        focusedBorder: outlineInputBorder(AppThemes.infoColor),
+        errorBorder: outlineInputBorder(Theme.of(context).colorScheme.error),
+        focusedErrorBorder: outlineInputBorder(AppThemes.infoColor),
+        contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),
+      ),
+      style: Theme.of(context).textTheme.bodyMedium,
+      maxLines: maxLines,
+      minLines: minLines,
+      cursorColor: Theme.of(context).colorScheme.onPrimary,
+    );
+  }
 }

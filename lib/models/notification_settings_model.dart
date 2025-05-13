@@ -8,9 +8,9 @@ import '../api/data/user.dart';
 import '../themes/theme.dart';
 
 class NotificationSettingsModel extends ChangeNotifier {
+  final BuildContext context;
   final User user;
   final Position? userLocation;
-  final BuildContext context;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -21,8 +21,8 @@ class NotificationSettingsModel extends ChangeNotifier {
   bool isActiveLocationServices = false;
 
   NotificationSettingsModel({
-    required this.user,
     required this.context,
+    required this.user,
     this.userLocation,
   });
 

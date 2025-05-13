@@ -7,12 +7,12 @@ import 'package:geolocator/geolocator.dart';
 import '../../api/account_api.dart';
 import '../../api/data/basic_response.dart';
 import '../../api/data/user_response.dart';
+import '../../components/toaster.dart';
 import '../../models/authentication_model.dart';
 import '../../models/login_tab_model.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
 import '../../utils/signup_methods.dart';
-import '../../utils/toaster.dart';
 
 class LogInTab extends StatefulWidget {
   final AuthenticationModel model;
@@ -52,9 +52,10 @@ class _LogInTabState extends State<LogInTab> {
     }
   }
 
-  void _goToHomepage(String userEmail, Position userLocation) =>
-      Navigator.pushNamed(context, Routes.HOMEPAGE,
-          arguments: {'userEmail': userEmail, 'userLocation': userLocation});
+  void _goToHomepage(String userEmail, Position userLocation) {
+    Navigator.pushNamed(context, Routes.HOMEPAGE,
+        arguments: {'userEmail': userEmail, 'userLocation': userLocation});
+  }
 
   void _forgotPassword() {
     Toaster.displayInfo(context, 'Not implemented yet');
@@ -146,199 +147,211 @@ class _LogInTabState extends State<LogInTab> {
     );
   }
 
-  Widget _buildPasswordField() => TextFormField(
-        controller: widget.model.passwordLoInTextController,
-        focusNode: widget.model.passwordLogInFocusNode,
-        autofocus: false,
-        autofillHints: const [AutofillHints.password],
-        obscureText: !widget.model.passwordlogInVisibility,
-        decoration: InputDecoration(
-          labelText: 'Password',
-          labelStyle: Theme.of(context).textTheme.bodyMedium,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onPrimary,
-              width: .5,
-            ),
-            borderRadius: BorderRadius.circular(8),
+  Widget _buildPasswordField() {
+    return TextFormField(
+      controller: widget.model.passwordLoInTextController,
+      focusNode: widget.model.passwordLogInFocusNode,
+      autofocus: false,
+      autofillHints: const [AutofillHints.password],
+      obscureText: !widget.model.passwordlogInVisibility,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        labelStyle: Theme.of(context).textTheme.bodyMedium,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.onPrimary,
+            width: .5,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: AppThemes.infoColor,
-              width: .5,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.error,
-              width: .5,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.error,
-              width: .5,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          contentPadding: const EdgeInsetsDirectional.fromSTEB(24, 24, 0, 24),
-          suffixIcon: InkWell(
-            onTap: () => setState(
-              () => widget.model.passwordlogInVisibility =
-                  !widget.model.passwordlogInVisibility,
-            ),
-            focusNode: FocusNode(skipTraversal: true),
-            child: Icon(
-              (widget.model.passwordlogInVisibility)
-                  ? CupertinoIcons.eye_solid
-                  : CupertinoIcons.eye_slash_fill,
-              color: Theme.of(context).colorScheme.onPrimary,
-              size: 24,
-            ),
-          ),
+          borderRadius: BorderRadius.circular(8),
         ),
-        style: Theme.of(context).textTheme.bodyMedium,
-        cursorColor: Theme.of(context).colorScheme.onPrimary,
-      );
-
-  Widget _buildEmailField() => TextFormField(
-        controller: widget.model.emailAddressLogInTextController,
-        focusNode: widget.model.emailAddressLogInFocusNode,
-        autofocus: false,
-        autofillHints: const [AutofillHints.email],
-        obscureText: false,
-        decoration: InputDecoration(
-          isDense: false,
-          labelText: 'Email',
-          labelStyle: Theme.of(context).textTheme.bodyMedium,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onPrimary,
-              width: .5,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: AppThemes.infoColor,
-              width: .5,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.error,
-              width: .5,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.error,
-              width: .5,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          contentPadding: const EdgeInsets.all(24),
-        ),
-        style: Theme.of(context).textTheme.bodyLarge,
-        keyboardType: TextInputType.emailAddress,
-        cursorColor: Theme.of(context).colorScheme.onPrimary,
-      );
-
-  Widget _buildLogInButton() => Align(
-        child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
-          child: FFButtonWidget(
-            onPressed: () => _performLogIn(SignUpMethodEnum.custom),
-            text: 'Log In',
-            options: FFButtonOptions(
-              width: 270,
-              height: 50,
-              color: Theme.of(context).colorScheme.primary,
-              textStyle: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
-                fontSize: 18,
-              ),
-              borderSide: BorderSide.none,
-              elevation: 3,
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-      );
-
-  Widget _buildGoogleLogInButton() => Align(
-        child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
-          child: FFButtonWidget(
-            onPressed: () => _performLogIn(SignUpMethodEnum.google),
-            text: 'Continue with Google',
-            icon: const Icon(
-              FontAwesomeIcons.google,
-              size: 16,
-            ),
-            options: FFButtonOptions(
-              width: 270,
-              height: 50,
-              color: Theme.of(context).colorScheme.background,
-              textStyle: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(.3),
-                fontSize: 18,
-              ),
-              borderSide: BorderSide(
-                color: Theme.of(context).colorScheme.onPrimary,
-                width: 1,
-              ),
-              elevation: 0,
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-      );
-
-  Widget _buildAppleLogInButton() => Align(
-        child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
-          child: FFButtonWidget(
-            onPressed: () => _performLogIn(SignUpMethodEnum.apple),
-            text: 'Continue with Apple',
-            icon: const Icon(
-              Icons.apple,
-              size: 24,
-            ),
-            options: FFButtonOptions(
-              width: 270,
-              height: 50,
-              color: Theme.of(context).colorScheme.background,
-              textStyle: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(.3),
-                fontSize: 18,
-              ),
-              borderSide: BorderSide(
-                color: Theme.of(context).colorScheme.onPrimary,
-                width: 1,
-              ),
-              elevation: 0,
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-      );
-
-  Widget _buildForgotPassword() => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-      child: TextButton(
-        onPressed: _forgotPassword,
-        child: const Text(
-          'Forgot password? Reset here.',
-          style: TextStyle(
-            fontSize: 12,
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
             color: AppThemes.infoColor,
-            decoration: TextDecoration.underline,
+            width: .5,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.error,
+            width: .5,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.error,
+            width: .5,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsetsDirectional.fromSTEB(24, 24, 0, 24),
+        suffixIcon: InkWell(
+          onTap: () => setState(
+            () => widget.model.passwordlogInVisibility =
+                !widget.model.passwordlogInVisibility,
+          ),
+          focusNode: FocusNode(skipTraversal: true),
+          child: Icon(
+            (widget.model.passwordlogInVisibility)
+                ? CupertinoIcons.eye_solid
+                : CupertinoIcons.eye_slash_fill,
+            color: Theme.of(context).colorScheme.onPrimary,
+            size: 24,
           ),
         ),
-      ));
+      ),
+      style: Theme.of(context).textTheme.bodyMedium,
+      cursorColor: Theme.of(context).colorScheme.onPrimary,
+    );
+  }
+
+  Widget _buildEmailField() {
+    return TextFormField(
+      controller: widget.model.emailAddressLogInTextController,
+      focusNode: widget.model.emailAddressLogInFocusNode,
+      autofocus: false,
+      autofillHints: const [AutofillHints.email],
+      obscureText: false,
+      decoration: InputDecoration(
+        isDense: false,
+        labelText: 'Email',
+        labelStyle: Theme.of(context).textTheme.bodyMedium,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.onPrimary,
+            width: .5,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: AppThemes.infoColor,
+            width: .5,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.error,
+            width: .5,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.error,
+            width: .5,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsets.all(24),
+      ),
+      style: Theme.of(context).textTheme.bodyLarge,
+      keyboardType: TextInputType.emailAddress,
+      cursorColor: Theme.of(context).colorScheme.onPrimary,
+    );
+  }
+
+  Widget _buildLogInButton() {
+    return Align(
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
+        child: FFButtonWidget(
+          onPressed: () => _performLogIn(SignUpMethodEnum.custom),
+          text: 'Log In',
+          options: FFButtonOptions(
+            width: 270,
+            height: 50,
+            color: Theme.of(context).colorScheme.primary,
+            textStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontSize: 18,
+            ),
+            borderSide: BorderSide.none,
+            elevation: 3,
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGoogleLogInButton() {
+    return Align(
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
+        child: FFButtonWidget(
+          onPressed: () => _performLogIn(SignUpMethodEnum.google),
+          text: 'Continue with Google',
+          icon: const Icon(
+            FontAwesomeIcons.google,
+            size: 16,
+          ),
+          options: FFButtonOptions(
+            width: 270,
+            height: 50,
+            color: Theme.of(context).colorScheme.background,
+            textStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(.3),
+              fontSize: 18,
+            ),
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.onPrimary,
+              width: 1,
+            ),
+            elevation: 0,
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppleLogInButton() {
+    return Align(
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
+        child: FFButtonWidget(
+          onPressed: () => _performLogIn(SignUpMethodEnum.apple),
+          text: 'Continue with Apple',
+          icon: const Icon(
+            Icons.apple,
+            size: 24,
+          ),
+          options: FFButtonOptions(
+            width: 270,
+            height: 50,
+            color: Theme.of(context).colorScheme.background,
+            textStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(.3),
+              fontSize: 18,
+            ),
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.onPrimary,
+              width: 1,
+            ),
+            elevation: 0,
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildForgotPassword() {
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+        child: TextButton(
+          onPressed: _forgotPassword,
+          child: const Text(
+            'Forgot password? Reset here.',
+            style: TextStyle(
+              fontSize: 12,
+              color: AppThemes.infoColor,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ));
+  }
 }

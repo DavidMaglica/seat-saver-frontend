@@ -8,13 +8,13 @@ import '../api/data/user.dart';
 import '../themes/theme.dart';
 
 class EditProfileModel extends ChangeNotifier {
+  final BuildContext context;
   final User user;
   final Position? userLocation;
-  final BuildContext context;
 
   EditProfileModel({
-    required this.user,
     required this.context,
+    required this.user,
     this.userLocation,
   });
 
@@ -74,8 +74,9 @@ class EditProfileModel extends ChangeNotifier {
     if (response.success) {
       updatedUsername = newName;
       newUsernameTextController.clear();
-      notifyListeners();
+      if (!context.mounted) return;
       Navigator.of(context).pop();
+      notifyListeners();
     }
   }
 
@@ -96,8 +97,9 @@ class EditProfileModel extends ChangeNotifier {
     if (response.success) {
       updatedEmail = newEmail;
       newEmailTextController.clear();
-      notifyListeners();
+      if (!context.mounted) return;
       Navigator.of(context).pop();
+      notifyListeners();
     }
   }
 
@@ -140,8 +142,9 @@ class EditProfileModel extends ChangeNotifier {
       updatedPassword = newPassword;
       newPasswordTextController.clear();
       confirmNewPasswordTextController.clear();
-      notifyListeners();
+      if (!context.mounted) return;
       Navigator.of(context).pop();
+      notifyListeners();
     }
   }
 

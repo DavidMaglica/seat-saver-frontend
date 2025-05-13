@@ -6,9 +6,9 @@ import '../api/data/user.dart';
 import '../api/reservation_api.dart';
 
 class ReservationHistoryModel extends ChangeNotifier {
+  final BuildContext context;
   final User user;
   final Position? userLocation;
-  final BuildContext context;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final ReservationApi reservationApi = ReservationApi();
@@ -16,16 +16,13 @@ class ReservationHistoryModel extends ChangeNotifier {
   List<ReservationDetails>? reservations;
 
   ReservationHistoryModel({
-    required this.user,
     required this.context,
+    required this.user,
     this.userLocation,
   });
 
   Future<void> loadReservations() async {
     final response2 = await reservationApi.getReservation(user.email);
-    debugPrint('Reservations: ${response2?.reservations}');
-
-    debugPrint('Reservations: ${reservationApi.reservationsStore}');
 
     if (response2 != null) {
       reservations = response2.reservations;
@@ -33,10 +30,6 @@ class ReservationHistoryModel extends ChangeNotifier {
       reservations = [];
     }
 
-    // final response = await reservationApi.getReservations(user.email);
-    // if (response.success) {
-    //   reservations = response.reservations;
-    //   notifyListeners();
-    // }
+    notifyListeners();
   }
 }

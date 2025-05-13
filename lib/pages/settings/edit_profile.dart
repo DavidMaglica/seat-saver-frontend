@@ -8,7 +8,7 @@ import '../../components/custom_appbar.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
 import '../../models/edit_profile_model.dart';
-import 'utils/settings_utils.dart';
+import '../../components/modal_widgets.dart';
 
 class EditProfile extends StatelessWidget {
   final User user;
@@ -24,8 +24,8 @@ class EditProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => EditProfileModel(
-        user: user,
         context: context,
+        user: user,
         userLocation: userLocation,
       ),
       child: Consumer<EditProfileModel>(
@@ -328,8 +328,12 @@ class EditProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildInputField(String labelText, String hint,
-      TextEditingController controller, FocusNode focusNode) {
+  Widget _buildInputField(
+    String labelText,
+    String hint,
+    TextEditingController controller,
+    FocusNode focusNode,
+  ) {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
       child: TextFormField(
