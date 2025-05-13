@@ -339,9 +339,7 @@ class VenuePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
             child: RatingBar.builder(
-              onRatingUpdate: (value) => {
-                debugPrint('Rating: $value'),
-              },
+              onRatingUpdate: (_) => {},
               itemBuilder: (context, index) => Icon(
                 CupertinoIcons.star_fill,
                 color: Theme.of(context).colorScheme.onTertiary,

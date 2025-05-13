@@ -56,7 +56,6 @@ class HomepageModel extends ChangeNotifier {
     await checkLogIn();
 
     if (locationPopUpCounter < 1) {
-      debugPrint('Location pop up counter: $locationPopUpCounter');
       await displayLocationPermissionPopUp(locationPopUpCounter);
     }
 
