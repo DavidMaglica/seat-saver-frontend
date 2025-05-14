@@ -1,30 +1,20 @@
-import 'package:TableReserver/utils/utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_credit_card/extension.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 
-import '../../api/account_api.dart';
-import '../../api/data/notification_settings.dart';
-import '../../api/data/user.dart';
-import '../../api/data/user_location.dart';
-import '../../api/data/user_response.dart';
 import '../../api/data/venue.dart';
-import '../../api/geolocation_api.dart';
-import '../../api/venue_api.dart';
 import '../../components/carousel_item.dart';
-import '../../components/location_permission.dart';
 import '../../components/navbar.dart';
 import '../../components/venue_card.dart';
 import '../../components/venue_suggested_card.dart';
+import '../../models/homepage_model.dart';
 import '../../themes/theme.dart';
-import '../../utils/constants.dart';
+import '../../utils/extensions.dart';
 import '../../utils/routing_utils.dart';
-import '../../utils/toaster.dart';
 
-class Homepage extends StatefulWidget {
+class Homepage extends StatelessWidget {
   final String? userEmail;
   final Position? userLocation;
 
@@ -32,260 +22,78 @@ class Homepage extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<Homepage> createState() => _HomepageState();
-}
-
-class _HomepageState extends State<Homepage> {
-  final unfocusNode = FocusNode();
-
-  final int pageIndex = 0;
-  List<Venue>? _nearbyVenues;
-  List<Venue>? _newVenues;
-  List<Venue>? _trendingVenues;
-  List<Venue>? _suggestedVenues;
-  CarouselController? _carouselController;
-  int carouselCurrentIndex = 1;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  List<String>? _nearbyCities;
-  Position? currentUserLocation;
-  User? loggedInUser;
-
-  AccountApi accountApi = AccountApi();
-  GeolocationApi geolocationApi = GeolocationApi();
-  VenueApi venueApi = VenueApi();
-
-  Map<int, String> _venueTypeMap = {};
-
-  @override
-  void dispose() {
-    unfocusNode.dispose();
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    int locationPopUpCounter = 0;
-
-    _loadVenueTypes();
-
-    _checkLogin();
-
-    if (locationPopUpCounter < 1) {
-      _displayLocationPermissionPopUp(locationPopUpCounter);
-    }
-
-    if (widget.userEmail != null && widget.userEmail?.isNotEmpty == true) {
-      _updateUserLocation(widget.userEmail!);
-    }
-
-    _resolveNearbyCities();
-
-    _getNearbyVenues();
-    _getNewVenues();
-    _getTrendingVenues();
-    _getSuggestedVenues();
-  }
-
-  Future<void> _loadVenueTypes() async {
-    final venueTypes = await venueApi.getAllVenueTypes();
-
-    setState(() {
-      _venueTypeMap = {
-        for (var type in venueTypes) type.id: type.type.toTitleCase(),
-      };
-    });
-  }
-
-  void _resolveNearbyCities() {
-    if (widget.userLocation != null) {
-      geolocationApi.getNearbyCities(
-        UserLocation(
-            latitude: widget.userLocation!.latitude,
-            longitude: widget.userLocation!.longitude),
-      );
-    } else {
-      if (loggedInUser != null &&
-          loggedInUser?.notificationOptions.locationServicesTurnedOn == true) {
-        setState(() => currentUserLocation = loggedInUser!.lastKnownLocation);
-        geolocationApi.getNearbyCities(
-          UserLocation(
-              latitude: currentUserLocation!.latitude,
-              longitude: currentUserLocation!.longitude),
-        );
-      }
-    }
-  }
-
-  void _displayLocationPermissionPopUp(int locationPopUpCounter) {
-    if (widget.userEmail != null && widget.userEmail!.isNotEmpty) {
-      locationPopUpCounter++;
-      bool? isLocationServicesTurnedOn;
-      accountApi.getNotificationOptions(widget.userEmail!).then((value) =>
-          isLocationServicesTurnedOn = value.locationServicesTurnedOn);
-      if (isLocationServicesTurnedOn != null &&
-          isLocationServicesTurnedOn == false) {
-        _openPopUp(widget.userEmail!);
-      } else {
-        if (widget.userLocation == null) {
-          _openPopUp(widget.userEmail!);
-        }
-        accountApi.getLastKnownLocation(widget.userEmail!).then((value) => {
-              geolocationApi.getNearbyCities(value).then((cities) => {
-                    setState(() {
-                      _nearbyCities = cities;
-                    }),
-                  }),
-            });
-      }
-    }
-  }
-
-  void _updateUserLocation(String userEmail) async {
-    NotificationOptions options =
-        await accountApi.getNotificationOptions(userEmail);
-    if (options.locationServicesTurnedOn) {
-      Position userLocation = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best);
-      accountApi.updateUserLocation(userEmail, userLocation);
-    }
-  }
-
-  void _checkLogin() async {
-    if (widget.userEmail.isNotNullAndNotEmpty) {
-      UserResponse? user = await accountApi.getUser(widget.userEmail!);
-      if (user != null && user.success) {
-        setState(() {
-          loggedInUser = user.user;
-        });
-      }
-    }
-  }
-
-  void _getNearbyVenues() async {
-    List<Venue> list = await venueApi.getNearbyVenues();
-    setState(() {
-      _nearbyVenues = list;
-    });
-  }
-
-  void _getNewVenues() async {
-    List<Venue> list = await venueApi.getNewVenues();
-    setState(() {
-      _newVenues = list;
-    });
-  }
-
-  void _getTrendingVenues() async {
-    List<Venue> list = await venueApi.getTrendingVenues();
-    setState(() {
-      _trendingVenues = list;
-    });
-  }
-
-  void _getSuggestedVenues() async {
-    List<Venue> list = await venueApi.getSuggestedVenues();
-    setState(() {
-      _suggestedVenues = list;
-    });
-  }
-
-  void _openPopUp(String userEmail) {
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await showModalBottomSheet(
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          barrierColor: Theme.of(context).colorScheme.onSecondary,
-          enableDrag: false,
-          context: context,
-          builder: (context) {
-            return GestureDetector(
-                onTap: () => unfocusNode.canRequestFocus
-                    ? FocusScope.of(context).requestFocus(unfocusNode)
-                    : FocusScope.of(context).unfocus(),
-                child: Padding(
-                    padding: MediaQuery.viewInsetsOf(context),
-                    child: SizedBox(
-                      height: 568,
-                      child: LocationPermissionPopUp(userEmail: userEmail),
-                    )));
-          });
-    });
-  }
-
-  void _openNearbyVenues() {
-    Toaster.displayInfo(context, 'Currently unavailable');
-    return;
-  }
-
-  void _openNewVenues() {
-    Toaster.displayInfo(context, 'Currently unavailable');
-    return;
-  }
-
-  void _openTrendingVenues() {
-    Toaster.displayInfo(context, 'Currently unavailable');
-    return;
-  }
-
-  Future<void> _searchByVenueType(int venueTypeId) =>
-      Navigator.pushNamed(context, Routes.SEARCH, arguments: {
-        'userEmail': widget.userEmail,
-        'userLocation': widget.userLocation,
-        'selectedVenueType': venueTypeId,
-      });
-
-  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () => unfocusNode.canRequestFocus
-            ? FocusScope.of(context).requestFocus(unfocusNode)
-            : FocusScope.of(context).unfocus(),
-        child: WillPopScope(
-            onWillPop: () async => false,
-            child: Scaffold(
-                key: scaffoldKey,
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                body: SafeArea(
-                  top: true,
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          _buildHeader(),
-                          _buildCarouselComponent(_nearbyCities ?? []),
-                          _buildVenues('Nearby Venues', _openNearbyVenues,
-                              _nearbyVenues ?? []),
-                          _buildVenues(
-                              'New Venues', _openNewVenues, _newVenues ?? []),
-                          _buildVenues('Trending Venues', _openTrendingVenues,
-                              _trendingVenues ?? []),
-                          _buildSuggestedVenues(_suggestedVenues ?? []),
-                          _buildCategories(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                bottomNavigationBar: NavBar(
-                  currentIndex: pageIndex,
-                  context: context,
-                  onTap: (index, context) => onNavbarItemTapped(
-                      pageIndex,
-                      index,
-                      context,
-                      widget.userEmail,
-                      currentUserLocation ?? widget.userLocation),
-                ))));
+    return ChangeNotifierProvider(
+        create: (_) => HomepageModel(
+            context: context, userEmail: userEmail, userLocation: userLocation)
+          ..init(),
+        child: Consumer<HomepageModel>(
+          builder: (context, model, _) {
+            return GestureDetector(
+                onTap: () => model.unfocusNode.canRequestFocus
+                    ? FocusScope.of(context).requestFocus(model.unfocusNode)
+                    : FocusScope.of(context).unfocus(),
+                child: WillPopScope(
+                    onWillPop: () async => false,
+                    child: Scaffold(
+                        key: model.scaffoldKey,
+                        backgroundColor: Theme.of(context).colorScheme.surface,
+                        body: SafeArea(
+                          top: true,
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 16, 0, 0),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  _buildHeader(context, model),
+                                  _buildCarouselComponent(model),
+                                  _buildVenues(
+                                    context,
+                                    'Nearby Venues',
+                                    model.openNearbyVenues,
+                                    model.nearbyVenues ?? [],
+                                  ),
+                                  _buildVenues(
+                                    context,
+                                    'New Venues',
+                                    model.openNewVenues,
+                                    model.newVenues ?? [],
+                                  ),
+                                  _buildVenues(
+                                    context,
+                                    'Trending Venues',
+                                    model.openTrendingVenues,
+                                    model.trendingVenues ?? [],
+                                  ),
+                                  _buildSuggestedVenues(
+                                    context,
+                                    model.suggestedVenues ?? [],
+                                  ),
+                                  _buildCategories(context, model),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        bottomNavigationBar: NavBar(
+                          currentIndex: model.pageIndex,
+                          context: context,
+                          onTap: (index, context) => onNavbarItemTapped(
+                              context,
+                              model.pageIndex,
+                              index,
+                              userEmail,
+                              model.currentUserLocation ?? userLocation),
+                        ))));
+          },
+        ));
   }
 
-  Row _buildCarouselComponent(List<String> nearbyCities) {
-    if (nearbyCities.isEmpty) {
+  Widget _buildCarouselComponent(HomepageModel model) {
+    final nearby = model.nearbyCities ?? [];
+    if (nearby.isEmpty) {
       return const Row();
     }
     return Row(
@@ -298,13 +106,13 @@ class _HomepageState extends State<Homepage> {
               width: double.infinity,
               height: 212,
               child: CarouselSlider(
-                items: nearbyCities
+                items: nearby
                     .map((city) => Padding(
                         padding:
                             const EdgeInsetsDirectional.symmetric(vertical: 12),
                         child: CarouselItem(city)))
                     .toList(),
-                carouselController: _carouselController ??=
+                carouselController: model.carouselController ??=
                     CarouselController(),
                 options: CarouselOptions(
                   initialPage: 1,
@@ -319,7 +127,8 @@ class _HomepageState extends State<Homepage> {
                   autoPlayInterval: const Duration(seconds: 5),
                   autoPlayCurve: Curves.linear,
                   pauseAutoPlayInFiniteScroll: true,
-                  onPageChanged: (index, _) => carouselCurrentIndex = index,
+                  onPageChanged: (index, _) =>
+                      model.carouselCurrentIndex = index,
                 ),
               ),
             ),
@@ -329,238 +138,244 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  Padding _buildVenues(
-          String title, Function() seeAllFunction, List<Venue> venues) =>
-      Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-          child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                    child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildTitle(title),
-                          _buildSeeAllButton(seeAllFunction),
-                        ],
-                      ),
-                      _buildVenueCards(venues),
-                    ]))
-              ]));
-
-  Padding _buildSuggestedVenues(List<Venue> venues) => Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 0, 0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onPrimary.withOpacity(.2),
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              bottomLeft: Radius.circular(16),
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 0, 24),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
+  Widget _buildVenues(
+    BuildContext ctx,
+    String title,
+    Function() seeAllFunction,
+    List<Venue> venues,
+  ) {
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
+        child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildTitle('We suggest'),
-                        ],
-                      ),
-                      _buildVenueSuggestedCards(venues),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildTitle(ctx, title),
+                        _buildSeeAllButton(ctx, seeAllFunction),
+                      ],
+                    ),
+                    _buildVenueCards(venues),
+                  ]))
+            ]));
+  }
+
+  Widget _buildSuggestedVenues(BuildContext ctx, List<Venue> venues) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 0, 0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(.2),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            bottomLeft: Radius.circular(16),
           ),
         ),
-      );
-
-  Padding _buildVenueCards(List<Venue> venues) => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(4, 12, 0, 0),
-      child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
+        child: Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 0, 24),
           child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: venues.map((venue) {
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  child: VenueCard(
-                    venue: venue,
-                    userEmail: widget.userEmail,
-                    userLocation: widget.userLocation,
-                  ),
-                );
-              }).toList())));
-
-  Padding _buildVenueSuggestedCards(List<Venue> venues) => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(4, 12, 0, 0),
-      child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: venues.map((venue) {
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  child: VenueSuggestedCard(
-                    venue: venue,
-                    userEmail: widget.userEmail,
-                    userLocation: widget.userLocation,
-                  ),
-                );
-              }).toList())));
-
-  Padding _buildCategories() => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 72),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 12),
-          child: Text('Categories',
-              style: Theme.of(context).textTheme.titleMedium),
-        ),
-        Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: _venueTypeMap.entries
-                      .map(
-                          (entry) => _buildCategoryCard(entry.key, entry.value))
-                      .toList(),
-                ))),
-      ]));
-
-  InkWell _buildCategoryCard(int id, String label) => InkWell(
-      onTap: () => _searchByVenueType(id),
-      child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-              width: 140,
-              child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    side: BorderSide(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      width: 2,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildTitle(ctx, 'We suggest'),
+                      ],
                     ),
-                  ),
-                  child: Stack(
-                    alignment: AlignmentDirectional.center,
-                    children: [
-                      Container(
-                        width: 128,
-                        height: 128,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.background,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
+                    _buildVenueSuggestedCards(venues),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVenueCards(List<Venue> venues) {
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(4, 12, 0, 0),
+        child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: venues.map((venue) {
+                  return Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    child: VenueCard(
+                      venue: venue,
+                      userEmail: userEmail,
+                      userLocation: userLocation,
+                    ),
+                  );
+                }).toList())));
+  }
+
+  Widget _buildVenueSuggestedCards(List<Venue> venues) {
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(4, 12, 0, 0),
+        child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: venues.map((venue) {
+                  return Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    child: VenueSuggestedCard(
+                      venue: venue,
+                      userEmail: userEmail,
+                      userLocation: userLocation,
+                    ),
+                  );
+                }).toList())));
+  }
+
+  Widget _buildCategories(BuildContext ctx, HomepageModel model) {
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 72),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 12),
+            child:
+                Text('Categories', style: Theme.of(ctx).textTheme.titleMedium),
+          ),
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: model.venueTypeMap.entries
+                        .map((entry) => _buildCategoryCard(
+                              ctx,
+                              model,
+                              entry.key,
+                              entry.value,
+                            ))
+                        .toList(),
+                  ))),
+        ]));
+  }
+
+  Widget _buildCategoryCard(
+    BuildContext ctx,
+    HomepageModel model,
+    int id,
+    String label,
+  ) {
+    return InkWell(
+        onTap: () => model.searchByVenueType(id),
+        child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+                width: 140,
+                child: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(
+                        color: Theme.of(ctx).colorScheme.onPrimary,
+                        width: 2,
                       ),
-                      Center(
-                          child: Text(
-                        label.toTitleCase(),
-                        style: Theme.of(context).textTheme.titleSmall,
-                        textAlign: TextAlign.center,
-                      ))
-                    ],
-                  )))));
-
-  Padding _buildTitle(String title) => Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-        child: Text(title, style: Theme.of(context).textTheme.titleMedium),
-      );
-
-  Padding _buildSeeAllButton(Function() onPressed) => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-      child: FFButtonWidget(
-          showLoadingIndicator: true,
-          onPressed: onPressed,
-          text: 'See all',
-          options: FFButtonOptions(
-            width: 80,
-            height: 24,
-            color: Theme.of(context).colorScheme.background,
-            textStyle: const TextStyle(
-              color: AppThemes.accent1,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-            elevation: 3,
-            borderSide: const BorderSide(
-              color: AppThemes.accent1,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          )));
-
-  Row _buildHeader() => Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Expanded(
-                child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
-                    child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                12, 0, 0, 0),
-                            child: Text(
-                              loggedInUser != null
-                                  ? 'Welcome, ${loggedInUser!.username}'
-                                  : 'Welcome',
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
+                    ),
+                    child: Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: [
+                        Container(
+                          width: 128,
+                          height: 128,
+                          decoration: BoxDecoration(
+                            color: Theme.of(ctx).colorScheme.background,
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                          // Padding(
-                          //     padding: const EdgeInsetsDirectional.fromSTEB(
-                          //         0, 0, 12, 0),
-                          //     child: FFButtonWidget(
-                          //         onPressed: () {},
-                          //         text: 'Help',
-                          //         options: FFButtonOptions(
-                          //           width: 80,
-                          //           height: 24,
-                          //           color: Theme.of(context)
-                          //               .colorScheme
-                          //               .background,
-                          //           textStyle: const TextStyle(
-                          //             color: AppThemes.infoColor,
-                          //             fontSize: 12,
-                          //             fontWeight: FontWeight.w500,
-                          //           ),
-                          //           elevation: 3,
-                          //           borderSide: const BorderSide(
-                          //             color: AppThemes.infoColor,
-                          //             width: 1,
-                          //           ),
-                          //           borderRadius: BorderRadius.circular(8),
-                          //         ))),
-                        ])))
-          ]);
+                        ),
+                        Center(
+                            child: Text(
+                          label.toTitleCase(),
+                          style: Theme.of(ctx).textTheme.titleSmall,
+                          textAlign: TextAlign.center,
+                        ))
+                      ],
+                    )))));
+  }
+
+  Widget _buildTitle(BuildContext ctx, String title) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+      child: Text(title, style: Theme.of(ctx).textTheme.titleMedium),
+    );
+  }
+
+  Widget _buildSeeAllButton(BuildContext ctx, Function() onPressed) {
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+        child: FFButtonWidget(
+            showLoadingIndicator: true,
+            onPressed: onPressed,
+            text: 'See all',
+            options: FFButtonOptions(
+              width: 80,
+              height: 24,
+              color: Theme.of(ctx).colorScheme.background,
+              textStyle: const TextStyle(
+                color: AppThemes.accent1,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+              elevation: 3,
+              borderSide: const BorderSide(
+                color: AppThemes.accent1,
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            )));
+  }
+
+  Widget _buildHeader(BuildContext ctx, HomepageModel model) {
+    return Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Expanded(
+              child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+                  child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                          child: Text(
+                            model.loggedInUser != null
+                                ? 'Welcome, ${model.loggedInUser!.username}'
+                                : 'Welcome',
+                            style: Theme.of(ctx).textTheme.titleLarge,
+                          ),
+                        ),
+                      ])))
+        ]);
+  }
 }

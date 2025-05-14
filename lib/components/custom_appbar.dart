@@ -4,25 +4,20 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final String routeToPush;
-  final Object? args;
+  final VoidCallback? onBack;
 
   const CustomAppbar({
-    Key? key,
+    super.key,
     required this.title,
-    required this.routeToPush,
-    this.args,
-  }) : super(key: key);
+    this.onBack,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       automaticallyImplyLeading: false,
-      title: Text(
-        title,
-        style: Theme.of(context).textTheme.labelLarge,
-      ),
+      title: Text(title, style: Theme.of(context).textTheme.labelLarge),
       leading: FlutterFlowIconButton(
         borderColor: Colors.transparent,
         borderRadius: 30,
@@ -33,9 +28,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
           color: Theme.of(context).colorScheme.background,
           size: 24,
         ),
-        onPressed: () async {
-          Navigator.pushNamed(context, routeToPush, arguments: args);
-        },
+        onPressed: onBack ?? () => Navigator.of(context).maybePop(),
       ),
       centerTitle: false,
       elevation: 2,

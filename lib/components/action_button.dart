@@ -35,15 +35,3 @@ class ActionButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ))));
 }
-
-OutlineInputBorder outlineInputBorder(Color colour) => OutlineInputBorder(
-      borderSide: BorderSide(color: colour, width: .5),
-      borderRadius: BorderRadius.circular(8),
-    );
-
-EdgeInsets modalPadding(BuildContext context) => EdgeInsets.only(
-      bottom: MediaQuery.of(context).viewInsets.bottom,
-      left: 16,
-      right: 16,
-      top: 16,
-    );

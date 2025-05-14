@@ -1,264 +1,252 @@
-import 'package:TableReserver/utils/toaster.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 
-import '../../api/account_api.dart';
 import '../../api/data/user.dart';
-import '../../api/data/user_response.dart';
 import '../../components/navbar.dart';
 import '../../themes/theme.dart';
 import '../../utils/constants.dart';
 import '../../utils/routing_utils.dart';
+import '../../models/account_model.dart';
 
-class Account extends StatefulWidget {
+class Account extends StatelessWidget {
   final String? userEmail;
   final Position? userLocation;
 
-  const Account({
-    Key? key,
-    this.userEmail,
-    this.userLocation,
-  }) : super(key: key);
-
-  @override
-  State<Account> createState() => _AccountState();
-}
-
-class _AccountState extends State<Account> with TickerProviderStateMixin {
-  final unfocusNode = FocusNode();
-  final int pageIndex = 3;
-  User? user;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  AccountApi accountApi = AccountApi();
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (widget.userEmail != null && widget.userEmail != '') {
-      _getUserByEmail(widget.userEmail!);
-    }
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
-  }
-
-  @override
-  void dispose() {
-    unfocusNode.dispose();
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    super.dispose();
-  }
-
-  Future<void> _getUserByEmail(String email) async {
-    UserResponse? response = await accountApi.getUser(email);
-    if (response != null && response.success) {
-      setState(() => user = response.user);
-    }
-  }
-
-  void _openSettingsItem(String route, String? action) {
-    if (route == Routes.TERMS_OF_SERVICE) {
-      Navigator.pushNamed(context, route, arguments: {
-        'userEmail': user?.email,
-        'userLocation': widget.userLocation
-      });
-      return;
-    }
-    if (user == null) {
-      Toaster.displayInfo(context, 'Please log in to $action.');
-      return;
-    }
-    Navigator.pushNamed(context, route,
-        arguments: {'user': user, 'userLocation': widget.userLocation});
-  }
+  const Account({super.key, this.userEmail, this.userLocation});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () => unfocusNode.canRequestFocus
-            ? FocusScope.of(context).requestFocus(unfocusNode)
-            : FocusScope.of(context).unfocus(),
-        child: Scaffold(
-            key: scaffoldKey,
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            body: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 96, 0, 0)),
-                  _buildAccountDetails(user),
-                  _buildHistorySettings(user),
-                  _buildAccountSettings(user),
-                  _buildApplicationSettings(user),
-                  _buildOpenAuthentication(user?.email)
-                ],
+    return ChangeNotifierProvider(
+      create: (_) => AccountModel(
+        context: context,
+        userEmail: userEmail,
+        userLocation: userLocation,
+      )..init(),
+      child: Consumer<AccountModel>(
+        builder: (context, model, _) {
+          return GestureDetector(
+            onTap: () {
+              final currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus &&
+                  currentFocus.focusedChild != null) {
+                currentFocus.unfocus();
+              }
+            },
+            child: Scaffold(
+              key: model.scaffoldKey,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              body: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 96),
+                    _buildAccountDetails(context, model.user),
+                    _buildHistorySettings(context, model),
+                    _buildAccountSettings(context, model),
+                    _buildApplicationSettings(context, model),
+                    _buildOpenAuthentication(context, model.user?.email),
+                  ],
+                ),
+              ),
+              bottomNavigationBar: NavBar(
+                context: context,
+                currentIndex: model.pageIndex,
+                onTap: (index, context) => onNavbarItemTapped(
+                  context,
+                  model.pageIndex,
+                  index,
+                  userEmail,
+                  userLocation,
+                ),
               ),
             ),
-            bottomNavigationBar: NavBar(
-                context: context,
-                currentIndex: pageIndex,
-                onTap: (index, context) {
-                  onNavbarItemTapped(pageIndex, index, context,
-                      widget.userEmail, widget.userLocation);
-                })));
+          );
+        },
+      ),
+    );
   }
 
-  Column _buildHistorySettings(User? user) =>
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildTitle('Reservations'),
-        _buildSettingsItem(
-            CupertinoIcons.doc_on_clipboard,
-            'Reservation history',
-            Routes.RESERVATION_HISTORY,
-            user,
-            'view your reservation history'),
-      ]);
-
-  Column _buildAccountSettings(User? user) =>
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildTitle('Account Settings'),
-        _buildSettingsItem(CupertinoIcons.person_circle_fill, 'Edit profile',
-            Routes.EDIT_PROFILE, user, 'edit your profile'),
-        _buildSettingsItem(
-            CupertinoIcons.bell_circle_fill,
-            'Notification settings',
-            Routes.NOTIFICATION_SETTINGS,
-            user,
-            'edit notification settings'),
-      ]);
-
-  Column _buildApplicationSettings(User? user) =>
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildTitle('Application Settings'),
-        _buildSettingsItem(CupertinoIcons.question_circle_fill, 'Support',
-            Routes.SUPPORT, user, 'access support'),
-        _buildSettingsItem(CupertinoIcons.exclamationmark_shield_fill,
-            'Terms of service', Routes.TERMS_OF_SERVICE, user, null),
-      ]);
-
-  Padding _buildTitle(String title) => Padding(
+  Widget _buildTitle(BuildContext ctx, String title) {
+    return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 0),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.titleMedium,
-      ));
+      child: Text(title, style: Theme.of(ctx).textTheme.titleMedium),
+    );
+  }
 
-  Padding _buildSettingsItem(IconData icon, String text, String route,
-          User? user, String? action) =>
-      Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
-          child: Container(
-              width: double.infinity,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 5,
-                    color:
-                        Theme.of(context).colorScheme.onPrimary.withOpacity(.5),
-                  )
-                ],
-                borderRadius: BorderRadius.circular(8),
-                shape: BoxShape.rectangle,
-              ),
-              child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: InkWell(
-                      onTap: () async => _openSettingsItem(route, action),
-                      child: Row(mainAxisSize: MainAxisSize.max, children: [
-                        Icon(
-                          icon,
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          size: 24,
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                          child: Text(
-                            text,
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                        ),
-                        const Spacer(),
-                        Icon(
-                          CupertinoIcons.chevron_forward,
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          size: 14,
-                        )
-                      ])))));
-
-  Column _buildAccountDetails(User? user) =>
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  Widget _buildAccountDetails(BuildContext ctx, User? user) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
           child: Text(
             user?.username ?? '',
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(ctx).textTheme.titleLarge,
           ),
         ),
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(24, 4, 0, 16),
           child: Text(
             user?.email ?? '',
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(ctx).textTheme.bodyMedium,
           ),
-        )
-      ]);
+        ),
+      ],
+    );
+  }
 
-  Widget _buildOpenAuthentication(String? userEmail) {
+  Widget _buildSettingsItem(
+    BuildContext ctx,
+    AccountModel model,
+    IconData icon,
+    String text,
+    String route,
+    String? action,
+  ) {
     return Padding(
-        padding:
-            const EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 48),
-        child: Container(
-            width: double.infinity,
-            height: 60,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 10,
-                  color: userEmail != null
-                      ? Theme.of(context).colorScheme.error.withOpacity(.8)
-                      : AppThemes.successColor.withOpacity(.8),
-                )
+      padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+      child: Container(
+        height: 60,
+        decoration: BoxDecoration(
+          color: Theme.of(ctx).colorScheme.background,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 5,
+              color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(.5),
+            )
+          ],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: InkWell(
+          onTap: () => model.openSettingsItem(route, action),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Icon(icon, color: Theme.of(ctx).colorScheme.onPrimary),
+                const SizedBox(width: 12),
+                Text(text, style: Theme.of(ctx).textTheme.titleMedium),
+                const Spacer(),
+                Icon(CupertinoIcons.chevron_forward,
+                    size: 14, color: Theme.of(ctx).colorScheme.onPrimary),
               ],
-              borderRadius: BorderRadius.circular(8),
-              shape: BoxShape.rectangle,
             ),
-            child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: InkWell(
-                    onTap: () async {
-                      if (!mounted) return;
-                      Navigator.pushNamed(context, Routes.AUTHENTICATION);
-                    },
-                    child: Row(mainAxisSize: MainAxisSize.max, children: [
-                      Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                        child: Text(
-                          userEmail != null ? 'Log out' : 'Log in',
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    color: userEmail != null
-                                        ? Theme.of(context).colorScheme.error
-                                        : AppThemes.successColor,
-                                  ),
-                        ),
-                      ),
-                      const Spacer(),
-                      Icon(
-                        CupertinoIcons.chevron_forward,
-                        color: userEmail != null
-                            ? Theme.of(context).colorScheme.error
-                            : AppThemes.successColor,
-                        size: 14,
-                      )
-                    ])))));
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHistorySettings(BuildContext ctx, AccountModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildTitle(ctx, 'Reservations'),
+        _buildSettingsItem(
+          ctx,
+          model,
+          CupertinoIcons.doc_on_clipboard,
+          'Reservation history',
+          Routes.RESERVATION_HISTORY,
+          'view your reservation history',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAccountSettings(BuildContext ctx, AccountModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildTitle(ctx, 'Account Settings'),
+        _buildSettingsItem(
+          ctx,
+          model,
+          CupertinoIcons.person_circle_fill,
+          'Edit profile',
+          Routes.EDIT_PROFILE,
+          'edit your profile',
+        ),
+        _buildSettingsItem(
+          ctx,
+          model,
+          CupertinoIcons.bell_circle_fill,
+          'Notification settings',
+          Routes.NOTIFICATION_SETTINGS,
+          'edit notification settings',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildApplicationSettings(BuildContext ctx, AccountModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildTitle(ctx, 'Application Settings'),
+        _buildSettingsItem(
+          ctx,
+          model,
+          CupertinoIcons.question_circle_fill,
+          'Support',
+          Routes.SUPPORT,
+          'access support',
+        ),
+        _buildSettingsItem(
+          ctx,
+          model,
+          CupertinoIcons.exclamationmark_shield_fill,
+          'Terms of service',
+          Routes.TERMS_OF_SERVICE,
+          null,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOpenAuthentication(BuildContext ctx, String? userEmail) {
+    final isLoggedIn = userEmail != null;
+    final text = isLoggedIn ? 'Log out' : 'Log in';
+    final color = isLoggedIn
+        ? Theme.of(ctx).colorScheme.error
+        : AppThemes.successColor;
+
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(12, 48, 12, 0),
+      child: Container(
+        height: 60,
+        decoration: BoxDecoration(
+          color: Theme.of(ctx).colorScheme.background,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 10,
+              color: color.withOpacity(.8),
+            ),
+          ],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: InkWell(
+          onTap: () => Navigator.pushNamed(ctx, Routes.AUTHENTICATION),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Text(
+                  text,
+                  style: Theme.of(ctx)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: color),
+                ),
+                const Spacer(),
+                Icon(CupertinoIcons.chevron_forward, color: color, size: 14),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

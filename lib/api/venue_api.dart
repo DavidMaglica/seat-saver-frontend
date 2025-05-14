@@ -6,7 +6,7 @@ import 'data/basic_response.dart';
 import 'data/venue.dart';
 import 'dio_setup.dart';
 
-final dio = setupDio(ApiRoutes.VENUE);
+final dio = setupDio(ApiRoutes.venue);
 
 class VenueApi {
   Future<List<String>> getImages() async {
@@ -236,21 +236,14 @@ class VenueApi {
     return allVenues.toList();
   }
 
-  Future<List<Venue>> getVenuesByType(List<VenueTypeEnum> types) async {
-    List<Venue> allVenues = await getAllVenues();
-    List<Venue> filteredVenues =
-        allVenues.where((venue) => types.contains(venue.typeId)).toList();
-    return filteredVenues;
-  }
-
   Future<Venue> getVenue(int venueId) async {
     Response response =
-        await dio.get('${ApiRoutes.GET_VENUE}?venueId=$venueId');
+        await dio.get('${ApiRoutes.getVenue}?venueId=$venueId');
     return Venue.fromMap(response.data);
   }
 
   Future<List<Venue>> getAllVenuesFromApi() async {
-    Response response = await dio.get(ApiRoutes.GET_ALL_VENUES);
+    Response response = await dio.get(ApiRoutes.getAllVenues);
     List<Venue> venues =
         (response.data as List).map((venue) => Venue.fromMap(venue)).toList();
     return venues;
@@ -258,12 +251,12 @@ class VenueApi {
 
   Future<String> getVenueType(int typeId) async {
     Response response =
-        await dio.get('${ApiRoutes.GET_VENUE_TYPE}?typeId=$typeId');
+        await dio.get('${ApiRoutes.getVenueType}?typeId=$typeId');
     return response.data;
   }
 
   Future<List<VenueType>> getAllVenueTypes() async {
-    Response response = await dio.get(ApiRoutes.GET_ALL_VENUE_TYPES);
+    Response response = await dio.get(ApiRoutes.getAllVenueTypes);
     List<VenueType> types = (response.data as List)
         .map((type) => VenueType.fromJson(type))
         .toList();
@@ -272,7 +265,7 @@ class VenueApi {
 
   Future<BasicResponse> rateVenue(int venueId, double rating) async {
     Response response = await dio
-        .post('${ApiRoutes.RATE_VENUE}?venueId=$venueId&rating=$rating');
+        .post('${ApiRoutes.rateVenue}?venueId=$venueId&rating=$rating');
     return BasicResponse.fromJson(response.data);
   }
 }

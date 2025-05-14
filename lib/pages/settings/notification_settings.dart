@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 
-import '../../api/account_api.dart';
-import '../../api/data/basic_response.dart';
-import '../../api/data/notification_settings.dart';
 import '../../api/data/user.dart';
+import '../../components/action_button.dart';
 import '../../components/custom_appbar.dart';
-import '../../themes/theme.dart';
+import '../../models/notification_settings_model.dart';
 import '../../utils/constants.dart';
-import 'utils/settings_utils.dart';
 
-class NotificationSettings extends StatefulWidget {
+class NotificationSettings extends StatelessWidget {
   final User user;
   final Position? userLocation;
 
@@ -21,168 +19,118 @@ class NotificationSettings extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<NotificationSettings> createState() => _NotificationSettingsState();
-}
-
-class _NotificationSettingsState extends State<NotificationSettings> {
-  bool _isActivePushNotifications = false;
-  bool _isActiveEmailNotifications = false;
-  bool _isActiveLocationServices = false;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  AccountApi accountApi = AccountApi();
-
-  @override
-  void initState() {
-    super.initState();
-
-    _getNotificationSettingsByEmail();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  Future<void> _getNotificationSettingsByEmail() async {
-    NotificationOptions response =
-        await accountApi.getNotificationOptions(widget.user.email);
-
-    setState(() {
-      _isActivePushNotifications = response.pushNotificationsTurnedOn;
-      _isActiveEmailNotifications = response.emailNotificationsTurnedOn;
-      _isActiveLocationServices = response.locationServicesTurnedOn;
-    });
-  }
-
-  Future<void> _saveChanges() async {
-    BasicResponse response = await accountApi.updateUserNotificationOptions(
-      widget.user.email,
-      _isActivePushNotifications,
-      _isActiveEmailNotifications,
-      _isActiveLocationServices,
-    );
-
-    if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(response.message),
-      backgroundColor:
-          response.success ? AppThemes.successColor : AppThemes.errorColor,
-    ));
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: CustomAppbar(
-        title: 'Notification settings',
-        routeToPush: Routes.ACCOUNT,
-        args: {
-          'userEmail': widget.user.email,
-          'userLocation': widget.userLocation
-        },
-      ),
-      body: SafeArea(
-        top: true,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              _buildDescriptionText(),
-              const Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-              ),
-              SwitchListTile.adaptive(
-                value: _isActivePushNotifications,
-                onChanged: (newValue) async {
-                  setState(() => _isActivePushNotifications = newValue);
-                },
-                title: Text('Push Notifications',
-                    style: Theme.of(context).textTheme.titleMedium),
-                subtitle: Text(
-                  'Receive Push notifications from our application on a semi regular basis.',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                tileColor: Theme.of(context).colorScheme.surface,
-                activeTrackColor: Theme.of(context).colorScheme.primary,
-                inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
-                dense: false,
-                controlAffinity: ListTileControlAffinity.trailing,
-                contentPadding:
-                    const EdgeInsetsDirectional.fromSTEB(24, 12, 24, 12),
-              ),
-              _buildDivider(),
-              SwitchListTile.adaptive(
-                value: _isActiveEmailNotifications,
-                onChanged: (newValue) async {
-                  setState(() => _isActiveEmailNotifications = newValue);
-                },
-                title: Text('Email Notifications',
-                    style: Theme.of(context).textTheme.titleMedium),
-                subtitle: Text(
-                  'Receive email notifications from our marketing team about new features.',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                tileColor: Theme.of(context).colorScheme.surface,
-                activeTrackColor: Theme.of(context).colorScheme.primary,
-                inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
-                dense: false,
-                controlAffinity: ListTileControlAffinity.trailing,
-                contentPadding:
-                    const EdgeInsetsDirectional.fromSTEB(24, 12, 24, 12),
-              ),
-              _buildDivider(),
-              SwitchListTile.adaptive(
-                value: _isActiveLocationServices,
-                onChanged: (newValue) async {
-                  setState(() => _isActiveLocationServices = newValue);
-                },
-                title: Text('Location Services',
-                    style: Theme.of(context).textTheme.titleMedium),
-                subtitle: Text(
-                  'Allow us to track your location, this helps keep track of spending and keeps you safe.',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                tileColor: Theme.of(context).colorScheme.surface,
-                activeTrackColor: Theme.of(context).colorScheme.primary,
-                inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
-                dense: false,
-                controlAffinity: ListTileControlAffinity.trailing,
-                contentPadding:
-                    const EdgeInsetsDirectional.fromSTEB(24, 12, 24, 12),
-              ),
-              ActionButton(title: 'Save Changes', onPressed: _saveChanges),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+    return ChangeNotifierProvider<NotificationSettingsModel>(
+      create: (_) => NotificationSettingsModel(
+        context: context,
+        user: user,
+        userLocation: userLocation,
+      )..loadNotificationSettings(),
+      builder: (context, _) {
+        final model = context.watch<NotificationSettingsModel>();
 
-  Padding _buildDescriptionText() => Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 12, 0),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: Text(
-                'Choose what notifications you want to receive below and we will update the settings.',
-                style: Theme.of(context).textTheme.bodyMedium,
+        return Scaffold(
+          key: model.scaffoldKey,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          appBar: CustomAppbar(
+            title: 'Notification Settings',
+            onBack: () => Navigator.of(context).pushNamed(
+              Routes.ACCOUNT,
+              arguments: {
+                'userEmail': user.email,
+                'userLocation': userLocation,
+              },
+            ),
+          ),
+          body: SafeArea(
+            top: true,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  _buildDescriptionText(context),
+                  const SizedBox(height: 12),
+                  _buildSwitchTile(
+                    context: context,
+                    title: 'Push Notifications',
+                    subtitle: 'Receive app updates via push notifications.',
+                    value: model.isActivePushNotifications,
+                    onChanged: model.togglePushNotifications,
+                  ),
+                  _buildDivider(context),
+                  _buildSwitchTile(
+                    context: context,
+                    title: 'Email Notifications',
+                    subtitle: 'Get email updates from our marketing team.',
+                    value: model.isActiveEmailNotifications,
+                    onChanged: model.toggleEmailNotifications,
+                  ),
+                  _buildDivider(context),
+                  _buildSwitchTile(
+                    context: context,
+                    title: 'Location Services',
+                    subtitle:
+                        'Allow us to track your location for better services.',
+                    value: model.isActiveLocationServices,
+                    onChanged: model.toggleLocationServices,
+                  ),
+                  ActionButton(
+                    title: 'Save Changes',
+                    onPressed: model.saveChanges,
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      );
+          ),
+        );
+      },
+    );
+  }
 
-  Divider _buildDivider() => Divider(
-        height: 1,
-        thickness: 1,
-        color: Theme.of(context).colorScheme.onPrimary,
-        indent: 12,
-        endIndent: 12,
-      );
+  Widget _buildDescriptionText(BuildContext ctx) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 12, 0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              'Choose what notifications you want to receive below and we will update the settings.',
+              style: Theme.of(ctx).textTheme.bodyMedium,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDivider(BuildContext ctx) {
+    return Divider(
+      height: 1,
+      thickness: 1,
+      color: Theme.of(ctx).colorScheme.onPrimary,
+      indent: 12,
+      endIndent: 12,
+    );
+  }
+
+  Widget _buildSwitchTile({
+    required BuildContext context,
+    required String title,
+    required String subtitle,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return SwitchListTile.adaptive(
+      value: value,
+      onChanged: onChanged,
+      title: Text(title, style: Theme.of(context).textTheme.titleMedium),
+      subtitle: Text(subtitle, style: Theme.of(context).textTheme.bodyMedium),
+      tileColor: Theme.of(context).colorScheme.surface,
+      activeTrackColor: Theme.of(context).colorScheme.primary,
+      inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
+      dense: false,
+      controlAffinity: ListTileControlAffinity.trailing,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+    );
+  }
 }

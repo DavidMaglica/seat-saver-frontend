@@ -42,11 +42,6 @@ class _VenueCardState extends State<VenueCard> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   void _openVenuePage() =>
       Navigator.pushNamed(context, Routes.VENUE, arguments: {
         'venueId': widget.venue.id,
@@ -107,55 +102,63 @@ class _VenueCardState extends State<VenueCard> {
     );
   }
 
-  Hero _buildImage() => Hero(
-      tag: 'locationCardImage${randomDouble(0, 100)}',
-      transitionOnUserGestures: true,
-      child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(8),
-            topRight: Radius.circular(8),
-          ),
-          child: Image.asset(
-            _venueImages!.first,
-            width: double.infinity,
-            height: 80,
-            fit: BoxFit.cover,
-          )));
+  Widget _buildImage() {
+    return Hero(
+        tag: 'locationCardImage${randomDouble(0, 100)}',
+        transitionOnUserGestures: true,
+        child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(8),
+              topRight: Radius.circular(8),
+            ),
+            child: Image.asset(
+              _venueImages!.first,
+              width: double.infinity,
+              height: 80,
+              fit: BoxFit.cover,
+            )));
+  }
 
-  Text _buildName(String name) => Text(
-        name.toUpperCase(),
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
-        style: Theme.of(context)
-            .textTheme
-            .titleSmall
-            ?.copyWith(color: AppThemes.accent1, fontSize: 12),
-      );
+  Widget _buildName(String name) {
+    return Text(
+      name.toUpperCase(),
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
+      style: Theme.of(context)
+          .textTheme
+          .titleSmall
+          ?.copyWith(color: AppThemes.accent1, fontSize: 12),
+    );
+  }
 
-  Padding _buildLocation(String location) => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-      child: Row(mainAxisSize: MainAxisSize.max, children: [
-        Text(location,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
-              fontWeight: FontWeight.w800,
-              fontSize: 9,
-            )),
-      ]));
+  Widget _buildLocation(String location) {
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+        child: Row(mainAxisSize: MainAxisSize.max, children: [
+          Text(location,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
+                fontWeight: FontWeight.w800,
+                fontSize: 9,
+              )),
+        ]));
+  }
 
-  Padding _buildRatingBar(double rating) => Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
-      child: Row(mainAxisSize: MainAxisSize.max, children: [
-        RatingBarIndicator(
-          itemBuilder: (context, index) => Icon(
-            CupertinoIcons.star_fill,
-            color: Theme.of(context).colorScheme.onTertiary,
-          ),
-          direction: Axis.horizontal,
-          rating: rating,
-          unratedColor: const Color(0xFF57636C).withOpacity(0.5),
-          itemCount: 5,
-          itemSize: 12,
-        )
-      ]));
+  Widget _buildRatingBar(double rating) {
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+        child: Row(mainAxisSize: MainAxisSize.max, children: [
+          RatingBarIndicator(
+            itemBuilder: (context, index) => Icon(
+              CupertinoIcons.star_fill,
+              color: Theme.of(context).colorScheme.onTertiary,
+            ),
+            direction: Axis.horizontal,
+            rating: rating,
+            unratedColor: const Color(0xFF57636C).withOpacity(0.5),
+            itemCount: 5,
+            itemSize: 12,
+          )
+        ]));
+  }
 }

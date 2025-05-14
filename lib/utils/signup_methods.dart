@@ -1,4 +1,4 @@
-enum SignupMethod {
+enum SignUpMethodEnum {
   google,
   apple,
   custom,

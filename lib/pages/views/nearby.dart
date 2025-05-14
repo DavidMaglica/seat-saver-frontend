@@ -36,8 +36,6 @@ class _NearbyState extends State<Nearby> {
     super.initState();
     if (widget.userEmail != null) setState(() => email = widget.userEmail);
 
-    debugPrint(
-        'User location: ${widget.userLocation?.latitude}, ${widget.userLocation?.longitude}');
     osmMapController = MapController(
       initPosition: GeoPoint(
         latitude: widget.userLocation?.latitude ?? 45.815399,
@@ -100,8 +98,8 @@ class _NearbyState extends State<Nearby> {
             bottomNavigationBar: NavBar(
               currentIndex: pageIndex,
               context: context,
-              onTap: (index, context) => onNavbarItemTapped(pageIndex, index,
-                  context, widget.userEmail, widget.userLocation),
+              onTap: (index, context) => onNavbarItemTapped(context, pageIndex,
+                  index, widget.userEmail, widget.userLocation),
             )));
   }
 }

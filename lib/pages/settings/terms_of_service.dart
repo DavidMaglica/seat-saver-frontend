@@ -38,8 +38,11 @@ class _TermsOfServiceState extends State<TermsOfService> {
       child: Scaffold(
         appBar: CustomAppbar(
           title: 'Terms of Service',
-          routeToPush: Routes.ACCOUNT,
-          args: {'userEmail': widget.userEmail, 'userLocation': widget.userLocation},
+          onBack: () => Navigator.of(context).pushNamed(Routes.ACCOUNT,
+              arguments: {
+                'userEmail': widget.userEmail,
+                'userLocation': widget.userLocation
+              }),
         ),
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -86,31 +89,37 @@ class _TermsOfServiceState extends State<TermsOfService> {
     );
   }
 
-  Divider _buildDivider() => Divider(
-        thickness: .3,
-        color: Theme.of(context).colorScheme.onBackground,
-      );
+  Widget _buildDivider() {
+    return Divider(
+      thickness: .3,
+      color: Theme.of(context).colorScheme.onBackground,
+    );
+  }
 
-  Padding _buildBodyText(String text) => Padding(
-        padding: const EdgeInsetsDirectional.only(bottom: 8),
-        child: Text(text,
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.center),
-      );
+  Widget _buildBodyText(String text) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(bottom: 8),
+      child: Text(text,
+          style: Theme.of(context).textTheme.bodyLarge,
+          textAlign: TextAlign.center),
+    );
+  }
 
-  Padding _buildSection(String title, String bodyText) => Padding(
-        padding: const EdgeInsetsDirectional.only(top: 12, bottom: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(title,
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.center),
-            const SizedBox(height: 4),
-            Text(bodyText,
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center)
-          ],
-        ),
-      );
+  Widget _buildSection(String title, String bodyText) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(top: 12, bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(title,
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.center),
+          const SizedBox(height: 4),
+          Text(bodyText,
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center)
+        ],
+      ),
+    );
+  }
 }
