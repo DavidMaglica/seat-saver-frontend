@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'pages/auth/authentication.dart';
-import 'pages/views/successful_reservation.dart';
 import 'pages/settings/edit_profile.dart';
 import 'pages/settings/notification_settings.dart';
 import 'pages/settings/reservation_history.dart';
@@ -12,6 +11,7 @@ import 'pages/views/homepage.dart';
 import 'pages/views/landing.dart';
 import 'pages/views/nearby.dart';
 import 'pages/views/search.dart';
+import 'pages/views/successful_reservation.dart';
 import 'pages/views/venue_page.dart';
 import 'themes/theme.dart';
 import 'utils/constants.dart';
@@ -33,14 +33,14 @@ class MyApp extends StatelessWidget {
       home: const Landing(),
       debugShowCheckedModeBanner: false,
       routes: {
-        Routes.LANDING: (context) => const Landing(),
-        Routes.HOMEPAGE: (context) => Homepage(
+        Routes.landing: (context) => const Landing(),
+        Routes.homepage: (context) => Homepage(
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
               userLocation: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userLocation'],
             ),
-        Routes.SEARCH: (context) => Search(
+        Routes.search: (context) => Search(
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
               userLocation: (ModalRoute.of(context)!.settings.arguments
@@ -48,50 +48,50 @@ class MyApp extends StatelessWidget {
               selectedVenueType: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['selectedVenueType'],
             ),
-        Routes.NEARBY: (context) => Nearby(
+        Routes.nearby: (context) => Nearby(
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
               userLocation: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userLocation'],
             ),
-        Routes.ACCOUNT: (context) => Account(
+        Routes.account: (context) => Account(
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
               userLocation: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userLocation'],
             ),
-        Routes.RESERVATION_HISTORY: (context) => ReservationHistory(
+        Routes.reservationHistory: (context) => ReservationHistory(
               user: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['user'],
               userLocation: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userLocation'],
             ),
-        Routes.NOTIFICATION_SETTINGS: (context) => NotificationSettings(
+        Routes.notificationSettings: (context) => NotificationSettings(
               user: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['user'],
               userLocation: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userLocation'],
             ),
-        Routes.SUPPORT: (context) => Support(
+        Routes.support: (context) => Support(
               user: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['user'],
               userLocation: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userLocation'],
             ),
-        Routes.EDIT_PROFILE: (context) => EditProfile(
+        Routes.editProfile: (context) => EditProfile(
               user: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['user'],
               userLocation: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userLocation'],
             ),
-        Routes.TERMS_OF_SERVICE: (context) => TermsOfService(
+        Routes.termsOfService: (context) => TermsOfService(
               userEmail: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userEmail'],
               userLocation: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userLocation'],
             ),
-        Routes.AUTHENTICATION: (context) => const Authentication(),
-        Routes.VENUE: (context) => VenuePage(
+        Routes.authentication: (context) => const Authentication(),
+        Routes.venue: (context) => VenuePage(
               venueId: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['venueId'],
               userEmail: (ModalRoute.of(context)!.settings.arguments
@@ -99,7 +99,7 @@ class MyApp extends StatelessWidget {
               userLocation: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['userLocation'],
             ),
-        Routes.SUCCESSFUL_RESERVATION: (context) => SuccessfulReservation(
+        Routes.successfulReservation: (context) => SuccessfulReservation(
               venueName: (ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>)['venueName'],
               numberOfGuests: (ModalRoute.of(context)!.settings.arguments

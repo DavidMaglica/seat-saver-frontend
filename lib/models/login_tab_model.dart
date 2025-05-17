@@ -29,7 +29,7 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
       case SignUpMethodEnum.custom:
         return _customLogIn(
           widget.model.emailAddressLogInTextController.text,
-          widget.model.passwordLoInTextController.text,
+          widget.model.passwordLogInTextController.text,
         );
 
       default:

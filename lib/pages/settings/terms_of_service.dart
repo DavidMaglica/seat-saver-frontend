@@ -38,7 +38,7 @@ class _TermsOfServiceState extends State<TermsOfService> {
       child: Scaffold(
         appBar: CustomAppbar(
           title: 'Terms of Service',
-          onBack: () => Navigator.of(context).pushNamed(Routes.ACCOUNT,
+          onBack: () => Navigator.of(context).pushNamed(Routes.account,
               arguments: {
                 'userEmail': widget.userEmail,
                 'userLocation': widget.userLocation

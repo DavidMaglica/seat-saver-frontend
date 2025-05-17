@@ -35,7 +35,7 @@ class NotificationSettings extends StatelessWidget {
           appBar: CustomAppbar(
             title: 'Notification Settings',
             onBack: () => Navigator.of(context).pushNamed(
-              Routes.ACCOUNT,
+              Routes.account,
               arguments: {
                 'userEmail': user.email,
                 'userLocation': userLocation,

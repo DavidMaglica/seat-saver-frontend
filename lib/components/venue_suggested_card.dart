@@ -48,7 +48,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
   }
 
   void _openVenuePage() =>
-      Navigator.pushNamed(context, Routes.VENUE, arguments: {
+      Navigator.pushNamed(context, Routes.venue, arguments: {
         'venueId': widget.venue.id,
         'userEmail': widget.userEmail,
         'userLocation': widget.userLocation,
@@ -149,11 +149,11 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
                 fontWeight: FontWeight.w800,
                 fontSize: 10,
               )),
-          Text(workingHours,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(fontSize: 9)),
+          Text(
+            workingHours,
+            style:
+                Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 9),
+          ),
         ],
       ),
     );
@@ -161,8 +161,11 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   Widget _buildRatingBar(double rating) {
     return Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(08, 8, 0, 0),
-        child: Row(mainAxisSize: MainAxisSize.max, children: [
+      padding: const EdgeInsetsDirectional.fromSTEB(08, 8, 0, 0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
           RatingBarIndicator(
             itemBuilder: (context, index) => Icon(
               CupertinoIcons.star_fill,
@@ -173,7 +176,19 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
             unratedColor: const Color(0xFF57636C).withOpacity(0.5),
             itemCount: 5,
             itemSize: 14,
-          )
-        ]));
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 4, top: 2),
+            child: Text(
+              ' ${rating.toStringAsFixed(1)}',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontSize: 10, fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

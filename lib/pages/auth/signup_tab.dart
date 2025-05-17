@@ -48,7 +48,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
   }
 
   void _goToHomepage(String userEmail) {
-    Navigator.pushNamed(context, Routes.HOMEPAGE,
+    Navigator.pushNamed(context, Routes.homepage,
         arguments: {'userEmail': userEmail, 'userLocation': null});
   }
 

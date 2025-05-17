@@ -220,7 +220,7 @@ class HomepageModel extends ChangeNotifier {
   }
 
   Future<void> searchByVenueType(int venueTypeId) =>
-      Navigator.pushNamed(context, Routes.SEARCH, arguments: {
+      Navigator.pushNamed(context, Routes.search, arguments: {
         'userEmail': userEmail,
         'userLocation': userLocation,
         'selectedVenueType': venueTypeId,

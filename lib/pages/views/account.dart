@@ -149,7 +149,7 @@ class Account extends StatelessWidget {
           model,
           CupertinoIcons.doc_on_clipboard,
           'Reservation history',
-          Routes.RESERVATION_HISTORY,
+          Routes.reservationHistory,
           'view your reservation history',
         ),
       ],
@@ -166,7 +166,7 @@ class Account extends StatelessWidget {
           model,
           CupertinoIcons.person_circle_fill,
           'Edit profile',
-          Routes.EDIT_PROFILE,
+          Routes.editProfile,
           'edit your profile',
         ),
         _buildSettingsItem(
@@ -174,7 +174,7 @@ class Account extends StatelessWidget {
           model,
           CupertinoIcons.bell_circle_fill,
           'Notification settings',
-          Routes.NOTIFICATION_SETTINGS,
+          Routes.notificationSettings,
           'edit notification settings',
         ),
       ],
@@ -191,7 +191,7 @@ class Account extends StatelessWidget {
           model,
           CupertinoIcons.question_circle_fill,
           'Support',
-          Routes.SUPPORT,
+          Routes.support,
           'access support',
         ),
         _buildSettingsItem(
@@ -199,7 +199,7 @@ class Account extends StatelessWidget {
           model,
           CupertinoIcons.exclamationmark_shield_fill,
           'Terms of service',
-          Routes.TERMS_OF_SERVICE,
+          Routes.termsOfService,
           null,
         ),
       ],
@@ -228,7 +228,7 @@ class Account extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: InkWell(
-          onTap: () => Navigator.pushNamed(ctx, Routes.AUTHENTICATION),
+          onTap: () => Navigator.pushNamed(ctx, Routes.authentication),
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(

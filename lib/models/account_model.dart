@@ -46,7 +46,7 @@ class AccountModel extends ChangeNotifier {
   }
 
   void openSettingsItem(String route, String? action) {
-    if (route == Routes.TERMS_OF_SERVICE) {
+    if (route == Routes.termsOfService) {
       Navigator.pushNamed(context, route,
           arguments: {'userEmail': user?.email, 'userLocation': userLocation});
       return;

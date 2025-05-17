@@ -49,7 +49,7 @@ class SuccessfulReservationModel extends ChangeNotifier {
 
   void navigateToHomepage() {
     if (!context.mounted) return;
-    Navigator.popAndPushNamed(context, Routes.HOMEPAGE, arguments: {
+    Navigator.popAndPushNamed(context, Routes.homepage, arguments: {
       'userEmail': userEmail,
       'userLocation': userLocation,
     });

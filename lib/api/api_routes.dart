@@ -20,6 +20,7 @@ class ApiRoutes {
   static const getVenue = '/get';
   static const getAllVenues = '/get-all';
   static const getVenueType = '/get-type';
+  static const getVenueRating = '/get-rating';
   static const getAllVenueTypes = '/get-all-types';
   static const getVenueMenu = '/get-menu';
   static const uploadMenuImage = '/upload-menu-image';

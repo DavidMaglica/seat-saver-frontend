@@ -53,7 +53,7 @@ class _LogInTabState extends State<LogInTab> {
   }
 
   void _goToHomepage(String userEmail, Position userLocation) {
-    Navigator.pushNamed(context, Routes.HOMEPAGE,
+    Navigator.pushNamed(context, Routes.homepage,
         arguments: {'userEmail': userEmail, 'userLocation': userLocation});
   }
 
@@ -149,11 +149,11 @@ class _LogInTabState extends State<LogInTab> {
 
   Widget _buildPasswordField() {
     return TextFormField(
-      controller: widget.model.passwordLoInTextController,
+      controller: widget.model.passwordLogInTextController,
       focusNode: widget.model.passwordLogInFocusNode,
       autofocus: false,
       autofillHints: const [AutofillHints.password],
-      obscureText: !widget.model.passwordlogInVisibility,
+      obscureText: !widget.model.passwordLogInVisibility,
       decoration: InputDecoration(
         labelText: 'Password',
         labelStyle: Theme.of(context).textTheme.bodyMedium,
@@ -188,12 +188,12 @@ class _LogInTabState extends State<LogInTab> {
         contentPadding: const EdgeInsetsDirectional.fromSTEB(24, 24, 0, 24),
         suffixIcon: InkWell(
           onTap: () => setState(
-            () => widget.model.passwordlogInVisibility =
-                !widget.model.passwordlogInVisibility,
+            () => widget.model.passwordLogInVisibility =
+                !widget.model.passwordLogInVisibility,
           ),
           focusNode: FocusNode(skipTraversal: true),
           child: Icon(
-            (widget.model.passwordlogInVisibility)
+            (widget.model.passwordLogInVisibility)
                 ? CupertinoIcons.eye_solid
                 : CupertinoIcons.eye_slash_fill,
             color: Theme.of(context).colorScheme.onPrimary,

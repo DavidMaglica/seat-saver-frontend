@@ -3,7 +3,7 @@ class Venue {
   final String name;
   final String location;
   final String workingHours;
-  final double rating;
+  double rating;
   final int typeId;
   String? description;
   // final List<String> imageLinks;
