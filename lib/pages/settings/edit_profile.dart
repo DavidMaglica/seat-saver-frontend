@@ -36,7 +36,7 @@ class EditProfile extends StatelessWidget {
             appBar: CustomAppbar(
               title: 'Edit Profile',
               onBack: () => Navigator.of(context).pushNamed(
-                Routes.ACCOUNT,
+                Routes.account,
                 arguments: {
                   'userEmail': model.updatedEmail ?? user.email,
                   'userLocation': userLocation,

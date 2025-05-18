@@ -102,7 +102,7 @@ class _AuthenticationState extends State<Authentication>
                                           ),
                                         ),
                                         onPressed: () => Navigator.pushNamed(
-                                                context, Routes.HOMEPAGE,
+                                                context, Routes.homepage,
                                                 arguments: {
                                                   'userEmail': null,
                                                   'userLocation': null

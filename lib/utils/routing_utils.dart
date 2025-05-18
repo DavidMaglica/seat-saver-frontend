@@ -15,19 +15,19 @@ void onNavbarItemTapped(
   }
   switch (index) {
     case 0:
-      Navigator.pushNamed(ctx, Routes.HOMEPAGE,
+      Navigator.pushNamed(ctx, Routes.homepage,
           arguments: {'userEmail': userEmail, 'userLocation': userLocation});
       break;
     case 1:
-      Navigator.pushNamed(ctx, Routes.SEARCH,
+      Navigator.pushNamed(ctx, Routes.search,
           arguments: {'userEmail': userEmail, 'userLocation': userLocation});
       break;
     case 2:
-      Navigator.pushNamed(ctx, Routes.NEARBY,
+      Navigator.pushNamed(ctx, Routes.nearby,
           arguments: {'userEmail': userEmail, 'userLocation': userLocation});
       break;
     case 3:
-      Navigator.pushNamed(ctx, Routes.ACCOUNT,
+      Navigator.pushNamed(ctx, Routes.account,
           arguments: {'userEmail': userEmail, 'userLocation': userLocation});
       break;
     default:

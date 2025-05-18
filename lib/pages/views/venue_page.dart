@@ -6,12 +6,12 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-import '../../api/data/venue.dart';
 import '../../components/custom_appbar.dart';
 import '../../components/full_image_view.dart';
+import '../../components/toaster.dart';
+import '../../models/venue_page_model.dart';
 import '../../themes/theme.dart';
 import '../../utils/extensions.dart';
-import '../../models/venue_page_model.dart';
 
 class VenuePage extends StatelessWidget {
   final int venueId;
@@ -72,37 +72,19 @@ class VenuePage extends StatelessWidget {
                         SingleChildScrollView(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               _buildHeadingImage(
                                   context,
                                   model.imageLinks != null
                                       ? model.imageLinks![0]
                                       : model.venueImages![0]),
-                              _buildObjectDetails(
-                                  context, model.venue, model.venueType),
-                              _buildObjectDescription(
-                                  context, model.venue.description),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  _buildDatePickerButton(context, model),
-                                  _buildNumberOfPeopleButton(context, model),
-                                ],
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  _buildTimePickerButton(context, model),
-                                ],
-                              ),
-                              _buildLeaveRatingButton(context, model),
+                              _buildObjectDetails(context, model),
+                              const SizedBox(height: 8),
+                              _buildDivider(context),
+                              const SizedBox(height: 8),
+                              _buildMakeReservation(context, model),
+                              const SizedBox(height: 8),
                               _buildDivider(context),
                               _buildMasonryView(model.imageLinks != null
                                   ? model.imageLinks!.skip(1).toList()
@@ -123,7 +105,7 @@ class VenuePage extends StatelessWidget {
 
   Widget _buildHeadingImage(BuildContext ctx, String image) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(32, 0, 0, 0),
+      padding: const EdgeInsets.only(right: 16),
       child: InkWell(
         onTap: () {
           ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
@@ -149,56 +131,13 @@ class VenuePage extends StatelessWidget {
     );
   }
 
-  Widget _buildObjectDescription(BuildContext ctx, String? description) {
-    return Flexible(
-      child: Align(
-        alignment: const AlignmentDirectional(-1, 0),
-        child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 16),
-          child: Text(
-            description ?? 'No description available',
-            style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-                  fontStyle: FontStyle.italic,
-                ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLeaveRatingButton(BuildContext ctx, VenuePageModel model) {
-    return Flexible(
-      child: Align(
-        alignment: const AlignmentDirectional(-1, 0),
-        child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 0, 8),
-          child: FFButtonWidget(
-            onPressed: () => _buildRatingModal(ctx, model),
-            text: 'Leave a rating',
-            options: FFButtonOptions(
-              width: 128,
-              height: 30,
-              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-              color: Theme.of(ctx).colorScheme.background,
-              textStyle: TextStyle(
-                color: Theme.of(ctx).colorScheme.onPrimary,
-                fontSize: 12,
-              ),
-              borderSide: BorderSide(
-                color: Theme.of(ctx).colorScheme.onPrimary,
-                width: 1,
-              ),
-              elevation: 3,
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<dynamic> _buildRatingModal(BuildContext ctx, VenuePageModel model) {
+  Future<dynamic>? _buildRatingModal(BuildContext ctx, VenuePageModel model) {
     double rating = 0;
+
+    if (model.userEmail.isNullOrEmpty) {
+      Toaster.displayError(ctx, 'Please log in to rate ${model.venue.name}');
+      return null;
+    }
 
     return showCupertinoModalPopup(
       context: ctx,
@@ -249,16 +188,19 @@ class VenuePage extends StatelessWidget {
                         ? Text(
                             'Your rating: ${rating.toStringAsFixed(1)}',
                             key: ValueKey(rating),
-                            style: Theme.of(context).textTheme.titleMedium,
+                            style: Theme.of(context).textTheme.bodyLarge,
                           )
                         : const SizedBox.shrink(),
                   ),
                   const SizedBox(height: 16),
-                  _buildBorderedButton('Give Rating', AppThemes.successColor,
-                      () {
-                    if (rating > 0) model.rateVenue(rating);
-                    Navigator.of(context).pop();
-                  }),
+                  _buildBorderedButton(
+                    'Give Rating',
+                    AppThemes.successColor,
+                    () {
+                      if (rating > 0) model.rateVenue(rating);
+                      Navigator.of(context).pop();
+                    },
+                  ),
                   const SizedBox(height: 16),
                   _buildBorderedButton('Cancel', AppThemes.errorColor, () {
                     Navigator.of(context).pop();
@@ -300,301 +242,330 @@ class VenuePage extends StatelessWidget {
         ));
   }
 
-  Widget _buildObjectDetails(BuildContext ctx, Venue venue, String type) {
+  Widget _buildObjectDetails(BuildContext ctx, VenuePageModel model) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+      padding: const EdgeInsets.only(left: 24),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            venue.name.toUpperCase(),
+            model.venue.name.toUpperCase(),
             style: Theme.of(ctx).textTheme.titleLarge,
           ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-            child: Text(
-              type.toFormattedUpperCase(),
-              style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(0.6),
-                  ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-            child: Text(
-              venue.location,
-              style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(0.6),
-                  ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-            child: Text(
-              'Working hours: ${venue.workingHours}',
-              style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-                    decoration: TextDecoration.underline,
-                  ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-            child: RatingBar.builder(
-              onRatingUpdate: (_) => {},
-              itemBuilder: (context, index) => Icon(
-                CupertinoIcons.star_fill,
-                color: Theme.of(context).colorScheme.onTertiary,
-              ),
-              unratedColor: const Color(0xFF57636C).withOpacity(0.5),
-              direction: Axis.horizontal,
-              glow: false,
-              ignoreGestures: true,
-              initialRating: venue.rating,
-              itemSize: 24,
-              allowHalfRating: true,
-            ),
-          )
+          const SizedBox(height: 8),
+          _buildVenueType(ctx, model),
+          const SizedBox(height: 8),
+          _buildVenueLocation(ctx, model),
+          const SizedBox(height: 8),
+          _buildVenueHours(ctx, model),
+          const SizedBox(height: 8),
+          _buildVenueRating(ctx, model),
+          const SizedBox(height: 8),
+          _buildRatingButton(ctx, model),
+          _buildVenueDescription(ctx, model),
         ],
       ),
     );
   }
 
-  Widget _buildDatePickerButton(BuildContext ctx, VenuePageModel model) {
-    DateFormat dateFormat = DateFormat('dd-MM-yyyy');
-
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 24, 0),
-      child: FFButtonWidget(
-        onPressed: () {
-          _buildDatePicker(ctx, model);
-        },
-        text: model.selectedDate != null
-            ? dateFormat.format(model.selectedDate!)
-            : 'Select date',
-        icon: const Icon(
-          CupertinoIcons.calendar,
-          size: 18,
+  Widget _buildRatingButton(BuildContext ctx, VenuePageModel model) {
+    return FFButtonWidget(
+      onPressed: () => _buildRatingModal(ctx, model),
+      text: 'Leave a rating',
+      showLoadingIndicator: false,
+      options: FFButtonOptions(
+        width: 128,
+        height: 30,
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+        color: Theme.of(ctx).colorScheme.surface,
+        textStyle: const TextStyle(
+          color: AppThemes.accent1,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
         ),
-        options: _selectorButtonOptions(ctx),
+        borderSide: const BorderSide(
+          color: AppThemes.accent1,
+          width: 1,
+        ),
+        elevation: 3,
+        borderRadius: BorderRadius.circular(8),
       ),
     );
   }
 
-  Future<dynamic> _buildDatePicker(BuildContext ctx, VenuePageModel model) {
-    return showCupertinoModalPopup(
-      context: ctx,
-      builder: (BuildContext context) {
-        return Container(
-          height: 264,
-          color: Theme.of(context).colorScheme.background,
-          child: Column(children: [
-            SizedBox(
-              height: 196,
-              child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.date,
-                  initialDateTime: DateTime.now(),
-                  minimumDate: DateTime.now().subtract(const Duration(days: 1)),
-                  maximumDate: DateTime(2100),
-                  onDateTimeChanged: (DateTime newDate) {
-                    model.selectedDate = newDate;
-                  }),
+  Widget _buildVenueType(BuildContext ctx, VenuePageModel model) {
+    return Text(
+      model.venueType.toFormattedUpperCase(),
+      style: Theme.of(ctx).textTheme.bodyMedium,
+    );
+  }
+
+  Widget _buildVenueLocation(BuildContext ctx, VenuePageModel model) {
+    return Row(
+      children: [
+        Icon(
+          CupertinoIcons.location_solid,
+          color: Theme.of(ctx).colorScheme.onPrimary,
+          size: 16,
+        ),
+        const SizedBox(width: 8),
+        Text(
+          model.venue.location,
+          style: Theme.of(ctx).textTheme.bodyMedium,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVenueHours(BuildContext ctx, VenuePageModel model) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(
+          CupertinoIcons.clock,
+          color: Theme.of(ctx).colorScheme.onPrimary,
+          size: 16,
+        ),
+        const SizedBox(width: 8),
+        Text(
+          'Working hours: ${model.venue.workingHours}',
+          style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                decoration: TextDecoration.underline,
+              ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVenueRating(BuildContext ctx, VenuePageModel model) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        RatingBar.builder(
+          onRatingUpdate: (_) => {},
+          itemBuilder: (context, index) => const Icon(
+            CupertinoIcons.star_fill,
+            color: AppThemes.accent1,
+          ),
+          unratedColor: const Color(0xFF57636C).withOpacity(0.5),
+          direction: Axis.horizontal,
+          glow: false,
+          ignoreGestures: true,
+          initialRating: model.venue.rating,
+          itemCount: 1,
+          itemSize: 18,
+          allowHalfRating: true,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Text(
+            ' ${model.venue.rating.toStringAsFixed(1)}',
+            style: Theme.of(ctx)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(fontSize: 12, fontWeight: FontWeight.w500),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVenueDescription(BuildContext ctx, VenuePageModel model) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: Text(
+            'About this venue',
+            style: Theme.of(ctx)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(fontWeight: FontWeight.w800),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Text(
+            model.venue.description ?? 'No description available',
+            style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                  fontStyle: FontStyle.italic,
+                ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMakeReservation(BuildContext ctx, VenuePageModel model) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Make a reservation',
+                style: Theme.of(ctx)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontFamily: 'Roboto'),
+              ),
+              const SizedBox(height: 16),
+              _buildPeopleButton(ctx, model),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  _buildDatePicker(ctx, model),
+                  const SizedBox(width: 22),
+                  _buildTimeButton(ctx, model),
+                ],
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildPeopleButton(BuildContext ctx, VenuePageModel model) {
+    return OutlinedButton(
+      onPressed: () {},
+      style: _reservationButtonsStyle(ctx),
+      child: SizedBox(
+        height: 46,
+        width: 350,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              CupertinoIcons.person_2,
+              color: Theme.of(ctx).colorScheme.onPrimary,
+              size: 28,
             ),
-            SizedBox(
-                height: 50,
-                child: CupertinoButton(
-                  child: Text(
-                    'Done',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )),
-          ]),
-        );
-      },
-    );
-  }
-
-  Widget _buildNumberOfPeopleButton(BuildContext ctx, VenuePageModel model) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-      child: FFButtonWidget(
-        onPressed: () {
-          _buildNumberOfPeoplePicker(ctx, model);
-        },
-        text: model.selectedNumberOfPeople != null
-            ? '${model.selectedNumberOfPeople}'
-            : 'Select no. of people attending',
-        icon: const Icon(
-          CupertinoIcons.person_2_alt,
-          size: 18,
+            const SizedBox(width: 12),
+            _buildPeopleDropdown(ctx, model)
+          ],
         ),
-        options: _selectorButtonOptions(ctx),
       ),
     );
   }
 
-  Future<dynamic> _buildNumberOfPeoplePicker(
+  Widget _buildPeopleDropdown(BuildContext ctx, VenuePageModel model) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: DropdownButton<int>(
+        value: model.selectedNumberOfPeople,
+        hint: Text(
+          'Select no. of people attending',
+          style: Theme.of(ctx).textTheme.bodyLarge,
+        ),
+        style: Theme.of(ctx).textTheme.bodyLarge,
+        dropdownColor: Theme.of(ctx).colorScheme.background,
+        underline: Container(),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        items: List.generate(12, (i) => i + 1)
+            .map((value) => DropdownMenuItem(
+                  value: value,
+                  child: Text(value == 1 ? '$value person' : '$value people'),
+                ))
+            .toList(),
+        onChanged: (value) {
+          model.setPeople(value);
+        },
+        selectedItemBuilder: (context) => List.generate(12, (i) => i + 1)
+            .map((value) => DropdownMenuItem(
+                  value: value,
+                  child: Text(value == 1 ? '$value person' : '$value people'),
+                ))
+            .toList(),
+      ),
+    );
+  }
+
+  Widget _buildDatePicker(BuildContext ctx, VenuePageModel model) {
+    DateFormat dateFormat = DateFormat('MMMM d, yyyy');
+    var displayDate = model.selectedDate != null
+        ? dateFormat.format(model.selectedDate!)
+        : 'Select date';
+    return OutlinedButton(
+      onPressed: () => model.selectDate(ctx),
+      style: _reservationButtonsStyle(ctx),
+      child: SizedBox(
+        height: 46,
+        width: 148,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              CupertinoIcons.calendar,
+              color: Theme.of(ctx).colorScheme.onPrimary,
+            ),
+            const SizedBox(width: 12),
+            Text(displayDate, style: Theme.of(ctx).textTheme.bodyLarge),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimeButton(BuildContext ctx, VenuePageModel model) {
+    return OutlinedButton(
+      onPressed: () {},
+      style: _reservationButtonsStyle(ctx),
+      child: SizedBox(
+        height: 46,
+        width: 148,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              CupertinoIcons.clock,
+              color: Theme.of(ctx).colorScheme.onPrimary,
+            ),
+            const SizedBox(width: 12),
+            _buildTimeDropdown(ctx, model)
+          ],
+        ),
+      ),
+    );
+  }
+
+  DropdownButton<TimeOfDay> _buildTimeDropdown(
     BuildContext ctx,
     VenuePageModel model,
   ) {
-    return showCupertinoModalPopup(
-      context: ctx,
-      builder: (BuildContext context) {
-        return Container(
-          height: 264,
-          color: Theme.of(context).colorScheme.background,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 196,
-                child: CupertinoPicker(
-                  itemExtent: 32,
-                  onSelectedItemChanged: (int selectedIndex) {
-                    model.selectedNumberOfPeople = selectedIndex + 1;
-                  },
-                  children: List<Widget>.generate(10, (int index) {
-                    return Center(
-                      child: Text(
-                        '${index + 1}',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          fontSize: 20,
-                        ),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-              SizedBox(
-                height: 50,
-                child: CupertinoButton(
-                  child: Text(
-                    'Done',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildTimePickerButton(BuildContext ctx, VenuePageModel model) {
-    String minutesToDisplay = model.selectedMinute == 0 ? '00' : '30';
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 12),
-      child: FFButtonWidget(
-        onPressed: () {
-          _buildTimePicker(ctx, model);
-        },
-        text: model.selectedHour != null && model.selectedMinute != null
-            ? '${model.selectedHour}:$minutesToDisplay'
-            : 'Select time',
-        icon: const Icon(
-          CupertinoIcons.clock,
-          size: 18,
-        ),
-        options: _selectorButtonOptions(ctx),
+    return DropdownButton<TimeOfDay>(
+      value: model.selectedTime,
+      hint: Text(
+        'Select time',
+        style: Theme.of(ctx).textTheme.bodyLarge,
       ),
-    );
-  }
-
-  Future<dynamic> _buildTimePicker(BuildContext ctx, VenuePageModel model) {
-    model.selectedMinute ??= 0;
-    return showCupertinoModalPopup(
-      context: ctx,
-      builder: (BuildContext context) {
-        return Container(
-          height: 264,
-          color: Theme.of(context).colorScheme.background,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 196,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: CupertinoPicker(
-                        itemExtent: 32,
-                        onSelectedItemChanged: (int index) {
-                          model.selectedHour = index;
-                        },
-                        scrollController: FixedExtentScrollController(
-                          initialItem: model.selectedHour ?? 0,
-                        ),
-                        children: List<Widget>.generate(24, (int index) {
-                          return Center(
-                            child: Text(
-                              '$index',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                fontSize: 20,
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ),
-                    Text(
-                      ':',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                    ),
-                    Expanded(
-                      child: CupertinoPicker(
-                        itemExtent: 32,
-                        onSelectedItemChanged: (int index) {
-                          model.selectedMinute = index;
-                        },
-                        scrollController: FixedExtentScrollController(
-                          initialItem: model.selectedMinute ?? 00,
-                        ),
-                        children: List<Widget>.generate(2, (int index) {
-                          return Center(
-                            child: Text(
-                              index == 0 ? '00' : '30',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                fontSize: 20,
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 50,
-                child: CupertinoButton(
-                  child: Text(
-                    'Done',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-            ],
-          ),
+      style: Theme.of(ctx).textTheme.bodyLarge,
+      dropdownColor: Theme.of(ctx).colorScheme.background,
+      underline: Container(),
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      items: model.timeOptions.map((time) {
+        final formatted = time.format(ctx);
+        return DropdownMenuItem(
+          value: time,
+          child: Text(formatted),
         );
+      }).toList(),
+      onChanged: (value) {
+        model.setTime(value);
       },
     );
   }
@@ -671,27 +642,22 @@ class VenuePage extends StatelessWidget {
       thickness: 1,
       indent: 16,
       endIndent: 16,
-      color: Theme.of(ctx).colorScheme.onPrimary,
+      color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(0.4),
     );
   }
 
-  FFButtonOptions _selectorButtonOptions(BuildContext ctx) {
-    return FFButtonOptions(
-      width: 180,
-      height: 40,
-      color: Theme.of(ctx).colorScheme.background,
-      textStyle: TextStyle(
+  ButtonStyle _reservationButtonsStyle(BuildContext ctx) {
+    return OutlinedButton.styleFrom(
+      side: BorderSide(
         color: Theme.of(ctx).colorScheme.onPrimary,
-        fontSize: 12,
+        width: 1,
       ),
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
-      iconPadding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 2),
+      splashFactory: NoSplash.splashFactory,
       elevation: 3,
-      borderSide: BorderSide(
-        color: Theme.of(ctx).colorScheme.onPrimary,
-        width: .5,
+      backgroundColor: Theme.of(ctx).colorScheme.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
       ),
-      borderRadius: BorderRadius.circular(8),
     );
   }
 }

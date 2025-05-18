@@ -57,7 +57,7 @@ class _SupportState extends State<Support> {
         appBar: CustomAppbar(
           title: 'Support',
           onBack: () => Navigator.of(context).pushNamed(
-            Routes.ACCOUNT,
+            Routes.account,
             arguments: {
               'userEmail': widget.user.email,
               'userLocation': widget.userLocation

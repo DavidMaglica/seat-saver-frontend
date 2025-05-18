@@ -21,7 +21,7 @@ class LandingModel extends ChangeNotifier {
     if (!context.mounted) return;
     Navigator.pushNamed(
       context,
-      Routes.HOMEPAGE,
+      Routes.homepage,
       arguments: {'userEmail': ''},
     );
   }

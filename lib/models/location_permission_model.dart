@@ -79,7 +79,7 @@ class LocationPermissionPopUpModel extends ChangeNotifier {
     _accountApi.updateUserLocation(userEmail, userLocation);
 
     if (!context.mounted) return;
-    Navigator.popAndPushNamed(context, Routes.HOMEPAGE, arguments: {
+    Navigator.popAndPushNamed(context, Routes.homepage, arguments: {
       'userEmail': userEmail,
       'userLocation': userLocation,
     });

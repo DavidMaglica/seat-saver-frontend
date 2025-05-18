@@ -1,17 +1,15 @@
-// ignore_for_file: constant_identifier_names
-
 class Routes {
-  static const String LANDING = '/landing';
-  static const String HOMEPAGE = '/homepage';
-  static const String SEARCH = '/search';
-  static const String NEARBY = '/nearby';
-  static const String ACCOUNT = '/account';
-  static const String RESERVATION_HISTORY = '/reservationHistory';
-  static const String NOTIFICATION_SETTINGS = '/notificationSettings';
-  static const String SUPPORT = '/support';
-  static const String EDIT_PROFILE = '/editProfile';
-  static const String TERMS_OF_SERVICE = '/termsOfService';
-  static const String AUTHENTICATION = '/authentication';
-  static const String VENUE = '/venue';
-  static const String SUCCESSFUL_RESERVATION = '/successfulReservation';
+  static const String landing = '/landing';
+  static const String homepage = '/homepage';
+  static const String search = '/search';
+  static const String nearby = '/nearby';
+  static const String account = '/account';
+  static const String reservationHistory = '/reservationHistory';
+  static const String notificationSettings = '/notificationSettings';
+  static const String support = '/support';
+  static const String editProfile = '/editProfile';
+  static const String termsOfService = '/termsOfService';
+  static const String authentication = '/authentication';
+  static const String venue = '/venue';
+  static const String successfulReservation = '/successfulReservation';
 }

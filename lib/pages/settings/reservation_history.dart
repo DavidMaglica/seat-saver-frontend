@@ -38,7 +38,7 @@ class ReservationHistory extends StatelessWidget {
             appBar: CustomAppbar(
               title: 'Reservation History',
               onBack: () => Navigator.of(context).pushNamed(
-                Routes.ACCOUNT,
+                Routes.account,
                 arguments: {
                   'userEmail': model.user.email,
                   'userLocation': model.userLocation,

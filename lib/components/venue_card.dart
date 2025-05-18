@@ -43,7 +43,7 @@ class _VenueCardState extends State<VenueCard> {
   }
 
   void _openVenuePage() =>
-      Navigator.pushNamed(context, Routes.VENUE, arguments: {
+      Navigator.pushNamed(context, Routes.venue, arguments: {
         'venueId': widget.venue.id,
         'userEmail': widget.userEmail,
         'userLocation': widget.userLocation,
@@ -146,8 +146,11 @@ class _VenueCardState extends State<VenueCard> {
 
   Widget _buildRatingBar(double rating) {
     return Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
-        child: Row(mainAxisSize: MainAxisSize.max, children: [
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
           RatingBarIndicator(
             itemBuilder: (context, index) => Icon(
               CupertinoIcons.star_fill,
@@ -158,7 +161,19 @@ class _VenueCardState extends State<VenueCard> {
             unratedColor: const Color(0xFF57636C).withOpacity(0.5),
             itemCount: 5,
             itemSize: 12,
-          )
-        ]));
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 4, top: 1),
+            child: Text(
+              ' ${rating.toStringAsFixed(1)}',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontSize: 10, fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

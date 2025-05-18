@@ -105,7 +105,7 @@ class SearchModel extends ChangeNotifier {
   }
 
   Function() goToVenuePage(Venue venue) =>
-          () => Navigator.pushNamed(context, Routes.VENUE, arguments: {
+          () => Navigator.pushNamed(context, Routes.venue, arguments: {
         'venueId': venue.id,
         'userEmail': userEmail,
         'userLocation': userLocation,

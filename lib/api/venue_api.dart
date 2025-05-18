@@ -113,92 +113,6 @@ class VenueApi {
     }
   }
 
-  Future<List<Venue>> getAllVenues() async {
-    final List<Venue> allVenues = [
-      Venue(
-        id: 1,
-        name: 'Trattoria Bellissimo',
-        location: 'Poreč',
-        workingHours: '8:00 AM - 10:00 PM',
-        rating: 5,
-        typeId: 13,
-        description: 'A lovely place to eat.',
-        // imageLinks: [],
-      ),
-      Venue(
-        id: 2,
-        name: 'Tequila',
-        location: 'Poreč',
-        workingHours: '8:00 AM - 10:00 PM',
-        rating: 2,
-        typeId: 1,
-        description: 'A lovely place to eat.',
-        // imageLinks: [],
-      ),
-      Venue(
-        id: 3,
-        name: 'La Carraia',
-        location: 'Pula',
-        workingHours: '8:00 AM - 10:00 PM',
-        rating: 3.5,
-        typeId: 5,
-        description: 'A lovely place to eat.',
-        // imageLinks: [],
-      ),
-      Venue(
-        id: 4,
-        name: 'Dei Neri',
-        location: 'Rovinj',
-        workingHours: '8:00 AM - 10:00 PM',
-        rating: 3,
-        typeId: 1,
-        description: 'A lovely place to eat.',
-        // imageLinks: [],
-      ),
-      Venue(
-        id: 5,
-        name: 'Chang',
-        location: 'Kopar',
-        workingHours: '8:00 AM - 10:00 PM',
-        rating: 5,
-        typeId: 1,
-        description: 'A lovely place to eat.',
-        // imageLinks: [],
-      ),
-      Venue(
-        id: 6,
-        name: 'Umi',
-        location: 'Poreč',
-        workingHours: '8:00 AM - 10:00 PM',
-        rating: 4.5,
-        typeId: 1,
-        description: 'A lovely place to eat.',
-        // imageLinks: [],
-      ),
-      Venue(
-        id: 7,
-        name: 'Tsuki',
-        location: 'Rovinj',
-        workingHours: '8:00 AM - 10:00 PM',
-        rating: 3,
-        typeId: 1,
-        description: 'A lovely place to eat.',
-        // imageLinks: [],
-      ),
-      Venue(
-        id: 8,
-        name: 'Bacchus',
-        location: 'Pula',
-        workingHours: '8:00 AM - 10:00 PM',
-        rating: 4,
-        typeId: 1,
-        description: 'A lovely place to eat.',
-        // imageLinks: [],
-      ),
-    ];
-    return allVenues.toList();
-  }
-
   Future<List<Venue>> getSortedVenues() async {
     List<Venue> allVenues = await getAllVenuesFromApi();
     allVenues.sort((a, b) => a.name.compareTo(b.name));
@@ -206,7 +120,7 @@ class VenueApi {
   }
 
   Future<List<Venue>> getNearbyVenues() async {
-    List<Venue> allVenues = await getAllVenues();
+    List<Venue> allVenues = await getVenues();
     List<Venue> nearbyVenues = allVenues
         .where(
             (venue) => venue.location == 'Poreč' || venue.location == 'Rovinj')
@@ -216,7 +130,7 @@ class VenueApi {
   }
 
   Future<List<Venue>> getTrendingVenues() async {
-    List<Venue> allVenues = await getAllVenues();
+    List<Venue> allVenues = await getVenues();
     List<Venue> trendingVenues =
         allVenues.where((venue) => venue.rating >= 4).toList();
     trendingVenues.sort((a, b) => b.rating.compareTo(a.rating));
@@ -224,21 +138,27 @@ class VenueApi {
   }
 
   Future<List<Venue>> getNewVenues() async {
-    List<Venue> allVenues = await getAllVenues();
+    List<Venue> allVenues = await getVenues();
     allVenues.sort((a, b) => b.id.compareTo(a.id));
-    List<Venue> newVenues = allVenues.take(8).toList();
+    List<Venue> newVenues = allVenues.take(20).toList();
     return newVenues;
   }
 
   Future<List<Venue>> getSuggestedVenues() async {
-    List<Venue> allVenues = await getAllVenues();
+    List<Venue> allVenues = await getVenues();
     allVenues.sort((a, b) => a.name.compareTo(b.name));
     return allVenues.toList();
   }
 
+  Future<List<Venue>> getVenues() async {
+    Response response = await dio.get(ApiRoutes.getAllVenues);
+    List<Venue> venues =
+        (response.data as List).map((venue) => Venue.fromMap(venue)).toList();
+    return venues;
+  }
+
   Future<Venue> getVenue(int venueId) async {
-    Response response =
-        await dio.get('${ApiRoutes.getVenue}?venueId=$venueId');
+    Response response = await dio.get('${ApiRoutes.getVenue}?venueId=$venueId');
     return Venue.fromMap(response.data);
   }
 
@@ -252,6 +172,12 @@ class VenueApi {
   Future<String> getVenueType(int typeId) async {
     Response response =
         await dio.get('${ApiRoutes.getVenueType}?typeId=$typeId');
+    return response.data;
+  }
+
+  Future<double> getVenueRating(int venueId) async {
+    Response response =
+        await dio.get('${ApiRoutes.getVenueRating}?venueId=$venueId');
     return response.data;
   }
 

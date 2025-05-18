@@ -97,7 +97,7 @@ class LocationPermissionPopUp extends StatelessWidget {
     return FFButtonWidget(
       onPressed: () {
         Navigator.of(ctx).popAndPushNamed(
-          Routes.HOMEPAGE,
+          Routes.homepage,
           arguments: {'userEmail': userEmail, 'userLocation': null},
         );
       },
