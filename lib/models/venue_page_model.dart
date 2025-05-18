@@ -54,7 +54,8 @@ class VenuePageModel extends ChangeNotifier {
   Future<void> init() async {
     await _loadData();
     await _loadImages();
-    selectedTime = _roundToNearestHalfHour(selectedTime!);
+    selectedTime = _roundToNearestHalfHour(
+        TimeOfDay(hour: selectedTime!.hour + 1, minute: selectedTime!.minute));
     notifyListeners();
   }
 
