@@ -113,8 +113,41 @@ class VenueApi {
     }
   }
 
+  // NON MOCKED API CALLS START HERE
+  Future<Venue> getVenue(int venueId) async {
+    Response response = await dio.get('${ApiRoutes.getVenue}?venueId=$venueId');
+    return Venue.fromMap(response.data);
+  }
+
+  Future<List<Venue>> getVenues() async {
+    Response response = await dio.get(ApiRoutes.getAllVenues);
+    List<Venue> venues =
+        (response.data as List).map((venue) => Venue.fromMap(venue)).toList();
+    return venues;
+  }
+
+  Future<String> getVenueType(int typeId) async {
+    Response response =
+        await dio.get('${ApiRoutes.getVenueType}?typeId=$typeId');
+    return response.data;
+  }
+
+  Future<List<VenueType>> getAllVenueTypes() async {
+    Response response = await dio.get(ApiRoutes.getAllVenueTypes);
+    List<VenueType> types = (response.data as List)
+        .map((type) => VenueType.fromJson(type))
+        .toList();
+    return types;
+  }
+
+  Future<double> getVenueRating(int venueId) async {
+    Response response =
+        await dio.get('${ApiRoutes.getVenueRating}?venueId=$venueId');
+    return response.data;
+  }
+
   Future<List<Venue>> getSortedVenues() async {
-    List<Venue> allVenues = await getAllVenuesFromApi();
+    List<Venue> allVenues = await getVenues();
     allVenues.sort((a, b) => a.name.compareTo(b.name));
     return allVenues;
   }
@@ -140,53 +173,13 @@ class VenueApi {
   Future<List<Venue>> getNewVenues() async {
     List<Venue> allVenues = await getVenues();
     allVenues.sort((a, b) => b.id.compareTo(a.id));
-    List<Venue> newVenues = allVenues.take(20).toList();
+    List<Venue> newVenues = allVenues.take(15).toList();
     return newVenues;
   }
 
   Future<List<Venue>> getSuggestedVenues() async {
     List<Venue> allVenues = await getVenues();
-    allVenues.sort((a, b) => a.name.compareTo(b.name));
-    return allVenues.toList();
-  }
-
-  Future<List<Venue>> getVenues() async {
-    Response response = await dio.get(ApiRoutes.getAllVenues);
-    List<Venue> venues =
-        (response.data as List).map((venue) => Venue.fromMap(venue)).toList();
-    return venues;
-  }
-
-  Future<Venue> getVenue(int venueId) async {
-    Response response = await dio.get('${ApiRoutes.getVenue}?venueId=$venueId');
-    return Venue.fromMap(response.data);
-  }
-
-  Future<List<Venue>> getAllVenuesFromApi() async {
-    Response response = await dio.get(ApiRoutes.getAllVenues);
-    List<Venue> venues =
-        (response.data as List).map((venue) => Venue.fromMap(venue)).toList();
-    return venues;
-  }
-
-  Future<String> getVenueType(int typeId) async {
-    Response response =
-        await dio.get('${ApiRoutes.getVenueType}?typeId=$typeId');
-    return response.data;
-  }
-
-  Future<double> getVenueRating(int venueId) async {
-    Response response =
-        await dio.get('${ApiRoutes.getVenueRating}?venueId=$venueId');
-    return response.data;
-  }
-
-  Future<List<VenueType>> getAllVenueTypes() async {
-    Response response = await dio.get(ApiRoutes.getAllVenueTypes);
-    List<VenueType> types = (response.data as List)
-        .map((type) => VenueType.fromJson(type))
-        .toList();
-    return types;
+    return allVenues.take(25).toList();
   }
 
   Future<BasicResponse> rateVenue(int venueId, double rating) async {

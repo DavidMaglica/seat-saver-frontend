@@ -65,7 +65,6 @@ class _SupportState extends State<Support> {
           ),
         ),
         body: SafeArea(
-          top: true,
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
             child: SingleChildScrollView(

@@ -58,7 +58,6 @@ class _AuthenticationState extends State<Authentication>
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.surface,
         body: SafeArea(
-          top: true,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [

@@ -39,7 +39,6 @@ class Homepage extends StatelessWidget {
                         key: model.scaffoldKey,
                         backgroundColor: Theme.of(context).colorScheme.surface,
                         body: SafeArea(
-                          top: true,
                           child: Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
                                 0, 16, 0, 0),

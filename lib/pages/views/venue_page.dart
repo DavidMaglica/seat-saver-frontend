@@ -302,6 +302,9 @@ class VenuePage extends StatelessWidget {
 
   Widget _buildVenueLocation(BuildContext ctx, VenuePageModel model) {
     return Row(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Icon(
           CupertinoIcons.location_solid,
@@ -320,7 +323,8 @@ class VenuePage extends StatelessWidget {
   Widget _buildVenueHours(BuildContext ctx, VenuePageModel model) {
     return Row(
       mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Icon(
           CupertinoIcons.clock,
@@ -341,6 +345,8 @@ class VenuePage extends StatelessWidget {
   Widget _buildVenueRating(BuildContext ctx, VenuePageModel model) {
     return Row(
       mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         RatingBar.builder(
           onRatingUpdate: (_) => {},
@@ -358,13 +364,10 @@ class VenuePage extends StatelessWidget {
           allowHalfRating: true,
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 4),
+          padding: const EdgeInsets.only(top: 4, left: 4),
           child: Text(
             ' ${model.venue.rating.toStringAsFixed(1)}',
-            style: Theme.of(ctx)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(fontSize: 12, fontWeight: FontWeight.w500),
+            style: Theme.of(ctx).textTheme.bodyMedium,
           ),
         ),
       ],

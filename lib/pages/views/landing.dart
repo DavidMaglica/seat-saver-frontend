@@ -26,7 +26,6 @@ class Landing extends StatelessWidget {
             key: model.scaffoldKey,
             backgroundColor: Theme.of(context).colorScheme.surface,
             body: SafeArea(
-              top: true,
               child: Align(
                 alignment: const AlignmentDirectional(0, 0),
                 child: Column(

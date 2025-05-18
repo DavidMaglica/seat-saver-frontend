@@ -40,7 +40,6 @@ class SuccessfulReservation extends StatelessWidget {
             child: Scaffold(
               backgroundColor: Theme.of(context).colorScheme.background,
               body: SafeArea(
-                top: true,
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [

@@ -41,7 +41,7 @@ class Account extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 96),
+                    if (model.userEmail != null) const SizedBox(height: 94),
                     _buildAccountDetails(context, model.user),
                     _buildHistorySettings(context, model),
                     _buildAccountSettings(context, model),

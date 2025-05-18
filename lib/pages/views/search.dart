@@ -40,7 +40,6 @@ class Search extends StatelessWidget {
                 key: model.scaffoldKey,
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 body: SafeArea(
-                  top: true,
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
