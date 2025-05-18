@@ -1,3 +1,4 @@
+import 'package:TableReserver/api/venue_api.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -12,8 +13,10 @@ class ReservationHistoryModel extends ChangeNotifier {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final ReservationApi reservationApi = ReservationApi();
+  final VenueApi venueApi = VenueApi();
 
   List<ReservationDetails>? reservations;
+  final Map<int, String> _venueNameCache = {};
 
   ReservationHistoryModel({
     required this.context,
@@ -21,15 +24,41 @@ class ReservationHistoryModel extends ChangeNotifier {
     this.userLocation,
   });
 
-  Future<void> loadReservations() async {
-    final response2 = await reservationApi.getReservation(user.email);
+  void init() {
+    loadReservationsFromApi();
+  }
 
-    if (response2 != null) {
-      reservations = response2.reservations;
+  Future<void> loadReservationsFromApi() async {
+    final response = await reservationApi.getReservationsFromApi(user.email);
+
+    if (response.isNotEmpty) {
+      reservations = response.map((reservation) {
+        return ReservationDetails(
+          venueId: reservation.venueId,
+          numberOfGuests: reservation.numberOfGuests,
+          reservationDateTime: DateTime.parse(reservation.dateTime),
+        );
+      }).toList();
+
+      for (var reservation in reservations!) {
+        _fetchVenueName(reservation.venueId);
+      }
     } else {
       reservations = [];
     }
 
+    notifyListeners();
+  }
+
+  String getVenueName(int venueId) {
+    return _venueNameCache[venueId] ?? 'Loading...';
+  }
+
+  Future<void> _fetchVenueName(int venueId) async {
+    if (_venueNameCache.containsKey(venueId)) return;
+
+    final venue = await venueApi.getVenue(venueId);
+    _venueNameCache[venueId] = venue.name;
     notifyListeners();
   }
 }

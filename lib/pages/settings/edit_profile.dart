@@ -109,8 +109,7 @@ class EditProfile extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Change Username',
-                style: Theme.of(ctx).textTheme.titleMedium),
+            Text('Change Username', style: Theme.of(ctx).textTheme.titleMedium),
             Row(
               children: [
                 Padding(
@@ -146,8 +145,7 @@ class EditProfile extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Change Email',
-                style: Theme.of(ctx).textTheme.titleMedium),
+            Text('Change Email', style: Theme.of(ctx).textTheme.titleMedium),
             Row(
               children: [
                 Padding(
@@ -183,8 +181,7 @@ class EditProfile extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Change Password',
-                style: Theme.of(ctx).textTheme.titleMedium),
+            Text('Change Password', style: Theme.of(ctx).textTheme.titleMedium),
             Icon(
               CupertinoIcons.chevron_right,
               color: Theme.of(ctx).colorScheme.onPrimary,
@@ -213,7 +210,7 @@ class EditProfile extends StatelessWidget {
             children: [
               buildModalTitle(context, 'Change Username'),
               const SizedBox(height: 16),
-              _buildInputField('New Username', 'Enter a new username',
+              _buildInputField(ctx, 'New Username', 'Enter a new username',
                   model.newUsernameTextController, model.newUsernameFocusNode),
               const SizedBox(height: 24),
               Row(
@@ -250,7 +247,7 @@ class EditProfile extends StatelessWidget {
             children: [
               buildModalTitle(context, 'Change Email'),
               const SizedBox(height: 16),
-              _buildInputField('New Email', 'Enter your new email',
+              _buildInputField(ctx, 'New Email', 'Enter your new email',
                   model.newEmailTextController, model.newEmailFocusNode),
               const SizedBox(height: 24),
               Row(
@@ -290,6 +287,7 @@ class EditProfile extends StatelessWidget {
                   buildModalTitle(context, 'Change Password'),
                   const SizedBox(height: 16),
                   _buildPasswordInputField(
+                      ctx,
                       'New Password',
                       'Enter a new password',
                       model.newPasswordTextController,
@@ -299,6 +297,7 @@ class EditProfile extends StatelessWidget {
                         !model.newPasswordVisibility);
                   }),
                   _buildPasswordInputField(
+                      ctx,
                       'Confirm New Password',
                       'Confirm your password',
                       model.confirmNewPasswordTextController,
@@ -328,6 +327,7 @@ class EditProfile extends StatelessWidget {
   }
 
   Widget _buildInputField(
+    BuildContext ctx,
     String labelText,
     String hint,
     TextEditingController controller,
@@ -342,11 +342,13 @@ class EditProfile extends StatelessWidget {
           labelText: labelText,
           hintText: hint,
         ),
+        style: Theme.of(ctx).textTheme.bodyLarge,
       ),
     );
   }
 
   Widget _buildPasswordInputField(
+    BuildContext ctx,
     String labelText,
     String hint,
     TextEditingController controller,
@@ -360,6 +362,7 @@ class EditProfile extends StatelessWidget {
         controller: controller,
         focusNode: focusNode,
         obscureText: !isVisible,
+        style: Theme.of(ctx).textTheme.bodyLarge,
         decoration: InputDecoration(
           labelText: labelText,
           hintText: hint,

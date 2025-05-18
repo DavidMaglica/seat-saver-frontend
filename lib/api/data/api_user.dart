@@ -1,6 +1,7 @@
 import 'notification_settings.dart';
 
 class APIUser {
+  final int id;
   final String username;
   final String email;
   final String password;
@@ -9,6 +10,7 @@ class APIUser {
   final double? lastKnownLongitude;
 
   APIUser({
+    required this.id,
     required this.username,
     required this.email,
     required this.password,
@@ -19,6 +21,7 @@ class APIUser {
 
   factory APIUser.fromMap(Map<String, dynamic> json) {
     return APIUser(
+      id: json['id'],
       username: json['username'],
       email: json['email'],
       password: json['password'],

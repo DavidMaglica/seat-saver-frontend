@@ -1,62 +1,44 @@
+import 'package:dio/dio.dart';
+
+import 'api_routes.dart';
 import 'data/basic_response.dart';
 import 'data/reservation_details.dart';
+import 'dio_setup.dart';
+
+final dio = setupDio(ApiRoutes.reservation);
 
 class ReservationApi {
-  Map<String, List<ReservationDetails>> reservationsStore = {};
+  Future<List<ReservationDetailsFromApi>> getReservationsFromApi(
+      String userEmail) async {
+    Response response =
+        await dio.get('${ApiRoutes.getReservations}?email=$userEmail');
+    List<ReservationDetailsFromApi> reservations = (response.data as List)
+        .map((reservation) => ReservationDetailsFromApi.fromJson(reservation))
+        .toList();
 
-  List<ReservationDetails>? findReservation(String email) =>
-      reservationsStore[email];
-
-  Future<ReservationResponse?> getReservation(String email) async {
-    if (!reservationsStore.containsKey(email)) {
-      return null;
-    }
-
-    List<ReservationDetails> reservation = reservationsStore[email]!;
-    return ReservationResponse(
-      success: true,
-      message: 'Reservation retrieved successfully',
-      reservations: reservation,
-    );
+    return reservations;
   }
 
-  Future<BasicResponse> addReservation(
+  Future<BasicResponse> addReservationToApi(
     String userEmail,
     int venueId,
     int numberOfPeople,
     DateTime reservationDate,
   ) async {
-    ReservationDetails newReservation = ReservationDetails(
-      venueId: venueId,
-      numberOfGuests: numberOfPeople,
-      reservationDateTime: reservationDate,
-    );
+    try {
+      Response response = await dio.post(ApiRoutes.createReservation, data: {
+        'userEmail': userEmail,
+        'venueId': venueId,
+        'reservationDate': reservationDate.toIso8601String(),
+        'numberOfPeople': numberOfPeople,
+      });
 
-    if (!reservationsStore.containsKey(userEmail)) {
-      reservationsStore[userEmail] = [newReservation];
+      return BasicResponse.fromJson(response.data);
+    } catch (e) {
       return BasicResponse(
-          success: true, message: 'Reservation added successfully');
-    }
-
-    reservationsStore[userEmail]!.add(newReservation);
-    return BasicResponse(
-        success: true, message: 'Reservation added successfully');
-  }
-
-  Future<ReservationResponse> getReservations(String email) async {
-    if (!reservationsStore.containsKey(email)) {
-      return ReservationResponse(
         success: false,
-        message: 'User not found',
-        reservations: null,
+        message: 'Failed to create reservation',
       );
     }
-
-    List<ReservationDetails> reservations = reservationsStore[email]!;
-    return ReservationResponse(
-      success: true,
-      message: 'Reservation retrieved successfully',
-      reservations: reservations,
-    );
   }
 }

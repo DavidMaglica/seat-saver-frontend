@@ -134,18 +134,17 @@ class VenuePageModel extends ChangeNotifier {
       selectedTime!.minute,
     );
 
-    BasicResponse response = await reservationApi.addReservation(
+    BasicResponse response = await reservationApi.addReservationToApi(
       userEmail!,
       venueId,
       selectedNumberOfPeople!,
       reservationDateTime,
     );
-
     if (!ctx.mounted) return;
     ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
 
     if (!response.success) {
-      Toaster.displayError(ctx, 'Error reserving venue');
+      Toaster.displayError(ctx, response.message);
       return;
     }
 

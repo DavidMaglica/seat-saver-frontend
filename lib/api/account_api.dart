@@ -34,6 +34,7 @@ class AccountApi {
         );
 
         User user = User(
+            id: apiUser.id,
             username: apiUser.username,
             email: apiUser.email,
             password: apiUser.password,
@@ -45,6 +46,7 @@ class AccountApi {
             success: true,
             message: 'User found',
             user: User(
+                id: apiUser.id,
                 username: apiUser.username,
                 email: apiUser.email,
                 password: apiUser.password,

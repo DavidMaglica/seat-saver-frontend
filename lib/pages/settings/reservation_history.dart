@@ -27,7 +27,7 @@ class ReservationHistory extends StatelessWidget {
         context: context,
         user: user,
         userLocation: userLocation,
-      )..loadReservations(),
+      )..init(),
       child: Builder(
         builder: (context) {
           final model = context.watch<ReservationHistoryModel>();
@@ -114,18 +114,17 @@ class ReservationHistory extends StatelessWidget {
             InkWell(
               onTap: () => _openReservationDetailsBottomSheet(
                 ctx,
-                reservation.venueId,
+                model.getVenueName(reservation.venueId),
                 reservation.numberOfGuests,
                 reservation.reservationDateTime,
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsetsDirectional.all(12),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      DateFormat('dd-MM-yyyy HH:mm')
-                          .format(reservation.reservationDateTime),
+                      model.getVenueName(reservation.venueId),
                       style: Theme.of(ctx).textTheme.titleMedium,
                     ),
                     Row(
@@ -170,7 +169,7 @@ class ReservationHistory extends StatelessWidget {
 
   void _openReservationDetailsBottomSheet(
     BuildContext ctx,
-    int venueId,
+    String venueName,
     int numberOfGuests,
     DateTime reservationDateTime,
   ) {
@@ -192,7 +191,7 @@ class ReservationHistory extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
-                    _buildDetailRow(context, 'Venue ID', venueId.toString()),
+                    _buildDetailRow(context, 'Venue name', venueName),
                     Divider(
                       color: Theme.of(context)
                           .colorScheme
