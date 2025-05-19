@@ -63,7 +63,6 @@ class _NearbyState extends State<Nearby> {
             resizeToAvoidBottomInset: false,
             backgroundColor: Theme.of(context).colorScheme.background,
             body: SafeArea(
-              top: true,
               child: Column(
                 children: [
                   Expanded(

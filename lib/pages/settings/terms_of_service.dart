@@ -47,7 +47,6 @@ class _TermsOfServiceState extends State<TermsOfService> {
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.surface,
         body: SafeArea(
-          top: true,
           child: Center(
             child: SingleChildScrollView(
               child: Padding(

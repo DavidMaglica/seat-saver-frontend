@@ -21,8 +21,6 @@ class VenuePageModel extends ChangeNotifier {
   Future<List<String>>? images;
   DateTime? selectedDate = DateTime.now();
   TimeOfDay? selectedTime = TimeOfDay.now();
-  int? selectedHour;
-  int? selectedMinute;
   int? selectedNumberOfPeople;
   List<String>? venueImages;
   String venueType = '';
@@ -93,8 +91,7 @@ class VenuePageModel extends ChangeNotifier {
     final validationErrors = [
       if (userEmail.isNullOrEmpty) 'Please log in to reserve a spot',
       if (selectedDate == null) 'Please select a date',
-      if (selectedHour == null || selectedMinute == null)
-        'Please select a time',
+      if (selectedTime == null) 'Please select a time',
       if (selectedNumberOfPeople == null) 'Please select the number of people',
     ];
 
@@ -133,22 +130,21 @@ class VenuePageModel extends ChangeNotifier {
       selectedDate!.year,
       selectedDate!.month,
       selectedDate!.day,
-      selectedHour!,
-      selectedMinute!,
+      selectedTime!.hour,
+      selectedTime!.minute,
     );
 
-    BasicResponse response = await reservationApi.addReservation(
+    BasicResponse response = await reservationApi.createReservation(
       userEmail!,
       venueId,
       selectedNumberOfPeople!,
       reservationDateTime,
     );
-
     if (!ctx.mounted) return;
     ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
 
     if (!response.success) {
-      Toaster.displayError(ctx, 'Error reserving venue');
+      Toaster.displayError(ctx, response.message);
       return;
     }
 
@@ -196,12 +192,8 @@ class VenuePageModel extends ChangeNotifier {
           selectedTime!.hour == timeOfDay.hour &&
           selectedTime!.minute == timeOfDay.minute) {
         selectedTime = null;
-        selectedHour = null;
-        selectedMinute = null;
       } else {
         selectedTime = timeOfDay;
-        selectedHour = timeOfDay.hour;
-        selectedMinute = timeOfDay.minute;
       }
 
       TimeOfDay currentTime = _roundToNearestHalfHour(TimeOfDay.now());
@@ -210,8 +202,6 @@ class VenuePageModel extends ChangeNotifier {
         if (!ctx.mounted) return;
         Toaster.displayWarning(ctx, 'Please select a different time');
         selectedTime = null;
-        selectedHour = null;
-        selectedMinute = null;
       }
 
       notifyListeners();

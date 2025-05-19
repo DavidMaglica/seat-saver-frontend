@@ -4,11 +4,13 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
+import '../../api/data/reservation_details.dart';
 import '../../api/data/user.dart';
 import '../../components/custom_appbar.dart';
-import '../../utils/constants.dart';
-import '../../models/reservation_history_model.dart';
 import '../../components/modal_widgets.dart';
+import '../../models/reservation_history_model.dart';
+import '../../themes/theme.dart';
+import '../../utils/constants.dart';
 
 class ReservationHistory extends StatelessWidget {
   final User user;
@@ -27,7 +29,7 @@ class ReservationHistory extends StatelessWidget {
         context: context,
         user: user,
         userLocation: userLocation,
-      )..loadReservations(),
+      )..init(),
       child: Builder(
         builder: (context) {
           final model = context.watch<ReservationHistoryModel>();
@@ -46,7 +48,6 @@ class ReservationHistory extends StatelessWidget {
               ),
             ),
             body: SafeArea(
-              top: true,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
@@ -115,18 +116,16 @@ class ReservationHistory extends StatelessWidget {
             InkWell(
               onTap: () => _openReservationDetailsBottomSheet(
                 ctx,
-                reservation.venueId,
-                reservation.numberOfGuests,
-                reservation.reservationDateTime,
+                model,
+                reservation,
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsetsDirectional.all(12),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      DateFormat('dd-MM-yyyy HH:mm')
-                          .format(reservation.reservationDateTime),
+                      model.getVenueName(reservation.venueId),
                       style: Theme.of(ctx).textTheme.titleMedium,
                     ),
                     Row(
@@ -171,10 +170,11 @@ class ReservationHistory extends StatelessWidget {
 
   void _openReservationDetailsBottomSheet(
     BuildContext ctx,
-    int venueId,
-    int numberOfGuests,
-    DateTime reservationDateTime,
+    ReservationHistoryModel model,
+    ReservationDetails reservation,
   ) {
+    final String venueName = model.getVenueName(reservation.venueId);
+
     showModalBottomSheet(
       context: ctx,
       isScrollControlled: true,
@@ -193,7 +193,7 @@ class ReservationHistory extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
-                    _buildDetailRow(context, 'Venue ID', venueId.toString()),
+                    _buildDetailRow(context, 'Venue name', venueName),
                     Divider(
                       color: Theme.of(context)
                           .colorScheme
@@ -204,7 +204,7 @@ class ReservationHistory extends StatelessWidget {
                     _buildDetailRow(
                       context,
                       'Number of Guests',
-                      numberOfGuests.toString(),
+                      reservation.numberOfGuests.toString(),
                     ),
                     Divider(
                       color: Theme.of(context)
@@ -217,23 +217,27 @@ class ReservationHistory extends StatelessWidget {
                       context,
                       'Date (dd-MM-yyyy HH:mm)',
                       DateFormat('dd-MM-yyyy HH:mm')
-                          .format(reservationDateTime),
+                          .format(reservation.reservationDateTime),
                     ),
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    buildModalButton(
-                      'Done',
-                      () => Navigator.pop(context),
-                      Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ],
-                ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  buildModalButton(
+                    'Cancel',
+                    () => Navigator.pop(context),
+                    Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  buildModalButton(
+                    'Delete',
+                    () => model.deleteReservation(reservation.id),
+                    AppThemes.errorColor,
+                  )
+                ],
               ),
               const SizedBox(height: 36),
             ],

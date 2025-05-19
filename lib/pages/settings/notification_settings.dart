@@ -43,7 +43,6 @@ class NotificationSettings extends StatelessWidget {
             ),
           ),
           body: SafeArea(
-            top: true,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
