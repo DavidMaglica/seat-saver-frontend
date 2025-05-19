@@ -76,8 +76,15 @@ class ReservationHistoryModel extends ChangeNotifier {
   Future<void> _fetchVenueName(int venueId) async {
     if (_venueNameCache.containsKey(venueId)) return;
 
-    final venue = await venueApi.getVenue(venueId);
-    _venueNameCache[venueId] = venue.name;
-    notifyListeners();
+    try {
+      final venue = await venueApi.getVenue(venueId);
+      _venueNameCache[venueId] = venue.name;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Failed to fetch venue name for venueId $venueId: $e');
+      if (context.mounted) {
+        Toaster.displayError(context, 'Failed to load venue name');
+      }
+    }
   }
 }
