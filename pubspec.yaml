@@ -36,6 +36,7 @@ dependencies:
   geolocator: 8.2.0
   geocoding: 2.0.4
   http: 0.13.3
+  logger: 2.5.0
   provider: 6.0.4
   url_launcher: 6.2.2
 
