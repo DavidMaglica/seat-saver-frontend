@@ -29,13 +29,11 @@ Widget buildModalTitle(BuildContext ctx, String title) {
 Widget buildModalButton(String text, Function() onPressed, Color buttonColour) {
   return Align(
       alignment: const AlignmentDirectional(-1, 0),
-      child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(16, 24, 16, 0),
-          child: CupertinoButton(
-              onPressed: onPressed,
-              child: Text(text,
-                  style: TextStyle(
-                    color: buttonColour,
-                    fontWeight: FontWeight.bold,
-                  )))));
+      child: CupertinoButton(
+          onPressed: onPressed,
+          child: Text(text,
+              style: TextStyle(
+                color: buttonColour,
+                fontWeight: FontWeight.bold,
+              ))));
 }

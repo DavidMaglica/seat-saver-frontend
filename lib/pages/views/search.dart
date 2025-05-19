@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 import '../../api/data/venue.dart';
+import '../../components/modal_widgets.dart';
 import '../../components/navbar.dart';
 import '../../models/search_model.dart';
 import '../../themes/theme.dart';
@@ -294,32 +295,40 @@ class Search extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildBorderedButton('Apply', AppThemes.successColor, () {
-                        Navigator.pop(context);
-
-                        model.selectedTypes = tempSelected;
-
-                        model.filterVenues(model.selectedTypes);
-                      }),
-                      _buildBorderedButton('Clear', AppThemes.errorColor, () {
-                        Navigator.pop(context);
-
-                        model.selectedTypes.clear();
-
-                        model.getAllVenues();
-                      })
+                      buildModalButton(
+                        'Clear',
+                        () {
+                          Navigator.pop(context);
+                          model.selectedTypes.clear();
+                          model.getAllVenues();
+                        },
+                        AppThemes.errorColor,
+                      ),
+                      buildModalButton(
+                        'Apply',
+                        () {
+                          Navigator.pop(context);
+                          model.selectedTypes = tempSelected;
+                          model.filterVenues(model.selectedTypes);
+                        },
+                        AppThemes.successColor,
+                      ),
                     ],
                   ),
                   const SizedBox(height: 16),
                   Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildBorderedButton(
+                      buildModalButton(
                         'Cancel',
-                        Theme.of(context).colorScheme.onPrimary,
                         () {
                           Navigator.of(context).pop();
                         },
+                        Theme.of(context).colorScheme.onPrimary,
                       ),
                     ],
                   ),
@@ -330,35 +339,6 @@ class Search extends StatelessWidget {
           },
         );
       },
-    );
-  }
-
-  Widget _buildBorderedButton(String text, Color colour, VoidCallback action) {
-    return Expanded(
-      child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: colour,
-                width: 1.5,
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: CupertinoButton(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.transparent,
-              onPressed: action,
-              child: Text(
-                text,
-                style: TextStyle(
-                  color: colour,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          )),
     );
   }
 

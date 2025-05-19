@@ -1,25 +1,24 @@
 import 'package:dio/dio.dart';
 
 import 'api_routes.dart';
+import 'data/api_reservation_details.dart';
 import 'data/basic_response.dart';
-import 'data/reservation_details.dart';
 import 'dio_setup.dart';
 
 final dio = setupDio(ApiRoutes.reservation);
 
 class ReservationApi {
-  Future<List<ReservationDetailsFromApi>> getReservationsFromApi(
-      String userEmail) async {
+  Future<List<APIReservationDetails>> getReservations(String userEmail) async {
     Response response =
         await dio.get('${ApiRoutes.getReservations}?email=$userEmail');
-    List<ReservationDetailsFromApi> reservations = (response.data as List)
-        .map((reservation) => ReservationDetailsFromApi.fromJson(reservation))
+    List<APIReservationDetails> reservations = (response.data as List)
+        .map((reservation) => APIReservationDetails.fromJson(reservation))
         .toList();
 
     return reservations;
   }
 
-  Future<BasicResponse> addReservationToApi(
+  Future<BasicResponse> createReservation(
     String userEmail,
     int venueId,
     int numberOfPeople,
@@ -38,6 +37,22 @@ class ReservationApi {
       return BasicResponse(
         success: false,
         message: 'Failed to create reservation',
+      );
+    }
+  }
+
+  Future<BasicResponse> deleteReservation(
+    String email,
+    int reservationId,
+  ) async {
+    try {
+      Response response = await dio.delete(
+          '${ApiRoutes.deleteReservation}?email=$email&reservationId=$reservationId');
+      return BasicResponse.fromJson(response.data);
+    } catch (e) {
+      return BasicResponse(
+        success: false,
+        message: 'Failed to delete reservation',
       );
     }
   }

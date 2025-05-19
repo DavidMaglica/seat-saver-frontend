@@ -134,7 +134,7 @@ class VenuePageModel extends ChangeNotifier {
       selectedTime!.minute,
     );
 
-    BasicResponse response = await reservationApi.addReservationToApi(
+    BasicResponse response = await reservationApi.createReservation(
       userEmail!,
       venueId,
       selectedNumberOfPeople!,

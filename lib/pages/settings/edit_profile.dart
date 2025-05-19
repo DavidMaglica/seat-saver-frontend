@@ -214,6 +214,7 @@ class EditProfile extends StatelessWidget {
                   model.newUsernameTextController, model.newUsernameFocusNode),
               const SizedBox(height: 24),
               Row(
+                mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   buildModalButton('Cancel', model.cancel,

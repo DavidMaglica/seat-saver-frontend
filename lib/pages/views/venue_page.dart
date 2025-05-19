@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../components/custom_appbar.dart';
 import '../../components/full_image_view.dart';
+import '../../components/modal_widgets.dart';
 import '../../components/toaster.dart';
 import '../../models/venue_page_model.dart';
 import '../../themes/theme.dart';
@@ -145,7 +146,7 @@ class VenuePage extends StatelessWidget {
         return StatefulBuilder(
           builder: (context, setModalState) {
             return Container(
-              height: 280,
+              height: 248,
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.background,
@@ -192,19 +193,30 @@ class VenuePage extends StatelessWidget {
                           )
                         : const SizedBox.shrink(),
                   ),
-                  const SizedBox(height: 16),
-                  _buildBorderedButton(
-                    'Give Rating',
-                    AppThemes.successColor,
-                    () {
-                      if (rating > 0) model.rateVenue(rating);
-                      Navigator.of(context).pop();
-                    },
+                  rating != 0
+                      ? const SizedBox(height: 29)
+                      : const SizedBox(height: 48),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildModalButton(
+                        'Cancel',
+                        () {
+                          Navigator.of(context).pop();
+                        },
+                        Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      buildModalButton(
+                        'Rate',
+                        () {
+                          if (rating > 0) model.rateVenue(rating);
+                          Navigator.of(context).pop();
+                        },
+                        AppThemes.successColor,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  _buildBorderedButton('Cancel', AppThemes.errorColor, () {
-                    Navigator.of(context).pop();
-                  }),
                 ],
               ),
             );
@@ -212,34 +224,6 @@ class VenuePage extends StatelessWidget {
         );
       },
     );
-  }
-
-  Widget _buildBorderedButton(String text, Color colour, VoidCallback action) {
-    return Padding(
-        padding: const EdgeInsets.all(0),
-        child: Container(
-          width: 250,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: colour,
-              width: 1.5,
-            ),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: CupertinoButton(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.transparent,
-            onPressed: action,
-            child: Text(
-              text,
-              style: TextStyle(
-                color: colour,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ));
   }
 
   Widget _buildObjectDetails(BuildContext ctx, VenuePageModel model) {
