@@ -11,7 +11,6 @@ import '../../components/venue_card.dart';
 import '../../components/venue_suggested_card.dart';
 import '../../models/homepage_model.dart';
 import '../../themes/theme.dart';
-import '../../utils/extensions.dart';
 import '../../utils/routing_utils.dart';
 
 class Homepage extends StatelessWidget {
@@ -70,7 +69,7 @@ class Homepage extends StatelessWidget {
                                     context,
                                     model.suggestedVenues ?? [],
                                   ),
-                                  _buildCategories(context, model),
+                                  const SizedBox(height: 24),
                                 ],
                               ),
                             ),
@@ -249,74 +248,6 @@ class Homepage extends StatelessWidget {
                     ),
                   );
                 }).toList())));
-  }
-
-  Widget _buildCategories(BuildContext ctx, HomepageModel model) {
-    return Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 72),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 12),
-            child:
-                Text('Categories', style: Theme.of(ctx).textTheme.titleMedium),
-          ),
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: model.venueTypeMap.entries
-                        .map((entry) => _buildCategoryCard(
-                              ctx,
-                              model,
-                              entry.key,
-                              entry.value,
-                            ))
-                        .toList(),
-                  ))),
-        ]));
-  }
-
-  Widget _buildCategoryCard(
-    BuildContext ctx,
-    HomepageModel model,
-    int id,
-    String label,
-  ) {
-    return InkWell(
-        onTap: () => model.searchByVenueType(id),
-        child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-                width: 140,
-                child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(
-                        color: Theme.of(ctx).colorScheme.onPrimary,
-                        width: 2,
-                      ),
-                    ),
-                    child: Stack(
-                      alignment: AlignmentDirectional.center,
-                      children: [
-                        Container(
-                          width: 128,
-                          height: 128,
-                          decoration: BoxDecoration(
-                            color: Theme.of(ctx).colorScheme.background,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        Center(
-                            child: Text(
-                          label.toTitleCase(),
-                          style: Theme.of(ctx).textTheme.titleSmall,
-                          textAlign: TextAlign.center,
-                        ))
-                      ],
-                    )))));
   }
 
   Widget _buildTitle(BuildContext ctx, String title) {

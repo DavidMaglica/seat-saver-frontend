@@ -42,8 +42,6 @@ class HomepageModel extends ChangeNotifier {
   GeolocationApi geolocationApi = GeolocationApi();
   VenueApi venueApi = VenueApi();
 
-  Map<int, String> venueTypeMap = {};
-
   HomepageModel({
     required this.context,
     this.userEmail,
@@ -51,8 +49,6 @@ class HomepageModel extends ChangeNotifier {
   });
 
   Future<void> init() async {
-    await loadVenueTypes();
-
     await checkLogIn();
 
     if (locationPopUpCounter < 1) {
@@ -77,15 +73,6 @@ class HomepageModel extends ChangeNotifier {
     unfocusNode.dispose();
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
-  }
-
-  Future<void> loadVenueTypes() async {
-    final venueTypes = await venueApi.getAllVenueTypes();
-
-    venueTypeMap = {
-      for (var type in venueTypes) type.id: type.type.toTitleCase(),
-    };
-    notifyListeners();
   }
 
   Future<void> resolveNearbyCities() async {
