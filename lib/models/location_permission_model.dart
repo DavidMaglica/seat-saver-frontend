@@ -1,3 +1,5 @@
+import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/components/toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:geocoding/geocoding.dart';
@@ -38,12 +40,17 @@ class LocationPermissionPopUpModel extends ChangeNotifier {
 
     if (locationPermission == LocationPermission.deniedForever) return false;
 
-    _accountApi.updateUserNotificationOptions(
-      userEmail,
-      notificationOptions!.pushNotificationsTurnedOn,
-      notificationOptions!.emailNotificationsTurnedOn,
-      true,
-    );
+    BasicResponse basicResponse =
+        await _accountApi.updateUserNotificationOptions(
+            userEmail,
+            notificationOptions!.pushNotificationsTurnedOn,
+            notificationOptions!.emailNotificationsTurnedOn,
+            true);
+
+    if (!basicResponse.success) {
+      if (!context.mounted) return false;
+      Toaster.displayError(context, basicResponse.message);
+    }
 
     return true;
   }

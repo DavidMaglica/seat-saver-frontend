@@ -1,12 +1,14 @@
 import 'package:TableReserver/api/api_routes.dart';
 import 'package:TableReserver/api/data/venue_type.dart';
 import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
 
 import 'data/basic_response.dart';
 import 'data/venue.dart';
 import 'dio_setup.dart';
 
 final dio = setupDio(ApiRoutes.venue);
+final logger = Logger();
 
 class VenueApi {
   Future<List<String>> getImages() async {
@@ -114,9 +116,15 @@ class VenueApi {
   }
 
   // NON MOCKED API CALLS START HERE
-  Future<Venue> getVenue(int venueId) async {
-    Response response = await dio.get('${ApiRoutes.getVenue}?venueId=$venueId');
-    return Venue.fromMap(response.data);
+  Future<Venue?> getVenue(int venueId) async {
+    try {
+      Response response =
+          await dio.get('${ApiRoutes.getVenue}?venueId=$venueId');
+      return Venue.fromMap(response.data);
+    } catch (e) {
+      logger.e('Error fetching venue: $e');
+      return null;
+    }
   }
 
   Future<List<Venue>> getVenues() async {
@@ -126,65 +134,110 @@ class VenueApi {
     return venues;
   }
 
-  Future<String> getVenueType(int typeId) async {
-    Response response =
-        await dio.get('${ApiRoutes.getVenueType}?typeId=$typeId');
-    return response.data;
+  Future<String?> getVenueType(int typeId) async {
+    try {
+      Response response =
+          await dio.get('${ApiRoutes.getVenueType}?typeId=$typeId');
+      return response.data;
+    } catch (e) {
+      logger.e('Error fetching venue type: $e');
+      return null;
+    }
   }
 
   Future<List<VenueType>> getAllVenueTypes() async {
-    Response response = await dio.get(ApiRoutes.getAllVenueTypes);
-    List<VenueType> types = (response.data as List)
-        .map((type) => VenueType.fromJson(type))
-        .toList();
-    return types;
+    try {
+      Response response = await dio.get(ApiRoutes.getAllVenueTypes);
+      List<VenueType> types = (response.data as List)
+          .map((type) => VenueType.fromJson(type))
+          .toList();
+      return types;
+    } catch (e) {
+      logger.e('Error fetching venue types: $e');
+      return [];
+    }
   }
 
-  Future<double> getVenueRating(int venueId) async {
-    Response response =
-        await dio.get('${ApiRoutes.getVenueRating}?venueId=$venueId');
-    return response.data;
+  Future<double?> getVenueRating(int venueId) async {
+    try {
+      Response response =
+          await dio.get('${ApiRoutes.getVenueRating}?venueId=$venueId');
+      return response.data;
+    } catch (e) {
+      logger.e('Error fetching venue rating: $e');
+      return null;
+    }
   }
 
   Future<List<Venue>> getSortedVenues() async {
-    List<Venue> allVenues = await getVenues();
-    allVenues.sort((a, b) => a.name.compareTo(b.name));
-    return allVenues;
+    try {
+      List<Venue> allVenues = await getVenues();
+      allVenues.sort((a, b) => a.name.compareTo(b.name));
+      return allVenues;
+    } catch (e) {
+      logger.e('Error sorting venues: $e');
+      return [];
+    }
   }
 
   Future<List<Venue>> getNearbyVenues() async {
-    List<Venue> allVenues = await getVenues();
-    List<Venue> nearbyVenues = allVenues
-        .where(
-            (venue) => venue.location == 'Poreč' || venue.location == 'Rovinj')
-        .toList();
-    nearbyVenues.sort((a, b) => a.location.compareTo(b.location));
-    return nearbyVenues;
+    try {
+      List<Venue> allVenues = await getVenues();
+      List<Venue> nearbyVenues = allVenues
+          .where((venue) =>
+              venue.location == 'Poreč' || venue.location == 'Rovinj')
+          .toList();
+      nearbyVenues.sort((a, b) => a.location.compareTo(b.location));
+      return nearbyVenues;
+    } catch (e) {
+      logger.e('Error fetching nearby venues: $e');
+      return [];
+    }
   }
 
   Future<List<Venue>> getTrendingVenues() async {
-    List<Venue> allVenues = await getVenues();
-    List<Venue> trendingVenues =
-        allVenues.where((venue) => venue.rating >= 4).toList();
-    trendingVenues.sort((a, b) => b.rating.compareTo(a.rating));
-    return trendingVenues;
+    try {
+      List<Venue> allVenues = await getVenues();
+      List<Venue> trendingVenues =
+          allVenues.where((venue) => venue.rating >= 4).toList();
+      trendingVenues.sort((a, b) => b.rating.compareTo(a.rating));
+      return trendingVenues;
+    } catch (e) {
+      logger.e('Error fetching trending venues: $e');
+      return [];
+    }
   }
 
   Future<List<Venue>> getNewVenues() async {
-    List<Venue> allVenues = await getVenues();
-    allVenues.sort((a, b) => b.id.compareTo(a.id));
-    List<Venue> newVenues = allVenues.take(15).toList();
-    return newVenues;
+    try {
+      List<Venue> allVenues = await getVenues();
+      allVenues.sort((a, b) => b.id.compareTo(a.id));
+      List<Venue> newVenues = allVenues.take(15).toList();
+      return newVenues;
+    } catch (e) {
+      logger.e('Error fetching new venues: $e');
+      return [];
+    }
   }
 
   Future<List<Venue>> getSuggestedVenues() async {
-    List<Venue> allVenues = await getVenues();
-    return allVenues.take(25).toList();
+    try {
+      List<Venue> allVenues = await getVenues();
+      return allVenues.take(25).toList();
+    } catch (e) {
+      logger.e('Error fetching suggested venues: $e');
+      return [];
+    }
   }
 
   Future<BasicResponse> rateVenue(int venueId, double rating) async {
-    Response response = await dio
-        .post('${ApiRoutes.rateVenue}?venueId=$venueId&rating=$rating');
-    return BasicResponse.fromJson(response.data);
+    try {
+      Response response = await dio
+          .post('${ApiRoutes.rateVenue}?venueId=$venueId&rating=$rating');
+      return BasicResponse.fromJson(response.data);
+    } catch (e) {
+      logger.e('Error rating venue: $e');
+      return BasicResponse(success: false, message: 'Error rating venue');
+    }
   }
 }

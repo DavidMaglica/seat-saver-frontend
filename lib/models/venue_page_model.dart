@@ -57,6 +57,32 @@ class VenuePageModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> _loadData() async {
+    final loadedVenue = await venueApi.getVenue(venueId);
+    if (loadedVenue == null) {
+      if (!ctx.mounted) return;
+      Toaster.displayError(ctx, 'Failed to load venue data');
+      return;
+    }
+    venue = loadedVenue;
+    final loadedVenueType = await venueApi.getVenueType(venue.typeId);
+    if (loadedVenueType == null) {
+      if (!ctx.mounted) return;
+      Toaster.displayError(ctx, 'Failed to load venue type');
+      return;
+    }
+    venueType = loadedVenueType;
+  }
+
+  Future<void> _loadImages() async {
+    if (imageLinks != null && imageLinks!.isNotEmpty) {
+      images = Future.value(imageLinks);
+    } else {
+      images = Future.value(venueApi.getVenueImages(venue.name));
+      venueImages = venueApi.getVenueImages(venue.name);
+    }
+  }
+
   TimeOfDay _roundToNearestHalfHour(TimeOfDay time) {
     int hour = time.hour;
     int minute = time.minute;
@@ -71,20 +97,6 @@ class VenuePageModel extends ChangeNotifier {
     }
 
     return TimeOfDay(hour: hour, minute: minute);
-  }
-
-  Future<void> _loadImages() async {
-    if (imageLinks != null && imageLinks!.isNotEmpty) {
-      images = Future.value(imageLinks);
-    } else {
-      images = Future.value(venueApi.getVenueImages(venue.name));
-      venueImages = venueApi.getVenueImages(venue.name);
-    }
-  }
-
-  Future<void> _loadData() async {
-    venue = await venueApi.getVenue(venueId);
-    venueType = await venueApi.getVenueType(venue.typeId);
   }
 
   bool _validateInput() {
@@ -161,14 +173,22 @@ class VenuePageModel extends ChangeNotifier {
 
   Future<void> rateVenue(double newRating) async {
     BasicResponse response = await venueApi.rateVenue(venueId, newRating);
+
     if (!ctx.mounted) return;
     ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
+
     if (response.success) {
       Toaster.displaySuccess(ctx, 'Rating updated successfully');
     } else {
-      Toaster.displayError(ctx, 'Error updating rating');
+      Toaster.displayError(ctx, response.message);
     }
-    double updatedRating = await venueApi.getVenueRating(venueId);
+
+    final updatedRating = await venueApi.getVenueRating(venueId);
+    if (updatedRating == null) {
+      if (!ctx.mounted) return;
+      Toaster.displayError(ctx, 'Error fetching updated rating');
+      return;
+    }
 
     venue.rating = updatedRating;
 

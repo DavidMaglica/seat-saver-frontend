@@ -33,13 +33,14 @@ class NotificationSettingsModel extends ChangeNotifier {
   }
 
   Future<void> loadNotificationSettings() async {
-    NotificationOptions response =
+    NotificationOptions? response =
         await accountApi.getNotificationOptions(user.email);
 
-    isActivePushNotifications = response.pushNotificationsTurnedOn;
-    isActiveEmailNotifications = response.emailNotificationsTurnedOn;
-    isActiveLocationServices = response.locationServicesTurnedOn;
-
+    if (response != null) {
+      isActivePushNotifications = response.pushNotificationsTurnedOn;
+      isActiveEmailNotifications = response.emailNotificationsTurnedOn;
+      isActiveLocationServices = response.locationServicesTurnedOn;
+    }
     notifyListeners();
   }
 

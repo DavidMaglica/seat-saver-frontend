@@ -67,6 +67,13 @@ class EditProfileModel extends ChangeNotifier {
     }
 
     final response = await accountApi.changeUsername(user.email, newName);
+
+    if (!response.success) {
+      _hideKeyboard();
+      _showToast(response.message, AppThemes.errorColor);
+      return;
+    }
+
     _hideKeyboard();
     _showToast(response.message,
         response.success ? AppThemes.successColor : AppThemes.errorColor);
@@ -90,6 +97,13 @@ class EditProfileModel extends ChangeNotifier {
     }
 
     final response = await accountApi.changeEmail(user.email, newEmail);
+
+    if (!response.success) {
+      _hideKeyboard();
+      _showToast(response.message, AppThemes.errorColor);
+      return;
+    }
+
     _hideKeyboard();
     _showToast(response.message,
         response.success ? AppThemes.successColor : AppThemes.errorColor);
@@ -134,6 +148,13 @@ class EditProfileModel extends ChangeNotifier {
 
     final email = updatedEmail ?? user.email;
     final response = await accountApi.changePassword(email, newPassword);
+
+    if (!response.success) {
+      _hideKeyboard();
+      _showToast(response.message, AppThemes.errorColor);
+      return;
+    }
+
     _hideKeyboard();
     _showToast(response.message,
         response.success ? AppThemes.successColor : AppThemes.errorColor);
