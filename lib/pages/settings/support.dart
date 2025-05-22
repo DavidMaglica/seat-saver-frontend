@@ -177,9 +177,9 @@ class _SupportState extends State<Support> {
       focusNode: focusNode,
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: Theme.of(context).textTheme.bodyMedium,
+        labelStyle: Theme.of(context).textTheme.bodyLarge,
         hintText: hintText,
-        hintStyle: Theme.of(context).textTheme.bodySmall,
+        hintStyle: Theme.of(context).textTheme.bodyMedium,
         enabledBorder:
             outlineInputBorder(Theme.of(context).colorScheme.onPrimary),
         focusedBorder: outlineInputBorder(AppThemes.infoColor),
@@ -187,7 +187,7 @@ class _SupportState extends State<Support> {
         focusedErrorBorder: outlineInputBorder(AppThemes.infoColor),
         contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),
       ),
-      style: Theme.of(context).textTheme.bodyMedium,
+      style: Theme.of(context).textTheme.bodyLarge,
       maxLines: maxLines,
       minLines: minLines,
       cursorColor: Theme.of(context).colorScheme.onPrimary,

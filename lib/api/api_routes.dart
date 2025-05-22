@@ -38,4 +38,7 @@ class ApiRoutes {
   static const fetchGeolocation = '/fetch-geolocation';
   static const getGeolocation = '/get-geolocation';
   static const getNearbyCities = '/get-nearby-cities';
+
+  static const support = '/support';
+  static const sendEmail = '/send-email';
 }
