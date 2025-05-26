@@ -41,9 +41,13 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
   void initState() {
     List<String> venueImages = venueApi.getVenueImages(widget.venue.name);
     setState(() => _venueImages = venueImages);
-    venueApi.getVenueType(widget.venue.typeId).then((value) => setState(() {
+    venueApi.getVenueType(widget.venue.typeId).then((value) {
+      if (value != null) {
+        setState(() {
           _venueType = value;
-        }));
+        });
+      }
+    });
     super.initState();
   }
 

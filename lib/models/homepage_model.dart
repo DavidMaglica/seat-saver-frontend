@@ -13,7 +13,6 @@ import '../api/geolocation_api.dart';
 import '../api/venue_api.dart';
 import '../components/location_permission.dart';
 import '../components/toaster.dart';
-import '../utils/constants.dart';
 import '../utils/extensions.dart';
 
 class HomepageModel extends ChangeNotifier {
@@ -42,8 +41,6 @@ class HomepageModel extends ChangeNotifier {
   GeolocationApi geolocationApi = GeolocationApi();
   VenueApi venueApi = VenueApi();
 
-  Map<int, String> venueTypeMap = {};
-
   HomepageModel({
     required this.context,
     this.userEmail,
@@ -51,8 +48,6 @@ class HomepageModel extends ChangeNotifier {
   });
 
   Future<void> init() async {
-    await loadVenueTypes();
-
     await checkLogIn();
 
     if (locationPopUpCounter < 1) {
@@ -77,15 +72,6 @@ class HomepageModel extends ChangeNotifier {
     unfocusNode.dispose();
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
-  }
-
-  Future<void> loadVenueTypes() async {
-    final venueTypes = await venueApi.getAllVenueTypes();
-
-    venueTypeMap = {
-      for (var type in venueTypes) type.id: type.type.toTitleCase(),
-    };
-    notifyListeners();
   }
 
   Future<void> resolveNearbyCities() async {
@@ -113,8 +99,14 @@ class HomepageModel extends ChangeNotifier {
     if (userEmail != null && userEmail!.isNotEmpty) {
       locationPopUpCounter++;
       bool? isLocationServicesTurnedOn;
-      await accountApi.getNotificationOptions(userEmail!).then((value) =>
-          isLocationServicesTurnedOn = value.locationServicesTurnedOn);
+      await accountApi.getNotificationOptions(userEmail!).then((value) {
+        if (value != null) {
+          isLocationServicesTurnedOn = value.locationServicesTurnedOn;
+        } else {
+          Toaster.displayError(context,
+              'There was an error while fetching your notification options. Please try again later.');
+        }
+      });
       if (isLocationServicesTurnedOn != null &&
           isLocationServicesTurnedOn == false) {
         _openPopUp(userEmail!);
@@ -122,23 +114,35 @@ class HomepageModel extends ChangeNotifier {
         if (userLocation == null) {
           _openPopUp(userEmail!);
         }
-        await accountApi.getLastKnownLocation(userEmail!).then((value) => {
-              geolocationApi
-                  .getNearbyCities(value)
-                  .then((cities) => {nearbyCities = cities}),
-            });
+        await accountApi.getLastKnownLocation(userEmail!).then((value) {
+          if (value != null) {
+            geolocationApi
+                .getNearbyCities(value)
+                .then((cities) => {nearbyCities = cities});
+          } else {
+            Toaster.displayError(
+              context,
+              'There was an error while fetching your location. Please try again later.',
+            );
+          }
+        });
       }
     }
     notifyListeners();
   }
 
   Future<void> updateUserLocation(String userEmail) async {
-    NotificationOptions options =
+    NotificationOptions? options =
         await accountApi.getNotificationOptions(userEmail);
-    if (options.locationServicesTurnedOn) {
+
+    if (options != null && options.locationServicesTurnedOn) {
       Position userLocation = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.best);
       accountApi.updateUserLocation(userEmail, userLocation);
+    } else {
+      if (!context.mounted) return;
+      Toaster.displayError(context,
+          'Error getting notification options. Please try again later.');
     }
     notifyListeners();
   }
@@ -218,11 +222,4 @@ class HomepageModel extends ChangeNotifier {
     });
     notifyListeners();
   }
-
-  Future<void> searchByVenueType(int venueTypeId) =>
-      Navigator.pushNamed(context, Routes.search, arguments: {
-        'userEmail': userEmail,
-        'userLocation': userLocation,
-        'selectedVenueType': venueTypeId,
-      });
 }

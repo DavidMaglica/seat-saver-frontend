@@ -40,7 +40,6 @@ class SearchModel extends ChangeNotifier {
 
   Future<void> init() async {
     await _loadData();
-
     notifyListeners();
   }
 

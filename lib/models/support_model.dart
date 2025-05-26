@@ -4,7 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../api/data/basic_response.dart';
 import '../api/data/user.dart';
-import '../api/email_sender.dart';
+import '../api/support_api.dart';
 import '../components/toaster.dart';
 
 class SupportModel extends ChangeNotifier {
@@ -13,7 +13,7 @@ class SupportModel extends ChangeNotifier {
   final Position? position;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final EmailSender emailSender = EmailSender();
+  final SupportApi emailSender = SupportApi();
 
   final FocusNode unfocusNode = FocusNode();
   final FocusNode ticketTitleFocusNode = FocusNode();

@@ -14,13 +14,11 @@ import '../../utils/routing_utils.dart';
 class Search extends StatelessWidget {
   final String? userEmail;
   final Position? userLocation;
-  final int? selectedVenueType;
 
   const Search({
     Key? key,
     this.userEmail,
     this.userLocation,
-    this.selectedVenueType,
   }) : super(key: key);
 
   @override

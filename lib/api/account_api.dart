@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:logger/logger.dart';
 
 import 'api_routes.dart';
 import 'data/api_user.dart';
@@ -11,6 +12,7 @@ import 'data/user_response.dart';
 import 'dio_setup.dart';
 
 final dio = setupDio(ApiRoutes.user);
+final logger = Logger();
 
 class AccountApi {
   Future<UserResponse?> getUser(String email) async {
@@ -55,7 +57,10 @@ class AccountApi {
       }
     } catch (e) {
       return UserResponse(
-          success: false, message: 'User not found', user: null);
+        success: false,
+        message: 'User not found',
+        user: null,
+      );
     }
   }
 
@@ -93,17 +98,27 @@ class AccountApi {
     }
   }
 
-  Future<NotificationOptions> getNotificationOptions(String email) async {
-    final response =
-        await dio.get('${ApiRoutes.getNotificationOptions}?email=$email');
+  Future<NotificationOptions?> getNotificationOptions(String email) async {
+    try {
+      final response =
+          await dio.get('${ApiRoutes.getNotificationOptions}?email=$email');
 
-    return NotificationOptions.fromMap(response.data);
+      return NotificationOptions.fromMap(response.data);
+    } catch (e) {
+      logger.e('Error fetching notification options: $e');
+      return null;
+    }
   }
 
-  Future<UserLocation> getLastKnownLocation(String email) async {
-    final response = await dio.get('${ApiRoutes.getLocation}?email=$email');
+  Future<UserLocation?> getLastKnownLocation(String email) async {
+    try {
+      final response = await dio.get('${ApiRoutes.getLocation}?email=$email');
 
-    return UserLocation.fromMap(response.data);
+      return UserLocation.fromMap(response.data);
+    } catch (e) {
+      logger.e('Error fetching last known location: $e');
+      return null;
+    }
   }
 
   Future<BasicResponse> updateUserNotificationOptions(
@@ -112,38 +127,65 @@ class AccountApi {
     bool emailNotificationsTurnedOn,
     bool locationServicesTurnedOn,
   ) async {
-    final response = await dio.patch(
-        '${ApiRoutes.updateNotificationOptions}?email=$email&pushNotificationsTurnedOn=$pushNotificationsTurnedOn&emailNotificationsTurnedOn=$emailNotificationsTurnedOn&locationServicesTurnedOn=$locationServicesTurnedOn');
+    try {
+      final response = await dio.patch(
+          '${ApiRoutes.updateNotificationOptions}?email=$email&pushNotificationsTurnedOn=$pushNotificationsTurnedOn&emailNotificationsTurnedOn=$emailNotificationsTurnedOn&locationServicesTurnedOn=$locationServicesTurnedOn');
 
-    return BasicResponse.fromJson(response.data);
+      return BasicResponse.fromJson(response.data);
+    } catch (e) {
+      logger.e('Error updating notification options: $e');
+      return BasicResponse(success: false, message: e.toString());
+    }
   }
 
   Future<BasicResponse> updateUserLocation(
-      String userEmail, Position? position) async {
-    final response = await dio.patch(
-        '${ApiRoutes.updateLocation}?email=$userEmail&latitude=${position!.latitude}&longitude=${position.longitude}');
+    String userEmail,
+    Position? position,
+  ) async {
+    try {
+      final response = await dio.patch(
+          '${ApiRoutes.updateLocation}?email=$userEmail&latitude=${position!.latitude}&longitude=${position.longitude}');
 
-    return BasicResponse.fromJson(response.data);
+      return BasicResponse.fromJson(response.data);
+    } catch (e) {
+      logger.e('Error updating user location: $e');
+      return BasicResponse(success: false, message: e.toString());
+    }
   }
 
   Future<BasicResponse> changePassword(String email, String newPassword) async {
-    Response response = await dio.patch(
-        '${ApiRoutes.updatePassword}?email=$email&newPassword=$newPassword');
-    BasicResponse basicResponse = BasicResponse.fromJson(response.data);
-    return basicResponse;
+    try {
+      Response response = await dio.patch(
+          '${ApiRoutes.updatePassword}?email=$email&newPassword=$newPassword');
+      BasicResponse basicResponse = BasicResponse.fromJson(response.data);
+      return basicResponse;
+    } catch (e) {
+      logger.e('Error changing password: $e');
+      return BasicResponse(success: false, message: e.toString());
+    }
   }
 
   Future<BasicResponse> changeUsername(String email, String newUsername) async {
-    Response response = await dio.patch(
-        '${ApiRoutes.updateUsername}?email=$email&newUsername=$newUsername');
-    BasicResponse basicResponse = BasicResponse.fromJson(response.data);
-    return basicResponse;
+    try {
+      Response response = await dio.patch(
+          '${ApiRoutes.updateUsername}?email=$email&newUsername=$newUsername');
+      BasicResponse basicResponse = BasicResponse.fromJson(response.data);
+      return basicResponse;
+    } catch (e) {
+      logger.e('Error changing username: $e');
+      return BasicResponse(success: false, message: e.toString());
+    }
   }
 
   Future<BasicResponse> changeEmail(String email, String newEmail) async {
-    Response response = await dio
-        .patch('${ApiRoutes.updateEmail}?email=$email&newEmail=$newEmail');
-    BasicResponse basicResponse = BasicResponse.fromJson(response.data);
-    return basicResponse;
+    try {
+      Response response = await dio
+          .patch('${ApiRoutes.updateEmail}?email=$email&newEmail=$newEmail');
+      BasicResponse basicResponse = BasicResponse.fromJson(response.data);
+      return basicResponse;
+    } catch (e) {
+      logger.e('Error changing email: $e');
+      return BasicResponse(success: false, message: e.toString());
+    }
   }
 }
