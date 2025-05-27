@@ -77,7 +77,6 @@ class Homepage extends StatelessWidget {
                         ),
                         bottomNavigationBar: NavBar(
                           currentIndex: model.pageIndex,
-                          context: context,
                           onTap: (index, context) => onNavbarItemTapped(
                               context,
                               model.pageIndex,

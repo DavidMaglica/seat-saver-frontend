@@ -21,6 +21,21 @@ class Search extends StatelessWidget {
     this.userLocation,
   }) : super(key: key);
 
+  void _clear(BuildContext ctx, SearchModel model) {
+    Navigator.pop(ctx);
+    model.clearFilters();
+  }
+
+  void _applyFilters(
+      BuildContext ctx, SearchModel model, List<String> tempSelected) {
+    Navigator.pop(ctx);
+    model.filterVenues(tempSelected);
+  }
+
+  void _cancel(BuildContext ctx) {
+    Navigator.pop(ctx);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -108,7 +123,6 @@ class Search extends StatelessWidget {
                 ),
                 bottomNavigationBar: NavBar(
                   currentIndex: model.pageIndex,
-                  context: context,
                   onTap: (index, context) => onNavbarItemTapped(
                       context, model.pageIndex, index, userEmail, userLocation),
                 ),
@@ -130,22 +144,26 @@ class Search extends StatelessWidget {
               child: TextField(
                 controller: model.searchBarController,
                 decoration: InputDecoration(
-                  hintText: 'Search',
+                  hintText: 'Type to search for venues',
                   hintStyle: Theme.of(ctx).textTheme.bodyLarge?.copyWith(
                       color:
                           Theme.of(ctx).colorScheme.onPrimary.withOpacity(0.5)),
-                  prefixIcon: const Icon(CupertinoIcons.search),
+                  prefixIcon: Icon(
+                    CupertinoIcons.search,
+                    color: Theme.of(ctx).colorScheme.onPrimary,
+                  ),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
                       color: Theme.of(ctx).colorScheme.onPrimary,
                     ),
                   ),
-                  focusedBorder: UnderlineInputBorder(
+                  focusedBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: Theme.of(ctx).colorScheme.primary,
+                      color: AppThemes.accent1,
                     ),
                   ),
                 ),
+                cursorColor: Theme.of(ctx).colorScheme.onPrimary,
                 style: Theme.of(ctx).textTheme.bodyLarge,
                 onChanged: (value) => model.search(value),
               ),
@@ -297,21 +315,13 @@ class Search extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       buildModalButton(
-                        'Clear',
-                        () {
-                          Navigator.pop(context);
-                          model.selectedTypes.clear();
-                          model.getAllVenues();
-                        },
+                        'Clear filters',
+                        () => _clear(context, model),
                         AppThemes.errorColor,
                       ),
                       buildModalButton(
                         'Apply',
-                        () {
-                          Navigator.pop(context);
-                          model.selectedTypes = tempSelected;
-                          model.filterVenues(model.selectedTypes);
-                        },
+                        () => _applyFilters(context, model, tempSelected),
                         AppThemes.successColor,
                       ),
                     ],
@@ -323,9 +333,7 @@ class Search extends StatelessWidget {
                     children: [
                       buildModalButton(
                         'Cancel',
-                        () {
-                          Navigator.of(context).pop();
-                        },
+                        () => _cancel(context),
                         Theme.of(context).colorScheme.onPrimary,
                       ),
                     ],
@@ -355,9 +363,11 @@ class Search extends StatelessWidget {
           Text(
             type,
             style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-                color: Theme.of(ctx).colorScheme.onPrimary),
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              color: Theme.of(ctx).colorScheme.onPrimary,
+              decoration: TextDecoration.none,
+            ),
           ),
           Transform.scale(
             scale: 0.8,

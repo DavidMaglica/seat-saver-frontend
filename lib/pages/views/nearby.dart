@@ -96,7 +96,6 @@ class _NearbyState extends State<Nearby> {
             ),
             bottomNavigationBar: NavBar(
               currentIndex: pageIndex,
-              context: context,
               onTap: (index, context) => onNavbarItemTapped(context, pageIndex,
                   index, widget.userEmail, widget.userLocation),
             )));

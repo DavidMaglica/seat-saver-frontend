@@ -51,7 +51,6 @@ class Account extends StatelessWidget {
                 ),
               ),
               bottomNavigationBar: NavBar(
-                context: context,
                 currentIndex: model.pageIndex,
                 onTap: (index, context) => onNavbarItemTapped(
                   context,
