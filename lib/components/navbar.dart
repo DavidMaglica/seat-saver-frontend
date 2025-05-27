@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../themes/theme.dart';
+
 class NavBar extends StatelessWidget {
   final BuildContext context;
   final int currentIndex;
@@ -32,7 +34,7 @@ class NavBar extends StatelessWidget {
         currentIndex: currentIndex,
         onTap: (index) => onTap(index, context),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
+        selectedItemColor: AppThemes.accent1,
         unselectedItemColor: Theme.of(context).colorScheme.background,
         type: BottomNavigationBarType.fixed,
         items: const [

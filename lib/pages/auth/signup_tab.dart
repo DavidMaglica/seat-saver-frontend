@@ -71,11 +71,9 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
                 const SizedBox(width: 230, height: 16),
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 24),
-                child: Text(
-                  'Create Account',
-                  textAlign: TextAlign.start,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+                child: Text('Create Account',
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.titleLarge),
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),

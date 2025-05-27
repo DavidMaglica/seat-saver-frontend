@@ -21,6 +21,8 @@ class SearchModel extends ChangeNotifier {
 
   List<String> venueTypeOptions = [];
   List<String> selectedTypes = [];
+
+  List<Venue> allVenuesMaster = [];
   List<Venue> allVenues = [];
   Map<int, String> venueTypeMap = {};
 
@@ -52,7 +54,9 @@ class SearchModel extends ChangeNotifier {
       for (var type in venueTypes) type.id: type.type.toTitleCase(),
     };
     venueTypeOptions = venueTypeMap.values.toList();
-    allVenues = venues;
+
+    allVenuesMaster = venues;
+    allVenues = List.from(venues);
 
     final selectedType = venueTypeMap[selectedVenueType];
     if (selectedType != null) {
@@ -62,31 +66,43 @@ class SearchModel extends ChangeNotifier {
     }
   }
 
-  Future<void> getAllVenues() async {
-    final venues = await venueApi.getVenues();
-    venues.sort((a, b) => a.name.compareTo(b.name));
-    allVenues = venues;
-    notifyListeners();
-  }
-
   void search(String value) async {
     if (value.isEmpty) {
-      await getAllVenues();
+      if (selectedTypes.isEmpty) {
+        allVenues = List.from(allVenuesMaster);
+      } else {
+        filterVenues(selectedTypes);
+      }
+      notifyListeners();
       return;
     }
 
-    final filtered = allVenues
-        .where(
-            (venue) => venue.name.toLowerCase().contains(value.toLowerCase()))
+    final lowerQuery = value.toLowerCase();
+    var filtered = allVenuesMaster
+        .where((venue) => venue.name.toLowerCase().contains(lowerQuery))
         .toList();
+
+    if (selectedTypes.isNotEmpty) {
+      List<int> selectedTypeIds = venueTypeMap.entries
+          .where((e) => selectedTypes.contains(e.value))
+          .map((e) => e.key)
+          .toList();
+
+      filtered = filtered
+          .where((venue) => selectedTypeIds.contains(venue.typeId))
+          .toList();
+    }
 
     allVenues = filtered;
     notifyListeners();
   }
 
-  void filterVenues(List<String> selectedTypeLabels) async {
-    if (selectedTypeLabels.isEmpty) {
-      await getAllVenues();
+  void filterVenues(List<String> selectedTypeLabels) {
+    selectedTypes = selectedTypeLabels;
+
+    if (selectedTypes.isEmpty) {
+      allVenues = List.from(allVenuesMaster);
+      notifyListeners();
       return;
     }
 
@@ -95,19 +111,26 @@ class SearchModel extends ChangeNotifier {
         .map((e) => e.key)
         .toList();
 
-    final venues = await venueApi.getVenues();
-    allVenues = venues
+    allVenues = allVenuesMaster
         .where((venue) => selectedTypeIds.contains(venue.typeId))
         .toList();
 
     notifyListeners();
   }
 
-  Function() goToVenuePage(Venue venue) =>
-          () => Navigator.pushNamed(context, Routes.venue, arguments: {
-        'venueId': venue.id,
-        'userEmail': userEmail,
-        'userLocation': userLocation,
-      });
+  void clearFilters() {
+    selectedTypes.clear();
+    allVenues = List.from(allVenuesMaster);
+    notifyListeners();
+  }
 
+  Function() goToVenuePage(Venue venue) => () => Navigator.pushNamed(
+        context,
+        Routes.venue,
+        arguments: {
+          'venueId': venue.id,
+          'userEmail': userEmail,
+          'userLocation': userLocation,
+        },
+      );
 }

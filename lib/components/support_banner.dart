@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../themes/theme.dart';
+
 class SupportBanner extends StatelessWidget {
   final BuildContext context;
   final String title;
@@ -37,7 +39,7 @@ class SupportBanner extends StatelessWidget {
                 children: [
                   Icon(
                     icon,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: AppThemes.accent1,
                     size: 36,
                   ),
                   Padding(

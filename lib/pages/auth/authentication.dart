@@ -111,16 +111,14 @@ class _AuthenticationState extends State<Authentication>
                             Align(
                               alignment: const Alignment(0, 0),
                               child: TabBar(
-                                labelColor:
-                                    Theme.of(context).colorScheme.primary,
+                                labelColor: AppThemes.accent1,
                                 unselectedLabelColor:
                                     Theme.of(context).colorScheme.onPrimary,
                                 labelStyle:
                                     Theme.of(context).textTheme.titleSmall,
                                 unselectedLabelStyle:
                                     Theme.of(context).textTheme.titleSmall,
-                                indicatorColor:
-                                    Theme.of(context).colorScheme.primary,
+                                indicatorColor: AppThemes.accent1,
                                 indicatorWeight: 3,
                                 padding: const EdgeInsetsDirectional.fromSTEB(
                                     16, 0, 16, 0),
