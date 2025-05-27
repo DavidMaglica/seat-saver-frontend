@@ -21,15 +21,19 @@ class Search extends StatelessWidget {
     this.userLocation,
   }) : super(key: key);
 
-  void clear(BuildContext ctx, SearchModel model) {
+  void _clear(BuildContext ctx, SearchModel model) {
     Navigator.pop(ctx);
     model.clearFilters();
   }
 
-  void applyFilters(
+  void _applyFilters(
       BuildContext ctx, SearchModel model, List<String> tempSelected) {
     Navigator.pop(ctx);
     model.filterVenues(tempSelected);
+  }
+
+  void _cancel(BuildContext ctx) {
+    Navigator.pop(ctx);
   }
 
   @override
@@ -119,7 +123,6 @@ class Search extends StatelessWidget {
                 ),
                 bottomNavigationBar: NavBar(
                   currentIndex: model.pageIndex,
-                  context: context,
                   onTap: (index, context) => onNavbarItemTapped(
                       context, model.pageIndex, index, userEmail, userLocation),
                 ),
@@ -313,16 +316,12 @@ class Search extends StatelessWidget {
                     children: [
                       buildModalButton(
                         'Clear filters',
-                        () => clear(ctx, model),
+                        () => _clear(context, model),
                         AppThemes.errorColor,
                       ),
                       buildModalButton(
                         'Apply',
-                        () {
-                          Navigator.pop(context);
-                          model.selectedTypes = tempSelected;
-                          model.filterVenues(model.selectedTypes);
-                        },
+                        () => _applyFilters(context, model, tempSelected),
                         AppThemes.successColor,
                       ),
                     ],
@@ -334,9 +333,7 @@ class Search extends StatelessWidget {
                     children: [
                       buildModalButton(
                         'Cancel',
-                        () {
-                          Navigator.of(context).pop();
-                        },
+                        () => _cancel(context),
                         Theme.of(context).colorScheme.onPrimary,
                       ),
                     ],

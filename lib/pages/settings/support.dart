@@ -84,8 +84,7 @@ class _SupportState extends State<Support> {
                       Expanded(
                         child: InkWell(
                           onTap: model.openFAQs,
-                          child: SupportBanner(
-                            context: context,
+                          child: const SupportBanner(
                             title: 'Search FAQs',
                             icon: CupertinoIcons.search_circle_fill,
                           ),

@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import '../themes/theme.dart';
 
 class SupportBanner extends StatelessWidget {
-  final BuildContext context;
   final String title;
   final IconData icon;
 
   const SupportBanner({
     super.key,
-    required this.context,
     required this.title,
     required this.icon,
   });

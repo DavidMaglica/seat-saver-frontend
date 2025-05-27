@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 import '../themes/theme.dart';
 
 class NavBar extends StatelessWidget {
-  final BuildContext context;
   final int currentIndex;
   final Function(int, BuildContext) onTap;
 
   const NavBar({
     super.key,
     required this.currentIndex,
-    required this.context,
     required this.onTap,
   });
 
