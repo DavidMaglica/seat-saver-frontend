@@ -1,3 +1,4 @@
+import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -141,20 +142,9 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
         ));
   }
 
-  Color calculateAvailabilityColour() {
-    final ratio = widget.venue.maximumCapacity > 0
-        ? widget.venue.availableCapacity / widget.venue.maximumCapacity
-        : 0.0;
-
-    return ratio >= 0.4
-        ? AppThemes.successColor
-        : ratio >= 0.1
-            ? AppThemes.warningColor
-            : Colors.red;
-  }
-
   Widget _buildLocationAndAvailability() {
-    final availabilityColour = calculateAvailabilityColour();
+    final availabilityColour = calculateAvailabilityColour(
+        widget.venue.maximumCapacity, widget.venue.availableCapacity);
 
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),

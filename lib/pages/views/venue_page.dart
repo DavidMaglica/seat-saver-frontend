@@ -1,3 +1,4 @@
+import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -306,20 +307,9 @@ class VenuePage extends StatelessWidget {
     );
   }
 
-  Color calculateAvailabilityColour(VenuePageModel model) {
-    final ratio = model.venue.maximumCapacity > 0
-        ? model.venue.availableCapacity / model.venue.maximumCapacity
-        : 0.0;
-
-    return ratio >= 0.4
-        ? AppThemes.successColor
-        : ratio >= 0.1
-            ? AppThemes.warningColor
-            : Colors.red;
-  }
-
   Widget _buildAvailability(BuildContext ctx, VenuePageModel model) {
-    final availabilityColour = calculateAvailabilityColour(model);
+    final availabilityColour = calculateAvailabilityColour(
+        model.venue.maximumCapacity, model.venue.availableCapacity);
 
     return Row(
       mainAxisSize: MainAxisSize.max,
