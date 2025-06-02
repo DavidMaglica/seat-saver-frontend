@@ -131,16 +131,20 @@ class _VenueCardState extends State<VenueCard> {
     );
   }
 
-  Widget _buildLocationAndAvailability(String location) {
+  Color calculateAvailabilityColour() {
     final ratio = widget.venue.maximumCapacity > 0
         ? widget.venue.availableCapacity / widget.venue.maximumCapacity
         : 0.0;
 
-    final Color availabilityColor = ratio >= 0.6
+    return ratio >= 0.4
         ? AppThemes.successColor
-        : ratio >= 0.3
+        : ratio >= 0.1
             ? AppThemes.warningColor
             : Colors.red;
+  }
+
+  Widget _buildLocationAndAvailability(String location) {
+    final availabilityColour = calculateAvailabilityColour();
 
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
@@ -164,7 +168,7 @@ class _VenueCardState extends State<VenueCard> {
             children: [
               Icon(
                 CupertinoIcons.person_2_fill,
-                color: availabilityColor,
+                color: availabilityColour,
                 size: 12,
               ),
               const SizedBox(width: 4),
@@ -173,7 +177,7 @@ class _VenueCardState extends State<VenueCard> {
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontSize: 10,
                       fontWeight: FontWeight.w500,
-                      color: availabilityColor,
+                      color: availabilityColour,
                     ),
               ),
             ],

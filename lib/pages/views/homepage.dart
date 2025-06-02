@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
@@ -28,62 +29,69 @@ class Homepage extends StatelessWidget {
           ..init(),
         child: Consumer<HomepageModel>(
           builder: (context, model, _) {
+            var brightness = Theme.of(context).brightness;
             return GestureDetector(
-                onTap: () => model.unfocusNode.canRequestFocus
-                    ? FocusScope.of(context).requestFocus(model.unfocusNode)
-                    : FocusScope.of(context).unfocus(),
-                child: WillPopScope(
-                    onWillPop: () async => false,
-                    child: Scaffold(
-                        key: model.scaffoldKey,
-                        backgroundColor: Theme.of(context).colorScheme.surface,
-                        body: SafeArea(
-                          child: Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                0, 16, 0, 0),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  _buildHeader(context, model),
-                                  _buildCarouselComponent(model),
-                                  _buildVenues(
-                                    context,
-                                    'Nearby Venues',
-                                    model.openNearbyVenues,
-                                    model.nearbyVenues ?? [],
-                                  ),
-                                  _buildVenues(
-                                    context,
-                                    'New Venues',
-                                    model.openNewVenues,
-                                    model.newVenues ?? [],
-                                  ),
-                                  _buildVenues(
-                                    context,
-                                    'Trending Venues',
-                                    model.openTrendingVenues,
-                                    model.trendingVenues ?? [],
-                                  ),
-                                  _buildSuggestedVenues(
-                                    context,
-                                    model.suggestedVenues ?? [],
-                                  ),
-                                  const SizedBox(height: 24),
-                                ],
+              onTap: () => model.unfocusNode.canRequestFocus
+                  ? FocusScope.of(context).requestFocus(model.unfocusNode)
+                  : FocusScope.of(context).unfocus(),
+              child: WillPopScope(
+                  onWillPop: () async => false,
+                  child: AnnotatedRegion<SystemUiOverlayStyle>(
+                      value: brightness == Brightness.dark
+                          ? SystemUiOverlayStyle.light
+                          : SystemUiOverlayStyle.dark,
+                      child: Scaffold(
+                          key: model.scaffoldKey,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.surface,
+                          body: SafeArea(
+                            child: Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0, 16, 0, 0),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    _buildHeader(context, model),
+                                    _buildCarouselComponent(model),
+                                    _buildVenues(
+                                      context,
+                                      'Nearby Venues',
+                                      model.openNearbyVenues,
+                                      model.nearbyVenues ?? [],
+                                    ),
+                                    _buildVenues(
+                                      context,
+                                      'New Venues',
+                                      model.openNewVenues,
+                                      model.newVenues ?? [],
+                                    ),
+                                    _buildVenues(
+                                      context,
+                                      'Trending Venues',
+                                      model.openTrendingVenues,
+                                      model.trendingVenues ?? [],
+                                    ),
+                                    _buildSuggestedVenues(
+                                      context,
+                                      model.suggestedVenues ?? [],
+                                    ),
+                                    const SizedBox(height: 24),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        bottomNavigationBar: NavBar(
-                          currentIndex: model.pageIndex,
-                          onTap: (index, context) => onNavbarItemTapped(
-                              context,
-                              model.pageIndex,
-                              index,
-                              userEmail,
-                              model.currentUserLocation ?? userLocation),
-                        ))));
+                          bottomNavigationBar: NavBar(
+                            currentIndex: model.pageIndex,
+                            onTap: (index, context) => onNavbarItemTapped(
+                                context,
+                                model.pageIndex,
+                                index,
+                                userEmail,
+                                model.currentUserLocation ?? userLocation),
+                          )))),
+            );
           },
         ));
   }

@@ -306,16 +306,20 @@ class VenuePage extends StatelessWidget {
     );
   }
 
-  Widget _buildAvailability(BuildContext ctx, VenuePageModel model) {
+  Color calculateAvailabilityColour(VenuePageModel model) {
     final ratio = model.venue.maximumCapacity > 0
         ? model.venue.availableCapacity / model.venue.maximumCapacity
         : 0.0;
 
-    final Color availabilityColor = ratio >= 0.6
+    return ratio >= 0.4
         ? AppThemes.successColor
-        : ratio >= 0.3
+        : ratio >= 0.1
             ? AppThemes.warningColor
             : Colors.red;
+  }
+
+  Widget _buildAvailability(BuildContext ctx, VenuePageModel model) {
+    final availabilityColour = calculateAvailabilityColour(model);
 
     return Row(
       mainAxisSize: MainAxisSize.max,
@@ -324,14 +328,14 @@ class VenuePage extends StatelessWidget {
       children: [
         Icon(
           CupertinoIcons.person_2,
-          color: availabilityColor,
+          color: availabilityColour,
           size: 16,
         ),
         const SizedBox(width: 8),
         Text(
-          '${model.venue.availableCapacity} / ${model.venue.maximumCapacity} available',
+          '${model.venue.availableCapacity} / ${model.venue.maximumCapacity} currently available',
           style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-                color: availabilityColor,
+                color: availabilityColour,
               ),
         ),
       ],
@@ -596,7 +600,9 @@ class VenuePage extends StatelessWidget {
       padding: const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 48),
       child: FFButtonWidget(
         onPressed: () => isDisabled ? null : model.reserve(),
-        text: 'Reserve your spot now',
+        text: isDisabled
+            ? 'No seats currently available'
+            : 'Reserve your spot now',
         options: FFButtonOptions(
           width: double.infinity,
           height: 60,

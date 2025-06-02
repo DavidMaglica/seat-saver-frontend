@@ -90,11 +90,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
                   children: [
                     _buildImage(),
                     _buildNameAndType(widget.venue.name, _venueType),
-                    _buildLocationAndAvailability(
-                      widget.venue.location,
-                      widget.venue.maximumCapacity,
-                      widget.venue.availableCapacity,
-                    ),
+                    _buildLocationAndAvailability(),
                     _buildRatingBarAndWorkingHours(
                         widget.venue.rating, widget.venue.workingHours),
                   ],
@@ -145,31 +141,34 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
         ));
   }
 
-  Widget _buildLocationAndAvailability(
-    String location,
-    int maximumCapacity,
-    int availableCapacity,
-  ) {
-    final ratio =
-        maximumCapacity > 0 ? availableCapacity / maximumCapacity : 0.0;
+  Color calculateAvailabilityColour() {
+    final ratio = widget.venue.maximumCapacity > 0
+        ? widget.venue.availableCapacity / widget.venue.maximumCapacity
+        : 0.0;
 
-    final Color availabilityColor = ratio >= 0.6
+    return ratio >= 0.4
         ? AppThemes.successColor
-        : ratio >= 0.3
+        : ratio >= 0.1
             ? AppThemes.warningColor
             : Colors.red;
+  }
+
+  Widget _buildLocationAndAvailability() {
+    final availabilityColour = calculateAvailabilityColour();
 
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(location,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
-                fontWeight: FontWeight.w800,
-                fontSize: 10,
-              )),
+          Text(
+            widget.venue.location,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
+              fontWeight: FontWeight.w800,
+              fontSize: 10,
+            ),
+          ),
           Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -177,14 +176,14 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
             children: [
               Icon(
                 CupertinoIcons.person_2_fill,
-                color: availabilityColor,
+                color: availabilityColour,
                 size: 12,
               ),
               const SizedBox(width: 4),
               Text(
-                '$availableCapacity/$maximumCapacity',
+                '${widget.venue.availableCapacity}/${widget.venue.maximumCapacity}',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: availabilityColor,
+                    color: availabilityColour,
                     fontWeight: FontWeight.w700,
                     fontSize: 10),
               ),

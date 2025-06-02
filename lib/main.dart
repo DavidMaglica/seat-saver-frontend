@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       title: 'TableReserver',
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
+      themeMode: ThemeMode.system,
       home: const Landing(),
       debugShowCheckedModeBanner: false,
       routes: {
