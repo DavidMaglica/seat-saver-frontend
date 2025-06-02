@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +27,7 @@ class Account extends StatelessWidget {
       )..init(),
       child: Consumer<AccountModel>(
         builder: (context, model, _) {
+          var brightness = Theme.of(context).brightness;
           return GestureDetector(
             onTap: () {
               final currentFocus = FocusScope.of(context);
@@ -34,30 +36,35 @@ class Account extends StatelessWidget {
                 currentFocus.unfocus();
               }
             },
-            child: Scaffold(
-              key: model.scaffoldKey,
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              body: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (model.userEmail != null) const SizedBox(height: 94),
-                    _buildAccountDetails(context, model.user),
-                    _buildHistorySettings(context, model),
-                    _buildAccountSettings(context, model),
-                    _buildApplicationSettings(context, model),
-                    _buildOpenAuthentication(context, model.user?.email),
-                  ],
+            child: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: brightness == Brightness.dark
+                  ? SystemUiOverlayStyle.light
+                  : SystemUiOverlayStyle.dark,
+              child: Scaffold(
+                key: model.scaffoldKey,
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                body: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (model.userEmail != null) const SizedBox(height: 94),
+                      _buildAccountDetails(context, model.user),
+                      _buildHistorySettings(context, model),
+                      _buildAccountSettings(context, model),
+                      _buildApplicationSettings(context, model),
+                      _buildOpenAuthentication(context, model.user?.email),
+                    ],
+                  ),
                 ),
-              ),
-              bottomNavigationBar: NavBar(
-                currentIndex: model.pageIndex,
-                onTap: (index, context) => onNavbarItemTapped(
-                  context,
-                  model.pageIndex,
-                  index,
-                  userEmail,
-                  userLocation,
+                bottomNavigationBar: NavBar(
+                  currentIndex: model.pageIndex,
+                  onTap: (index, context) => onNavbarItemTapped(
+                    context,
+                    model.pageIndex,
+                    index,
+                    userEmail,
+                    userLocation,
+                  ),
                 ),
               ),
             ),
@@ -208,9 +215,8 @@ class Account extends StatelessWidget {
   Widget _buildOpenAuthentication(BuildContext ctx, String? userEmail) {
     final isLoggedIn = userEmail != null;
     final text = isLoggedIn ? 'Log out' : 'Log in';
-    final color = isLoggedIn
-        ? Theme.of(ctx).colorScheme.error
-        : AppThemes.successColor;
+    final color =
+        isLoggedIn ? Theme.of(ctx).colorScheme.error : AppThemes.successColor;
 
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(12, 48, 12, 0),

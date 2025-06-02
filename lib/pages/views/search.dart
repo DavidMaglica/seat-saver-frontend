@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
@@ -46,85 +47,91 @@ class Search extends StatelessWidget {
             )..init(),
         child: Consumer<SearchModel>(
           builder: (context, model, _) {
+            var brightness = Theme.of(context).brightness;
             return GestureDetector(
               onTap: () => model.unfocusNode.canRequestFocus
                   ? FocusScope.of(context).requestFocus(model.unfocusNode)
                   : FocusScope.of(context).unfocus(),
-              child: Scaffold(
-                key: model.scaffoldKey,
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                body: SafeArea(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _buildSearchBar(context, model),
-                        _buildFilterDropdown(context, model),
-                        Padding(
-                          padding: const EdgeInsetsDirectional.all(12),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.background,
-                              boxShadow: [
-                                BoxShadow(
-                                  blurRadius: 10,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimary
-                                      .withOpacity(0.6),
-                                )
-                              ],
-                              borderRadius: BorderRadius.circular(8),
-                              shape: BoxShape.rectangle,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsetsDirectional.symmetric(
-                                  vertical: 12),
-                              child: model.allVenues.isNotEmpty
-                                  ? ListView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemCount: model.allVenues.length,
-                                      itemBuilder: (context, index) {
-                                        Venue venue = model.allVenues[index];
-                                        String venueType =
-                                            model.venueTypeMap[venue.typeId] ??
-                                                'Loading...';
+              child: AnnotatedRegion<SystemUiOverlayStyle>(
+                value: brightness == Brightness.dark
+                    ? SystemUiOverlayStyle.light
+                    : SystemUiOverlayStyle.dark,
+                child: Scaffold(
+                  key: model.scaffoldKey,
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  body: SafeArea(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _buildSearchBar(context, model),
+                          _buildFilterDropdown(context, model),
+                          Padding(
+                            padding: const EdgeInsetsDirectional.all(12),
+                            child: Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.background,
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 10,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary
+                                        .withOpacity(0.6),
+                                  )
+                                ],
+                                borderRadius: BorderRadius.circular(8),
+                                shape: BoxShape.rectangle,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsetsDirectional.symmetric(
+                                    vertical: 12),
+                                child: model.allVenues.isNotEmpty
+                                    ? ListView.builder(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount: model.allVenues.length,
+                                        itemBuilder: (context, index) {
+                                          Venue venue = model.allVenues[index];
+                                          String venueType = model
+                                                  .venueTypeMap[venue.typeId] ??
+                                              'Loading...';
 
-                                        return Column(
-                                          children: [
-                                            _buildListTitle(
-                                              context,
-                                              model,
-                                              venue,
-                                              venueType,
-                                            ),
-                                            if (index <
-                                                model.allVenues.length - 1)
-                                              _buildDivider(context),
-                                          ],
-                                        );
-                                      },
-                                    )
-                                  : const Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(16.0),
-                                        child: Text('No venues available'),
+                                          return Column(
+                                            children: [
+                                              _buildListTitle(
+                                                context,
+                                                model,
+                                                venue,
+                                                venueType,
+                                              ),
+                                              if (index <
+                                                  model.allVenues.length - 1)
+                                                _buildDivider(context),
+                                            ],
+                                          );
+                                        },
+                                      )
+                                    : const Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(16.0),
+                                          child: Text('No venues available'),
+                                        ),
                                       ),
-                                    ),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                bottomNavigationBar: NavBar(
-                  currentIndex: model.pageIndex,
-                  onTap: (index, context) => onNavbarItemTapped(
-                      context, model.pageIndex, index, userEmail, userLocation),
+                  bottomNavigationBar: NavBar(
+                    currentIndex: model.pageIndex,
+                    onTap: (index, context) => onNavbarItemTapped(context,
+                        model.pageIndex, index, userEmail, userLocation),
+                  ),
                 ),
               ),
             );
