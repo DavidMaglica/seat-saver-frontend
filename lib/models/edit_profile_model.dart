@@ -1,20 +1,19 @@
+import 'package:TableReserver/api/account_api.dart';
+import 'package:TableReserver/api/data/user.dart';
+import 'package:TableReserver/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../api/account_api.dart';
-import '../api/data/user.dart';
-import '../themes/theme.dart';
-
 class EditProfileModel extends ChangeNotifier {
   final BuildContext context;
-  final User user;
+  final int userId;
   final Position? userLocation;
 
   EditProfileModel({
     required this.context,
-    required this.user,
+    required this.userId,
     this.userLocation,
   });
 
@@ -40,10 +39,26 @@ class EditProfileModel extends ChangeNotifier {
 
   final AccountApi accountApi = AccountApi();
 
+  User? currentUser;
+
   @override
   void dispose() {
     disposeFields();
     super.dispose();
+  }
+
+  void init() {
+    _getUser();
+  }
+
+  Future<void> _getUser() async {
+    final response = await accountApi.getUser(userId);
+    if (response != null && response.success && response.user != null) {
+      currentUser = response.user!;
+    } else {
+      _showToast('Failed to load user data', AppThemes.errorColor);
+    }
+    notifyListeners();
   }
 
   void disposeFields() {
@@ -66,7 +81,7 @@ class EditProfileModel extends ChangeNotifier {
       return;
     }
 
-    final response = await accountApi.changeUsername(user.email, newName);
+    final response = await accountApi.changeUsername(userId, newName);
 
     if (!response.success) {
       _hideKeyboard();
@@ -96,7 +111,7 @@ class EditProfileModel extends ChangeNotifier {
       return;
     }
 
-    final response = await accountApi.changeEmail(user.email, newEmail);
+    final response = await accountApi.changeEmail(userId, newEmail);
 
     if (!response.success) {
       _hideKeyboard();
@@ -146,8 +161,7 @@ class EditProfileModel extends ChangeNotifier {
       return;
     }
 
-    final email = updatedEmail ?? user.email;
-    final response = await accountApi.changePassword(email, newPassword);
+    final response = await accountApi.changePassword(userId, newPassword);
 
     if (!response.success) {
       _hideKeyboard();

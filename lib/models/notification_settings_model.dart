@@ -1,15 +1,13 @@
+import 'package:TableReserver/api/account_api.dart';
+import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/api/data/notification_settings.dart';
+import 'package:TableReserver/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../api/account_api.dart';
-import '../api/data/basic_response.dart';
-import '../api/data/notification_settings.dart';
-import '../api/data/user.dart';
-import '../themes/theme.dart';
-
 class NotificationSettingsModel extends ChangeNotifier {
   final BuildContext context;
-  final User user;
+  final int userId;
   final Position? userLocation;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -22,7 +20,7 @@ class NotificationSettingsModel extends ChangeNotifier {
 
   NotificationSettingsModel({
     required this.context,
-    required this.user,
+    required this.userId,
     this.userLocation,
   });
 
@@ -34,7 +32,7 @@ class NotificationSettingsModel extends ChangeNotifier {
 
   Future<void> loadNotificationSettings() async {
     NotificationOptions? response =
-        await accountApi.getNotificationOptions(user.email);
+        await accountApi.getNotificationOptions(userId);
 
     if (response != null) {
       isActivePushNotifications = response.pushNotificationsTurnedOn;
@@ -61,7 +59,7 @@ class NotificationSettingsModel extends ChangeNotifier {
 
   Future<void> saveChanges() async {
     BasicResponse response = await accountApi.updateUserNotificationOptions(
-      user.email,
+      userId,
       isActivePushNotifications,
       isActiveEmailNotifications,
       isActiveLocationServices,

@@ -9,8 +9,6 @@ class Venue {
   final int typeId;
   String? description;
 
-  // final List<String> imageLinks;
-
   Venue({
     required this.id,
     required this.name,
@@ -21,10 +19,9 @@ class Venue {
     required this.rating,
     required this.typeId,
     this.description,
-    // required this.imageLinks,
   });
 
-  factory Venue.fromMap(Map<String, dynamic> map) {
+  factory Venue.fromJson(Map<String, dynamic> map) {
     return Venue(
       id: map['id'],
       name: map['name'],

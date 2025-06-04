@@ -1,3 +1,8 @@
+import 'package:TableReserver/api/data/venue.dart';
+import 'package:TableReserver/api/venue_api.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/utils/extensions.dart';
 import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,21 +10,15 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../api/data/venue.dart';
-import '../api/venue_api.dart';
-import '../themes/theme.dart';
-import '../utils/constants.dart';
-import '../utils/extensions.dart';
-
 class VenueSuggestedCard extends StatefulWidget {
   final Venue venue;
-  final String? userEmail;
+  final int? userId;
   final Position? userLocation;
 
   const VenueSuggestedCard({
     Key? key,
     required this.venue,
-    this.userEmail,
+    this.userId,
     this.userLocation,
   }) : super(key: key);
 
@@ -55,7 +54,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
   void _openVenuePage() =>
       Navigator.pushNamed(context, Routes.venue, arguments: {
         'venueId': widget.venue.id,
-        'userEmail': widget.userEmail,
+        'userId': widget.userId,
         'userLocation': widget.userLocation,
       });
 

@@ -1,23 +1,22 @@
+import 'package:TableReserver/api/account_api.dart';
+import 'package:TableReserver/api/data/user.dart';
+import 'package:TableReserver/api/data/notification_settings.dart';
+import 'package:TableReserver/api/data/user_location.dart';
+import 'package:TableReserver/api/data/user_response.dart';
+import 'package:TableReserver/api/data/venue.dart';
+import 'package:TableReserver/api/geolocation_api.dart';
+import 'package:TableReserver/api/venue_api.dart';
+import 'package:TableReserver/components/location_permission.dart';
+import 'package:TableReserver/components/toaster.dart';
+import 'package:TableReserver/utils/utils.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../api/account_api.dart';
-import '../api/data/notification_settings.dart';
-import '../api/data/user.dart';
-import '../api/data/user_location.dart';
-import '../api/data/user_response.dart';
-import '../api/data/venue.dart';
-import '../api/geolocation_api.dart';
-import '../api/venue_api.dart';
-import '../components/location_permission.dart';
-import '../components/toaster.dart';
-import '../utils/extensions.dart';
-
 class HomepageModel extends ChangeNotifier {
   final BuildContext context;
-  final String? userEmail;
+  final int? userId;
   final Position? userLocation;
 
   final unfocusNode = FocusNode();
@@ -43,7 +42,7 @@ class HomepageModel extends ChangeNotifier {
 
   HomepageModel({
     required this.context,
-    this.userEmail,
+    this.userId,
     this.userLocation,
   });
 
@@ -54,8 +53,8 @@ class HomepageModel extends ChangeNotifier {
       await displayLocationPermissionPopUp(locationPopUpCounter);
     }
 
-    if (userEmail != null && userEmail?.isNotEmpty == true) {
-      await updateUserLocation(userEmail!);
+    if (userId != null) {
+      await updateUserLocation(userId!);
     }
 
     await resolveNearbyCities();
@@ -82,9 +81,11 @@ class HomepageModel extends ChangeNotifier {
             longitude: userLocation!.longitude),
       );
     } else {
-      if (loggedInUser != null &&
-          loggedInUser?.notificationOptions.locationServicesTurnedOn == true) {
-        currentUserLocation = loggedInUser!.lastKnownLocation;
+      if (isUserLocationAvailableAndEnabled()) {
+        currentUserLocation = getPositionFromLatAndLong(
+          loggedInUser!.lastKnownLatitude!,
+          loggedInUser!.lastKnownLongitude!,
+        );
         await geolocationApi.getNearbyCities(
           UserLocation(
               latitude: currentUserLocation!.latitude,
@@ -95,11 +96,18 @@ class HomepageModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool isUserLocationAvailableAndEnabled() {
+    return loggedInUser != null &&
+        loggedInUser!.lastKnownLatitude != null &&
+        loggedInUser!.lastKnownLongitude != null &&
+        loggedInUser?.notificationOptions.locationServicesTurnedOn == true;
+  }
+
   Future<void> displayLocationPermissionPopUp(int locationPopUpCounter) async {
-    if (userEmail != null && userEmail!.isNotEmpty) {
+    if (userId != null) {
       locationPopUpCounter++;
       bool? isLocationServicesTurnedOn;
-      await accountApi.getNotificationOptions(userEmail!).then((value) {
+      await accountApi.getNotificationOptions(userId!).then((value) {
         if (value != null) {
           isLocationServicesTurnedOn = value.locationServicesTurnedOn;
         } else {
@@ -109,12 +117,12 @@ class HomepageModel extends ChangeNotifier {
       });
       if (isLocationServicesTurnedOn != null &&
           isLocationServicesTurnedOn == false) {
-        _openPopUp(userEmail!);
+        _openPopUp(userId!);
       } else {
         if (userLocation == null) {
-          _openPopUp(userEmail!);
+          _openPopUp(userId!);
         }
-        await accountApi.getLastKnownLocation(userEmail!).then((value) {
+        await accountApi.getLastKnownLocation(userId!).then((value) {
           if (value != null) {
             geolocationApi
                 .getNearbyCities(value)
@@ -131,14 +139,14 @@ class HomepageModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateUserLocation(String userEmail) async {
+  Future<void> updateUserLocation(int userId) async {
     NotificationOptions? options =
-        await accountApi.getNotificationOptions(userEmail);
+        await accountApi.getNotificationOptions(userId);
 
     if (options != null && options.locationServicesTurnedOn) {
       Position userLocation = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.best);
-      accountApi.updateUserLocation(userEmail, userLocation);
+      accountApi.updateUserLocation(userId, userLocation);
     } else {
       if (!context.mounted) return;
       Toaster.displayError(context,
@@ -148,8 +156,8 @@ class HomepageModel extends ChangeNotifier {
   }
 
   Future<void> checkLogIn() async {
-    if (userEmail.isNotNullAndNotEmpty) {
-      UserResponse? user = await accountApi.getUser(userEmail!);
+    if (userId != null) {
+      UserResponse? user = await accountApi.getUser(userId!);
       if (user != null && user.success) {
         loggedInUser = user.user;
       }
@@ -199,7 +207,7 @@ class HomepageModel extends ChangeNotifier {
     return;
   }
 
-  void _openPopUp(String userEmail) {
+  void _openPopUp(int userId) {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await showModalBottomSheet(
           isScrollControlled: true,
@@ -216,7 +224,7 @@ class HomepageModel extends ChangeNotifier {
                     padding: MediaQuery.viewInsetsOf(context),
                     child: SizedBox(
                       height: 568,
-                      child: LocationPermissionPopUp(userEmail: userEmail),
+                      child: LocationPermissionPopUp(userId: userId),
                     )));
           });
     });

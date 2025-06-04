@@ -1,11 +1,10 @@
 import 'package:TableReserver/api/api_routes.dart';
+import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/api/data/venue_type.dart';
+import 'package:TableReserver/api/dio_setup.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
-
-import 'data/basic_response.dart';
-import 'data/venue.dart';
-import 'dio_setup.dart';
 
 final dio = setupDio(ApiRoutes.venue);
 final logger = Logger();
@@ -118,9 +117,14 @@ class VenueApi {
   // NON MOCKED API CALLS START HERE
   Future<Venue?> getVenue(int venueId) async {
     try {
-      Response response =
-          await dio.get('${ApiRoutes.getVenue}?venueId=$venueId');
-      return Venue.fromMap(response.data);
+      Response response = await dio.get(
+        ApiRoutes.getVenue,
+        queryParameters: {
+          'venueId': venueId,
+        },
+      );
+
+      return Venue.fromJson(response.data);
     } catch (e) {
       logger.e('Error fetching venue: $e');
       return null;
@@ -130,14 +134,17 @@ class VenueApi {
   Future<List<Venue>> getVenues() async {
     Response response = await dio.get(ApiRoutes.getAllVenues);
     List<Venue> venues =
-        (response.data as List).map((venue) => Venue.fromMap(venue)).toList();
+        (response.data as List).map((venue) => Venue.fromJson(venue)).toList();
     return venues;
   }
 
   Future<String?> getVenueType(int typeId) async {
     try {
-      Response response =
-          await dio.get('${ApiRoutes.getVenueType}?typeId=$typeId');
+      Response response = await dio.get(
+        ApiRoutes.getVenueType,
+        queryParameters: {'typeId': typeId},
+      );
+
       return response.data;
     } catch (e) {
       logger.e('Error fetching venue type: $e');
@@ -160,8 +167,13 @@ class VenueApi {
 
   Future<double?> getVenueRating(int venueId) async {
     try {
-      Response response =
-          await dio.get('${ApiRoutes.getVenueRating}?venueId=$venueId');
+      Response response = await dio.get(
+        ApiRoutes.getVenueRating,
+        queryParameters: {
+          'venueId': venueId,
+        },
+      );
+
       return response.data;
     } catch (e) {
       logger.e('Error fetching venue rating: $e');
@@ -232,9 +244,15 @@ class VenueApi {
 
   Future<BasicResponse> rateVenue(int venueId, double rating) async {
     try {
-      Response response = await dio
-          .post('${ApiRoutes.rateVenue}?venueId=$venueId&rating=$rating');
-      return BasicResponse.fromJson(response.data);
+      Response response = await dio.post(
+        ApiRoutes.rateVenue,
+        queryParameters: {
+          'venueId': venueId,
+          'rating': rating,
+        },
+      );
+
+      return BasicResponse.fromJson(response.data, (json) => json);
     } catch (e) {
       logger.e('Error rating venue: $e');
       return BasicResponse(success: false, message: 'Error rating venue');

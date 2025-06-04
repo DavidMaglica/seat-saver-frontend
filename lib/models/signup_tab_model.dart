@@ -1,10 +1,10 @@
+import 'package:TableReserver/api/account_api.dart';
+import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/api/data/user.dart';
+import 'package:TableReserver/pages/auth/signup_tab.dart';
+import 'package:TableReserver/utils/signup_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-
-import '../api/account_api.dart';
-import '../api/data/basic_response.dart';
-import '../pages/auth/signup_tab.dart';
-import '../utils/signup_methods.dart';
 
 class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
   final AccountApi accountApi = AccountApi();
@@ -17,7 +17,7 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
   @override
   void initState(BuildContext context) {}
 
-  Future<BasicResponse> signUp(SignUpMethodEnum signUpMethod) async {
+  Future<BasicResponse<User>> signUp(SignUpMethodEnum signUpMethod) async {
     switch (signUpMethod) {
       case SignUpMethodEnum.apple:
         return _appleSignUp();
@@ -37,15 +37,15 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
     }
   }
 
-  BasicResponse _appleSignUp() {
+  BasicResponse<User> _appleSignUp() {
     return BasicResponse(success: false, message: 'Currently unavailable');
   }
 
-  BasicResponse _googleSignUp() {
+  BasicResponse<User> _googleSignUp() {
     return BasicResponse(success: false, message: 'Currently unavailable');
   }
 
-  Future<BasicResponse> _customSignUp(
+  Future<BasicResponse<User>> _customSignUp(
     String username,
     String email,
     String password,
@@ -70,6 +70,10 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
       return BasicResponse(success: false, message: 'Passwords do not match');
     }
 
-    return await accountApi.signUp(username, email, password);
+    return await accountApi.signUp(
+      email,
+      username,
+      password,
+    );
   }
 }

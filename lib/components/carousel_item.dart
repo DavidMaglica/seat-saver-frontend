@@ -1,9 +1,8 @@
+import 'package:TableReserver/components/toaster.dart';
+import 'package:TableReserver/models/carousel_item_model.dart';
+import 'package:TableReserver/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../models/carousel_item_model.dart';
-import '../themes/theme.dart';
-import 'toaster.dart';
 
 class CarouselItem extends StatelessWidget {
   final String currentCity;

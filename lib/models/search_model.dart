@@ -1,15 +1,12 @@
+import 'package:TableReserver/api/data/venue.dart';
+import 'package:TableReserver/api/venue_api.dart';
+import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../api/data/venue.dart';
-import '../api/venue_api.dart';
-import '../utils/constants.dart';
-import '../utils/extensions.dart';
-
 class SearchModel extends ChangeNotifier {
   final BuildContext context;
-  final String? userEmail;
-  final Position? userLocation;
   final int? selectedVenueType;
 
   final FocusNode unfocusNode = FocusNode();
@@ -28,8 +25,6 @@ class SearchModel extends ChangeNotifier {
 
   SearchModel({
     required this.context,
-    required this.userEmail,
-    required this.userLocation,
     this.selectedVenueType,
   });
 
@@ -124,13 +119,18 @@ class SearchModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Function() goToVenuePage(Venue venue) => () => Navigator.pushNamed(
-        context,
-        Routes.venue,
-        arguments: {
-          'venueId': venue.id,
-          'userEmail': userEmail,
-          'userLocation': userLocation,
-        },
-      );
+  Function() goToVenuePage(
+    Venue venue,
+    int? userId,
+    Position? userLocation,
+  ) =>
+      () => Navigator.pushNamed(
+            context,
+            Routes.venue,
+            arguments: {
+              'venueId': venue.id,
+              'userId': userId,
+              'userLocation': userLocation,
+            },
+          );
 }

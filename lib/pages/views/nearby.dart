@@ -1,20 +1,19 @@
+import 'package:TableReserver/components/navbar.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/routing_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../components/navbar.dart';
-import '../../themes/theme.dart';
-import '../../utils/routing_utils.dart';
-
 class Nearby extends StatefulWidget {
-  final String? userEmail;
+  final int? userId;
   final Position? userLocation;
 
   const Nearby({
     Key? key,
-    this.userEmail,
+    this.userId,
     this.userLocation,
   }) : super(key: key);
 
@@ -30,12 +29,9 @@ class _NearbyState extends State<Nearby> {
 
   late MapController osmMapController;
 
-  String? email;
-
   @override
   void initState() {
     super.initState();
-    if (widget.userEmail != null) setState(() => email = widget.userEmail);
 
     osmMapController = MapController(
       initPosition: GeoPoint(
@@ -50,6 +46,7 @@ class _NearbyState extends State<Nearby> {
   @override
   void dispose() {
     unfocusNode.dispose();
+    osmMapController.dispose();
     super.dispose();
   }
 
@@ -103,7 +100,7 @@ class _NearbyState extends State<Nearby> {
                 bottomNavigationBar: NavBar(
                   currentIndex: pageIndex,
                   onTap: (index, context) => onNavbarItemTapped(context,
-                      pageIndex, index, widget.userEmail, widget.userLocation),
+                      pageIndex, index, widget.userId, widget.userLocation),
                 ))));
   }
 }

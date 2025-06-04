@@ -1,32 +1,51 @@
+import 'package:TableReserver/api/account_api.dart';
+import 'package:TableReserver/api/data/user.dart';
+import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/api/support_api.dart';
+import 'package:TableReserver/components/toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../api/data/basic_response.dart';
-import '../api/data/user.dart';
-import '../api/support_api.dart';
-import '../components/toaster.dart';
-
 class SupportModel extends ChangeNotifier {
   final BuildContext context;
-  final User user;
+  final int userId;
   final Position? position;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final SupportApi emailSender = SupportApi();
+  final AccountApi accountApi = AccountApi();
 
   final FocusNode unfocusNode = FocusNode();
   final FocusNode ticketTitleFocusNode = FocusNode();
   final FocusNode ticketDescriptionFocusNode = FocusNode();
 
   final TextEditingController ticketTitleController = TextEditingController();
-  final TextEditingController ticketDescriptionController = TextEditingController();
+  final TextEditingController ticketDescriptionController =
+      TextEditingController();
+
+  late User loggedInUser;
 
   SupportModel({
     required this.context,
-    required this.user,
+    required this.userId,
     this.position,
   });
+
+  void init() {
+    _getUser();
+  }
+
+  Future<void> _getUser() async {
+    final response = await accountApi.getUser(userId);
+    if (response != null && response.success && response.user != null) {
+      loggedInUser = response.user!;
+    } else {
+      if (!context.mounted) return;
+      Toaster.displayError(context, 'Failed to load user data.');
+    }
+    notifyListeners();
+  }
 
   @override
   void dispose() {
@@ -44,12 +63,14 @@ class SupportModel extends ChangeNotifier {
     try {
       if (!await canLaunchUrl(url)) {
         if (!context.mounted) return;
-        Toaster.displayError(context, 'Could not launch default browser app. Please try again later.');
+        Toaster.displayError(context,
+            'Could not launch default browser app. Please try again later.');
       }
       await launchUrl(url);
     } catch (e) {
       if (!context.mounted) return;
-      Toaster.displayError(context, 'Could not open default browser app. Please try again later.');
+      Toaster.displayError(context,
+          'Could not open default browser app. Please try again later.');
     }
   }
 
@@ -63,7 +84,7 @@ class SupportModel extends ChangeNotifier {
     }
 
     BasicResponse response = await emailSender.sendEmail(
-      user.email,
+      loggedInUser.email,
       subject,
       body,
     );

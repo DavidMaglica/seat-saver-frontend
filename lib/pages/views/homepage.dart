@@ -1,3 +1,11 @@
+import 'package:TableReserver/api/data/venue.dart';
+import 'package:TableReserver/components/carousel_item.dart';
+import 'package:TableReserver/components/navbar.dart';
+import 'package:TableReserver/components/venue_card.dart';
+import 'package:TableReserver/components/venue_suggested_card.dart';
+import 'package:TableReserver/models/homepage_model.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/routing_utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,28 +13,20 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-import '../../api/data/venue.dart';
-import '../../components/carousel_item.dart';
-import '../../components/navbar.dart';
-import '../../components/venue_card.dart';
-import '../../components/venue_suggested_card.dart';
-import '../../models/homepage_model.dart';
-import '../../themes/theme.dart';
-import '../../utils/routing_utils.dart';
-
 class Homepage extends StatelessWidget {
-  final String? userEmail;
+  final int? userId;
   final Position? userLocation;
 
-  const Homepage({Key? key, this.userEmail, this.userLocation})
-      : super(key: key);
+  const Homepage({Key? key, this.userId, this.userLocation}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
         create: (_) => HomepageModel(
-            context: context, userEmail: userEmail, userLocation: userLocation)
-          ..init(),
+              context: context,
+              userId: userId,
+              userLocation: userLocation,
+            )..init(),
         child: Consumer<HomepageModel>(
           builder: (context, model, _) {
             var brightness = Theme.of(context).brightness;
@@ -88,7 +88,7 @@ class Homepage extends StatelessWidget {
                                 context,
                                 model.pageIndex,
                                 index,
-                                userEmail,
+                                userId,
                                 model.currentUserLocation ?? userLocation),
                           )))),
             );
@@ -229,7 +229,7 @@ class Homepage extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                     child: VenueCard(
                       venue: venue,
-                      userEmail: userEmail,
+                      userId: userId,
                       userLocation: userLocation,
                     ),
                   );
@@ -250,7 +250,7 @@ class Homepage extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                     child: VenueSuggestedCard(
                       venue: venue,
-                      userEmail: userEmail,
+                      userId: userId,
                       userLocation: userLocation,
                     ),
                   );

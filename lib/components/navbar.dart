@@ -1,7 +1,6 @@
+import 'package:TableReserver/themes/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../themes/theme.dart';
 
 class NavBar extends StatelessWidget {
   final int currentIndex;

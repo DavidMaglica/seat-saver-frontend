@@ -1,24 +1,22 @@
+import 'package:TableReserver/api/data/reservation_details.dart';
+import 'package:TableReserver/components/custom_appbar.dart';
+import 'package:TableReserver/components/modal_widgets.dart';
+import 'package:TableReserver/models/reservation_history_model.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-import '../../api/data/reservation_details.dart';
-import '../../api/data/user.dart';
-import '../../components/custom_appbar.dart';
-import '../../components/modal_widgets.dart';
-import '../../models/reservation_history_model.dart';
-import '../../themes/theme.dart';
-import '../../utils/constants.dart';
-
 class ReservationHistory extends StatelessWidget {
-  final User user;
+  final int userId;
   final Position? userLocation;
 
   const ReservationHistory({
     Key? key,
-    required this.user,
+    required this.userId,
     this.userLocation,
   }) : super(key: key);
 
@@ -27,7 +25,7 @@ class ReservationHistory extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => ReservationHistoryModel(
         context: context,
-        user: user,
+        userId: userId,
         userLocation: userLocation,
       )..init(),
       child: Builder(
@@ -42,7 +40,7 @@ class ReservationHistory extends StatelessWidget {
               onBack: () => Navigator.of(context).pushNamed(
                 Routes.account,
                 arguments: {
-                  'userEmail': model.user.email,
+                  'userId': userId,
                   'userLocation': model.userLocation,
                 },
               ),
@@ -217,7 +215,7 @@ class ReservationHistory extends StatelessWidget {
                       context,
                       'Date (dd-MM-yyyy HH:mm)',
                       DateFormat('dd-MM-yyyy HH:mm')
-                          .format(reservation.reservationDateTime),
+                          .format(reservation.datetime),
                     ),
                   ],
                 ),

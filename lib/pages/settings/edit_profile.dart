@@ -1,22 +1,20 @@
+import 'package:TableReserver/components/custom_appbar.dart';
+import 'package:TableReserver/components/modal_widgets.dart';
+import 'package:TableReserver/models/edit_profile_model.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-import '../../api/data/user.dart';
-import '../../components/custom_appbar.dart';
-import '../../themes/theme.dart';
-import '../../utils/constants.dart';
-import '../../models/edit_profile_model.dart';
-import '../../components/modal_widgets.dart';
-
 class EditProfile extends StatelessWidget {
-  final User user;
+  final int userId;
   final Position? userLocation;
 
   const EditProfile({
     Key? key,
-    required this.user,
+    required this.userId,
     this.userLocation,
   }) : super(key: key);
 
@@ -25,11 +23,14 @@ class EditProfile extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => EditProfileModel(
         context: context,
-        user: user,
+        userId: userId,
         userLocation: userLocation,
-      ),
+      )..init(),
       child: Consumer<EditProfileModel>(
         builder: (context, model, _) {
+          if (model.currentUser == null) {
+            return const CircularProgressIndicator();
+          }
           return Scaffold(
             key: model.scaffoldKey,
             backgroundColor: Theme.of(context).colorScheme.surface,
@@ -38,7 +39,7 @@ class EditProfile extends StatelessWidget {
               onBack: () => Navigator.of(context).pushNamed(
                 Routes.account,
                 arguments: {
-                  'userEmail': model.updatedEmail ?? user.email,
+                  'userId': model.userId,
                   'userLocation': userLocation,
                 },
               ),
@@ -115,7 +116,7 @@ class EditProfile extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsetsDirectional.only(end: 8),
                   child: Text(
-                    model.updatedUsername ?? model.user.username,
+                    model.updatedUsername ?? model.currentUser!.username,
                     style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(ctx)
                               .colorScheme
@@ -151,7 +152,7 @@ class EditProfile extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsetsDirectional.only(end: 8),
                   child: Text(
-                    model.updatedEmail ?? model.user.email,
+                    model.updatedEmail ?? model.currentUser!.email,
                     style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(ctx)
                               .colorScheme
@@ -210,8 +211,14 @@ class EditProfile extends StatelessWidget {
             children: [
               buildModalTitle(context, 'Change Username'),
               const SizedBox(height: 16),
-              _buildInputField(ctx, 'New Username', 'Enter a new username',
-                  model.newUsernameTextController, model.newUsernameFocusNode),
+              _buildInputField(
+                ctx,
+                'New Username',
+                'Enter a new username',
+                model.newUsernameTextController,
+                model.newUsernameFocusNode,
+                TextInputType.text,
+              ),
               const SizedBox(height: 24),
               Row(
                 mainAxisSize: MainAxisSize.max,
@@ -248,8 +255,14 @@ class EditProfile extends StatelessWidget {
             children: [
               buildModalTitle(context, 'Change Email'),
               const SizedBox(height: 16),
-              _buildInputField(ctx, 'New Email', 'Enter your new email',
-                  model.newEmailTextController, model.newEmailFocusNode),
+              _buildInputField(
+                ctx,
+                'New Email',
+                'Enter your new email',
+                model.newEmailTextController,
+                model.newEmailFocusNode,
+                TextInputType.emailAddress,
+              ),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -333,12 +346,14 @@ class EditProfile extends StatelessWidget {
     String hint,
     TextEditingController controller,
     FocusNode focusNode,
+    TextInputType keyboardType,
   ) {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
       child: TextFormField(
         controller: controller,
         focusNode: focusNode,
+        keyboardType: keyboardType,
         decoration: InputDecoration(
           labelText: labelText,
           hintText: hint,

@@ -1,9 +1,8 @@
+import 'package:TableReserver/models/landing_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
-
-import '../../models/landing_model.dart';
 
 class Landing extends StatelessWidget {
   const Landing({super.key});

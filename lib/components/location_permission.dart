@@ -1,24 +1,23 @@
+import 'package:TableReserver/models/location_permission_model.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
 
-import '../models/location_permission_model.dart';
-import '../themes/theme.dart';
-import '../utils/constants.dart';
-
 class LocationPermissionPopUp extends StatelessWidget {
-  final String userEmail;
+  final int userId;
 
   const LocationPermissionPopUp({
     Key? key,
-    required this.userEmail,
+    required this.userId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<LocationPermissionPopUpModel>(
-      create: (_) => LocationPermissionPopUpModel(context, userEmail)..init(),
+      create: (_) => LocationPermissionPopUpModel(context, userId)..init(),
       builder: (context, _) {
         final model = Provider.of<LocationPermissionPopUpModel>(context);
 
@@ -98,7 +97,7 @@ class LocationPermissionPopUp extends StatelessWidget {
       onPressed: () {
         Navigator.of(ctx).popAndPushNamed(
           Routes.homepage,
-          arguments: {'userEmail': userEmail, 'userLocation': null},
+          arguments: {'userId': userId, 'userLocation': null},
         );
       },
       text: 'No, thanks',

@@ -1,16 +1,16 @@
 import 'dart:async';
 
+import 'package:TableReserver/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../utils/constants.dart';
 
 class SuccessfulReservationModel extends ChangeNotifier {
   final BuildContext context;
   final String venueName;
   final int numberOfGuests;
   final DateTime reservationDateTime;
-  final String userEmail;
+  final int userId;
   final Position? userLocation;
 
   int countdown = 15;
@@ -21,7 +21,7 @@ class SuccessfulReservationModel extends ChangeNotifier {
     required this.venueName,
     required this.numberOfGuests,
     required this.reservationDateTime,
-    required this.userEmail,
+    required this.userId,
     required this.userLocation,
   });
 
@@ -50,7 +50,7 @@ class SuccessfulReservationModel extends ChangeNotifier {
   void navigateToHomepage() {
     if (!context.mounted) return;
     Navigator.popAndPushNamed(context, Routes.homepage, arguments: {
-      'userEmail': userEmail,
+      'userId': userId,
       'userLocation': userLocation,
     });
   }

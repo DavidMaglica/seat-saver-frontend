@@ -1,6 +1,5 @@
+import 'package:TableReserver/api/carousel_api.dart';
 import 'package:flutter/material.dart';
-
-import '../api/carousel_api.dart';
 
 class CarouselItemModel extends ChangeNotifier {
   final String currentCity;

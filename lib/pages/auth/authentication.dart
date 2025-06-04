@@ -1,14 +1,13 @@
+import 'package:TableReserver/api/account_api.dart';
+import 'package:TableReserver/models/authentication_model.dart';
+import 'package:TableReserver/pages/auth/login_tab.dart';
+import 'package:TableReserver/pages/auth/signup_tab.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-
-import '../../api/account_api.dart';
-import '../../themes/theme.dart';
-import '../../utils/constants.dart';
-import '../../models/authentication_model.dart';
-import 'login_tab.dart';
-import 'signup_tab.dart';
 
 export '../../models/authentication_model.dart';
 
@@ -92,20 +91,22 @@ class _AuthenticationState extends State<Authentication>
                                         const EdgeInsetsDirectional.symmetric(
                                             horizontal: 0, vertical: 36),
                                     child: CupertinoButton(
-                                        child: const Text(
-                                          'Continue without account.',
-                                          style: TextStyle(
-                                            color: AppThemes.infoColor,
-                                            decoration:
-                                                TextDecoration.underline,
-                                          ),
+                                      child: const Text(
+                                        'Continue without account.',
+                                        style: TextStyle(
+                                          color: AppThemes.infoColor,
+                                          decoration: TextDecoration.underline,
                                         ),
-                                        onPressed: () => Navigator.pushNamed(
-                                                context, Routes.homepage,
-                                                arguments: {
-                                                  'userEmail': null,
-                                                  'userLocation': null
-                                                })),
+                                      ),
+                                      onPressed: () => Navigator.pushNamed(
+                                        context,
+                                        Routes.homepage,
+                                        arguments: {
+                                          'userId': null,
+                                          'userLocation': null
+                                        },
+                                      ),
+                                    ),
                                   )
                                 : const SizedBox(),
                             Align(
