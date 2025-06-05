@@ -3,7 +3,6 @@ import 'package:TableReserver/api/data/basic_response.dart';
 import 'package:TableReserver/api/data/reservation_details.dart';
 import 'package:TableReserver/api/dio_setup.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 final dio = setupDio(ApiRoutes.reservation);
@@ -16,8 +15,6 @@ class ReservationApi {
         ApiRoutes.getReservations,
         queryParameters: {'userId': userId},
       );
-
-      debugPrint('Response data: ${response.data}');
 
       List<ReservationDetails> reservations = (response.data as List)
           .map((reservation) => ReservationDetails.fromJson(reservation))

@@ -59,8 +59,6 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
           success: false, message: 'Please enter a valid email address');
     }
 
-    debugPrint('Logging in with email: $userEmail');
-
     return await accountApi.logIn(userEmail, password);
   }
 }
