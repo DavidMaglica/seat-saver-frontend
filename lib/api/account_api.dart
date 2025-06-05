@@ -165,14 +165,14 @@ class AccountApi {
 
   Future<BasicResponse> updateUserLocation(
     int userId,
-    Position? position,
+    Position position,
   ) async {
     try {
       final response = await dio.patch(
         ApiRoutes.updateLocation,
         queryParameters: <String, dynamic>{
           'userId': userId,
-          'latitude': position!.latitude,
+          'latitude': position.latitude,
           'longitude': position.longitude,
         },
       );
