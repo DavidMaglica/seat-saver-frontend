@@ -9,7 +9,7 @@ class NotificationOptions {
     required this.locationServicesTurnedOn,
   });
 
-  factory NotificationOptions.fromMap(Map<String, dynamic> json) {
+  factory NotificationOptions.fromJson(Map<String, dynamic> json) {
     return NotificationOptions(
       pushNotificationsTurnedOn: json['pushNotificationsTurnedOn'],
       emailNotificationsTurnedOn: json['emailNotificationsTurnedOn'],

@@ -1,3 +1,10 @@
+import 'package:TableReserver/components/custom_appbar.dart';
+import 'package:TableReserver/components/full_image_view.dart';
+import 'package:TableReserver/components/modal_widgets.dart';
+import 'package:TableReserver/components/toaster.dart';
+import 'package:TableReserver/models/venue_page_model.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/extensions.dart';
 import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,25 +14,17 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-import '../../components/custom_appbar.dart';
-import '../../components/full_image_view.dart';
-import '../../components/modal_widgets.dart';
-import '../../components/toaster.dart';
-import '../../models/venue_page_model.dart';
-import '../../themes/theme.dart';
-import '../../utils/extensions.dart';
-
 class VenuePage extends StatelessWidget {
   final int venueId;
   final List<String>? imageLinks;
-  final String? userEmail;
+  final int? userId;
   final Position? userLocation;
 
   const VenuePage({
     Key? key,
     required this.venueId,
     this.imageLinks,
-    this.userEmail,
+    this.userId,
     this.userLocation,
   }) : super(key: key);
 
@@ -36,7 +35,7 @@ class VenuePage extends StatelessWidget {
             ctx: context,
             venueId: venueId,
             imageLinks: imageLinks,
-            userEmail: userEmail,
+            userId: userId,
             userLocation: userLocation)
           ..init(),
         child: Consumer<VenuePageModel>(
@@ -49,7 +48,7 @@ class VenuePage extends StatelessWidget {
                 appBar: CustomAppbar(
                   title: model.venue.name,
                   onBack: () => Navigator.of(context).pop({
-                    'userEmail': userEmail,
+                    'userId': userId,
                     'userLocation': userLocation,
                   }),
                 ),
@@ -136,7 +135,7 @@ class VenuePage extends StatelessWidget {
   Future<dynamic>? _buildRatingModal(BuildContext ctx, VenuePageModel model) {
     double rating = 0;
 
-    if (model.userEmail.isNullOrEmpty) {
+    if (model.userId == null) {
       Toaster.displayError(ctx, 'Please log in to rate ${model.venue.name}');
       return null;
     }

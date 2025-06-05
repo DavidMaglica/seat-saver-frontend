@@ -1,21 +1,19 @@
+import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/api/data/venue.dart';
+import 'package:TableReserver/api/reservation_api.dart';
+import 'package:TableReserver/api/venue_api.dart';
+import 'package:TableReserver/components/toaster.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/constants.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-
-import '../api/data/basic_response.dart';
-import '../api/data/venue.dart';
-import '../api/reservation_api.dart';
-import '../api/venue_api.dart';
-import '../components/toaster.dart';
-import '../themes/theme.dart';
-import '../utils/constants.dart';
-import '../utils/extensions.dart';
 
 class VenuePageModel extends ChangeNotifier {
   final BuildContext ctx;
   final int venueId;
   final List<String>? imageLinks;
-  final String? userEmail;
+  final int? userId;
   final Position? userLocation;
 
   Future<List<String>>? images;
@@ -36,7 +34,16 @@ class VenuePageModel extends ChangeNotifier {
     description: '',
   );
   final List<TimeOfDay> timeOptions = List.generate(
-      48, (index) => TimeOfDay(hour: index ~/ 2, minute: (index % 2) * 30));
+    48,
+    (index) {
+      final hour = index ~/ 2;
+      final minute = (index % 2) * 30;
+      if (hour >= 24) {
+        return const TimeOfDay(hour: 23, minute: 30);
+      }
+      return TimeOfDay(hour: hour, minute: minute);
+    },
+  );
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -47,15 +54,16 @@ class VenuePageModel extends ChangeNotifier {
     required this.ctx,
     required this.venueId,
     this.imageLinks,
-    this.userEmail,
+    this.userId,
     this.userLocation,
   });
 
   Future<void> init() async {
     await _loadData();
     await _loadImages();
-    selectedTime = _roundToNearestHalfHour(
-        TimeOfDay(hour: selectedTime!.hour + 1, minute: selectedTime!.minute));
+    final currentTime = _roundToNearestHalfHour(
+        TimeOfDay(hour: selectedTime!.hour, minute: selectedTime!.minute));
+    selectedTime = addOneHour(currentTime);
     notifyListeners();
   }
 
@@ -101,9 +109,13 @@ class VenuePageModel extends ChangeNotifier {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
+  TimeOfDay addOneHour(TimeOfDay time) {
+    return TimeOfDay(hour: (time.hour + 1) % 24, minute: time.minute);
+  }
+
   bool _validateInput() {
     final validationErrors = [
-      if (userEmail.isNullOrEmpty) 'Please log in to reserve a spot',
+      if (userId == null) 'Please log in to reserve a spot',
       if (selectedDate == null) 'Please select a date',
       if (selectedTime == null) 'Please select a time',
       if (selectedNumberOfPeople == null) 'Please select the number of people',
@@ -149,7 +161,7 @@ class VenuePageModel extends ChangeNotifier {
     );
 
     BasicResponse response = await reservationApi.createReservation(
-      userEmail!,
+      userId!,
       venueId,
       selectedNumberOfPeople!,
       reservationDateTime,
@@ -166,7 +178,7 @@ class VenuePageModel extends ChangeNotifier {
       'venueName': venue.name,
       'numberOfGuests': selectedNumberOfPeople,
       'reservationDateTime': reservationDateTime,
-      'userEmail': userEmail,
+      'userId': userId,
       'userLocation': userLocation,
     });
 

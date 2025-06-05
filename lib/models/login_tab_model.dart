@@ -1,10 +1,10 @@
+import 'package:TableReserver/api/account_api.dart';
+import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/api/data/user.dart';
+import 'package:TableReserver/pages/auth/login_tab.dart';
+import 'package:TableReserver/utils/signup_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-
-import '../../api/account_api.dart';
-import '../../api/data/basic_response.dart';
-import '../pages/auth/login_tab.dart';
-import '../utils/signup_methods.dart';
 
 class LogInTabModel extends FlutterFlowModel<LogInTab> {
   final AccountApi accountApi = AccountApi();
@@ -18,7 +18,7 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
   @override
   void initState(BuildContext context) {}
 
-  Future<BasicResponse> logIn(SignUpMethodEnum? signUpMethod) async {
+  Future<BasicResponse<User>> logIn(SignUpMethodEnum? signUpMethod) async {
     switch (signUpMethod) {
       case SignUpMethodEnum.apple:
         return _appleLogIn();
@@ -37,15 +37,18 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
     }
   }
 
-  BasicResponse _appleLogIn() {
+  BasicResponse<User> _appleLogIn() {
     return BasicResponse(success: false, message: 'Currently unavailable');
   }
 
-  BasicResponse _googleLogIn() {
+  BasicResponse<User> _googleLogIn() {
     return BasicResponse(success: false, message: 'Currently unavailable');
   }
 
-  Future<BasicResponse> _customLogIn(String userEmail, String password) async {
+  Future<BasicResponse<User>> _customLogIn(
+    String userEmail,
+    String password,
+  ) async {
     if (userEmail.isEmpty || password.isEmpty) {
       return BasicResponse(
           success: false, message: 'Please fill in all fields');

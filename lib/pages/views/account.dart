@@ -1,28 +1,27 @@
+import 'package:TableReserver/api/data/user.dart';
+import 'package:TableReserver/components/navbar.dart';
+import 'package:TableReserver/models/account_model.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/utils/routing_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-import '../../api/data/user.dart';
-import '../../components/navbar.dart';
-import '../../themes/theme.dart';
-import '../../utils/constants.dart';
-import '../../utils/routing_utils.dart';
-import '../../models/account_model.dart';
-
 class Account extends StatelessWidget {
-  final String? userEmail;
+  final int? userId;
   final Position? userLocation;
 
-  const Account({super.key, this.userEmail, this.userLocation});
+  const Account({super.key, this.userId, this.userLocation});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => AccountModel(
         context: context,
-        userEmail: userEmail,
+        userId: userId,
         userLocation: userLocation,
       )..init(),
       child: Consumer<AccountModel>(
@@ -47,12 +46,12 @@ class Account extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (model.userEmail != null) const SizedBox(height: 94),
-                      _buildAccountDetails(context, model.user),
+                      if (model.userId != null) const SizedBox(height: 94),
+                      _buildAccountDetails(context, model.currentUser),
                       _buildHistorySettings(context, model),
                       _buildAccountSettings(context, model),
                       _buildApplicationSettings(context, model),
-                      _buildOpenAuthentication(context, model.user?.email),
+                      _buildOpenAuthentication(context, model.currentUser?.email),
                     ],
                   ),
                 ),
@@ -62,7 +61,7 @@ class Account extends StatelessWidget {
                     context,
                     model.pageIndex,
                     index,
-                    userEmail,
+                    userId,
                     userLocation,
                   ),
                 ),

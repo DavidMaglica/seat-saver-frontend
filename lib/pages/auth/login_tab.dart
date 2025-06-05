@@ -1,18 +1,18 @@
+import 'package:TableReserver/api/account_api.dart';
+import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/api/data/user.dart';
+import 'package:TableReserver/components/toaster.dart';
+import 'package:TableReserver/models/authentication_model.dart';
+import 'package:TableReserver/models/login_tab_model.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/utils/signup_methods.dart';
+import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-
-import '../../api/account_api.dart';
-import '../../api/data/basic_response.dart';
-import '../../api/data/user_response.dart';
-import '../../components/toaster.dart';
-import '../../models/authentication_model.dart';
-import '../../models/login_tab_model.dart';
-import '../../themes/theme.dart';
-import '../../utils/constants.dart';
-import '../../utils/signup_methods.dart';
 
 class LogInTab extends StatefulWidget {
   final AuthenticationModel model;
@@ -40,21 +40,25 @@ class _LogInTabState extends State<LogInTab> {
   }
 
   void _performLogIn(SignUpMethodEnum signUpMethod) async {
-    BasicResponse response = await _model.logIn(signUpMethod);
-    if (response.success) {
-      String email = widget.model.emailAddressLogInTextController.text;
-      UserResponse? userResponse = await accountApi.getUser(email);
+    BasicResponse<User> response = await _model.logIn(signUpMethod);
+    if (response.success && response.data != null) {
+      User user = response.data!;
 
-      _goToHomepage(email, userResponse!.user!.lastKnownLocation!);
+      Position? lastKnownLocation = getPositionFromLatAndLong(
+        user.lastKnownLatitude,
+        user.lastKnownLongitude,
+      );
+
+      _goToHomepage(user.id, lastKnownLocation);
     } else {
       if (!mounted) return;
       Toaster.displayError(context, response.message);
     }
   }
 
-  void _goToHomepage(String userEmail, Position userLocation) {
+  void _goToHomepage(int userId, Position? userLocation) {
     Navigator.pushNamed(context, Routes.homepage,
-        arguments: {'userEmail': userEmail, 'userLocation': userLocation});
+        arguments: {'userId': userId, 'userLocation': userLocation});
   }
 
   void _forgotPassword() {

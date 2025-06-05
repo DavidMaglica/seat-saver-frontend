@@ -4,7 +4,7 @@ class UserLocation {
 
   UserLocation({required this.latitude, required this.longitude});
 
-  factory UserLocation.fromMap(Map<String, dynamic> json) {
+  factory UserLocation.fromJson(Map<String, dynamic> json) {
     return UserLocation(
       latitude: json['latitude'],
       longitude: json['longitude'],

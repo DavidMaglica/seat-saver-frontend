@@ -1,6 +1,5 @@
- import 'package:flutter/material.dart';
-
-import '../utils/constants.dart';
+import 'package:TableReserver/utils/constants.dart';
+import 'package:flutter/material.dart';
 
 class LandingModel extends ChangeNotifier {
   final BuildContext context;
@@ -22,7 +21,7 @@ class LandingModel extends ChangeNotifier {
     Navigator.pushNamed(
       context,
       Routes.homepage,
-      arguments: {'userEmail': ''},
+      arguments: {'userId': ''},
     );
   }
 }

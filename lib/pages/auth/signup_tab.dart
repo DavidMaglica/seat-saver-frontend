@@ -1,16 +1,16 @@
+import 'package:TableReserver/api/account_api.dart';
+import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/api/data/user.dart';
+import 'package:TableReserver/components/toaster.dart';
+import 'package:TableReserver/models/authentication_model.dart';
+import 'package:TableReserver/models/signup_tab_model.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/utils/signup_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../api/account_api.dart';
-import '../../api/data/basic_response.dart';
-import '../../components/toaster.dart';
-import '../../models/authentication_model.dart';
-import '../../models/signup_tab_model.dart';
-import '../../themes/theme.dart';
-import '../../utils/constants.dart';
-import '../../utils/signup_methods.dart';
 
 class SignUpTab extends StatefulWidget {
   final AuthenticationModel model;
@@ -38,18 +38,18 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
   }
 
   void _performSignUp(SignUpMethodEnum signUpMethod) async {
-    BasicResponse response = await _model.signUp(signUpMethod);
-    if (response.success) {
-      _goToHomepage(widget.model.emailAddressSignUpTextController.text);
+    BasicResponse<User> response = await _model.signUp(signUpMethod);
+    if (response.success && response.data != null) {
+      _goToHomepage(response.data!.id);
     } else {
       if (!mounted) return;
       Toaster.displayError(context, response.message);
     }
   }
 
-  void _goToHomepage(String userEmail) {
+  void _goToHomepage(int userId) {
     Navigator.pushNamed(context, Routes.homepage,
-        arguments: {'userEmail': userEmail, 'userLocation': null});
+        arguments: {'userId': userId, 'userLocation': null});
   }
 
   @override

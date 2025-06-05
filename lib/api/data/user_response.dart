@@ -1,4 +1,4 @@
-import 'user.dart';
+import 'package:TableReserver/api/data/user.dart';
 
 class UserResponse {
   bool success;
@@ -15,7 +15,7 @@ class UserResponse {
     return UserResponse(
       success: json['success'],
       message: json['message'],
-      user: User.fromMap(json['user']),
+      user: User.fromJson(json['user']),
     );
   }
 }

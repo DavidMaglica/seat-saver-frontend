@@ -1,6 +1,5 @@
+import 'package:TableReserver/themes/theme.dart';
 import 'package:flutter/material.dart';
-
-import '../themes/theme.dart';
 
 class Toaster {
   static void display(BuildContext ctx, String text, Color colour) {

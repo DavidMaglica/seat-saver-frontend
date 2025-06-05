@@ -1,3 +1,4 @@
+import 'package:TableReserver/models/successful_reservation_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,13 +6,12 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/successful_reservation_model.dart';
 
 class SuccessfulReservation extends StatelessWidget {
   final String venueName;
   final int numberOfGuests;
   final DateTime reservationDateTime;
-  final String userEmail;
+  final int userId;
   final Position? userLocation;
 
   const SuccessfulReservation({
@@ -19,7 +19,7 @@ class SuccessfulReservation extends StatelessWidget {
     required this.venueName,
     required this.numberOfGuests,
     required this.reservationDateTime,
-    required this.userEmail,
+    required this.userId,
     this.userLocation,
   }) : super(key: key);
 
@@ -31,7 +31,7 @@ class SuccessfulReservation extends StatelessWidget {
         venueName: venueName,
         numberOfGuests: numberOfGuests,
         reservationDateTime: reservationDateTime,
-        userEmail: userEmail,
+        userId: userId,
         userLocation: userLocation,
       )..startCountdown(),
       child: Consumer<SuccessfulReservationModel>(

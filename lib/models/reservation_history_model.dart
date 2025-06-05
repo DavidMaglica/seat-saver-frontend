@@ -1,15 +1,13 @@
+import 'package:TableReserver/api/data/reservation_details.dart';
+import 'package:TableReserver/api/reservation_api.dart';
+import 'package:TableReserver/api/venue_api.dart';
+import 'package:TableReserver/components/toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../api/data/reservation_details.dart';
-import '../api/data/user.dart';
-import '../api/reservation_api.dart';
-import '../api/venue_api.dart';
-import '../components/toaster.dart';
-
 class ReservationHistoryModel extends ChangeNotifier {
   final BuildContext context;
-  final User user;
+  final int userId;
   final Position? userLocation;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -21,26 +19,19 @@ class ReservationHistoryModel extends ChangeNotifier {
 
   ReservationHistoryModel({
     required this.context,
-    required this.user,
+    required this.userId,
     this.userLocation,
   });
 
   void init() {
-    loadReservationsFromApi();
+    _loadReservationsFromApi();
   }
 
-  Future<void> loadReservationsFromApi() async {
-    final response = await reservationApi.getReservations(user.email);
+  Future<void> _loadReservationsFromApi() async {
+   List<ReservationDetails> response = await reservationApi.getReservations(userId);
 
     if (response.isNotEmpty) {
-      reservations = response.map((reservation) {
-        return ReservationDetails(
-          id: reservation.id,
-          venueId: reservation.venueId,
-          numberOfGuests: reservation.numberOfGuests,
-          reservationDateTime: DateTime.parse(reservation.dateTime),
-        );
-      }).toList();
+      reservations = response;
 
       for (var reservation in reservations!) {
         _fetchVenueName(reservation.venueId);
@@ -54,7 +45,7 @@ class ReservationHistoryModel extends ChangeNotifier {
 
   Future<void> deleteReservation(int reservationId) async {
     final response =
-        await reservationApi.deleteReservation(user.email, reservationId);
+        await reservationApi.deleteReservation(userId, reservationId);
 
     if (response.success) {
       reservations

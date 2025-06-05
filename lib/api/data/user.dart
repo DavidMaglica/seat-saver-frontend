@@ -1,6 +1,4 @@
-import 'package:geolocator/geolocator.dart';
-
-import 'notification_settings.dart';
+import 'package:TableReserver/api/data/notification_settings.dart';
 
 class User {
   final int id;
@@ -8,7 +6,8 @@ class User {
   final String email;
   final String password;
   final NotificationOptions notificationOptions;
-  final Position? lastKnownLocation;
+  final double? lastKnownLatitude;
+  final double? lastKnownLongitude;
 
   User({
     required this.id,
@@ -16,20 +15,68 @@ class User {
     required this.email,
     required this.password,
     required this.notificationOptions,
-    this.lastKnownLocation,
+    this.lastKnownLatitude,
+    this.lastKnownLongitude,
   });
 
-  factory User.fromMap(Map<String, dynamic> json) {
+  factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
       username: json['username'],
       email: json['email'],
       password: json['password'],
       notificationOptions:
-          NotificationOptions.fromMap(json['notificationOptions']),
-      lastKnownLocation: json['lastKnownLocation'] != null
-          ? Position.fromMap(json['lastKnownLocation'])
-          : null,
+          NotificationOptions.fromJson(json['notificationOptions']),
+      lastKnownLatitude: json['lastKnownLatitude'],
+      lastKnownLongitude: json['lastKnownLongitude'],
+    );
+  }
+}
+
+class APIUser {
+  final int id;
+  final String username;
+  final String email;
+  final String password;
+  final int roleId;
+  final double? lastKnownLatitude;
+  final double? lastKnownLongitude;
+
+  APIUser({
+    required this.id,
+    required this.username,
+    required this.email,
+    required this.password,
+    required this.roleId,
+    this.lastKnownLatitude,
+    this.lastKnownLongitude,
+  });
+
+  factory APIUser.fromJson(Map<String, dynamic> json) {
+    return APIUser(
+      id: json['id'],
+      username: json['username'],
+      email: json['email'],
+      password: json['password'],
+      roleId: json['roleId'],
+      lastKnownLatitude: json['lastKnownLatitude'],
+      lastKnownLongitude: json['lastKnownLongitude'],
+    );
+  }
+
+  User toUser() {
+    return User(
+      id: id,
+      username: username,
+      email: email,
+      password: password,
+      notificationOptions: NotificationOptions(
+        pushNotificationsTurnedOn: false,
+        emailNotificationsTurnedOn: false,
+        locationServicesTurnedOn: false,
+      ),
+      lastKnownLatitude: lastKnownLatitude,
+      lastKnownLongitude: lastKnownLongitude,
     );
   }
 }

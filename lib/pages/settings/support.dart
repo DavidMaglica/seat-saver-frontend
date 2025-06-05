@@ -1,24 +1,22 @@
+import 'package:TableReserver/components/action_button.dart';
+import 'package:TableReserver/components/custom_appbar.dart';
+import 'package:TableReserver/components/modal_widgets.dart';
+import 'package:TableReserver/components/support_banner.dart';
+import 'package:TableReserver/models/support_model.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../api/data/user.dart';
-import '../../components/action_button.dart';
-import '../../components/support_banner.dart';
-import '../../components/custom_appbar.dart';
-import '../../themes/theme.dart';
-import '../../utils/constants.dart';
-import '../../models/support_model.dart';
-import '../../components/modal_widgets.dart';
-
 class Support extends StatefulWidget {
-  final User user;
+  final int userId;
   final Position? userLocation;
 
   const Support({
     Key? key,
-    required this.user,
+    required this.userId,
     this.userLocation,
   }) : super(key: key);
 
@@ -34,7 +32,7 @@ class _SupportState extends State<Support> {
     super.initState();
     model = SupportModel(
       context: context,
-      user: widget.user,
+      userId: widget.userId,
       position: widget.userLocation,
     );
   }
@@ -59,7 +57,7 @@ class _SupportState extends State<Support> {
           onBack: () => Navigator.of(context).pushNamed(
             Routes.account,
             arguments: {
-              'userEmail': widget.user.email,
+              'userId': widget.userId,
               'userLocation': widget.userLocation
             },
           ),

@@ -1,32 +1,31 @@
+import 'package:TableReserver/api/account_api.dart';
+import 'package:TableReserver/api/data/user.dart';
+import 'package:TableReserver/components/toaster.dart';
+import 'package:TableReserver/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../api/account_api.dart';
-import '../api/data/user.dart';
-import '../components/toaster.dart';
-import '../utils/constants.dart';
-
 class AccountModel extends ChangeNotifier {
   final BuildContext context;
-  final String? userEmail;
+  final int? userId;
   final Position? userLocation;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final unfocusNode = FocusNode();
   final int pageIndex = 3;
 
-  User? user;
+  User? currentUser;
   final AccountApi accountApi = AccountApi();
 
   AccountModel({
     required this.context,
-    this.userEmail,
+    this.userId,
     this.userLocation,
   });
 
   Future<void> init() async {
-    if (userEmail != null && userEmail!.isNotEmpty) {
-      await _getUserByEmail(userEmail!);
+    if (userId != null) {
+      await _getUser(userId!);
       notifyListeners();
     }
   }
@@ -37,10 +36,10 @@ class AccountModel extends ChangeNotifier {
     super.dispose();
   }
 
-  Future<void> _getUserByEmail(String email) async {
-    final response = await accountApi.getUser(email);
+  Future<void> _getUser(int userId) async {
+    final response = await accountApi.getUser(userId);
     if (response != null && response.success) {
-      user = response.user;
+      currentUser = response.user;
       notifyListeners();
     }
   }
@@ -48,15 +47,15 @@ class AccountModel extends ChangeNotifier {
   void openSettingsItem(String route, String? action) {
     if (route == Routes.termsOfService) {
       Navigator.pushNamed(context, route,
-          arguments: {'userEmail': user?.email, 'userLocation': userLocation});
+          arguments: {'userId': currentUser?.id, 'userLocation': userLocation});
       return;
     }
-    if (user == null) {
+    if (currentUser == null) {
       Toaster.displayInfo(context, 'Please log in to $action.');
       return;
     }
     Navigator.pushNamed(context, route, arguments: {
-      'user': user,
+      'userId': userId,
       'userLocation': userLocation,
     });
   }

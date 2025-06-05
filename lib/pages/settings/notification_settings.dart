@@ -1,20 +1,18 @@
+import 'package:TableReserver/components/action_button.dart';
+import 'package:TableReserver/components/custom_appbar.dart';
+import 'package:TableReserver/models/notification_settings_model.dart';
+import 'package:TableReserver/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-import '../../api/data/user.dart';
-import '../../components/action_button.dart';
-import '../../components/custom_appbar.dart';
-import '../../models/notification_settings_model.dart';
-import '../../utils/constants.dart';
-
 class NotificationSettings extends StatelessWidget {
-  final User user;
+  final int userId;
   final Position? userLocation;
 
   const NotificationSettings({
     Key? key,
-    required this.user,
+    required this.userId,
     this.userLocation,
   }) : super(key: key);
 
@@ -23,7 +21,7 @@ class NotificationSettings extends StatelessWidget {
     return ChangeNotifierProvider<NotificationSettingsModel>(
       create: (_) => NotificationSettingsModel(
         context: context,
-        user: user,
+        userId: userId,
         userLocation: userLocation,
       )..loadNotificationSettings(),
       builder: (context, _) {
@@ -37,7 +35,7 @@ class NotificationSettings extends StatelessWidget {
             onBack: () => Navigator.of(context).pushNamed(
               Routes.account,
               arguments: {
-                'userEmail': user.email,
+                'userId': userId,
                 'userLocation': userLocation,
               },
             ),

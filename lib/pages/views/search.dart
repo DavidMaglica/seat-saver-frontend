@@ -1,24 +1,23 @@
+import 'package:TableReserver/api/data/venue.dart';
+import 'package:TableReserver/components/modal_widgets.dart';
+import 'package:TableReserver/components/navbar.dart';
+import 'package:TableReserver/models/search_model.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/extensions.dart';
+import 'package:TableReserver/utils/routing_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-import '../../api/data/venue.dart';
-import '../../components/modal_widgets.dart';
-import '../../components/navbar.dart';
-import '../../models/search_model.dart';
-import '../../themes/theme.dart';
-import '../../utils/extensions.dart';
-import '../../utils/routing_utils.dart';
-
 class Search extends StatelessWidget {
-  final String? userEmail;
+  final int? userId;
   final Position? userLocation;
 
   const Search({
     Key? key,
-    this.userEmail,
+    this.userId,
     this.userLocation,
   }) : super(key: key);
 
@@ -42,8 +41,6 @@ class Search extends StatelessWidget {
     return ChangeNotifierProvider(
         create: (_) => SearchModel(
               context: context,
-              userEmail: userEmail,
-              userLocation: userLocation,
             )..init(),
         child: Consumer<SearchModel>(
           builder: (context, model, _) {
@@ -129,8 +126,13 @@ class Search extends StatelessWidget {
                   ),
                   bottomNavigationBar: NavBar(
                     currentIndex: model.pageIndex,
-                    onTap: (index, context) => onNavbarItemTapped(context,
-                        model.pageIndex, index, userEmail, userLocation),
+                    onTap: (index, context) => onNavbarItemTapped(
+                      context,
+                      model.pageIndex,
+                      index,
+                      userId,
+                      userLocation,
+                    ),
                   ),
                 ),
               ),
@@ -191,7 +193,7 @@ class Search extends StatelessWidget {
       padding:
           const EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 6),
       child: ListTile(
-        onTap: model.goToVenuePage(venue),
+        onTap: model.goToVenuePage(venue, userId, userLocation),
         title: Text(
           venue.name,
           style: Theme.of(ctx).textTheme.titleMedium,

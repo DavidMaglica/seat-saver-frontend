@@ -1,27 +1,26 @@
+import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/api/data/notification_settings.dart';
 import 'package:TableReserver/components/toaster.dart';
+import 'package:TableReserver/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../api/account_api.dart';
-import '../api/data/notification_settings.dart';
-import '../utils/constants.dart';
-
 class LocationPermissionPopUpModel extends ChangeNotifier {
   final BuildContext context;
-  final String userEmail;
+  final int userId;
   final AccountApi _accountApi = AccountApi();
 
   NotificationOptions? notificationOptions;
 
-  LocationPermissionPopUpModel(this.context, this.userEmail) {
+  LocationPermissionPopUpModel(this.context, this.userId) {
     init();
   }
 
   void init() async {
-    notificationOptions = await _accountApi.getNotificationOptions(userEmail);
+    notificationOptions = await _accountApi.getNotificationOptions(userId);
     notifyListeners();
   }
 
@@ -42,7 +41,7 @@ class LocationPermissionPopUpModel extends ChangeNotifier {
 
     BasicResponse basicResponse =
         await _accountApi.updateUserNotificationOptions(
-            userEmail,
+            userId,
             notificationOptions!.pushNotificationsTurnedOn,
             notificationOptions!.emailNotificationsTurnedOn,
             true);
@@ -83,11 +82,11 @@ class LocationPermissionPopUpModel extends ChangeNotifier {
           duration: const Duration(seconds: 4));
     }
 
-    _accountApi.updateUserLocation(userEmail, userLocation);
+    _accountApi.updateUserLocation(userId, userLocation);
 
     if (!context.mounted) return;
     Navigator.popAndPushNamed(context, Routes.homepage, arguments: {
-      'userEmail': userEmail,
+      'userId': userId,
       'userLocation': userLocation,
     });
   }

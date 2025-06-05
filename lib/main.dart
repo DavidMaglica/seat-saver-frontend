@@ -1,20 +1,20 @@
+import 'package:TableReserver/pages/auth/authentication.dart';
+import 'package:TableReserver/pages/settings/edit_profile.dart';
+import 'package:TableReserver/pages/settings/notification_settings.dart';
+import 'package:TableReserver/pages/settings/reservation_history.dart';
+import 'package:TableReserver/pages/settings/support.dart';
+import 'package:TableReserver/pages/settings/terms_of_service.dart';
+import 'package:TableReserver/pages/views/account.dart';
+import 'package:TableReserver/pages/views/homepage.dart';
+import 'package:TableReserver/pages/views/landing.dart';
+import 'package:TableReserver/pages/views/nearby.dart';
+import 'package:TableReserver/pages/views/search.dart';
+import 'package:TableReserver/pages/views/successful_reservation.dart';
+import 'package:TableReserver/pages/views/venue_page.dart';
+import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/constants.dart';
 import 'package:flutter/material.dart';
-
-import 'pages/auth/authentication.dart';
-import 'pages/settings/edit_profile.dart';
-import 'pages/settings/notification_settings.dart';
-import 'pages/settings/reservation_history.dart';
-import 'pages/settings/support.dart';
-import 'pages/settings/terms_of_service.dart';
-import 'pages/views/account.dart';
-import 'pages/views/homepage.dart';
-import 'pages/views/landing.dart';
-import 'pages/views/nearby.dart';
-import 'pages/views/search.dart';
-import 'pages/views/successful_reservation.dart';
-import 'pages/views/venue_page.dart';
-import 'themes/theme.dart';
-import 'utils/constants.dart';
+import 'package:geolocator/geolocator.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +23,21 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  T getRequiredArg<T>(BuildContext context, String key) {
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final value = args?[key];
+    if (value is T) return value;
+    throw Exception("Missing or invalid argument '$key'");
+  }
+
+  T? getOptionalArg<T>(BuildContext context, String key) {
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final value = args?[key];
+    return value is T ? value : null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,79 +51,54 @@ class MyApp extends StatelessWidget {
       routes: {
         Routes.landing: (context) => const Landing(),
         Routes.homepage: (context) => Homepage(
-              userEmail: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userEmail'],
-              userLocation: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userLocation'],
+              userId: getOptionalArg<int>(context, 'userId'),
+              userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),
         Routes.search: (context) => Search(
-              userEmail: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userEmail'],
-              userLocation: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userLocation'],
+              userId: getOptionalArg<int>(context, 'userId'),
+              userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),
         Routes.nearby: (context) => Nearby(
-              userEmail: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userEmail'],
-              userLocation: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userLocation'],
+              userId: getOptionalArg<int>(context, 'userId'),
+              userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),
         Routes.account: (context) => Account(
-              userEmail: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userEmail'],
-              userLocation: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userLocation'],
+              userId: getOptionalArg<int>(context, 'userId'),
+              userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),
         Routes.reservationHistory: (context) => ReservationHistory(
-              user: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['user'],
-              userLocation: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userLocation'],
+              userId: getRequiredArg<int>(context, 'userId'),
+              userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),
         Routes.notificationSettings: (context) => NotificationSettings(
-              user: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['user'],
-              userLocation: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userLocation'],
+              userId: getRequiredArg<int>(context, 'userId'),
+              userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),
         Routes.support: (context) => Support(
-              user: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['user'],
-              userLocation: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userLocation'],
+              userId: getRequiredArg<int>(context, 'userId'),
+              userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),
         Routes.editProfile: (context) => EditProfile(
-              user: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['user'],
-              userLocation: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userLocation'],
+              userId: getRequiredArg<int>(context, 'userId'),
+              userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),
         Routes.termsOfService: (context) => TermsOfService(
-              userEmail: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userEmail'],
-              userLocation: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userLocation'],
+              userId: getOptionalArg<int>(context, 'userId'),
+              userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),
         Routes.authentication: (context) => const Authentication(),
         Routes.venue: (context) => VenuePage(
-              venueId: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['venueId'],
-              userEmail: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userEmail'],
-              userLocation: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userLocation'],
+              venueId: getRequiredArg<int>(context, 'venueId'),
+              userId: getOptionalArg<int>(context, 'userId'),
+              userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),
         Routes.successfulReservation: (context) => SuccessfulReservation(
-              venueName: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['venueName'],
-              numberOfGuests: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['numberOfGuests'],
-              reservationDateTime: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['reservationDateTime'],
-              userEmail: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userEmail'],
-              userLocation: (ModalRoute.of(context)!.settings.arguments
-                  as Map<String, dynamic>)['userLocation'],
+              venueName: getRequiredArg<String>(context, 'venueName'),
+              numberOfGuests: getRequiredArg<int>(context, 'numberOfGuests'),
+              reservationDateTime:
+                  getRequiredArg<DateTime>(context, 'reservationDateTime'),
+              userId: getRequiredArg<int>(context, 'userId'),
+              userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),
       },
     );

@@ -1,16 +1,15 @@
+import 'package:TableReserver/components/custom_appbar.dart';
+import 'package:TableReserver/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../components/custom_appbar.dart';
-import '../../utils/constants.dart';
-
 class TermsOfService extends StatefulWidget {
-  final String? userEmail;
+  final int? userId;
   final Position? userLocation;
 
   const TermsOfService({
     Key? key,
-    this.userEmail,
+    this.userId,
     this.userLocation,
   }) : super(key: key);
 
@@ -40,7 +39,7 @@ class _TermsOfServiceState extends State<TermsOfService> {
           title: 'Terms of Service',
           onBack: () => Navigator.of(context).pushNamed(Routes.account,
               arguments: {
-                'userEmail': widget.userEmail,
+                'userId': widget.userId,
                 'userLocation': widget.userLocation
               }),
         ),
@@ -58,26 +57,40 @@ class _TermsOfServiceState extends State<TermsOfService> {
                     _buildBodyText(
                         'Please read these terms of service carefully.'),
                     _buildDivider(),
-                    _buildSection('Acceptance of Terms',
-                        'By accessing or using the app, you agree to be bound by these terms of service. If you do not agree to these terms, you may not use the app.'),
+                    _buildSection(
+                      'Acceptance of Terms',
+                      'By accessing or using the app, you agree to be bound by these terms of service. If you do not agree to these terms, you may not use the app.',
+                    ),
                     _buildDivider(),
-                    _buildSection('Use of the App',
-                        'You may use the app for your personal, non-commercial use only. You may not use the app for any illegal or unauthorized purpose.'),
+                    _buildSection(
+                      'Use of the App',
+                      'You may use the app for your personal, non-commercial use only. You may not use the app for any illegal or unauthorized purpose.',
+                    ),
                     _buildDivider(),
-                    _buildSection('Intellectual Property',
-                        'The app and its original content, features, and functionality are owned by us and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.'),
+                    _buildSection(
+                      'Intellectual Property',
+                      'The app and its original content, features, and functionality are owned by us and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.',
+                    ),
                     _buildDivider(),
-                    _buildSection('User Content',
-                        'You retain ownership of any content you submit to the app. By submitting content, you grant us a worldwide, non-exclusive, royalty-free license to use, reproduce, modify, adapt, publish, translate, distribute, and display such content in any media.'),
+                    _buildSection(
+                      'User Content',
+                      'You retain ownership of any content you submit to the app. By submitting content, you grant us a worldwide, non-exclusive, royalty-free license to use, reproduce, modify, adapt, publish, translate, distribute, and display such content in any media.',
+                    ),
                     _buildDivider(),
-                    _buildSection('Limitation of Liability',
-                        'We shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses.'),
+                    _buildSection(
+                      'Limitation of Liability',
+                      'We shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses.',
+                    ),
                     _buildDivider(),
-                    _buildSection('Governing Law',
-                        'These terms of service shall be governed by and construed in accordance with the laws of the jurisdiction in which we operate.'),
+                    _buildSection(
+                      'Governing Law',
+                      'These terms of service shall be governed by and construed in accordance with the laws of the jurisdiction in which we operate.',
+                    ),
                     _buildDivider(),
-                    _buildSection('Changes to Terms of Service',
-                        'We reserve the right to modify or replace these terms of service at any time. Your continued use of the app after any such changes constitutes your acceptance of the new terms.'),
+                    _buildSection(
+                      'Changes to Terms of Service',
+                      'We reserve the right to modify or replace these terms of service at any time. Your continued use of the app after any such changes constitutes your acceptance of the new terms.',
+                    ),
                   ],
                 ),
               ),
