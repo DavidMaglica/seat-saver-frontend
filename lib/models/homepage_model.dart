@@ -166,26 +166,22 @@ class HomepageModel extends ChangeNotifier {
   }
 
   Future<void> getNearbyVenues() async {
-    List<Venue> venues = await venueApi.getNearbyVenues();
-    nearbyVenues = venues;
+    nearbyVenues = await venueApi.getNearbyVenues();
     notifyListeners();
   }
 
   Future<void> getNewVenues() async {
-    List<Venue> venues = await venueApi.getNewVenues();
-    newVenues = venues;
+    newVenues = await venueApi.getNewVenues();
     notifyListeners();
   }
 
   Future<void> getTrendingVenues() async {
-    List<Venue> venues = await venueApi.getTrendingVenues();
-    trendingVenues = venues;
+    trendingVenues = await venueApi.getTrendingVenues();
     notifyListeners();
   }
 
   Future<void> getSuggestedVenues() async {
-    List<Venue> venues = await venueApi.getSuggestedVenues();
-    suggestedVenues = venues;
+    suggestedVenues = await venueApi.getSuggestedVenues();
     notifyListeners();
   }
 
