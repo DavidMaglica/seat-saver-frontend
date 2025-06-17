@@ -6,7 +6,7 @@ import 'package:TableReserver/models/authentication_model.dart';
 import 'package:TableReserver/models/login_tab_model.dart';
 import 'package:TableReserver/themes/theme.dart';
 import 'package:TableReserver/utils/constants.dart';
-import 'package:TableReserver/utils/signup_methods.dart';
+import 'package:TableReserver/utils/sign_up_methods.dart';
 import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

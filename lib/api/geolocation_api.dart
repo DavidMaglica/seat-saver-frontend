@@ -3,7 +3,7 @@ import 'package:TableReserver/api/data/user_location.dart';
 import 'package:TableReserver/api/dio_setup.dart';
 import 'package:logger/logger.dart';
 
-final dio = setupDio('/geolocation');
+final dio = setupDio(ApiRoutes.geolocation);
 final logger = Logger();
 
 class GeolocationApi {

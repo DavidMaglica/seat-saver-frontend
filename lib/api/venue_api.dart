@@ -131,11 +131,89 @@ class VenueApi {
     }
   }
 
-  Future<List<Venue>> getVenues() async {
+  Future<List<Venue>> getAllVenues() async {
     Response response = await dio.get(ApiRoutes.getAllVenues);
     List<Venue> venues =
         (response.data as List).map((venue) => Venue.fromJson(venue)).toList();
     return venues;
+  }
+
+  Future<List<Venue>> getNearbyVenues() async {
+    try {
+      Response response = await dio.get(
+        ApiRoutes.getVenuesByCategory,
+        queryParameters: {
+          'category': 'nearby',
+        },
+      );
+      List<Venue> nearbyVenues = (response.data as List)
+          .map((venue) => Venue.fromJson(venue))
+          .toList();
+
+      nearbyVenues.sort((a, b) => a.location.compareTo(b.location));
+      return nearbyVenues;
+    } catch (e) {
+      logger.e('Error fetching nearby venues: $e');
+      return [];
+    }
+  }
+
+  Future<List<Venue>> getTrendingVenues() async {
+    try {
+      Response response = await dio.get(
+        ApiRoutes.getVenuesByCategory,
+        queryParameters: {
+          'category': 'trending',
+        },
+      );
+      List<Venue> trendingVenues = (response.data as List)
+          .map((venue) => Venue.fromJson(venue))
+          .toList();
+
+      trendingVenues.sort((a, b) => b.rating.compareTo(a.rating));
+      return trendingVenues;
+    } catch (e) {
+      logger.e('Error fetching trending venues: $e');
+      return [];
+    }
+  }
+
+  Future<List<Venue>> getNewVenues() async {
+    try {
+      Response response = await dio.get(
+        ApiRoutes.getVenuesByCategory,
+        queryParameters: {
+          'category': 'new',
+        },
+      );
+      List<Venue> newVenues = (response.data as List)
+          .map((venue) => Venue.fromJson(venue))
+          .toList();
+
+      return newVenues;
+    } catch (e) {
+      logger.e('Error fetching new venues: $e');
+      return [];
+    }
+  }
+
+  Future<List<Venue>> getSuggestedVenues() async {
+    try {
+      Response response = await dio.get(
+        ApiRoutes.getVenuesByCategory,
+        queryParameters: {
+          'category': 'suggested',
+        },
+      );
+      List<Venue> suggestedVenues = (response.data as List)
+          .map((venue) => Venue.fromJson(venue))
+          .toList();
+
+      return suggestedVenues;
+    } catch (e) {
+      logger.e('Error fetching suggested venues: $e');
+      return [];
+    }
   }
 
   Future<String?> getVenueType(int typeId) async {
@@ -178,67 +256,6 @@ class VenueApi {
     } catch (e) {
       logger.e('Error fetching venue rating: $e');
       return null;
-    }
-  }
-
-  Future<List<Venue>> getSortedVenues() async {
-    try {
-      List<Venue> allVenues = await getVenues();
-      allVenues.sort((a, b) => a.name.compareTo(b.name));
-      return allVenues;
-    } catch (e) {
-      logger.e('Error sorting venues: $e');
-      return [];
-    }
-  }
-
-  Future<List<Venue>> getNearbyVenues() async {
-    try {
-      List<Venue> allVenues = await getVenues();
-      List<Venue> nearbyVenues = allVenues
-          .where((venue) =>
-              venue.location == 'Poreč' || venue.location == 'Rovinj')
-          .toList();
-      nearbyVenues.sort((a, b) => a.location.compareTo(b.location));
-      return nearbyVenues;
-    } catch (e) {
-      logger.e('Error fetching nearby venues: $e');
-      return [];
-    }
-  }
-
-  Future<List<Venue>> getTrendingVenues() async {
-    try {
-      List<Venue> allVenues = await getVenues();
-      List<Venue> trendingVenues =
-          allVenues.where((venue) => venue.rating >= 4).toList();
-      trendingVenues.sort((a, b) => b.rating.compareTo(a.rating));
-      return trendingVenues;
-    } catch (e) {
-      logger.e('Error fetching trending venues: $e');
-      return [];
-    }
-  }
-
-  Future<List<Venue>> getNewVenues() async {
-    try {
-      List<Venue> allVenues = await getVenues();
-      allVenues.sort((a, b) => b.id.compareTo(a.id));
-      List<Venue> newVenues = allVenues.take(15).toList();
-      return newVenues;
-    } catch (e) {
-      logger.e('Error fetching new venues: $e');
-      return [];
-    }
-  }
-
-  Future<List<Venue>> getSuggestedVenues() async {
-    try {
-      List<Venue> allVenues = await getVenues();
-      return allVenues.take(25).toList();
-    } catch (e) {
-      logger.e('Error fetching suggested venues: $e');
-      return [];
     }
   }
 

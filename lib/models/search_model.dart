@@ -42,7 +42,7 @@ class SearchModel extends ChangeNotifier {
 
   Future<void> _loadData() async {
     final venueTypes = await venueApi.getAllVenueTypes();
-    final venues = await venueApi.getVenues();
+    final venues = await venueApi.getAllVenues();
     venues.sort((a, b) => a.name.compareTo(b.name));
 
     venueTypeMap = {

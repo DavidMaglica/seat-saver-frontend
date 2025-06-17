@@ -17,8 +17,9 @@ class ApiRoutes {
   static const venue = '/venue';
   static const createVenue = '/create';
   static const uploadVenueImage = '/upload-image';
-  static const getVenue = '/get';
+  static const getVenue = '/get-venue';
   static const getAllVenues = '/get-all';
+  static const getVenuesByCategory = '/get-by-category';
   static const getVenueType = '/get-type';
   static const getVenueRating = '/get-rating';
   static const getAllVenueTypes = '/get-all-types';

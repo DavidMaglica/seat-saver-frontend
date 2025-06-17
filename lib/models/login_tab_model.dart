@@ -2,7 +2,7 @@ import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/api/data/basic_response.dart';
 import 'package:TableReserver/api/data/user.dart';
 import 'package:TableReserver/pages/auth/login_tab.dart';
-import 'package:TableReserver/utils/signup_methods.dart';
+import 'package:TableReserver/utils/sign_up_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
