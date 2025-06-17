@@ -72,10 +72,14 @@ class Homepage extends StatelessWidget {
                                       model.openTrendingVenues,
                                       model.trendingVenues ?? [],
                                     ),
-                                    _buildSuggestedVenues(
-                                      context,
-                                      model.suggestedVenues ?? [],
-                                    ),
+                                    if (model.suggestedVenues != null &&
+                                        model.suggestedVenues!.isNotEmpty)
+                                      _buildSuggestedVenues(
+                                        context,
+                                        model.suggestedVenues!,
+                                      )
+                                    else
+                                      const SizedBox.shrink(),
                                     const SizedBox(height: 24),
                                   ],
                                 ),
