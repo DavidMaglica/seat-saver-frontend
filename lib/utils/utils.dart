@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 Color calculateAvailabilityColour(int maximumCapacity, int availableCapacity) {
-  final ratio = maximumCapacity > 0 ? availableCapacity / maximumCapacity : 0.0;
+  final ratio = maximumCapacity > 0 ? availableCapacity / maximumCapacity : 0;
 
   return ratio >= 0.4
       ? AppThemes.successColor

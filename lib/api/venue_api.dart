@@ -1,5 +1,6 @@
 import 'package:TableReserver/api/api_routes.dart';
 import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/api/data/rating.dart';
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/api/data/venue_type.dart';
 import 'package:TableReserver/api/dio_setup.dart';
@@ -259,13 +260,40 @@ class VenueApi {
     }
   }
 
-  Future<BasicResponse> rateVenue(int venueId, double rating) async {
+  Future<List<Rating>> getAllVenueRatings(int venueId) async {
+    try {
+      Response response = await dio.get(
+        ApiRoutes.getAllVenueRatings,
+        queryParameters: {
+          'venueId': venueId,
+        },
+      );
+
+      List<Rating> ratings = (response.data as List)
+          .map((rating) => Rating.fromJson(rating))
+          .toList();
+
+      return ratings;
+    } catch (e) {
+      logger.e('Error fetching venue ratings: $e');
+      return [];
+    }
+  }
+
+  Future<BasicResponse> rateVenue(
+    int venueId,
+    double rating,
+    int userId,
+    String comment,
+  ) async {
     try {
       Response response = await dio.post(
         ApiRoutes.rateVenue,
         queryParameters: {
           'venueId': venueId,
           'rating': rating,
+          'userId': userId,
+          'comment': comment,
         },
       );
 

@@ -113,7 +113,7 @@ class Search extends StatelessWidget {
                                       )
                                     : const Center(
                                         child: Padding(
-                                          padding: EdgeInsets.all(16.0),
+                                          padding: EdgeInsets.all(16),
                                           child: Text('No venues available'),
                                         ),
                                       ),

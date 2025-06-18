@@ -190,7 +190,7 @@ class EditProfileModel extends ChangeNotifier {
       message,
       context: context,
       backgroundColor: color,
-      textStyle: const TextStyle(color: Colors.white, fontSize: 16.0),
+      textStyle: const TextStyle(color: Colors.white, fontSize: 16),
       borderRadius: BorderRadius.circular(8),
       textPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       alignment: Alignment.bottomLeft,

@@ -44,7 +44,7 @@ class SuccessfulReservation extends StatelessWidget {
                   ? SystemUiOverlayStyle.light
                   : SystemUiOverlayStyle.dark,
               child: Scaffold(
-                backgroundColor: Theme.of(context).colorScheme.background,
+                backgroundColor: Theme.of(context).colorScheme.surface,
                 body: SafeArea(
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
