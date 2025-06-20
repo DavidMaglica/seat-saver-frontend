@@ -68,7 +68,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+            color: Theme.of(context).colorScheme.outline,
             blurRadius: 6,
           )
         ],

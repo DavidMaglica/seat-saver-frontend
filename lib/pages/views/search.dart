@@ -71,11 +71,9 @@ class Search extends StatelessWidget {
                                 color: Theme.of(context).colorScheme.background,
                                 boxShadow: [
                                   BoxShadow(
-                                    blurRadius: 10,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary
-                                        .withOpacity(0.6),
+                                    blurRadius: 4,
+                                    spreadRadius: 4,
+                                    color: Theme.of(context).colorScheme.outline,
                                   )
                                 ],
                                 borderRadius: BorderRadius.circular(8),
@@ -113,7 +111,7 @@ class Search extends StatelessWidget {
                                       )
                                     : const Center(
                                         child: Padding(
-                                          padding: EdgeInsets.all(16.0),
+                                          padding: EdgeInsets.all(16),
                                           child: Text('No venues available'),
                                         ),
                                       ),

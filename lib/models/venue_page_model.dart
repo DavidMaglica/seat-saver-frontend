@@ -185,30 +185,6 @@ class VenuePageModel extends ChangeNotifier {
     return;
   }
 
-  Future<void> rateVenue(double newRating) async {
-    BasicResponse response = await venueApi.rateVenue(venueId, newRating);
-
-    if (!ctx.mounted) return;
-    ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
-
-    if (response.success) {
-      Toaster.displaySuccess(ctx, 'Rating updated successfully');
-    } else {
-      Toaster.displayError(ctx, response.message);
-    }
-
-    final updatedRating = await venueApi.getVenueRating(venueId);
-    if (updatedRating == null) {
-      if (!ctx.mounted) return;
-      Toaster.displayError(ctx, 'Error fetching updated rating');
-      return;
-    }
-
-    venue.rating = updatedRating;
-
-    notifyListeners();
-  }
-
   void setPeople(int? value) {
     if (value != null) {
       if (selectedNumberOfPeople != null && selectedNumberOfPeople == value) {

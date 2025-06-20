@@ -60,10 +60,7 @@ class ReservationHistory extends StatelessWidget {
                           boxShadow: [
                             BoxShadow(
                               blurRadius: 3,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimary
-                                  .withOpacity(.5),
+                              color: Theme.of(context).colorScheme.outline,
                               offset: const Offset(0, 1),
                             )
                           ],

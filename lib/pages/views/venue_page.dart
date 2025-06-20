@@ -1,9 +1,8 @@
 import 'package:TableReserver/components/custom_appbar.dart';
 import 'package:TableReserver/components/full_image_view.dart';
-import 'package:TableReserver/components/modal_widgets.dart';
-import 'package:TableReserver/components/toaster.dart';
 import 'package:TableReserver/models/venue_page_model.dart';
 import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/utils/constants.dart';
 import 'package:TableReserver/utils/extensions.dart';
 import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -132,100 +131,6 @@ class VenuePage extends StatelessWidget {
     );
   }
 
-  Future<dynamic>? _buildRatingModal(BuildContext ctx, VenuePageModel model) {
-    double rating = 0;
-
-    if (model.userId == null) {
-      Toaster.displayError(ctx, 'Please log in to rate ${model.venue.name}');
-      return null;
-    }
-
-    return showCupertinoModalPopup(
-      context: ctx,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            return Container(
-              height: 248,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(24),
-                  topRight: Radius.circular(24),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    height: 96,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: RatingBar.builder(
-                        onRatingUpdate: (newRating) {
-                          setModalState(() {
-                            rating = newRating;
-                          });
-                        },
-                        itemBuilder: (context, index) => Icon(
-                          CupertinoIcons.star_fill,
-                          color: Theme.of(context).colorScheme.onTertiary,
-                        ),
-                        unratedColor: const Color(0xFF57636C).withOpacity(0.5),
-                        direction: Axis.horizontal,
-                        glow: false,
-                        ignoreGestures: false,
-                        initialRating: rating,
-                        itemSize: 32,
-                        allowHalfRating: true,
-                      ),
-                    ),
-                  ),
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
-                    child: rating > 0
-                        ? Text(
-                            'Your rating: ${rating.toStringAsFixed(1)}',
-                            key: ValueKey(rating),
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                  rating != 0
-                      ? const SizedBox(height: 29)
-                      : const SizedBox(height: 48),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      buildModalButton(
-                        'Cancel',
-                        () {
-                          Navigator.of(context).pop();
-                        },
-                        Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      buildModalButton(
-                        'Rate',
-                        () {
-                          if (rating > 0) model.rateVenue(rating);
-                          Navigator.of(context).pop();
-                        },
-                        AppThemes.successColor,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
   Widget _buildObjectDetails(BuildContext ctx, VenuePageModel model) {
     return Padding(
       padding: const EdgeInsets.only(left: 24),
@@ -247,20 +152,27 @@ class VenuePage extends StatelessWidget {
           const SizedBox(height: 8),
           _buildVenueRating(ctx, model),
           const SizedBox(height: 8),
-          _buildRatingButton(ctx, model),
+          _buildViewRatingsButton(ctx, model),
           _buildVenueDescription(ctx, model),
         ],
       ),
     );
   }
 
-  Widget _buildRatingButton(BuildContext ctx, VenuePageModel model) {
+  Widget _buildViewRatingsButton(BuildContext ctx, VenuePageModel model) {
     return FFButtonWidget(
-      onPressed: () => _buildRatingModal(ctx, model),
-      text: 'Leave a rating',
+      onPressed: () => Navigator.of(ctx).pushNamed(
+        Routes.venueRatings,
+        arguments: {
+          'venueId': model.venue.id,
+          'userId': model.userId,
+          'userLocation': model.userLocation,
+        },
+      ),
+      text: 'View Ratings & Reviews',
       showLoadingIndicator: false,
       options: FFButtonOptions(
-        width: 128,
+        width: 164,
         height: 30,
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
         color: Theme.of(ctx).colorScheme.surface,
@@ -370,7 +282,6 @@ class VenuePage extends StatelessWidget {
           initialRating: model.venue.rating,
           itemCount: 1,
           itemSize: 18,
-          allowHalfRating: true,
         ),
         Padding(
           padding: const EdgeInsets.only(top: 4, left: 4),

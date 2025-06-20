@@ -284,7 +284,7 @@ class Homepage extends StatelessWidget {
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
-              elevation: 3,
+              elevation: 1,
               borderSide: const BorderSide(
                 color: AppThemes.accent1,
                 width: 1,

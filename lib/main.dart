@@ -8,6 +8,7 @@ import 'package:TableReserver/pages/views/account.dart';
 import 'package:TableReserver/pages/views/homepage.dart';
 import 'package:TableReserver/pages/views/landing.dart';
 import 'package:TableReserver/pages/views/nearby.dart';
+import 'package:TableReserver/pages/views/ratings_page.dart';
 import 'package:TableReserver/pages/views/search.dart';
 import 'package:TableReserver/pages/views/successful_reservation.dart';
 import 'package:TableReserver/pages/views/venue_page.dart';
@@ -88,6 +89,11 @@ class MyApp extends StatelessWidget {
             ),
         Routes.authentication: (context) => const Authentication(),
         Routes.venue: (context) => VenuePage(
+              venueId: getRequiredArg<int>(context, 'venueId'),
+              userId: getOptionalArg<int>(context, 'userId'),
+              userLocation: getOptionalArg<Position>(context, 'userLocation'),
+            ),
+        Routes.venueRatings: (context) => RatingsPage(
               venueId: getRequiredArg<int>(context, 'venueId'),
               userId: getOptionalArg<int>(context, 'userId'),
               userLocation: getOptionalArg<Position>(context, 'userLocation'),

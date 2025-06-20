@@ -17,15 +17,6 @@ class NavBar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 12,
-            spreadRadius: 2,
-            offset: Offset(0, 3),
-          ),
-        ],
       ),
       child: BottomNavigationBar(
         currentIndex: currentIndex,

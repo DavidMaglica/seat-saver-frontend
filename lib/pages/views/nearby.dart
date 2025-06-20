@@ -64,7 +64,7 @@ class _NearbyState extends State<Nearby> {
             child: Scaffold(
                 key: scaffoldKey,
                 resizeToAvoidBottomInset: false,
-                backgroundColor: Theme.of(context).colorScheme.background,
+                backgroundColor: Theme.of(context).colorScheme.surface,
                 body: SafeArea(
                   child: Column(
                     children: [
