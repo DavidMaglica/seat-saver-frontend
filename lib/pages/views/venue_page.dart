@@ -282,7 +282,6 @@ class VenuePage extends StatelessWidget {
           initialRating: model.venue.rating,
           itemCount: 1,
           itemSize: 18,
-          allowHalfRating: true,
         ),
         Padding(
           padding: const EdgeInsets.only(top: 4, left: 4),

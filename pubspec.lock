@@ -768,6 +768,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
+  rating_summary:
+    dependency: "direct main"
+    description:
+      name: rating_summary
+      sha256: c2bac2b3844406320512c2e0e239f06b1000ad90b85e8e1637756da03efcd12d
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   rfc_6901:
     dependency: transitive
     description:

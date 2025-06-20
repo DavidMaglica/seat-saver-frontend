@@ -21,14 +21,12 @@ class CarouselItem extends StatelessWidget {
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.background,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.onPrimary,
-              width: 0.2,
-            ),
             boxShadow: [
               BoxShadow(
-                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
-                blurRadius: 6,
+                color: Theme.of(context).colorScheme.outline,
+                blurRadius: 2,
+                spreadRadius: 2,
+                offset: const Offset(0, 1),
               )
             ],
           ),

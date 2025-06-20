@@ -9,6 +9,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+import 'package:rating_summary/rating_summary.dart';
 
 class RatingsPage extends StatelessWidget {
   final int venueId;
@@ -28,6 +29,8 @@ class RatingsPage extends StatelessWidget {
       create: (_) => RatingsPageModel(ctx: context, venueId: venueId)..init(),
       child: Consumer<RatingsPageModel>(
         builder: (context, model, _) {
+          bool isAtBottom = false;
+
           while (model.ratings == null) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -50,22 +53,104 @@ class RatingsPage extends StatelessWidget {
                   children: [
                     _buildContainer(context, model),
                     Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            ..._buildRatings(context, model),
-                          ],
-                        ),
+                      child: Stack(
+                        alignment: const AlignmentDirectional(-1,-1),
+                        children: [
+                          NotificationListener<ScrollNotification>(
+                            onNotification: (notification) {
+                              if (notification.metrics.pixels >=
+                                  notification.metrics.maxScrollExtent - 20) {
+                                if (!isAtBottom) {
+                                  isAtBottom = true;
+                                }
+                              } else {
+                                if (isAtBottom) {
+                                  isAtBottom = false;
+                                }
+                              }
+                              return true;
+                            },
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.only(bottom: 80),
+                              child: Column(
+                                children: [
+                                  _buildRatingSummary(context, model),
+                                  ..._buildRatings(context, model),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: isAtBottom ? 72 : 16,
+                            left: 0,
+                            right: 0,
+                            child: Center(
+                              child: _buildLeaveReviewButton(context, model),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    _buildLeaveReviewButton(context, model),
                   ],
                 ),
               ),
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildRatingSummary(BuildContext ctx, RatingsPageModel model) {
+    int fiveStars =
+        model.ratings?.where((element) => element.rating == 5.0).length ?? 0;
+    int fourStars =
+        model.ratings?.where((element) => element.rating == 4.0).length ?? 0;
+    int threeStars =
+        model.ratings?.where((element) => element.rating == 3.0).length ?? 0;
+    int twoStars =
+        model.ratings?.where((element) => element.rating == 2.0).length ?? 0;
+    int oneStar =
+        model.ratings?.where((element) => element.rating == 1.0).length ?? 0;
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Theme.of(ctx).colorScheme.background,
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 3,
+            color: Theme.of(ctx).colorScheme.outline,
+            offset: const Offset(0, 5),
+          )
+        ],
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(12),
+          bottomRight: Radius.circular(12),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: RatingSummary(
+          counter: model.ratings?.length ?? 0,
+          showAverage: false,
+          counterFiveStars: fiveStars,
+          counterFourStars: fourStars,
+          counterThreeStars: threeStars,
+          counterTwoStars: twoStars,
+          counterOneStars: oneStar,
+          color: AppThemes.accent1,
+          labelCounterOneStars:
+              Text('1', style: Theme.of(ctx).textTheme.bodyMedium),
+          labelCounterTwoStars:
+              Text('2', style: Theme.of(ctx).textTheme.bodyMedium),
+          labelCounterThreeStars:
+              Text('3', style: Theme.of(ctx).textTheme.bodyMedium),
+          labelCounterFourStars:
+              Text('4', style: Theme.of(ctx).textTheme.bodyMedium),
+          labelCounterFiveStars:
+              Text('5', style: Theme.of(ctx).textTheme.bodyMedium),
+        ),
       ),
     );
   }
@@ -81,8 +166,8 @@ class RatingsPage extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 blurRadius: 3,
-                color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(0.3),
-                offset: const Offset(0, 2),
+                color: Theme.of(ctx).colorScheme.outline,
+                offset: const Offset(0, 3),
               )
             ],
             borderRadius: BorderRadius.circular(12),
@@ -354,13 +439,6 @@ class RatingsPage extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: Theme.of(ctx).colorScheme.background,
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 3,
-            color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(1),
-            offset: const Offset(0, 1),
-          )
-        ],
       ),
       child: Padding(
         padding:

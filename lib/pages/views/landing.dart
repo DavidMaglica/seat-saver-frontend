@@ -43,10 +43,7 @@ class Landing extends StatelessWidget {
                             borderRadius: BorderRadius.circular(96),
                             boxShadow: [
                               BoxShadow(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimary
-                                    .withOpacity(.4),
+                                color: Theme.of(context).colorScheme.outline,
                                 blurRadius: 5,
                                 spreadRadius: 2,
                                 offset: const Offset(4, 4),

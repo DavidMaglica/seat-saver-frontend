@@ -70,8 +70,9 @@ class EditProfile extends StatelessWidget {
           color: Theme.of(ctx).colorScheme.background,
           boxShadow: [
             BoxShadow(
-              blurRadius: 3,
-              color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(.5),
+              blurRadius: 2,
+              spreadRadius: 2,
+              color: Theme.of(ctx).colorScheme.outline,
               offset: const Offset(0, 1),
             )
           ],

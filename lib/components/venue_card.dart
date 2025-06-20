@@ -59,8 +59,10 @@ class _VenueCardState extends State<VenueCard> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
-            blurRadius: 6,
+            color: Theme.of(context).colorScheme.outline,
+            blurRadius: 2,
+            spreadRadius: 2,
+            offset: const Offset(0, 2),
           )
         ],
       ),
