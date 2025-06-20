@@ -71,7 +71,8 @@ class Search extends StatelessWidget {
                                 color: Theme.of(context).colorScheme.background,
                                 boxShadow: [
                                   BoxShadow(
-                                    blurRadius: 10,
+                                    blurRadius: 4,
+                                    spreadRadius: 4,
                                     color: Theme.of(context).colorScheme.outline,
                                   )
                                 ],
