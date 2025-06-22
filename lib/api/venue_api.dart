@@ -237,7 +237,7 @@ class VenueApi {
 
       return images;
     } catch (e) {
-      logger.e('Error fetching venue images: $e');
+      logger.e('Error fetching menu images: $e');
       return [];
     }
   }
