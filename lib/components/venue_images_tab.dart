@@ -15,8 +15,24 @@ class VenueImagesTab extends StatelessWidget {
     required this.menuImages,
   }) : super(key: key);
 
+  double calculateTabHeight(List<Uint8List>? images) {
+    if (images == null || images.isEmpty) {
+      return 196;
+    }
+    final int rows = (images.skip(1).length / 2).ceil();
+
+    final double imageGridHeight = rows * 170 + (rows - 1) * 12;
+
+    const double outerPadding = 12 + 96;
+
+    return imageGridHeight + outerPadding;
+  }
+
   @override
   Widget build(BuildContext context) {
+    double venueTabHeight = calculateTabHeight(venueImages);
+    double menuTabHeight = calculateTabHeight(menuImages);
+
     return DefaultTabController(
       length: 2,
       child: Column(
@@ -31,7 +47,8 @@ class VenueImagesTab extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 700,
+            height:
+                venueTabHeight > menuTabHeight ? venueTabHeight : menuTabHeight,
             child: TabBarView(
               children: [
                 _buildMasonryGrid(context, venueImages, 'venue'),
