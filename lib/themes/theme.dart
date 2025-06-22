@@ -130,17 +130,17 @@ class AppThemes {
       titleSmall: TextStyle(
           color: darkPrimaryTextColor,
           fontSize: 14,
-          fontFamily: 'Roboto',
+          fontFamily: 'Oswald',
           fontWeight: FontWeight.bold),
       titleMedium: TextStyle(
           color: darkPrimaryTextColor,
           fontSize: 18,
-          fontFamily: 'Roboto',
+          fontFamily: 'Oswald',
           fontWeight: FontWeight.bold),
       titleLarge: TextStyle(
           color: darkPrimaryTextColor,
           fontSize: 24,
-          fontFamily: 'Roboto',
+          fontFamily: 'Oswald',
           fontWeight: FontWeight.bold),
       labelLarge: TextStyle(
           color: darkPrimaryBackgroundColor,

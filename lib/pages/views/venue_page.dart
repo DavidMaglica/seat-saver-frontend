@@ -1,6 +1,6 @@
-import 'package:TableReserver/components/venue_images_tab.dart';
 import 'package:TableReserver/components/custom_appbar.dart';
 import 'package:TableReserver/components/full_image_view.dart';
+import 'package:TableReserver/components/venue_images_tab.dart';
 import 'package:TableReserver/models/venue_page_model.dart';
 import 'package:TableReserver/themes/theme.dart';
 import 'package:TableReserver/utils/constants.dart';
@@ -60,10 +60,7 @@ class VenuePage extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              _buildHeadingImage(
-                                context,
-                                model.venueHeadingImage,
-                              ),
+                              _buildHeadingImage(context, model),
                               _buildObjectDetails(context, model),
                               const SizedBox(height: 8),
                               _buildDivider(context),
@@ -88,8 +85,9 @@ class VenuePage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeadingImage(BuildContext ctx, Uint8List? imageBytes) {
-    final bool hasImage = imageBytes != null && imageBytes.isNotEmpty;
+  Widget _buildHeadingImage(BuildContext ctx, VenuePageModel model) {
+    final bool hasImage =
+        model.venueHeadingImage != null && model.venueHeadingImage!.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.only(right: 16),
@@ -101,7 +99,7 @@ class VenuePage extends StatelessWidget {
           Navigator.of(ctx).push(
             MaterialPageRoute(
               builder: (context) => FullScreenImageView(
-                imageBytes: imageBytes,
+                imageBytes: model.venueHeadingImage!,
                 heroTag: 'headerImageTag',
               ),
             ),
@@ -111,7 +109,7 @@ class VenuePage extends StatelessWidget {
           tag: 'headerImageTag',
           child: hasImage
               ? Image.memory(
-                  imageBytes,
+                  model.venueHeadingImage!,
                   width: double.infinity,
                   height: 320,
                   fit: BoxFit.cover,
@@ -120,16 +118,22 @@ class VenuePage extends StatelessWidget {
                   width: double.infinity,
                   height: 320,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: const BorderRadius.only(
-                      bottomRight: Radius.circular(8),
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFF1B5E20).withOpacity(0.8),
+                        const Color(0xFF43A047).withOpacity(0.8),
+                        const Color(0xFFFF7043).withOpacity(0.8),
+                        const Color(0xFFFF5722).withOpacity(0.8),
+                      ],
+                      begin: Alignment.bottomLeft,
+                      end: Alignment.topRight,
+                      stops: const [0.0, 0.5, 0.9, 1.0],
                     ),
                   ),
                   alignment: Alignment.center,
-                  child: const Icon(
-                    Icons.image_not_supported,
-                    color: Colors.grey,
-                    size: 48,
+                  child: Text(
+                    model.venue.name,
+                    style: Theme.of(ctx).textTheme.titleLarge?.copyWith(color: Colors.white),
                   ),
                 ),
         ),

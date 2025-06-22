@@ -129,24 +129,36 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
                 height: 110,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return _buildFallbackImage();
+                  return _buildFallbackImage(context);
                 },
               )
-            : _buildFallbackImage(),
+            : _buildFallbackImage(context),
       ),
     );
   }
 
-  Widget _buildFallbackImage() {
+  Widget _buildFallbackImage(BuildContext ctx) {
     return Container(
       width: double.infinity,
       height: 110,
-      color: Colors.grey.shade300,
       alignment: Alignment.center,
-      child: Icon(
-        CupertinoIcons.photo_fill,
-        size: 36,
-        color: Colors.grey.shade600,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            const Color(0xFF1B5E20).withOpacity(0.8),
+            const Color(0xFF43A047).withOpacity(0.8),
+            const Color(0xFFFF7043).withOpacity(0.8),
+            const Color(0xFFFF5722).withOpacity(0.8),
+          ],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+          stops: const [0.0, 0.5, 0.9, 1.0],
+        ),
+      ),
+      child: Text(
+        widget.venue.name,
+        style: Theme.of(ctx).textTheme.titleMedium,
+        textAlign: TextAlign.center,
       ),
     );
   }
