@@ -26,7 +26,7 @@ class VenueCard extends StatefulWidget {
 }
 
 class _VenueCardState extends State<VenueCard> {
-  List<String>? _venueImages;
+  Uint8List? _venueImage;
 
   VenueApi venueApi = VenueApi();
 
@@ -37,9 +37,17 @@ class _VenueCardState extends State<VenueCard> {
 
   @override
   void initState() {
-    List<String> venueImages = venueApi.getVenueImages(widget.venue.name);
-    setState(() => _venueImages = venueImages);
+    _loadVenueImage();
     super.initState();
+  }
+
+  Future<void> _loadVenueImage() async {
+    List<Uint8List> venues = await venueApi.getVenueImages(widget.venue.id);
+    if (venues.isNotEmpty) {
+      setState(() => _venueImage = venues.first);
+    } else {
+      setState(() => _venueImage = null);
+    }
   }
 
   void _openVenuePage() =>
@@ -106,19 +114,40 @@ class _VenueCardState extends State<VenueCard> {
 
   Widget _buildImage() {
     return Hero(
-        tag: 'locationCardImage${randomDouble(0, 100)}',
-        transitionOnUserGestures: true,
-        child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(8),
-              topRight: Radius.circular(8),
-            ),
-            child: Image.asset(
-              _venueImages!.first,
-              width: double.infinity,
-              height: 80,
-              fit: BoxFit.cover,
-            )));
+      tag: 'locationCardImage${randomDouble(0, 100)}',
+      transitionOnUserGestures: true,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
+        child: _venueImage != null
+            ? Image.memory(
+                _venueImage!,
+                width: double.infinity,
+                height: 80,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return _buildFallbackImage();
+                },
+              )
+            : _buildFallbackImage(),
+      ),
+    );
+  }
+
+  Widget _buildFallbackImage() {
+    return Container(
+      width: double.infinity,
+      height: 80,
+      color: Colors.grey.shade300,
+      alignment: Alignment.center,
+      child: Icon(
+        CupertinoIcons.photo_fill,
+        size: 32,
+        color: Colors.grey.shade600,
+      ),
+    );
   }
 
   Widget _buildName(String name) {

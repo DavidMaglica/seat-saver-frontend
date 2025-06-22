@@ -1,13 +1,15 @@
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FullScreenImageView extends StatelessWidget {
-  final String imageUrl;
+  final Uint8List imageBytes;
   final String heroTag;
 
   const FullScreenImageView({
     Key? key,
-    required this.imageUrl,
+    required this.imageBytes,
     required this.heroTag,
   }) : super(key: key);
 
@@ -28,8 +30,8 @@ class FullScreenImageView extends StatelessWidget {
         body: Center(
           child: Hero(
             tag: heroTag,
-            child: Image.asset(
-              imageUrl,
+            child: Image.memory(
+              imageBytes,
               fit: BoxFit.contain,
             ),
           ),

@@ -254,7 +254,7 @@ class RatingsPage extends StatelessWidget {
           width: double.infinity,
           height: 60,
           padding: const EdgeInsetsDirectional.all(0),
-          color: AppThemes.infoColor,
+          color: AppThemes.successColor,
           splashColor: Theme.of(ctx).colorScheme.surfaceVariant,
           textStyle: TextStyle(
             color: Theme.of(ctx).colorScheme.background,
