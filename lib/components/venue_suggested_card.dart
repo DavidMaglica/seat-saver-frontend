@@ -143,17 +143,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
       height: 110,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFF1B5E20).withOpacity(0.8),
-            const Color(0xFF43A047).withOpacity(0.8),
-            const Color(0xFFFF7043).withOpacity(0.8),
-            const Color(0xFFFF5722).withOpacity(0.8),
-          ],
-          begin: Alignment.bottomLeft,
-          end: Alignment.topRight,
-          stops: const [0.0, 0.5, 0.9, 1.0],
-        ),
+        gradient: fallbackImageGradient(),
       ),
       child: Text(
         widget.venue.name,
