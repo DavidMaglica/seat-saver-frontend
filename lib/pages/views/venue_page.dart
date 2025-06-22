@@ -1,5 +1,6 @@
 import 'package:TableReserver/components/custom_appbar.dart';
 import 'package:TableReserver/components/full_image_view.dart';
+import 'package:TableReserver/components/venue_images_tab.dart';
 import 'package:TableReserver/models/venue_page_model.dart';
 import 'package:TableReserver/themes/theme.dart';
 import 'package:TableReserver/utils/constants.dart';
@@ -8,21 +9,18 @@ import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 class VenuePage extends StatelessWidget {
   final int venueId;
-  final List<String>? imageLinks;
   final int? userId;
   final Position? userLocation;
 
   const VenuePage({
     Key? key,
     required this.venueId,
-    this.imageLinks,
     this.userId,
     this.userLocation,
   }) : super(key: key);
@@ -30,43 +28,31 @@ class VenuePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (_) => VenuePageModel(
-            ctx: context,
-            venueId: venueId,
-            imageLinks: imageLinks,
-            userId: userId,
-            userLocation: userLocation)
-          ..init(),
-        child: Consumer<VenuePageModel>(
-          builder: (context, model, _) {
-            return GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
-              child: Scaffold(
-                key: model.scaffoldKey,
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                appBar: CustomAppbar(
-                  title: model.venue.name,
-                  onBack: () => Navigator.of(context).pop({
-                    'userId': userId,
-                    'userLocation': userLocation,
-                  }),
-                ),
-                body: FutureBuilder<List<String>>(
-                  future: model.images,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                          child: CupertinoActivityIndicator(
-                        radius: 24,
-                        color: AppThemes.infoColor,
-                      ));
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No images available'));
-                    }
-
-                    return Stack(
+      create: (_) => VenuePageModel(
+          ctx: context,
+          venueId: venueId,
+          userId: userId,
+          userLocation: userLocation)
+        ..init(),
+      child: Consumer<VenuePageModel>(
+        builder: (context, model, _) {
+          return GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Scaffold(
+              key: model.scaffoldKey,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              appBar: CustomAppbar(
+                title: model.venue.name,
+                onBack: () => Navigator.of(context).pop({
+                  'userId': userId,
+                  'userLocation': userLocation,
+                }),
+              ),
+              body: model.venueImageBytes == null
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Stack(
                       alignment: const AlignmentDirectional(0, 1),
                       children: [
                         SingleChildScrollView(
@@ -74,11 +60,7 @@ class VenuePage extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              _buildHeadingImage(
-                                  context,
-                                  model.imageLinks != null
-                                      ? model.imageLinks![0]
-                                      : model.venueImages![0]),
+                              _buildHeadingImage(context, model),
                               _buildObjectDetails(context, model),
                               const SizedBox(height: 8),
                               _buildDivider(context),
@@ -86,33 +68,38 @@ class VenuePage extends StatelessWidget {
                               _buildMakeReservation(context, model),
                               const SizedBox(height: 8),
                               _buildDivider(context),
-                              _buildMasonryView(model.imageLinks != null
-                                  ? model.imageLinks!.skip(1).toList()
-                                  : model.venueImages!.skip(1).toList()),
+                              VenueImagesTab(
+                                venueImages: model.venueImageBytes,
+                                menuImages: model.menuImageBytes,
+                              )
                             ],
                           ),
                         ),
                         _buildReserveSpotButton(context, model),
                       ],
-                    );
-                  },
-                ),
-              ),
-            );
-          },
-        ));
+                    ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
-  Widget _buildHeadingImage(BuildContext ctx, String image) {
+  Widget _buildHeadingImage(BuildContext ctx, VenuePageModel model) {
+    final bool hasImage =
+        model.venueHeadingImage != null && model.venueHeadingImage!.isNotEmpty;
+
     return Padding(
       padding: const EdgeInsets.only(right: 16),
       child: InkWell(
         onTap: () {
+          if (!hasImage) return;
+
           ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
           Navigator.of(ctx).push(
             MaterialPageRoute(
               builder: (context) => FullScreenImageView(
-                imageUrl: image,
+                imageBytes: model.venueHeadingImage!,
                 heroTag: 'headerImageTag',
               ),
             ),
@@ -120,12 +107,35 @@ class VenuePage extends StatelessWidget {
         },
         child: Hero(
           tag: 'headerImageTag',
-          child: Image.asset(
-            image,
-            width: double.infinity,
-            height: 320,
-            fit: BoxFit.fitWidth,
-          ),
+          child: hasImage
+              ? Image.memory(
+                  model.venueHeadingImage!,
+                  width: double.infinity,
+                  height: 320,
+                  fit: BoxFit.cover,
+                )
+              : Container(
+                  width: double.infinity,
+                  height: 320,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFF1B5E20).withOpacity(0.8),
+                        const Color(0xFF43A047).withOpacity(0.8),
+                        const Color(0xFFFF7043).withOpacity(0.8),
+                        const Color(0xFFFF5722).withOpacity(0.8),
+                      ],
+                      begin: Alignment.bottomLeft,
+                      end: Alignment.topRight,
+                      stops: const [0.0, 0.5, 0.9, 1.0],
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    model.venue.name,
+                    style: Theme.of(ctx).textTheme.titleLarge?.copyWith(color: Colors.white),
+                  ),
+                ),
         ),
       ),
     );
@@ -507,7 +517,7 @@ class VenuePage extends StatelessWidget {
           width: double.infinity,
           height: 60,
           padding: const EdgeInsetsDirectional.all(0),
-          color: isDisabled ? Colors.grey : AppThemes.infoColor,
+          color: isDisabled ? Colors.grey : AppThemes.successColor,
           splashColor: isDisabled
               ? AppThemes.transparentColour
               : Theme.of(ctx).colorScheme.surfaceVariant,
@@ -520,50 +530,6 @@ class VenuePage extends StatelessWidget {
           elevation: 3,
           borderRadius: BorderRadius.circular(8),
         ),
-      ),
-    );
-  }
-
-  Widget _buildMasonryView(List<String> imageUrls) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(24, 12, 24, 96),
-      child: MasonryGridView.builder(
-        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-        ),
-        crossAxisSpacing: 24,
-        mainAxisSpacing: 12,
-        itemCount: imageUrls.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          final imageUrl = imageUrls[index];
-          return InkWell(
-            onTap: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => FullScreenImageView(
-                    imageUrl: imageUrl,
-                    heroTag: 'imageTag$index',
-                  ),
-                ),
-              );
-            },
-            child: Hero(
-              tag: 'imageTag$index',
-              transitionOnUserGestures: true,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  imageUrl,
-                  width: 160,
-                  height: 170,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          );
-        },
       ),
     );
   }

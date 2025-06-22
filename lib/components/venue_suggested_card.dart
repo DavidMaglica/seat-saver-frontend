@@ -27,7 +27,7 @@ class VenueSuggestedCard extends StatefulWidget {
 }
 
 class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
-  List<String>? _venueImages;
+  Uint8List? _venueImage;
   String _venueType = '';
 
   VenueApi venueApi = VenueApi();
@@ -39,8 +39,12 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   @override
   void initState() {
-    List<String> venueImages = venueApi.getVenueImages(widget.venue.name);
-    setState(() => _venueImages = venueImages);
+    _getVenueType();
+    _loadVenueImage();
+    super.initState();
+  }
+
+  Future<void> _getVenueType() async {
     venueApi.getVenueType(widget.venue.typeId).then((value) {
       if (value != null) {
         setState(() {
@@ -48,7 +52,15 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
         });
       }
     });
-    super.initState();
+  }
+
+  Future<void> _loadVenueImage() async {
+    List<Uint8List> venues = await venueApi.getVenueImages(widget.venue.id);
+    if (venues.isNotEmpty) {
+      setState(() => _venueImage = venues.first);
+    } else {
+      setState(() => _venueImage = null);
+    }
   }
 
   void _openVenuePage() =>
@@ -103,19 +115,42 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   Widget _buildImage() {
     return Hero(
-        tag: 'locationCardImage${randomDouble(0, 100)}',
-        transitionOnUserGestures: true,
-        child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(8),
-              topRight: Radius.circular(8),
-            ),
-            child: Image.asset(
-              _venueImages!.first,
-              width: double.infinity,
-              height: 110,
-              fit: BoxFit.cover,
-            )));
+      tag: 'locationCardImage${randomDouble(0, 100)}',
+      transitionOnUserGestures: true,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
+        child: _venueImage != null
+            ? Image.memory(
+                _venueImage!,
+                width: double.infinity,
+                height: 110,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return _buildFallbackImage(context);
+                },
+              )
+            : _buildFallbackImage(context),
+      ),
+    );
+  }
+
+  Widget _buildFallbackImage(BuildContext ctx) {
+    return Container(
+      width: double.infinity,
+      height: 110,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        gradient: fallbackImageGradient(),
+      ),
+      child: Text(
+        widget.venue.name,
+        style: Theme.of(ctx).textTheme.titleMedium,
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 
   Widget _buildNameAndType(String name, String type) {

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:TableReserver/api/data/basic_response.dart';
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/api/reservation_api.dart';
@@ -12,15 +14,13 @@ import 'package:geolocator/geolocator.dart';
 class VenuePageModel extends ChangeNotifier {
   final BuildContext ctx;
   final int venueId;
-  final List<String>? imageLinks;
   final int? userId;
   final Position? userLocation;
 
-  Future<List<String>>? images;
   DateTime? selectedDate = DateTime.now();
   TimeOfDay? selectedTime = TimeOfDay.now();
   int? selectedNumberOfPeople;
-  List<String>? venueImages;
+
   String venueType = '';
   Venue venue = Venue(
     id: 0,
@@ -45,6 +45,10 @@ class VenuePageModel extends ChangeNotifier {
     },
   );
 
+  List<Uint8List>? venueImageBytes;
+  Uint8List? venueHeadingImage;
+  List<Uint8List>? menuImageBytes;
+
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   final ReservationApi reservationApi = ReservationApi();
@@ -53,7 +57,6 @@ class VenuePageModel extends ChangeNotifier {
   VenuePageModel({
     required this.ctx,
     required this.venueId,
-    this.imageLinks,
     this.userId,
     this.userLocation,
   });
@@ -62,7 +65,8 @@ class VenuePageModel extends ChangeNotifier {
     await _loadData();
     await _loadImages();
     final currentTime = _roundToNearestHalfHour(
-        TimeOfDay(hour: selectedTime!.hour, minute: selectedTime!.minute));
+      TimeOfDay(hour: selectedTime!.hour, minute: selectedTime!.minute),
+    );
     selectedTime = addOneHour(currentTime);
     notifyListeners();
   }
@@ -85,12 +89,10 @@ class VenuePageModel extends ChangeNotifier {
   }
 
   Future<void> _loadImages() async {
-    if (imageLinks != null && imageLinks!.isNotEmpty) {
-      images = Future.value(imageLinks);
-    } else {
-      images = Future.value(venueApi.getVenueImages(venue.name));
-      venueImages = venueApi.getVenueImages(venue.name);
-    }
+    venueImageBytes = await venueApi.getVenueImages(venueId);
+    venueHeadingImage =
+        venueImageBytes?.isNotEmpty == true ? venueImageBytes!.first : null;
+    menuImageBytes = await venueApi.getMenuImages(venueId);
   }
 
   TimeOfDay _roundToNearestHalfHour(TimeOfDay time) {
