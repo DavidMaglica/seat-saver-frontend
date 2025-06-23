@@ -1,3 +1,4 @@
+import 'package:TableReserver/api/data/paged_response.dart';
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/api/venue_api.dart';
 import 'package:TableReserver/utils/constants.dart';
@@ -13,6 +14,14 @@ class SearchModel extends ChangeNotifier {
   final int pageIndex = 1;
   final TextEditingController searchBarController = TextEditingController();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  int _currentPage = 0;
+  final int _pageSize = 20;
+  bool hasMorePages = true;
+  bool isLoading = false;
+  List<Venue> paginatedVenues = [];
+
+  final ScrollController scrollController = ScrollController();
 
   final VenueApi venueApi = VenueApi();
 
@@ -37,28 +46,66 @@ class SearchModel extends ChangeNotifier {
 
   Future<void> init() async {
     await _loadData();
+    await _loadVenueTypes();
+    await fetchNextPage();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollController.addListener(() {
+        if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50) {
+          debugPrint('Reached bottom of the list, fetching next page');
+          debugPrint('isLoading: $isLoading, hasMorePages: $hasMorePages');
+          if (!isLoading && hasMorePages) {
+            fetchNextPage();
+          }
+        }
+      });
+    });
+
     notifyListeners();
   }
 
-  Future<void> _loadData() async {
+  Future<void> _loadVenueTypes() async {
     final venueTypes = await venueApi.getAllVenueTypes();
-    final venues = await venueApi.getAllVenues();
-    venues.sort((a, b) => a.name.compareTo(b.name));
-
     venueTypeMap = {
       for (var type in venueTypes) type.id: type.type.toTitleCase(),
     };
     venueTypeOptions = venueTypeMap.values.toList();
+  }
 
-    allVenuesMaster = venues;
-    allVenues = List.from(venues);
+  Future<void> _loadData() async {
+    PagedResponse<Venue> venues =
+        await venueApi.getAllVenues(_currentPage, _pageSize);
+
+    venues.content.sort((a, b) => a.name.compareTo(b.name));
+
+    allVenuesMaster = venues.content;
+    allVenues = List.from(venues.content);
 
     final selectedType = venueTypeMap[selectedVenueType];
     if (selectedType != null) {
       selectedTypes.add(selectedType);
-      allVenues =
-          venues.where((venue) => venue.typeId == selectedVenueType).toList();
+      allVenues = venues.content
+          .where((venue) => venue.typeId == selectedVenueType)
+          .toList();
     }
+  }
+
+  Future<void> fetchNextPage() async {
+    isLoading = true;
+
+    debugPrint('Fetching page $_currentPage with size $_pageSize');
+
+    PagedResponse<Venue> paged = await venueApi.getAllVenues(
+      _currentPage,
+      _pageSize,
+    );
+
+    paginatedVenues = List.from(paginatedVenues)..addAll(paged.content);
+    hasMorePages = _currentPage < paged.totalPages - 1;
+    _currentPage++;
+
+    isLoading = false;
+    notifyListeners();
   }
 
   void search(String value) async {
