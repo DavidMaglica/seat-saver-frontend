@@ -116,7 +116,7 @@ class _VenueCardState extends State<VenueCard> {
 
   Widget _buildImage() {
     return Hero(
-      tag: 'venueCardImage${widget.venueIndex}',
+      tag: 'venueCardImage${randomDouble(0, 100)}${widget.venue.id}',
       transitionOnUserGestures: true,
       child: ClipRRect(
         borderRadius: const BorderRadius.only(

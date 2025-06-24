@@ -1,5 +1,6 @@
 import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/api/data/notification_settings.dart';
+import 'package:TableReserver/api/data/paged_response.dart';
 import 'package:TableReserver/api/data/user.dart';
 import 'package:TableReserver/api/data/user_location.dart';
 import 'package:TableReserver/api/data/user_response.dart';
@@ -167,26 +168,26 @@ class HomepageModel extends ChangeNotifier {
   }
 
   Future<void> getNearbyVenues() async {
-    // TODO IMPLEMENT NEW API
-    nearbyVenues = await venueApi.getNearbyVenues();
+    PagedResponse<Venue> venues = await venueApi.getNearbyVenuesNew();
+    nearbyVenues = venues.content;
     notifyListeners();
   }
 
   Future<void> getNewVenues() async {
-    // TODO IMPLEMENT NEW API
-    newVenues = await venueApi.getNewVenues();
+    PagedResponse<Venue> venues = await venueApi.getNewVenuesNew();
+    newVenues = venues.content;
     notifyListeners();
   }
 
   Future<void> getTrendingVenues() async {
-    // TODO IMPLEMENT NEW API
-    trendingVenues = await venueApi.getTrendingVenues();
+    PagedResponse<Venue> venues = await venueApi.getTrendingVenuesNew();
+    trendingVenues = venues.content;
     notifyListeners();
   }
 
   Future<void> getSuggestedVenues() async {
-    // TODO IMPLEMENT NEW API
-    suggestedVenues = await venueApi.getSuggestedVenues();
+    PagedResponse<Venue> venues = await venueApi.getSuggestedVenuesNew();
+    suggestedVenues = venues.content;
     notifyListeners();
   }
 
@@ -214,6 +215,16 @@ class HomepageModel extends ChangeNotifier {
     Navigator.of(context).pushNamed(Routes.venuesByType, arguments: {
       'userId': userId,
       'type': 'trending',
+      'userLocation': userLocation ?? currentUserLocation,
+    });
+    notifyListeners();
+    return;
+  }
+
+  void openSuggestedVenues() {
+    Navigator.of(context).pushNamed(Routes.venuesByType, arguments: {
+      'userId': userId,
+      'type': 'suggested',
       'userLocation': userLocation ?? currentUserLocation,
     });
     notifyListeners();

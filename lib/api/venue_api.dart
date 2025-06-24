@@ -57,84 +57,6 @@ class VenueApi {
     }
   }
 
-  Future<List<Venue>> getNearbyVenues() async {
-    try {
-      Response response = await dio.get(
-        ApiRoutes.getVenuesByCategory,
-        queryParameters: {
-          'category': 'nearby',
-        },
-      );
-      List<Venue> nearbyVenues = (response.data as List)
-          .map((venue) => Venue.fromJson(venue))
-          .toList();
-
-      nearbyVenues.sort((a, b) => a.location.compareTo(b.location));
-      return nearbyVenues;
-    } catch (e) {
-      logger.e('Error fetching nearby venues: $e');
-      return [];
-    }
-  }
-
-  Future<List<Venue>> getTrendingVenues() async {
-    try {
-      Response response = await dio.get(
-        ApiRoutes.getVenuesByCategory,
-        queryParameters: {
-          'category': 'trending',
-        },
-      );
-      List<Venue> trendingVenues = (response.data as List)
-          .map((venue) => Venue.fromJson(venue))
-          .toList();
-
-      trendingVenues.sort((a, b) => b.rating.compareTo(a.rating));
-      return trendingVenues;
-    } catch (e) {
-      logger.e('Error fetching trending venues: $e');
-      return [];
-    }
-  }
-
-  Future<List<Venue>> getNewVenues() async {
-    try {
-      Response response = await dio.get(
-        ApiRoutes.getVenuesByCategory,
-        queryParameters: {
-          'category': 'new',
-        },
-      );
-      List<Venue> newVenues = (response.data as List)
-          .map((venue) => Venue.fromJson(venue))
-          .toList();
-
-      return newVenues;
-    } catch (e) {
-      logger.e('Error fetching new venues: $e');
-      return [];
-    }
-  }
-
-  Future<List<Venue>> getSuggestedVenues() async {
-    try {
-      Response response = await dio.get(
-        ApiRoutes.getVenuesByCategory,
-        queryParameters: {
-          'category': 'suggested',
-        },
-      );
-      List<Venue> suggestedVenues = (response.data as List)
-          .map((venue) => Venue.fromJson(venue))
-          .toList();
-
-      return suggestedVenues;
-    } catch (e) {
-      logger.e('Error fetching suggested venues: $e');
-      return [];
-    }
-  }
-
   Future<PagedResponse<Venue>> getNearbyVenuesNew({
     int page = 0,
     int size = 15,
@@ -151,7 +73,7 @@ class VenueApi {
 
       return PagedResponse.fromJson(
         response.data,
-            (json) => Venue.fromJson(json),
+        (json) => Venue.fromJson(json),
       );
     } catch (e) {
       logger.e('Error fetching nearby venues: $e');
@@ -181,7 +103,7 @@ class VenueApi {
 
       return PagedResponse.fromJson(
         response.data,
-            (json) => Venue.fromJson(json),
+        (json) => Venue.fromJson(json),
       );
     } catch (e) {
       logger.e('Error fetching trending venues: $e');
@@ -211,7 +133,7 @@ class VenueApi {
 
       return PagedResponse.fromJson(
         response.data,
-            (json) => Venue.fromJson(json),
+        (json) => Venue.fromJson(json),
       );
     } catch (e) {
       logger.e('Error fetching new venues: $e');
@@ -241,7 +163,7 @@ class VenueApi {
 
       return PagedResponse.fromJson(
         response.data,
-            (json) => Venue.fromJson(json),
+        (json) => Venue.fromJson(json),
       );
     } catch (e) {
       logger.e('Error fetching suggested venues: $e');
