@@ -137,7 +137,7 @@ class VenueApi {
 
   Future<PagedResponse<Venue>> getNearbyVenuesNew({
     int page = 0,
-    int size = 10,
+    int size = 15,
   }) async {
     try {
       Response response = await dio.get(
@@ -204,6 +204,8 @@ class VenueApi {
         ApiRoutes.getVenuesByCategory,
         queryParameters: {
           'category': 'new',
+          'page': page,
+          'size': size,
         },
       );
 
@@ -232,6 +234,8 @@ class VenueApi {
         ApiRoutes.getVenuesByCategory,
         queryParameters: {
           'category': 'suggested',
+          'page': page,
+          'size': size,
         },
       );
 

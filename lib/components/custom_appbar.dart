@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
+  final String? title;
   final VoidCallback? onBack;
 
   const CustomAppbar({
     super.key,
-    required this.title,
+    this.title,
     this.onBack,
   });
 
@@ -17,7 +17,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       automaticallyImplyLeading: false,
-      title: Text(title, style: Theme.of(context).textTheme.labelLarge),
+      title: Text(title ?? '', style: Theme.of(context).textTheme.labelLarge),
       leading: FlutterFlowIconButton(
         borderColor: Colors.transparent,
         borderRadius: 30,

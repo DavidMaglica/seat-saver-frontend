@@ -12,5 +12,6 @@ class Routes {
   static const String authentication = '/authentication';
   static const String venue = '/venue';
   static const String venueRatings = '/venueRatings';
+  static const String venuesByType = '/venuesByType';
   static const String successfulReservation = '/successfulReservation';
 }

@@ -44,18 +44,18 @@ class SearchModel extends ChangeNotifier {
     super.dispose();
   }
 
+  // TODO: IMPLEMENT SEARCH AND FILTERS
+
   Future<void> init() async {
     await _loadData();
     await _loadVenueTypes();
-    await fetchNextPage();
+    await _fetchNextPage();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollController.addListener(() {
         if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50) {
-          debugPrint('Reached bottom of the list, fetching next page');
-          debugPrint('isLoading: $isLoading, hasMorePages: $hasMorePages');
           if (!isLoading && hasMorePages) {
-            fetchNextPage();
+            _fetchNextPage();
           }
         }
       });
@@ -90,10 +90,8 @@ class SearchModel extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchNextPage() async {
+  Future<void> _fetchNextPage() async {
     isLoading = true;
-
-    debugPrint('Fetching page $_currentPage with size $_pageSize');
 
     PagedResponse<Venue> paged = await venueApi.getAllVenues(
       _currentPage,
@@ -101,7 +99,7 @@ class SearchModel extends ChangeNotifier {
     );
 
     paginatedVenues = List.from(paginatedVenues)..addAll(paged.content);
-    hasMorePages = _currentPage < paged.totalPages - 1;
+    hasMorePages = _currentPage < paged.totalPages;
     _currentPage++;
 
     isLoading = false;

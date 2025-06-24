@@ -1,6 +1,6 @@
 import 'package:TableReserver/api/account_api.dart';
-import 'package:TableReserver/api/data/user.dart';
 import 'package:TableReserver/api/data/notification_settings.dart';
+import 'package:TableReserver/api/data/user.dart';
 import 'package:TableReserver/api/data/user_location.dart';
 import 'package:TableReserver/api/data/user_response.dart';
 import 'package:TableReserver/api/data/venue.dart';
@@ -8,6 +8,7 @@ import 'package:TableReserver/api/geolocation_api.dart';
 import 'package:TableReserver/api/venue_api.dart';
 import 'package:TableReserver/components/location_permission.dart';
 import 'package:TableReserver/components/toaster.dart';
+import 'package:TableReserver/utils/constants.dart';
 import 'package:TableReserver/utils/utils.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
@@ -166,39 +167,55 @@ class HomepageModel extends ChangeNotifier {
   }
 
   Future<void> getNearbyVenues() async {
+    // TODO IMPLEMENT NEW API
     nearbyVenues = await venueApi.getNearbyVenues();
     notifyListeners();
   }
 
   Future<void> getNewVenues() async {
+    // TODO IMPLEMENT NEW API
     newVenues = await venueApi.getNewVenues();
     notifyListeners();
   }
 
   Future<void> getTrendingVenues() async {
+    // TODO IMPLEMENT NEW API
     trendingVenues = await venueApi.getTrendingVenues();
     notifyListeners();
   }
 
   Future<void> getSuggestedVenues() async {
+    // TODO IMPLEMENT NEW API
     suggestedVenues = await venueApi.getSuggestedVenues();
     notifyListeners();
   }
 
   void openNearbyVenues() {
-    Toaster.displayInfo(context, 'Currently unavailable');
+    Navigator.of(context).pushNamed(Routes.venuesByType, arguments: {
+      'userId': userId,
+      'type': 'nearby',
+      'position': userLocation ?? currentUserLocation,
+    });
     notifyListeners();
     return;
   }
 
   void openNewVenues() {
-    Toaster.displayInfo(context, 'Currently unavailable');
+    Navigator.of(context).pushNamed(Routes.venuesByType, arguments: {
+      'userId': userId,
+      'type': 'new',
+      'position': userLocation ?? currentUserLocation,
+    });
     notifyListeners();
     return;
   }
 
   void openTrendingVenues() {
-    Toaster.displayInfo(context, 'Currently unavailable');
+    Navigator.of(context).pushNamed(Routes.venuesByType, arguments: {
+      'userId': userId,
+      'type': 'trending',
+      'position': userLocation ?? currentUserLocation,
+    });
     notifyListeners();
     return;
   }

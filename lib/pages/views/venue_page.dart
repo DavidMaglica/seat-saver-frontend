@@ -25,6 +25,13 @@ class VenuePage extends StatelessWidget {
     this.userLocation,
   }) : super(key: key);
 
+  Function() goBack(BuildContext context) {
+    return () => Navigator.of(context).pop({
+          'userId': userId,
+          'userLocation': userLocation,
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -42,11 +49,7 @@ class VenuePage extends StatelessWidget {
               key: model.scaffoldKey,
               backgroundColor: Theme.of(context).colorScheme.surface,
               appBar: CustomAppbar(
-                title: model.venue.name,
-                onBack: () => Navigator.of(context).pop({
-                  'userId': userId,
-                  'userLocation': userLocation,
-                }),
+                onBack: goBack(context),
               ),
               body: model.venueImageBytes == null
                   ? const Center(
@@ -133,7 +136,10 @@ class VenuePage extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Text(
                     model.venue.name,
-                    style: Theme.of(ctx).textTheme.titleLarge?.copyWith(color: Colors.white),
+                    style: Theme.of(ctx)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(color: Colors.white),
                   ),
                 ),
         ),
@@ -143,7 +149,7 @@ class VenuePage extends StatelessWidget {
 
   Widget _buildObjectDetails(BuildContext ctx, VenuePageModel model) {
     return Padding(
-      padding: const EdgeInsets.only(left: 24),
+      padding: const EdgeInsets.only(left: 24, top: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

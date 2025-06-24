@@ -27,7 +27,10 @@ class Search extends StatelessWidget {
   }
 
   void _applyFilters(
-      BuildContext ctx, SearchModel model, List<String> tempSelected) {
+    BuildContext ctx,
+    SearchModel model,
+    List<String> tempSelected,
+  ) {
     Navigator.pop(ctx);
     model.filterVenues(tempSelected);
   }
