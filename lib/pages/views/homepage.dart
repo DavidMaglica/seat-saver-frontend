@@ -1,8 +1,8 @@
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/components/carousel_item.dart';
 import 'package:TableReserver/components/navbar.dart';
-import 'package:TableReserver/components/venue_card.dart';
-import 'package:TableReserver/components/venue_suggested_card.dart';
+import 'package:TableReserver/components/homepage_venue_card.dart';
+import 'package:TableReserver/components/suggested_venue_card.dart';
 import 'package:TableReserver/models/homepage_model.dart';
 import 'package:TableReserver/themes/theme.dart';
 import 'package:TableReserver/utils/routing_utils.dart';
@@ -235,6 +235,7 @@ class Homepage extends StatelessWidget {
                       venue: venue,
                       userId: userId,
                       userLocation: userLocation,
+                      venueIndex: venue.id,
                     ),
                   );
                 }).toList())));

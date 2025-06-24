@@ -11,12 +11,14 @@ import 'package:geolocator/geolocator.dart';
 
 class VenueCard extends StatefulWidget {
   final Venue venue;
+  final int venueIndex;
   final int? userId;
   final Position? userLocation;
 
   const VenueCard({
     Key? key,
     required this.venue,
+    required this.venueIndex,
     this.userId,
     this.userLocation,
   }) : super(key: key);
@@ -42,9 +44,9 @@ class _VenueCardState extends State<VenueCard> {
   }
 
   Future<void> _loadVenueImage() async {
-    List<Uint8List> venues = await venueApi.getVenueImages(widget.venue.id);
-    if (venues.isNotEmpty) {
-      setState(() => _venueImage = venues.first);
+    List<Uint8List> venueImages = await venueApi.getVenueImages(widget.venue.id);
+    if (venueImages.isNotEmpty) {
+      setState(() => _venueImage = venueImages.first);
     } else {
       setState(() => _venueImage = null);
     }
@@ -114,7 +116,7 @@ class _VenueCardState extends State<VenueCard> {
 
   Widget _buildImage() {
     return Hero(
-      tag: 'locationCardImage${randomDouble(0, 100)}',
+      tag: 'venueCardImage${widget.venueIndex}',
       transitionOnUserGestures: true,
       child: ClipRRect(
         borderRadius: const BorderRadius.only(

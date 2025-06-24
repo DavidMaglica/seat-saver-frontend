@@ -102,7 +102,7 @@ class MyApp extends StatelessWidget {
         Routes.venuesByType: (context) => VenuesByType(
               type: getRequiredArg<String>(context, 'type'),
               userId: getOptionalArg<int>(context, 'userId'),
-              position: getOptionalArg<Position>(context, 'position'),
+              userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),
         Routes.successfulReservation: (context) => SuccessfulReservation(
               venueName: getRequiredArg<String>(context, 'venueName'),

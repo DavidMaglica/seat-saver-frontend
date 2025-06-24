@@ -2,6 +2,7 @@ import 'package:TableReserver/api/data/paged_response.dart';
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/api/venue_api.dart';
 import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -9,7 +10,7 @@ class VenuesByTypeModel extends ChangeNotifier {
   final BuildContext context;
   final String type;
   final int? userId;
-  final Position? position;
+  final Position? userLocation;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   VenueApi venueApi = VenueApi();
@@ -22,17 +23,18 @@ class VenuesByTypeModel extends ChangeNotifier {
   bool isLoading = false;
   List<Venue> venues = [];
 
+  Map<int, String> venueTypeMap = {};
+
   VenuesByTypeModel({
     required this.context,
     required this.type,
     this.userId,
-    this.position,
+    this.userLocation,
   });
-
-  // TODO: IMPLEMENT VENUE TYPES AND HEADING IMAGES
 
   Future<void> init() async {
     await _fetchNextPage(type);
+    await _loadVenueTypes();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollController.addListener(() {
@@ -46,6 +48,13 @@ class VenuesByTypeModel extends ChangeNotifier {
     });
 
     notifyListeners();
+  }
+
+  Future<void> _loadVenueTypes() async {
+    final venueTypes = await venueApi.getAllVenueTypes();
+    venueTypeMap = {
+      for (var type in venueTypes) type.id: type.type.toTitleCase(),
+    };
   }
 
   Future<void> _fetchNextPage(String type) async {
@@ -68,7 +77,6 @@ class VenuesByTypeModel extends ChangeNotifier {
         );
         _currentPage++;
         hasMorePages = _currentPage < paged.totalPages;
-        debugPrint('Current Page: $_currentPage, Total Pages: ${paged.totalPages}');
         break;
       case 'trending':
         paged = await venueApi.getTrendingVenuesNew(
@@ -77,7 +85,6 @@ class VenuesByTypeModel extends ChangeNotifier {
         );
         hasMorePages = _currentPage < paged.totalPages - 1;
         _currentPage++;
-        paged.content.removeWhere((venue) => venue.rating < 4.0);
         break;
       case 'suggested':
         paged = await venueApi.getSuggestedVenuesNew(
@@ -97,12 +104,23 @@ class VenuesByTypeModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void goToVenuePage(int venueId) {
+    Navigator.of(context).pushNamed(
+      Routes.venue,
+      arguments: {
+        'venueId': venueId,
+        'userId': userId,
+        'userLocation': userLocation,
+      },
+    );
+  }
+
   void goBack() {
     Navigator.of(context).pushNamed(
       Routes.homepage,
       arguments: {
         'userId': userId,
-        'position': position,
+        'userLocation': userLocation,
       },
     );
   }

@@ -194,7 +194,7 @@ class HomepageModel extends ChangeNotifier {
     Navigator.of(context).pushNamed(Routes.venuesByType, arguments: {
       'userId': userId,
       'type': 'nearby',
-      'position': userLocation ?? currentUserLocation,
+      'userLocation': userLocation ?? currentUserLocation,
     });
     notifyListeners();
     return;
@@ -204,7 +204,7 @@ class HomepageModel extends ChangeNotifier {
     Navigator.of(context).pushNamed(Routes.venuesByType, arguments: {
       'userId': userId,
       'type': 'new',
-      'position': userLocation ?? currentUserLocation,
+      'userLocation': userLocation ?? currentUserLocation,
     });
     notifyListeners();
     return;
@@ -214,7 +214,7 @@ class HomepageModel extends ChangeNotifier {
     Navigator.of(context).pushNamed(Routes.venuesByType, arguments: {
       'userId': userId,
       'type': 'trending',
-      'position': userLocation ?? currentUserLocation,
+      'userLocation': userLocation ?? currentUserLocation,
     });
     notifyListeners();
     return;
