@@ -129,8 +129,7 @@ class Search extends StatelessWidget {
                 }
 
                 final venue = model.paginatedVenues[index];
-                final venueType =
-                    model.venueTypeMap[venue.typeId] ?? '';
+                final venueType = model.venueTypeMap[venue.typeId] ?? '';
 
                 return Column(
                   children: [

@@ -31,14 +31,29 @@ class VenueApi {
     }
   }
 
-  Future<PagedResponse<Venue>> getAllVenues(int page, int size) async {
+  Future<PagedResponse<Venue>> getAllVenues(
+    int page,
+    int size,
+    String? searchQuery,
+    List<int>? typeIds,
+  ) async {
     try {
-      Response response = await dio.get(
+      final Map<String, dynamic> queryParams = {
+        'page': page,
+        'size': size,
+      };
+
+      if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+        queryParams['searchQuery'] = searchQuery.trim();
+      }
+
+      if (typeIds != null && typeIds.isNotEmpty) {
+        queryParams['typeIds'] = typeIds;
+      }
+
+      final Response response = await dio.get(
         ApiRoutes.getAllVenues,
-        queryParameters: {
-          'page': page,
-          'size': size,
-        },
+        queryParameters: queryParams,
       );
 
       return PagedResponse.fromJson(

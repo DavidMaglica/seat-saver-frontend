@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:TableReserver/api/data/paged_response.dart';
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/api/venue_api.dart';
@@ -15,11 +17,16 @@ class SearchModel extends ChangeNotifier {
   final TextEditingController searchBarController = TextEditingController();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+  Timer? _debounce;
+
   int _currentPage = 0;
   final int _pageSize = 20;
   bool hasMorePages = true;
   bool isLoading = false;
   List<Venue> paginatedVenues = [];
+
+  List<int> selectedTypeIds = [];
+  String searchQuery = '';
 
   final ScrollController scrollController = ScrollController();
 
@@ -28,8 +35,6 @@ class SearchModel extends ChangeNotifier {
   List<String> venueTypeOptions = [];
   List<String> selectedTypes = [];
 
-  List<Venue> allVenuesMaster = [];
-  List<Venue> allVenues = [];
   Map<int, String> venueTypeMap = {};
 
   SearchModel({
@@ -39,12 +44,11 @@ class SearchModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     searchBarController.dispose();
     unfocusNode.dispose();
     super.dispose();
   }
-
-  // TODO: IMPLEMENT SEARCH AND FILTERS
 
   Future<void> init() async {
     await _loadData();
@@ -53,7 +57,8 @@ class SearchModel extends ChangeNotifier {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollController.addListener(() {
-        if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50) {
+        if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent - 50) {
           if (!isLoading && hasMorePages) {
             _fetchNextPage();
           }
@@ -73,95 +78,68 @@ class SearchModel extends ChangeNotifier {
   }
 
   Future<void> _loadData() async {
-    PagedResponse<Venue> venues =
-        await venueApi.getAllVenues(_currentPage, _pageSize);
+    PagedResponse<Venue> venues = await venueApi.getAllVenues(
+      _currentPage,
+      _pageSize,
+      null,
+      null,
+    );
 
     venues.content.sort((a, b) => a.name.compareTo(b.name));
-
-    allVenuesMaster = venues.content;
-    allVenues = List.from(venues.content);
-
-    final selectedType = venueTypeMap[selectedVenueType];
-    if (selectedType != null) {
-      selectedTypes.add(selectedType);
-      allVenues = venues.content
-          .where((venue) => venue.typeId == selectedVenueType)
-          .toList();
-    }
   }
 
   Future<void> _fetchNextPage() async {
+    if (isLoading || !hasMorePages) return;
+
     isLoading = true;
 
     PagedResponse<Venue> paged = await venueApi.getAllVenues(
       _currentPage,
       _pageSize,
+      searchQuery.isEmpty ? null : searchQuery,
+      selectedTypeIds.isEmpty ? null : selectedTypeIds,
     );
 
-    paginatedVenues = List.from(paginatedVenues)..addAll(paged.content);
-    hasMorePages = _currentPage < paged.totalPages;
+    paginatedVenues.addAll(paged.content);
+    hasMorePages = _currentPage < paged.totalPages - 1;
     _currentPage++;
 
     isLoading = false;
     notifyListeners();
   }
 
-  void search(String value) async {
-    if (value.isEmpty) {
-      if (selectedTypes.isEmpty) {
-        allVenues = List.from(allVenuesMaster);
-      } else {
-        filterVenues(selectedTypes);
-      }
-      notifyListeners();
-      return;
-    }
+  void search(String value) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    final lowerQuery = value.toLowerCase();
-    var filtered = allVenuesMaster
-        .where((venue) => venue.name.toLowerCase().contains(lowerQuery))
-        .toList();
-
-    if (selectedTypes.isNotEmpty) {
-      List<int> selectedTypeIds = venueTypeMap.entries
-          .where((e) => selectedTypes.contains(e.value))
-          .map((e) => e.key)
-          .toList();
-
-      filtered = filtered
-          .where((venue) => selectedTypeIds.contains(venue.typeId))
-          .toList();
-    }
-
-    allVenues = filtered;
-    notifyListeners();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      searchQuery = value.trim();
+      _refreshPagedResults();
+    });
   }
 
   void filterVenues(List<String> selectedTypeLabels) {
     selectedTypes = selectedTypeLabels;
 
-    if (selectedTypes.isEmpty) {
-      allVenues = List.from(allVenuesMaster);
-      notifyListeners();
-      return;
-    }
-
-    final selectedTypeIds = venueTypeMap.entries
+    selectedTypeIds = venueTypeMap.entries
         .where((e) => selectedTypeLabels.contains(e.value))
         .map((e) => e.key)
         .toList();
 
-    allVenues = allVenuesMaster
-        .where((venue) => selectedTypeIds.contains(venue.typeId))
-        .toList();
-
-    notifyListeners();
+    _refreshPagedResults();
   }
 
   void clearFilters() {
     selectedTypes.clear();
-    allVenues = List.from(allVenuesMaster);
-    notifyListeners();
+    selectedTypeIds.clear();
+    searchQuery = '';
+    _refreshPagedResults();
+  }
+
+  void _refreshPagedResults() {
+    paginatedVenues.clear();
+    _currentPage = 0;
+    hasMorePages = true;
+    _fetchNextPage();
   }
 
   Function() goToVenuePage(
