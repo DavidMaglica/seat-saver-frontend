@@ -8,14 +8,12 @@ Color calculateAvailabilityColour(int maximumCapacity, int availableCapacity) {
   return ratio >= 0.4
       ? AppThemes.successColor
       : ratio >= 0.1
-          ? AppThemes.warningColor
-          : Colors.red;
+      ? AppThemes.warningColor
+      : Colors.red;
 }
 
-Position? getPositionFromLatAndLong(
-  double? lastKnownLatitude,
-  double? lastKnownLongitude,
-) {
+Position? getPositionFromLatAndLong(double? lastKnownLatitude,
+    double? lastKnownLongitude,) {
   if (lastKnownLatitude == null || lastKnownLongitude == null) {
     return null;
   }
@@ -40,6 +38,20 @@ LinearGradient fallbackImageGradient() {
       const Color(0xFF43A047).withOpacity(0.8),
       const Color(0xFFFF7043).withOpacity(0.8),
       const Color(0xFFFF5722).withOpacity(0.8),
+    ],
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    stops: const [0.0, 0.5, 0.9, 1.0],
+  );
+}
+
+LinearGradient fallbackImageGradientReverted() {
+  return LinearGradient(
+    colors: [
+      const Color(0xFFFF5722).withOpacity(0.8),
+      const Color(0xFFFF7043).withOpacity(0.6),
+      const Color(0xFF43A047).withOpacity(0.8),
+      const Color(0xFF1B5E20).withOpacity(0.8),
     ],
     begin: Alignment.bottomLeft,
     end: Alignment.topRight,

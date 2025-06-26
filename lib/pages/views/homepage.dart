@@ -1,8 +1,8 @@
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/components/carousel_item.dart';
 import 'package:TableReserver/components/navbar.dart';
-import 'package:TableReserver/components/venue_card.dart';
-import 'package:TableReserver/components/venue_suggested_card.dart';
+import 'package:TableReserver/components/homepage_venue_card.dart';
+import 'package:TableReserver/components/suggested_venue_card.dart';
 import 'package:TableReserver/models/homepage_model.dart';
 import 'package:TableReserver/themes/theme.dart';
 import 'package:TableReserver/utils/routing_utils.dart';
@@ -76,6 +76,7 @@ class Homepage extends StatelessWidget {
                                         model.suggestedVenues!.isNotEmpty)
                                       _buildSuggestedVenues(
                                         context,
+                                        model.openSuggestedVenues,
                                         model.suggestedVenues!,
                                       )
                                     else
@@ -178,12 +179,16 @@ class Homepage extends StatelessWidget {
             ]));
   }
 
-  Widget _buildSuggestedVenues(BuildContext ctx, List<Venue> venues) {
+  Widget _buildSuggestedVenues(
+    BuildContext ctx,
+    Function() seeAllFunction,
+    List<Venue> venues,
+  ) {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 0, 0),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(.2),
+          color: AppThemes.successColor.withOpacity(0.4),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16),
             bottomLeft: Radius.circular(16),
@@ -206,6 +211,7 @@ class Homepage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildTitle(ctx, 'We suggest'),
+                        _buildSeeAllButton(ctx, seeAllFunction)
                       ],
                     ),
                     _buildVenueSuggestedCards(venues),
@@ -235,6 +241,7 @@ class Homepage extends StatelessWidget {
                       venue: venue,
                       userId: userId,
                       userLocation: userLocation,
+                      venueIndex: venue.id,
                     ),
                   );
                 }).toList())));
@@ -264,7 +271,13 @@ class Homepage extends StatelessWidget {
   Widget _buildTitle(BuildContext ctx, String title) {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-      child: Text(title, style: Theme.of(ctx).textTheme.titleMedium),
+      child: Text(
+        title,
+        style: Theme.of(ctx)
+            .textTheme
+            .titleMedium
+            ?.copyWith(color: Theme.of(ctx).colorScheme.onPrimary),
+      ),
     );
   }
 

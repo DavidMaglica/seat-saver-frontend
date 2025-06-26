@@ -12,6 +12,7 @@ import 'package:TableReserver/pages/views/ratings_page.dart';
 import 'package:TableReserver/pages/views/search.dart';
 import 'package:TableReserver/pages/views/successful_reservation.dart';
 import 'package:TableReserver/pages/views/venue_page.dart';
+import 'package:TableReserver/pages/views/venues_by_type.dart';
 import 'package:TableReserver/themes/theme.dart';
 import 'package:TableReserver/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -95,6 +96,11 @@ class MyApp extends StatelessWidget {
             ),
         Routes.venueRatings: (context) => RatingsPage(
               venueId: getRequiredArg<int>(context, 'venueId'),
+              userId: getOptionalArg<int>(context, 'userId'),
+              userLocation: getOptionalArg<Position>(context, 'userLocation'),
+            ),
+        Routes.venuesByType: (context) => VenuesByType(
+              type: getRequiredArg<String>(context, 'type'),
               userId: getOptionalArg<int>(context, 'userId'),
               userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),

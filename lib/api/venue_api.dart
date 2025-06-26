@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:TableReserver/api/api_routes.dart';
 import 'package:TableReserver/api/data/basic_response.dart';
+import 'package:TableReserver/api/data/paged_response.dart';
 import 'package:TableReserver/api/data/rating.dart';
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/api/data/venue_type.dart';
@@ -30,88 +31,164 @@ class VenueApi {
     }
   }
 
-  Future<List<Venue>> getAllVenues() async {
-    Response response = await dio.get(ApiRoutes.getAllVenues);
-    List<Venue> venues =
-        (response.data as List).map((venue) => Venue.fromJson(venue)).toList();
-    return venues;
+  Future<PagedResponse<Venue>> getAllVenues(
+    int page,
+    int size,
+    String? searchQuery,
+    List<int>? typeIds,
+  ) async {
+    try {
+      final Map<String, dynamic> queryParams = {
+        'page': page,
+        'size': size,
+      };
+
+      if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+        queryParams['searchQuery'] = searchQuery.trim();
+      }
+
+      if (typeIds != null && typeIds.isNotEmpty) {
+        queryParams['typeIds'] = typeIds;
+      }
+
+      final Response response = await dio.get(
+        ApiRoutes.getAllVenues,
+        queryParameters: queryParams,
+      );
+
+      return PagedResponse.fromJson(
+        response.data,
+        (json) => Venue.fromJson(json),
+      );
+    } catch (e) {
+      logger.e('Error fetching all venues: $e');
+      return PagedResponse<Venue>(
+        content: [],
+        page: 0,
+        size: 0,
+        totalElements: 0,
+        totalPages: 0,
+      );
+    }
   }
 
-  Future<List<Venue>> getNearbyVenues() async {
+  Future<PagedResponse<Venue>> getNearbyVenuesNew({
+    int page = 0,
+    int size = 15,
+  }) async {
     try {
       Response response = await dio.get(
         ApiRoutes.getVenuesByCategory,
         queryParameters: {
           'category': 'nearby',
+          'page': page,
+          'size': size,
         },
       );
-      List<Venue> nearbyVenues = (response.data as List)
-          .map((venue) => Venue.fromJson(venue))
-          .toList();
 
-      nearbyVenues.sort((a, b) => a.location.compareTo(b.location));
-      return nearbyVenues;
+      return PagedResponse.fromJson(
+        response.data,
+        (json) => Venue.fromJson(json),
+      );
     } catch (e) {
       logger.e('Error fetching nearby venues: $e');
-      return [];
+      return PagedResponse<Venue>(
+        content: [],
+        page: 0,
+        size: 0,
+        totalElements: 0,
+        totalPages: 0,
+      );
     }
   }
 
-  Future<List<Venue>> getTrendingVenues() async {
+  Future<PagedResponse<Venue>> getTrendingVenuesNew({
+    int page = 0,
+    int size = 10,
+  }) async {
     try {
       Response response = await dio.get(
         ApiRoutes.getVenuesByCategory,
         queryParameters: {
           'category': 'trending',
+          'page': page,
+          'size': size,
         },
       );
-      List<Venue> trendingVenues = (response.data as List)
-          .map((venue) => Venue.fromJson(venue))
-          .toList();
 
-      trendingVenues.sort((a, b) => b.rating.compareTo(a.rating));
-      return trendingVenues;
+      return PagedResponse.fromJson(
+        response.data,
+        (json) => Venue.fromJson(json),
+      );
     } catch (e) {
       logger.e('Error fetching trending venues: $e');
-      return [];
+      return PagedResponse<Venue>(
+        content: [],
+        page: 0,
+        size: 0,
+        totalElements: 0,
+        totalPages: 0,
+      );
     }
   }
 
-  Future<List<Venue>> getNewVenues() async {
+  Future<PagedResponse<Venue>> getNewVenuesNew({
+    int page = 0,
+    int size = 10,
+  }) async {
     try {
       Response response = await dio.get(
         ApiRoutes.getVenuesByCategory,
         queryParameters: {
           'category': 'new',
+          'page': page,
+          'size': size,
         },
       );
-      List<Venue> newVenues = (response.data as List)
-          .map((venue) => Venue.fromJson(venue))
-          .toList();
 
-      return newVenues;
+      return PagedResponse.fromJson(
+        response.data,
+        (json) => Venue.fromJson(json),
+      );
     } catch (e) {
       logger.e('Error fetching new venues: $e');
-      return [];
+      return PagedResponse<Venue>(
+        content: [],
+        page: 0,
+        size: 0,
+        totalElements: 0,
+        totalPages: 0,
+      );
     }
   }
 
-  Future<List<Venue>> getSuggestedVenues() async {
+  Future<PagedResponse<Venue>> getSuggestedVenuesNew({
+    int page = 0,
+    int size = 10,
+  }) async {
     try {
       Response response = await dio.get(
         ApiRoutes.getVenuesByCategory,
         queryParameters: {
           'category': 'suggested',
+          'page': page,
+          'size': size,
         },
       );
-      List<Venue> suggestedVenues = (response.data as List)
-          .map((venue) => Venue.fromJson(venue))
-          .toList();
 
-      return suggestedVenues;
+      return PagedResponse.fromJson(
+        response.data,
+        (json) => Venue.fromJson(json),
+      );
     } catch (e) {
       logger.e('Error fetching suggested venues: $e');
-      return [];
+      return PagedResponse<Venue>(
+        content: [],
+        page: 0,
+        size: 0,
+        totalElements: 0,
+        totalPages: 0,
+      );
     }
   }
 

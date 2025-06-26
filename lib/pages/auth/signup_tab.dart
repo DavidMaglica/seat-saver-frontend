@@ -356,9 +356,9 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
             options: FFButtonOptions(
               width: 270,
               height: 50,
-              color: Theme.of(context).colorScheme.primary,
-              textStyle: TextStyle(
-                color: Theme.of(context).colorScheme.background,
+              color: AppThemes.successColor,
+              textStyle: const TextStyle(
+                color: Colors.white,
                 fontSize: 18,
               ),
               borderSide: BorderSide.none,

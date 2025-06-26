@@ -80,8 +80,10 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).colorScheme.outline,
-            blurRadius: 6,
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 2,
+            spreadRadius: 2,
+            offset: const Offset(0, 2),
           )
         ],
       ),
@@ -115,7 +117,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   Widget _buildImage() {
     return Hero(
-      tag: 'locationCardImage${randomDouble(0, 100)}',
+      tag: 'locationCardImage${widget.venue.id}',
       transitionOnUserGestures: true,
       child: ClipRRect(
         borderRadius: const BorderRadius.only(
@@ -143,11 +145,12 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
       height: 110,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        gradient: fallbackImageGradient(),
+        gradient: fallbackImageGradientReverted(),
       ),
       child: Text(
         widget.venue.name,
-        style: Theme.of(ctx).textTheme.titleMedium,
+        style:
+            Theme.of(ctx).textTheme.titleMedium?.copyWith(color: Colors.white),
         textAlign: TextAlign.center,
       ),
     );

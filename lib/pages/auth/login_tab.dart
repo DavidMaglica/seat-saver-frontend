@@ -267,9 +267,9 @@ class _LogInTabState extends State<LogInTab> {
           options: FFButtonOptions(
             width: 270,
             height: 50,
-            color: Theme.of(context).colorScheme.primary,
-            textStyle: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
+            color: AppThemes.successColor,
+            textStyle: const TextStyle(
+              color: Colors.white,
               fontSize: 18,
             ),
             borderSide: BorderSide.none,

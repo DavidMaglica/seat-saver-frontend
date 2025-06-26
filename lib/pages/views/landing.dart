@@ -1,4 +1,5 @@
 import 'package:TableReserver/models/landing_model.dart';
+import 'package:TableReserver/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
@@ -70,7 +71,7 @@ class Landing extends StatelessWidget {
                           options: FFButtonOptions(
                             width: 270,
                             height: 44,
-                            color: Theme.of(context).colorScheme.primary,
+                            color: AppThemes.successColor,
                             textStyle: TextStyle(
                               color: Theme.of(context).colorScheme.background,
                               fontSize: 16,

@@ -41,7 +41,6 @@ class RatingsPage extends StatelessWidget {
               key: model.scaffoldKey,
               backgroundColor: Theme.of(context).colorScheme.surface,
               appBar: CustomAppbar(
-                title: model.venue.name,
                 onBack: () => Navigator.of(context).pop({
                   'userId': userId,
                   'userLocation': userLocation,
