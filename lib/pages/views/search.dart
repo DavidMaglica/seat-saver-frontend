@@ -113,8 +113,7 @@ class Search extends StatelessWidget {
               controller: model.scrollController,
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
-              itemCount:
-                  model.paginatedVenues.length + (model.hasMorePages ? 1 : 0),
+              itemCount: model.paginatedVenues.length,
               itemBuilder: (context, index) {
                 if (index == model.paginatedVenues.length &&
                     model.hasMorePages) {

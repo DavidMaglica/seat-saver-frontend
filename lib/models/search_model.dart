@@ -51,7 +51,6 @@ class SearchModel extends ChangeNotifier {
   }
 
   Future<void> init() async {
-    await _loadData();
     await _loadVenueTypes();
     await _fetchNextPage();
 
