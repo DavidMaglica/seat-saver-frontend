@@ -1,6 +1,5 @@
 import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/api/data/user.dart';
 import 'package:TableReserver/components/toaster.dart';
 import 'package:TableReserver/models/authentication_model.dart';
 import 'package:TableReserver/models/signup_tab_model.dart';
@@ -38,9 +37,9 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
   }
 
   void _performSignUp(SignUpMethodEnum signUpMethod) async {
-    BasicResponse<User> response = await _model.signUp(signUpMethod);
+    BasicResponse<int> response = await _model.signUp(signUpMethod);
     if (response.success && response.data != null) {
-      _goToHomepage(response.data!.id);
+      _goToHomepage(response.data!);
     } else {
       if (!mounted) return;
       Toaster.displayError(context, response.message);
