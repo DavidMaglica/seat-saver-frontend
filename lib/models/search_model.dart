@@ -76,17 +76,6 @@ class SearchModel extends ChangeNotifier {
     venueTypeOptions = venueTypeMap.values.toList();
   }
 
-  Future<void> _loadData() async {
-    PagedResponse<Venue> venues = await venueApi.getAllVenues(
-      _currentPage,
-      _pageSize,
-      null,
-      null,
-    );
-
-    venues.content.sort((a, b) => a.name.compareTo(b.name));
-  }
-
   Future<void> _fetchNextPage() async {
     if (isLoading || !hasMorePages) return;
 

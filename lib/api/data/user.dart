@@ -4,7 +4,6 @@ class User {
   final int id;
   final String username;
   final String email;
-  final String password;
   final NotificationOptions notificationOptions;
   final double? lastKnownLatitude;
   final double? lastKnownLongitude;
@@ -13,7 +12,6 @@ class User {
     required this.id,
     required this.username,
     required this.email,
-    required this.password,
     required this.notificationOptions,
     this.lastKnownLatitude,
     this.lastKnownLongitude,
@@ -24,7 +22,6 @@ class User {
       id: json['id'],
       username: json['username'],
       email: json['email'],
-      password: json['password'],
       notificationOptions:
           NotificationOptions.fromJson(json['notificationOptions']),
       lastKnownLatitude: json['lastKnownLatitude'],
@@ -69,7 +66,6 @@ class APIUser {
       id: id,
       username: username,
       email: email,
-      password: password,
       notificationOptions: NotificationOptions(
         pushNotificationsTurnedOn: false,
         emailNotificationsTurnedOn: false,

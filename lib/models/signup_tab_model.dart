@@ -1,6 +1,5 @@
 import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/api/data/user.dart';
 import 'package:TableReserver/pages/auth/signup_tab.dart';
 import 'package:TableReserver/utils/sign_up_methods.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +16,7 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
   @override
   void initState(BuildContext context) {}
 
-  Future<BasicResponse<User>> signUp(SignUpMethodEnum signUpMethod) async {
+  Future<BasicResponse<int>> signUp(SignUpMethodEnum signUpMethod) async {
     switch (signUpMethod) {
       case SignUpMethodEnum.apple:
         return _appleSignUp();
@@ -37,15 +36,15 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
     }
   }
 
-  BasicResponse<User> _appleSignUp() {
+  BasicResponse<int> _appleSignUp() {
     return BasicResponse(success: false, message: 'Currently unavailable');
   }
 
-  BasicResponse<User> _googleSignUp() {
+  BasicResponse<int> _googleSignUp() {
     return BasicResponse(success: false, message: 'Currently unavailable');
   }
 
-  Future<BasicResponse<User>> _customSignUp(
+  Future<BasicResponse<int>> _customSignUp(
     String username,
     String email,
     String password,

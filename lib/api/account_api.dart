@@ -36,7 +36,7 @@ class AccountApi {
     }
   }
 
-  Future<BasicResponse<User>> signUp(
+  Future<BasicResponse<int>> signUp(
     String email,
     String username,
     String password,
@@ -58,24 +58,19 @@ class AccountApi {
         },
       );
 
-      final basicResponse = BasicResponse<APIUser>.fromJson(
-        response.data,
-        (json) => APIUser.fromJson(json),
-      );
+      final int userId = response.data['data'] as int;
 
-      final user = basicResponse.data?.toUser();
-
-      return BasicResponse<User>(
+      return BasicResponse<int>(
         success: true,
         message: 'User signed up',
-        data: user,
+        data: userId,
       );
     } catch (e) {
       return BasicResponse(success: false, message: e.toString());
     }
   }
 
-  Future<BasicResponse<User>> logIn(String email, String password) async {
+  Future<BasicResponse<int>> logIn(String email, String password) async {
     if (email.isEmpty || password.isEmpty) {
       return BasicResponse(
         success: false,
@@ -92,15 +87,12 @@ class AccountApi {
         },
       );
 
-      final basicResponse = BasicResponse<APIUser>.fromJson(
-        response.data,
-        (json) => APIUser.fromJson(json),
-      );
+      final int userId = response.data['data'] as int;
 
-      return BasicResponse<User>(
-        success: basicResponse.success,
-        message: basicResponse.message,
-        data: basicResponse.data?.toUser(),
+      return BasicResponse<int>(
+        success: true,
+        message: 'User logged in',
+        data: userId,
       );
     } catch (e) {
       return BasicResponse(success: false, message: e.toString());

@@ -8,12 +8,14 @@ Color calculateAvailabilityColour(int maximumCapacity, int availableCapacity) {
   return ratio >= 0.4
       ? AppThemes.successColor
       : ratio >= 0.1
-      ? AppThemes.warningColor
-      : Colors.red;
+          ? AppThemes.warningColor
+          : Colors.red;
 }
 
-Position? getPositionFromLatAndLong(double? lastKnownLatitude,
-    double? lastKnownLongitude,) {
+Position? getPositionFromLatAndLong(
+  double? lastKnownLatitude,
+  double? lastKnownLongitude,
+) {
   if (lastKnownLatitude == null || lastKnownLongitude == null) {
     return null;
   }

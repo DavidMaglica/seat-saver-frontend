@@ -1,6 +1,7 @@
 import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/api/data/basic_response.dart';
 import 'package:TableReserver/api/data/user.dart';
+import 'package:TableReserver/api/data/user_response.dart';
 import 'package:TableReserver/components/toaster.dart';
 import 'package:TableReserver/models/authentication_model.dart';
 import 'package:TableReserver/models/login_tab_model.dart';
@@ -40,9 +41,13 @@ class _LogInTabState extends State<LogInTab> {
   }
 
   void _performLogIn(SignUpMethodEnum signUpMethod) async {
-    BasicResponse<User> response = await _model.logIn(signUpMethod);
+    BasicResponse<int> response = await _model.logIn(signUpMethod);
     if (response.success && response.data != null) {
-      User user = response.data!;
+      int userId = response.data!;
+
+      UserResponse? userResponse = await accountApi.getUser(userId);
+
+      User user = userResponse!.user!;
 
       Position? lastKnownLocation = getPositionFromLatAndLong(
         user.lastKnownLatitude,
