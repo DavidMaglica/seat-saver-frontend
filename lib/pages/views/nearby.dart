@@ -1,12 +1,12 @@
 import 'package:TableReserver/components/navbar.dart';
-import 'package:TableReserver/themes/theme.dart';
 import 'package:TableReserver/utils/routing_utils.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+/// Builds Google Map with the user's location. If no location is provided, uses a default location (Zagreb).
+/// Google Map is currently commented out as it consumes tokens which i as a student do not want to spend until necessary.
 class Nearby extends StatefulWidget {
   final int? userId;
   final Position? userLocation;
@@ -27,18 +27,11 @@ class _NearbyState extends State<Nearby> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  late MapController osmMapController;
+  late GoogleMapController googleMapController;
 
   @override
   void initState() {
     super.initState();
-
-    osmMapController = MapController(
-      initPosition: GeoPoint(
-        latitude: widget.userLocation?.latitude ?? 45.815399,
-        longitude: widget.userLocation?.longitude ?? 15.966568,
-      ),
-    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -46,7 +39,7 @@ class _NearbyState extends State<Nearby> {
   @override
   void dispose() {
     unfocusNode.dispose();
-    osmMapController.dispose();
+    googleMapController.dispose();
     super.dispose();
   }
 
@@ -54,53 +47,56 @@ class _NearbyState extends State<Nearby> {
   Widget build(BuildContext context) {
     var brightness = Theme.of(context).brightness;
     return GestureDetector(
-        onTap: () => unfocusNode.canRequestFocus
-            ? FocusScope.of(context).requestFocus(unfocusNode)
-            : FocusScope.of(context).unfocus(),
-        child: AnnotatedRegion<SystemUiOverlayStyle>(
-            value: brightness == Brightness.dark
-                ? SystemUiOverlayStyle.light
-                : SystemUiOverlayStyle.dark,
-            child: Scaffold(
-                key: scaffoldKey,
-                resizeToAvoidBottomInset: false,
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                body: SafeArea(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: OSMFlutter(
-                          controller: osmMapController,
-                          osmOption: OSMOption(
-                              showDefaultInfoWindow: true,
-                              isPicker: false,
-                              showContributorBadgeForOSM: true,
-                              userTrackingOption: const UserTrackingOption(
-                                enableTracking: true,
-                                unFollowUser: false,
-                              ),
-                              zoomOption: const ZoomOption(
-                                initZoom: 16,
-                                minZoomLevel: 2,
-                                maxZoomLevel: 19,
-                                stepZoom: 10,
-                              ),
-                              markerOption: MarkerOption(
-                                  defaultMarker: const MarkerIcon(
-                                      icon: Icon(
-                                CupertinoIcons.location_solid,
-                                color: AppThemes.accent1,
-                                size: 32,
-                              )))),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                bottomNavigationBar: NavBar(
-                  currentIndex: pageIndex,
-                  onTap: (index, context) => onNavbarItemTapped(context,
-                      pageIndex, index, widget.userId, widget.userLocation),
-                ))));
+      onTap: () => unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(unfocusNode)
+          : FocusScope.of(context).unfocus(),
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: brightness == Brightness.dark
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          key: scaffoldKey,
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          body: const SafeArea(
+            child: Column(
+              children: [
+                Expanded(child: SizedBox.shrink()
+                    // GoogleMap(
+                    //   onMapCreated: (controller) {
+                    //     setState(() {
+                    //       googleMapController = controller;
+                    //     });
+                    //   },
+                    //   initialCameraPosition: CameraPosition(
+                    //     target: LatLng(
+                    //       widget.userLocation?.latitude ?? 45.815399,
+                    //       widget.userLocation?.longitude ?? 15.966568,
+                    //     ),
+                    //     zoom: 14.0,
+                    //   ),
+                    //   markers: {
+                    //     Marker(
+                    //       markerId: const MarkerId('userLocation'),
+                    //       position: LatLng(
+                    //         widget.userLocation?.latitude ?? 45.815399,
+                    //         widget.userLocation?.longitude ?? 15.966568,
+                    //       ),
+                    //       infoWindow: const InfoWindow(title: 'Your Location'),
+                    //     )
+                    //   },
+                    // ),
+                    )
+              ],
+            ),
+          ),
+          bottomNavigationBar: NavBar(
+            currentIndex: pageIndex,
+            onTap: (index, context) => onNavbarItemTapped(
+                context, pageIndex, index, widget.userId, widget.userLocation),
+          ),
+        ),
+      ),
+    );
   }
 }
