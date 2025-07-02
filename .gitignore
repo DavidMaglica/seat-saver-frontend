@@ -65,7 +65,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-# API KEYS
-/ios/Flutter/Debug.xcconfig
-/ios/Flutter/Release.xcconfig.xcconfig

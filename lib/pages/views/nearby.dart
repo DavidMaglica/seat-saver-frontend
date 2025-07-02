@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 /// Builds Google Map with the user's location. If no location is provided, uses a default location (Zagreb).
-/// Google Map is currently commented out as it consumes tokens which i as a student do not want to spend until necessary.
+/// Google Map is currently commented out as it queries Google Maps API which is not free after x queries.
 class Nearby extends StatefulWidget {
   final int? userId;
   final Position? userLocation;

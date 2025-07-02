@@ -1,7 +1,7 @@
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/components/carousel_item.dart';
-import 'package:TableReserver/components/navbar.dart';
 import 'package:TableReserver/components/homepage_venue_card.dart';
+import 'package:TableReserver/components/navbar.dart';
 import 'package:TableReserver/components/suggested_venue_card.dart';
 import 'package:TableReserver/models/homepage_model.dart';
 import 'package:TableReserver/themes/theme.dart';
@@ -101,11 +101,17 @@ class Homepage extends StatelessWidget {
         ));
   }
 
+
   Widget _buildCarouselComponent(HomepageModel model) {
-    final nearby = model.nearbyCities ?? [];
-    if (nearby.isEmpty) {
-      return const Row();
+    if (model.nearbyCities.isEmpty) {
+      return const SizedBox.shrink();
+    } else {
+      if (model.cityImages.isEmpty) {
+        /// Loading city image is currently commented out as it queries Google Places API which is not free after x queries.
+        // model.loadCarouselData(model.nearbyCities);
+      }
     }
+
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
@@ -116,14 +122,19 @@ class Homepage extends StatelessWidget {
               width: double.infinity,
               height: 212,
               child: CarouselSlider(
-                items: nearby
-                    .map((city) => Padding(
+                items: model.nearbyCities
+                    .mapIndexed(
+                      (index, city) => Padding(
                         padding:
                             const EdgeInsetsDirectional.symmetric(vertical: 12),
-                        child: CarouselItem(city)))
+                        child: CarouselItem(
+                          city,
+                          model.cityImages[city],
+                        ),
+                      ),
+                    )
                     .toList(),
-                carouselController: model.carouselController ??=
-                    CarouselController(),
+                carouselController: model.carouselController,
                 options: CarouselOptions(
                   initialPage: 1,
                   viewportFraction: .75,
