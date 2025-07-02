@@ -6,9 +6,9 @@ import 'package:TableReserver/api/data/user_location.dart';
 import 'package:TableReserver/api/data/user_response.dart';
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/api/geolocation_api.dart';
+import 'package:TableReserver/api/google_api.dart';
 import 'package:TableReserver/api/venue_api.dart';
 import 'package:TableReserver/components/location_permission.dart';
-import 'package:TableReserver/components/toaster.dart';
 import 'package:TableReserver/utils/constants.dart';
 import 'package:TableReserver/utils/utils.dart';
 import 'package:carousel_slider/carousel_controller.dart';
@@ -19,7 +19,7 @@ import 'package:geolocator/geolocator.dart';
 class HomepageModel extends ChangeNotifier {
   final BuildContext context;
   final int? userId;
-  final Position? userLocation;
+  Position? userLocation;
 
   final unfocusNode = FocusNode();
 
@@ -29,18 +29,20 @@ class HomepageModel extends ChangeNotifier {
   List<Venue>? newVenues;
   List<Venue>? trendingVenues;
   List<Venue>? suggestedVenues;
-  CarouselController? carouselController;
+  CarouselController carouselController = CarouselController();
   int carouselCurrentIndex = 1;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  List<String>? nearbyCities;
+  List<String> nearbyCities = [];
+  Map<String, String> cityImages = {};
   Position? currentUserLocation;
   User? loggedInUser;
 
   AccountApi accountApi = AccountApi();
   GeolocationApi geolocationApi = GeolocationApi();
   VenueApi venueApi = VenueApi();
+  GoogleApi googleApi = GoogleApi();
 
   HomepageModel({
     required this.context,
@@ -52,11 +54,18 @@ class HomepageModel extends ChangeNotifier {
     await checkLogIn();
 
     if (locationPopUpCounter < 1) {
-      await displayLocationPermissionPopUp(locationPopUpCounter);
+      await displayLocationPermissionPopUp();
     }
 
     if (userId != null) {
-      await updateUserLocation(userId!);
+      NotificationOptions? options =
+          await accountApi.getNotificationOptions(userId!);
+      if (options != null && options.locationServicesTurnedOn) {
+        userLocation = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best,
+        );
+        accountApi.updateUserLocation(userId!, userLocation!);
+      }
     }
 
     await resolveNearbyCities();
@@ -77,22 +86,28 @@ class HomepageModel extends ChangeNotifier {
 
   Future<void> resolveNearbyCities() async {
     if (userLocation != null) {
-      await geolocationApi.getNearbyCities(
-        UserLocation(
+      if (nearbyCities.isEmpty) {
+        nearbyCities = await geolocationApi.getNearbyCities(
+          UserLocation(
             latitude: userLocation!.latitude,
-            longitude: userLocation!.longitude),
-      );
+            longitude: userLocation!.longitude,
+          ),
+        );
+      }
     } else {
       if (isUserLocationAvailableAndEnabled()) {
         currentUserLocation = getPositionFromLatAndLong(
           loggedInUser!.lastKnownLatitude!,
           loggedInUser!.lastKnownLongitude!,
         );
-        await geolocationApi.getNearbyCities(
-          UserLocation(
+        if (nearbyCities.isEmpty) {
+          nearbyCities = await geolocationApi.getNearbyCities(
+            UserLocation(
               latitude: currentUserLocation!.latitude,
-              longitude: currentUserLocation!.longitude),
-        );
+              longitude: currentUserLocation!.longitude,
+            ),
+          );
+        }
       }
     }
     notifyListeners();
@@ -102,57 +117,28 @@ class HomepageModel extends ChangeNotifier {
     return loggedInUser != null &&
         loggedInUser!.lastKnownLatitude != null &&
         loggedInUser!.lastKnownLongitude != null &&
-        loggedInUser?.notificationOptions.locationServicesTurnedOn == true;
+        loggedInUser!.notificationOptions.locationServicesTurnedOn == true;
   }
 
-  Future<void> displayLocationPermissionPopUp(int locationPopUpCounter) async {
+  Future<void> displayLocationPermissionPopUp() async {
     if (userId != null) {
       locationPopUpCounter++;
-      bool? isLocationServicesTurnedOn;
-      await accountApi.getNotificationOptions(userId!).then((value) {
-        if (value != null) {
-          isLocationServicesTurnedOn = value.locationServicesTurnedOn;
-        } else {
-          Toaster.displayError(context,
-              'There was an error while fetching your notification options. Please try again later.');
-        }
-      });
-      if (isLocationServicesTurnedOn != null &&
-          isLocationServicesTurnedOn == false) {
+      bool isLocationServicesTurnedOn = false;
+      NotificationOptions? notificationOptions =
+          await accountApi.getNotificationOptions(userId!);
+
+      if (notificationOptions != null) {
+        isLocationServicesTurnedOn =
+            notificationOptions.locationServicesTurnedOn;
+      }
+
+      if (!isLocationServicesTurnedOn) {
         _openPopUp(userId!);
       } else {
         if (userLocation == null) {
           _openPopUp(userId!);
         }
-        await accountApi.getLastKnownLocation(userId!).then((value) {
-          if (value != null) {
-            geolocationApi
-                .getNearbyCities(value)
-                .then((cities) => {nearbyCities = cities});
-          } else {
-            Toaster.displayError(
-              context,
-              'There was an error while fetching your location. Please try again later.',
-            );
-          }
-        });
       }
-    }
-    notifyListeners();
-  }
-
-  Future<void> updateUserLocation(int userId) async {
-    NotificationOptions? options =
-        await accountApi.getNotificationOptions(userId);
-
-    if (options != null && options.locationServicesTurnedOn) {
-      Position userLocation = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best);
-      accountApi.updateUserLocation(userId, userLocation);
-    } else {
-      if (!context.mounted) return;
-      Toaster.displayError(context,
-          'Error getting notification options. Please try again later.');
     }
     notifyListeners();
   }
@@ -232,8 +218,9 @@ class HomepageModel extends ChangeNotifier {
   }
 
   void _openPopUp(int userId) {
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await showModalBottomSheet(
+    SchedulerBinding.instance.addPostFrameCallback(
+      (_) async {
+        await showModalBottomSheet(
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
           barrierColor: Theme.of(context).colorScheme.onSecondary,
@@ -241,17 +228,35 @@ class HomepageModel extends ChangeNotifier {
           context: context,
           builder: (context) {
             return GestureDetector(
-                onTap: () => unfocusNode.canRequestFocus
-                    ? FocusScope.of(context).requestFocus(unfocusNode)
-                    : FocusScope.of(context).unfocus(),
-                child: Padding(
-                    padding: MediaQuery.viewInsetsOf(context),
-                    child: SizedBox(
-                      height: 568,
-                      child: LocationPermissionPopUp(userId: userId),
-                    )));
-          });
-    });
+              onTap: () => unfocusNode.canRequestFocus
+                  ? FocusScope.of(context).requestFocus(unfocusNode)
+                  : FocusScope.of(context).unfocus(),
+              child: Padding(
+                padding: MediaQuery.viewInsetsOf(context),
+                child: SizedBox(
+                  height: 568,
+                  child: LocationPermissionPopUp(userId: userId),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+    notifyListeners();
+  }
+
+  Future<void> loadCarouselData(List<String> cities) async {
+    List<Future<void>> cityFutures = cities.map((city) async {
+      String? placeId = await googleApi.getPlaceId(city);
+      String? photoReference = await googleApi.getPhotoReference(placeId);
+      String? cityImage = await googleApi.getImage(photoReference);
+      if (cityImage != null) {
+        cityImages[city] = cityImage;
+      }
+    }).toList();
+
+    await Future.wait(cityFutures);
     notifyListeners();
   }
 }

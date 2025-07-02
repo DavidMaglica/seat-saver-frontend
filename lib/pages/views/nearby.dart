@@ -1,12 +1,12 @@
 import 'package:TableReserver/components/navbar.dart';
-import 'package:TableReserver/themes/theme.dart';
 import 'package:TableReserver/utils/routing_utils.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+/// Builds Google Map with the user's location. If no location is provided, uses a default location (Zagreb).
+/// Google Map is not used as it queries Google Maps API which is not free after x queries.
 class Nearby extends StatefulWidget {
   final int? userId;
   final Position? userLocation;
@@ -25,20 +25,14 @@ class _NearbyState extends State<Nearby> {
   final unfocusNode = FocusNode();
   final int pageIndex = 2;
 
+  final bool enableGoogleMap = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  late MapController osmMapController;
+  late GoogleMapController googleMapController;
 
   @override
   void initState() {
     super.initState();
-
-    osmMapController = MapController(
-      initPosition: GeoPoint(
-        latitude: widget.userLocation?.latitude ?? 45.815399,
-        longitude: widget.userLocation?.longitude ?? 15.966568,
-      ),
-    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -46,7 +40,7 @@ class _NearbyState extends State<Nearby> {
   @override
   void dispose() {
     unfocusNode.dispose();
-    osmMapController.dispose();
+    googleMapController.dispose();
     super.dispose();
   }
 
@@ -54,53 +48,59 @@ class _NearbyState extends State<Nearby> {
   Widget build(BuildContext context) {
     var brightness = Theme.of(context).brightness;
     return GestureDetector(
-        onTap: () => unfocusNode.canRequestFocus
-            ? FocusScope.of(context).requestFocus(unfocusNode)
-            : FocusScope.of(context).unfocus(),
-        child: AnnotatedRegion<SystemUiOverlayStyle>(
-            value: brightness == Brightness.dark
-                ? SystemUiOverlayStyle.light
-                : SystemUiOverlayStyle.dark,
-            child: Scaffold(
-                key: scaffoldKey,
-                resizeToAvoidBottomInset: false,
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                body: SafeArea(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: OSMFlutter(
-                          controller: osmMapController,
-                          osmOption: OSMOption(
-                              showDefaultInfoWindow: true,
-                              isPicker: false,
-                              showContributorBadgeForOSM: true,
-                              userTrackingOption: const UserTrackingOption(
-                                enableTracking: true,
-                                unFollowUser: false,
+      onTap: () => unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(unfocusNode)
+          : FocusScope.of(context).unfocus(),
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: brightness == Brightness.dark
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          key: scaffoldKey,
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          body: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: enableGoogleMap
+                      ? GoogleMap(
+                          onMapCreated: (controller) {
+                            setState(() {
+                              googleMapController = controller;
+                            });
+                          },
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(
+                              widget.userLocation?.latitude ?? 45.815399,
+                              widget.userLocation?.longitude ?? 15.966568,
+                            ),
+                            zoom: 14.0,
+                          ),
+                          markers: {
+                            Marker(
+                              markerId: const MarkerId('userLocation'),
+                              position: LatLng(
+                                widget.userLocation?.latitude ?? 45.815399,
+                                widget.userLocation?.longitude ?? 15.966568,
                               ),
-                              zoomOption: const ZoomOption(
-                                initZoom: 16,
-                                minZoomLevel: 2,
-                                maxZoomLevel: 19,
-                                stepZoom: 10,
-                              ),
-                              markerOption: MarkerOption(
-                                  defaultMarker: const MarkerIcon(
-                                      icon: Icon(
-                                CupertinoIcons.location_solid,
-                                color: AppThemes.accent1,
-                                size: 32,
-                              )))),
-                        ),
-                      )
-                    ],
-                  ),
+                              infoWindow:
+                                  const InfoWindow(title: 'Your Location'),
+                            )
+                          },
+                        )
+                      : const SizedBox.shrink(),
                 ),
-                bottomNavigationBar: NavBar(
-                  currentIndex: pageIndex,
-                  onTap: (index, context) => onNavbarItemTapped(context,
-                      pageIndex, index, widget.userId, widget.userLocation),
-                ))));
+              ],
+            ),
+          ),
+          bottomNavigationBar: NavBar(
+            currentIndex: pageIndex,
+            onTap: (index, context) => onNavbarItemTapped(
+                context, pageIndex, index, widget.userId, widget.userLocation),
+          ),
+        ),
+      ),
+    );
   }
 }

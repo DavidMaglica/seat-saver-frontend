@@ -16,6 +16,14 @@ PODS:
     - Flutter
   - geolocator_apple (1.2.0):
     - Flutter
+  - google_maps_flutter_ios (0.0.1):
+    - Flutter
+    - GoogleMaps (< 9.0)
+  - GoogleMaps (8.4.0):
+    - GoogleMaps/Maps (= 8.4.0)
+  - GoogleMaps/Base (8.4.0)
+  - GoogleMaps/Maps (8.4.0):
+    - GoogleMaps/Base
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -37,6 +45,7 @@ DEPENDENCIES:
   - flutter_osm_plugin (from `.symlinks/plugins/flutter_osm_plugin/ios`)
   - geocoding (from `.symlinks/plugins/geocoding/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
+  - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - rive_common (from `.symlinks/plugins/rive_common/ios`)
@@ -47,6 +56,7 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - FMDB
+    - GoogleMaps
     - Polyline
     - Tangram-es
     - Yams
@@ -60,6 +70,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/geocoding/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
+  google_maps_flutter_ios:
+    :path: ".symlinks/plugins/google_maps_flutter_ios/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   permission_handler_apple:
@@ -78,6 +90,8 @@ SPEC CHECKSUMS:
   FMDB: 728731dd336af3936ce00f91d9d8495f5718a0e6
   geocoding: 942dfd796e4eae1e70d4f79d68cacc3482267bc9
   geolocator_apple: d981750b9f47dbdb02427e1476d9a04397beb8d9
+  google_maps_flutter_ios: 857ed2745299c183d5cc91b3282606a403d5a179
+  GoogleMaps: 8939898920281c649150e0af74aa291c60f2e77d
   path_provider_foundation: 608fcb11be570ce83519b076ab6a1fffe2474f05
   permission_handler_apple: 3787117e48f80715ff04a3830ca039283d6a4f29
   Polyline: 2a1f29f87f8d9b7de868940f4f76deb8c678a5b1
