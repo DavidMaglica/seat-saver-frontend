@@ -246,8 +246,8 @@ class HomepageModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadCarouselData(List<String> nearbyCities) async {
-    List<Future<void>> cityFutures = nearbyCities.map((city) async {
+  Future<void> loadCarouselData(List<String> cities) async {
+    List<Future<void>> cityFutures = cities.map((city) async {
       String? placeId = await googleApi.getPlaceId(city);
       String? photoReference = await googleApi.getPhotoReference(placeId);
       String? cityImage = await googleApi.getImage(photoReference);
