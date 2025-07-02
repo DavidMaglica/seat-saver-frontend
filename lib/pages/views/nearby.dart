@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 /// Builds Google Map with the user's location. If no location is provided, uses a default location (Zagreb).
-/// Google Map is currently commented out as it queries Google Maps API which is not free after x queries.
+/// Google Map is not used as it queries Google Maps API which is not free after x queries.
 class Nearby extends StatefulWidget {
   final int? userId;
   final Position? userLocation;
@@ -25,6 +25,7 @@ class _NearbyState extends State<Nearby> {
   final unfocusNode = FocusNode();
   final int pageIndex = 2;
 
+  final bool enableGoogleMap = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   late GoogleMapController googleMapController;
@@ -58,35 +59,38 @@ class _NearbyState extends State<Nearby> {
           key: scaffoldKey,
           resizeToAvoidBottomInset: false,
           backgroundColor: Theme.of(context).colorScheme.surface,
-          body: const SafeArea(
+          body: SafeArea(
             child: Column(
               children: [
-                Expanded(child: SizedBox.shrink()
-                    // GoogleMap(
-                    //   onMapCreated: (controller) {
-                    //     setState(() {
-                    //       googleMapController = controller;
-                    //     });
-                    //   },
-                    //   initialCameraPosition: CameraPosition(
-                    //     target: LatLng(
-                    //       widget.userLocation?.latitude ?? 45.815399,
-                    //       widget.userLocation?.longitude ?? 15.966568,
-                    //     ),
-                    //     zoom: 14.0,
-                    //   ),
-                    //   markers: {
-                    //     Marker(
-                    //       markerId: const MarkerId('userLocation'),
-                    //       position: LatLng(
-                    //         widget.userLocation?.latitude ?? 45.815399,
-                    //         widget.userLocation?.longitude ?? 15.966568,
-                    //       ),
-                    //       infoWindow: const InfoWindow(title: 'Your Location'),
-                    //     )
-                    //   },
-                    // ),
-                    )
+                Expanded(
+                  child: enableGoogleMap
+                      ? GoogleMap(
+                          onMapCreated: (controller) {
+                            setState(() {
+                              googleMapController = controller;
+                            });
+                          },
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(
+                              widget.userLocation?.latitude ?? 45.815399,
+                              widget.userLocation?.longitude ?? 15.966568,
+                            ),
+                            zoom: 14.0,
+                          ),
+                          markers: {
+                            Marker(
+                              markerId: const MarkerId('userLocation'),
+                              position: LatLng(
+                                widget.userLocation?.latitude ?? 45.815399,
+                                widget.userLocation?.longitude ?? 15.966568,
+                              ),
+                              infoWindow:
+                                  const InfoWindow(title: 'Your Location'),
+                            )
+                          },
+                        )
+                      : const SizedBox.shrink(),
+                ),
               ],
             ),
           ),

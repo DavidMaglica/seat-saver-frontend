@@ -449,7 +449,7 @@ packages:
     source: hosted
     version: "4.0.3"
   google_maps:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: google_maps
       sha256: "555d5d736339b0478e821167ac521c810d7b51c3b2734e6802a9f046b64ea37a"

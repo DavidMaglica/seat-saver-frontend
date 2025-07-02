@@ -3,7 +3,7 @@ import 'package:logger/logger.dart';
 
 final logger = Logger();
 final dio = Dio();
-const String apiKey = 'AIzaSyDKUhrw-G6ZZBVz3vSVe9DzuidgasMvcYM';
+const String apiKey = String.fromEnvironment('GOOGLE_API_KEY',);
 
 class GoogleApi {
   Future<String?> getPlaceId(String city) async {
