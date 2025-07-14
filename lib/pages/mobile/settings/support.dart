@@ -3,8 +3,8 @@ import 'package:TableReserver/components/mobile/custom_appbar.dart';
 import 'package:TableReserver/components/mobile/modal_widgets.dart';
 import 'package:TableReserver/components/mobile/support_banner.dart';
 import 'package:TableReserver/models/mobile/support_model.dart';
-import 'package:TableReserver/themes/theme.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
@@ -179,9 +179,9 @@ class _SupportState extends State<Support> {
         hintStyle: Theme.of(context).textTheme.bodyMedium,
         enabledBorder:
             outlineInputBorder(Theme.of(context).colorScheme.onPrimary),
-        focusedBorder: outlineInputBorder(AppThemes.infoColor),
+        focusedBorder: outlineInputBorder(MobileTheme.infoColor),
         errorBorder: outlineInputBorder(Theme.of(context).colorScheme.error),
-        focusedErrorBorder: outlineInputBorder(AppThemes.infoColor),
+        focusedErrorBorder: outlineInputBorder(MobileTheme.infoColor),
         contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),
       ),
       style: Theme.of(context).textTheme.bodyLarge,

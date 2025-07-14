@@ -1,7 +1,7 @@
 import 'package:TableReserver/api/data/paged_response.dart';
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/api/venue_api.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:TableReserver/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';

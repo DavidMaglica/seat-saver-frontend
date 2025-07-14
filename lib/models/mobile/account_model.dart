@@ -1,7 +1,7 @@
 import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/api/data/user.dart';
 import 'package:TableReserver/components/mobile/toaster.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 

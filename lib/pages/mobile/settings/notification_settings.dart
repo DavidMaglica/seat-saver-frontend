@@ -1,7 +1,7 @@
 import 'package:TableReserver/components/mobile/action_button.dart';
 import 'package:TableReserver/components/mobile/custom_appbar.dart';
 import 'package:TableReserver/models/mobile/notification_settings_model.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';

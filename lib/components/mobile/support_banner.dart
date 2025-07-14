@@ -1,4 +1,4 @@
-import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:flutter/material.dart';
 
 class SupportBanner extends StatelessWidget {
@@ -36,7 +36,7 @@ class SupportBanner extends StatelessWidget {
               children: [
                 Icon(
                   icon,
-                  color: AppThemes.accent1,
+                  color: MobileTheme.accent1,
                   size: 36,
                 ),
                 Padding(

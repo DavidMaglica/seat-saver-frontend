@@ -2,8 +2,8 @@ import 'package:TableReserver/components/mobile/custom_appbar.dart';
 import 'package:TableReserver/components/mobile/full_image_view.dart';
 import 'package:TableReserver/components/mobile/venue_images_tab.dart';
 import 'package:TableReserver/models/mobile/venue_page_model.dart';
-import 'package:TableReserver/themes/theme.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:TableReserver/utils/extensions.dart';
 import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -193,12 +193,12 @@ class VenuePage extends StatelessWidget {
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
         color: Theme.of(ctx).colorScheme.surface,
         textStyle: const TextStyle(
-          color: AppThemes.accent1,
+          color: MobileTheme.accent1,
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
         borderSide: const BorderSide(
-          color: AppThemes.accent1,
+          color: MobileTheme.accent1,
           width: 1,
         ),
         elevation: 3,
@@ -289,7 +289,7 @@ class VenuePage extends StatelessWidget {
           onRatingUpdate: (_) => {},
           itemBuilder: (context, index) => const Icon(
             CupertinoIcons.star_fill,
-            color: AppThemes.accent1,
+            color: MobileTheme.accent1,
           ),
           unratedColor: const Color(0xFF57636C).withOpacity(0.5),
           direction: Axis.horizontal,
@@ -523,9 +523,9 @@ class VenuePage extends StatelessWidget {
           width: double.infinity,
           height: 60,
           padding: const EdgeInsetsDirectional.all(0),
-          color: isDisabled ? Colors.grey : AppThemes.successColor,
+          color: isDisabled ? Colors.grey : MobileTheme.successColor,
           splashColor: isDisabled
-              ? AppThemes.transparentColour
+              ? MobileTheme.transparentColour
               : Theme.of(ctx).colorScheme.surfaceVariant,
           textStyle: TextStyle(
             color: isDisabled

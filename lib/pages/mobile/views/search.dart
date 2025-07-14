@@ -2,7 +2,7 @@ import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/components/mobile/modal_widgets.dart';
 import 'package:TableReserver/components/mobile/navbar.dart';
 import 'package:TableReserver/models/mobile/search_model.dart';
-import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:TableReserver/utils/extensions.dart';
 import 'package:TableReserver/utils/routing_utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -121,7 +121,7 @@ class Search extends StatelessWidget {
                     padding: EdgeInsets.all(16),
                     child: Center(
                       child: CircularProgressIndicator(
-                        color: AppThemes.successColor,
+                        color: MobileTheme.successColor,
                       ),
                     ),
                   );
@@ -175,7 +175,7 @@ class Search extends StatelessWidget {
                   ),
                   focusedBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: AppThemes.accent1,
+                      color: MobileTheme.accent1,
                     ),
                   ),
                 ),
@@ -333,12 +333,12 @@ class Search extends StatelessWidget {
                       buildModalButton(
                         'Clear filters',
                         () => _clear(context, model),
-                        AppThemes.errorColor,
+                        MobileTheme.errorColor,
                       ),
                       buildModalButton(
                         'Apply',
                         () => _applyFilters(context, model, tempSelected),
-                        AppThemes.successColor,
+                        MobileTheme.successColor,
                       ),
                     ],
                   ),

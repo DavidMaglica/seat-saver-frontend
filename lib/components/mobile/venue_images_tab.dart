@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:TableReserver/components/mobile/full_image_view.dart';
-import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -39,7 +39,7 @@ class VenueImagesTab extends StatelessWidget {
         children: [
           TabBar(
             labelColor: Theme.of(context).colorScheme.onPrimary,
-            indicatorColor: AppThemes.accent1,
+            indicatorColor: MobileTheme.accent1,
             labelStyle: Theme.of(context).textTheme.titleSmall,
             tabs: const [
               Tab(text: 'Venue Images'),

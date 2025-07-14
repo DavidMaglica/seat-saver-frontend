@@ -2,7 +2,7 @@ import 'package:TableReserver/components/mobile/custom_appbar.dart';
 import 'package:TableReserver/components/mobile/modal_widgets.dart';
 import 'package:TableReserver/components/mobile/toaster.dart';
 import 'package:TableReserver/models/mobile/ratings_model.dart';
-import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -138,7 +138,7 @@ class RatingsPage extends StatelessWidget {
           counterThreeStars: threeStars,
           counterTwoStars: twoStars,
           counterOneStars: oneStar,
-          color: AppThemes.accent1,
+          color: MobileTheme.accent1,
           labelCounterOneStars:
               Text('1', style: Theme.of(ctx).textTheme.bodyMedium),
           labelCounterTwoStars:
@@ -193,7 +193,7 @@ class RatingsPage extends StatelessWidget {
                             child: RatingBarIndicator(
                               itemBuilder: (context, index) => const Icon(
                                 Icons.star_rounded,
-                                color: AppThemes.accent1,
+                                color: MobileTheme.accent1,
                               ),
                               direction: Axis.horizontal,
                               rating: rating.rating.roundToDouble(),
@@ -253,7 +253,7 @@ class RatingsPage extends StatelessWidget {
           width: double.infinity,
           height: 60,
           padding: const EdgeInsetsDirectional.all(0),
-          color: AppThemes.successColor,
+          color: MobileTheme.successColor,
           splashColor: Theme.of(ctx).colorScheme.surfaceVariant,
           textStyle: TextStyle(
             color: Theme.of(ctx).colorScheme.background,
@@ -384,7 +384,7 @@ class RatingsPage extends StatelessWidget {
             );
             Navigator.of(context).pop();
           },
-          AppThemes.successColor,
+          MobileTheme.successColor,
         ),
       ],
     );
@@ -407,7 +407,7 @@ class RatingsPage extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: AppThemes.infoColor,
+            color: MobileTheme.infoColor,
             width: .5,
           ),
           borderRadius: BorderRadius.circular(8),
@@ -480,7 +480,7 @@ class RatingsPage extends StatelessWidget {
                       padding: EdgeInsets.only(bottom: 2),
                       child: Icon(
                         CupertinoIcons.star_fill,
-                        color: AppThemes.accent1,
+                        color: MobileTheme.accent1,
                         size: 24,
                       ),
                     ),

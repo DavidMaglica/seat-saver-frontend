@@ -1,6 +1,6 @@
 import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/api/data/user.dart';
-import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
@@ -56,7 +56,7 @@ class EditProfileModel extends ChangeNotifier {
     if (response != null && response.success && response.user != null) {
       currentUser = response.user!;
     } else {
-      _showToast('Failed to load user data', AppThemes.errorColor);
+      _showToast('Failed to load user data', MobileTheme.errorColor);
     }
     notifyListeners();
   }
@@ -77,7 +77,7 @@ class EditProfileModel extends ChangeNotifier {
 
     if (newName.isEmpty) {
       _hideKeyboard();
-      _showToast('Please enter a new username', AppThemes.errorColor);
+      _showToast('Please enter a new username', MobileTheme.errorColor);
       return;
     }
 
@@ -85,13 +85,13 @@ class EditProfileModel extends ChangeNotifier {
 
     if (!response.success) {
       _hideKeyboard();
-      _showToast(response.message, AppThemes.errorColor);
+      _showToast(response.message, MobileTheme.errorColor);
       return;
     }
 
     _hideKeyboard();
     _showToast(response.message,
-        response.success ? AppThemes.successColor : AppThemes.errorColor);
+        response.success ? MobileTheme.successColor : MobileTheme.errorColor);
 
     if (response.success) {
       updatedUsername = newName;
@@ -107,7 +107,7 @@ class EditProfileModel extends ChangeNotifier {
 
     if (newEmail.isEmpty) {
       _hideKeyboard();
-      _showToast('Please enter a new email', AppThemes.errorColor);
+      _showToast('Please enter a new email', MobileTheme.errorColor);
       return;
     }
 
@@ -115,13 +115,13 @@ class EditProfileModel extends ChangeNotifier {
 
     if (!response.success) {
       _hideKeyboard();
-      _showToast(response.message, AppThemes.errorColor);
+      _showToast(response.message, MobileTheme.errorColor);
       return;
     }
 
     _hideKeyboard();
     _showToast(response.message,
-        response.success ? AppThemes.successColor : AppThemes.errorColor);
+        response.success ? MobileTheme.successColor : MobileTheme.errorColor);
 
     if (response.success) {
       updatedEmail = newEmail;
@@ -138,26 +138,26 @@ class EditProfileModel extends ChangeNotifier {
 
     if (newPassword.isEmpty) {
       _hideKeyboard();
-      _showToast('Please enter a new password', AppThemes.errorColor);
+      _showToast('Please enter a new password', MobileTheme.errorColor);
       return;
     }
 
     if (confirmNewPassword.isEmpty) {
       _hideKeyboard();
-      _showToast("New password hasn't been confirmed", AppThemes.errorColor);
+      _showToast("New password hasn't been confirmed", MobileTheme.errorColor);
       return;
     }
 
     if (newPassword.length < 8) {
       _hideKeyboard();
       _showToast(
-          'Password must be at least 8 characters long', AppThemes.errorColor);
+          'Password must be at least 8 characters long', MobileTheme.errorColor);
       return;
     }
 
     if (newPassword != confirmNewPassword) {
       _hideKeyboard();
-      _showToast('Passwords do not match', AppThemes.errorColor);
+      _showToast('Passwords do not match', MobileTheme.errorColor);
       return;
     }
 
@@ -165,13 +165,13 @@ class EditProfileModel extends ChangeNotifier {
 
     if (!response.success) {
       _hideKeyboard();
-      _showToast(response.message, AppThemes.errorColor);
+      _showToast(response.message, MobileTheme.errorColor);
       return;
     }
 
     _hideKeyboard();
     _showToast(response.message,
-        response.success ? AppThemes.successColor : AppThemes.errorColor);
+        response.success ? MobileTheme.successColor : MobileTheme.errorColor);
 
     if (response.success) {
       updatedPassword = newPassword;

@@ -1,8 +1,8 @@
 import 'package:TableReserver/api/data/user.dart';
 import 'package:TableReserver/components/mobile/navbar.dart';
 import 'package:TableReserver/models/mobile/account_model.dart';
-import 'package:TableReserver/themes/theme.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:TableReserver/utils/routing_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -217,7 +217,7 @@ class Account extends StatelessWidget {
     final isLoggedIn = userEmail != null;
     final text = isLoggedIn ? 'Log out' : 'Log in';
     final color =
-        isLoggedIn ? Theme.of(ctx).colorScheme.error : AppThemes.successColor;
+        isLoggedIn ? Theme.of(ctx).colorScheme.error : MobileTheme.successColor;
 
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(12, 48, 12, 0),

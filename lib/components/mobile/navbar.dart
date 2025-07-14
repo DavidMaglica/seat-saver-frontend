@@ -1,4 +1,4 @@
-import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +22,7 @@ class NavBar extends StatelessWidget {
         currentIndex: currentIndex,
         onTap: (index) => onTap(index, context),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
-        selectedItemColor: AppThemes.accent1,
+        selectedItemColor: MobileTheme.accent1,
         unselectedItemColor: Theme.of(context).colorScheme.background,
         type: BottomNavigationBarType.fixed,
         items: const [

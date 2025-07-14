@@ -9,7 +9,7 @@ import 'package:TableReserver/api/geolocation_api.dart';
 import 'package:TableReserver/api/google_api.dart';
 import 'package:TableReserver/api/venue_api.dart';
 import 'package:TableReserver/components/mobile/location_permission.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:TableReserver/utils/utils.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';

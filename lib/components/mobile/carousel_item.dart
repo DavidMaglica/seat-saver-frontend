@@ -1,5 +1,5 @@
 import 'package:TableReserver/components/mobile/toaster.dart';
-import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -85,7 +85,7 @@ class CarouselItem extends StatelessWidget {
               child: Text(
                 currentCity,
                 style: const TextStyle(
-                  color: AppThemes.accent1,
+                  color: MobileTheme.accent1,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),

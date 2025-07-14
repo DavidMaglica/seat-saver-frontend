@@ -1,7 +1,7 @@
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/api/venue_api.dart';
-import 'package:TableReserver/themes/theme.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -162,7 +162,7 @@ class _VenueCardState extends State<VenueCard> {
       style: Theme.of(context)
           .textTheme
           .titleSmall
-          ?.copyWith(color: AppThemes.accent1, fontSize: 12),
+          ?.copyWith(color: MobileTheme.accent1, fontSize: 12),
     );
   }
 

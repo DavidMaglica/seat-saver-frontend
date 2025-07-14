@@ -1,8 +1,8 @@
 import 'package:TableReserver/components/mobile/custom_appbar.dart';
 import 'package:TableReserver/components/mobile/modal_widgets.dart';
 import 'package:TableReserver/models/mobile/edit_profile_model.dart';
-import 'package:TableReserver/themes/theme.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -228,7 +228,7 @@ class EditProfile extends StatelessWidget {
                   buildModalButton('Cancel', model.cancel,
                       Theme.of(context).colorScheme.onPrimary),
                   buildModalButton(
-                      'Save', model.changeUsername, AppThemes.successColor),
+                      'Save', model.changeUsername, MobileTheme.successColor),
                 ],
               ),
               const SizedBox(height: 36),
@@ -271,7 +271,7 @@ class EditProfile extends StatelessWidget {
                   buildModalButton('Cancel', model.cancel,
                       Theme.of(context).colorScheme.onPrimary),
                   buildModalButton(
-                      'Save', model.changeEmail, AppThemes.successColor),
+                      'Save', model.changeEmail, MobileTheme.successColor),
                 ],
               ),
               const SizedBox(height: 36),
@@ -328,7 +328,7 @@ class EditProfile extends StatelessWidget {
                       buildModalButton('Cancel', model.cancel,
                           Theme.of(context).colorScheme.onPrimary),
                       buildModalButton(
-                          'Save', model.changePassword, AppThemes.successColor),
+                          'Save', model.changePassword, MobileTheme.successColor),
                     ],
                   ),
                   const SizedBox(height: 36),

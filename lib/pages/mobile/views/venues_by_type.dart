@@ -1,7 +1,7 @@
 import 'package:TableReserver/components/mobile/custom_appbar.dart';
 import 'package:TableReserver/components/mobile/venue_card_by_type.dart';
 import 'package:TableReserver/models/mobile/venue_by_type_model.dart';
-import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:TableReserver/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -75,7 +75,7 @@ class VenuesByType extends StatelessWidget {
             padding: EdgeInsets.all(16),
             child: Center(
               child: CircularProgressIndicator(
-                color: AppThemes.successColor,
+                color: MobileTheme.successColor,
               ),
             ),
           );

@@ -4,7 +4,7 @@ import 'package:TableReserver/components/mobile/homepage_venue_card.dart';
 import 'package:TableReserver/components/mobile/navbar.dart';
 import 'package:TableReserver/components/mobile/suggested_venue_card.dart';
 import 'package:TableReserver/models/mobile/homepage_model.dart';
-import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:TableReserver/utils/routing_utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -199,7 +199,7 @@ class Homepage extends StatelessWidget {
       padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 0, 0),
       child: Container(
         decoration: BoxDecoration(
-          color: AppThemes.successColor.withOpacity(0.4),
+          color: MobileTheme.successColor.withOpacity(0.4),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16),
             bottomLeft: Radius.circular(16),
@@ -304,13 +304,13 @@ class Homepage extends StatelessWidget {
               height: 24,
               color: Theme.of(ctx).colorScheme.background,
               textStyle: const TextStyle(
-                color: AppThemes.accent1,
+                color: MobileTheme.accent1,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
               elevation: 1,
               borderSide: const BorderSide(
-                color: AppThemes.accent1,
+                color: MobileTheme.accent1,
                 width: 1,
               ),
               borderRadius: BorderRadius.circular(8),

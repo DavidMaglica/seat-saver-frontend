@@ -1,7 +1,7 @@
 import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/api/data/basic_response.dart';
 import 'package:TableReserver/api/data/notification_settings.dart';
-import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -73,7 +73,7 @@ class NotificationSettingsModel extends ChangeNotifier {
       SnackBar(
         content: Text(response.message),
         backgroundColor:
-            response.success ? AppThemes.successColor : AppThemes.errorColor,
+            response.success ? MobileTheme.successColor : MobileTheme.errorColor,
       ),
     );
   }

@@ -2,8 +2,8 @@ import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/models/mobile/authentication_model.dart';
 import 'package:TableReserver/pages/mobile/auth/login_tab.dart';
 import 'package:TableReserver/pages/mobile/auth/signup_tab.dart';
-import 'package:TableReserver/themes/theme.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -93,7 +93,7 @@ class _AuthenticationState extends State<Authentication>
                                       child: const Text(
                                         'Continue without account.',
                                         style: TextStyle(
-                                          color: AppThemes.infoColor,
+                                          color: MobileTheme.infoColor,
                                           decoration: TextDecoration.underline,
                                         ),
                                       ),
@@ -111,14 +111,14 @@ class _AuthenticationState extends State<Authentication>
                             Align(
                               alignment: const Alignment(0, 0),
                               child: TabBar(
-                                labelColor: AppThemes.accent1,
+                                labelColor: MobileTheme.accent1,
                                 unselectedLabelColor:
                                     Theme.of(context).colorScheme.onPrimary,
                                 labelStyle:
                                     Theme.of(context).textTheme.titleSmall,
                                 unselectedLabelStyle:
                                     Theme.of(context).textTheme.titleSmall,
-                                indicatorColor: AppThemes.accent1,
+                                indicatorColor: MobileTheme.accent1,
                                 indicatorWeight: 3,
                                 padding: const EdgeInsetsDirectional.fromSTEB(
                                     16, 0, 16, 0),

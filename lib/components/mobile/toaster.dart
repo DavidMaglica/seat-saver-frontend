@@ -1,4 +1,4 @@
-import 'package:TableReserver/themes/theme.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:flutter/material.dart';
 
 class Toaster {
@@ -13,18 +13,18 @@ class Toaster {
   }
 
   static void displaySuccess(BuildContext ctx, String text) {
-    display(ctx, text, AppThemes.successColor);
+    display(ctx, text, MobileTheme.successColor);
   }
 
   static void displayInfo(BuildContext ctx, String text) {
-    display(ctx, text, AppThemes.infoColor);
+    display(ctx, text, MobileTheme.infoColor);
   }
 
   static void displayWarning(BuildContext ctx, String text) {
-    display(ctx, text, AppThemes.warningColor);
+    display(ctx, text, MobileTheme.warningColor);
   }
 
   static void displayError(BuildContext ctx, String text) {
-    display(ctx, text, AppThemes.errorColor);
+    display(ctx, text, MobileTheme.errorColor);
   }
 }

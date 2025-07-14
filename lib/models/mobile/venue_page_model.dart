@@ -5,8 +5,8 @@ import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/api/reservation_api.dart';
 import 'package:TableReserver/api/venue_api.dart';
 import 'package:TableReserver/components/mobile/toaster.dart';
-import 'package:TableReserver/themes/theme.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -234,23 +234,23 @@ class VenuePageModel extends ChangeNotifier {
       slidersColor: Theme.of(ctx).colorScheme.onPrimary,
       currentDateTextStyle: Theme.of(ctx).textTheme.bodyMedium,
       currentDateDecoration: const BoxDecoration(
-        color: AppThemes.transparentColour,
+        color: MobileTheme.transparentColour,
         shape: BoxShape.circle,
         border: Border(
           top: BorderSide(
-            color: AppThemes.infoColor,
+            color: MobileTheme.infoColor,
             width: 1,
           ),
           bottom: BorderSide(
-            color: AppThemes.infoColor,
+            color: MobileTheme.infoColor,
             width: 1,
           ),
           left: BorderSide(
-            color: AppThemes.infoColor,
+            color: MobileTheme.infoColor,
             width: 1,
           ),
           right: BorderSide(
-            color: AppThemes.infoColor,
+            color: MobileTheme.infoColor,
             width: 1,
           ),
         ),
@@ -258,7 +258,7 @@ class VenuePageModel extends ChangeNotifier {
       selectedCellTextStyle:
           Theme.of(ctx).textTheme.titleMedium?.copyWith(color: Colors.white),
       selectedCellDecoration: const BoxDecoration(
-        color: AppThemes.infoColor,
+        color: MobileTheme.infoColor,
         shape: BoxShape.circle,
       ),
       enabledCellsTextStyle: Theme.of(ctx).textTheme.bodyMedium,

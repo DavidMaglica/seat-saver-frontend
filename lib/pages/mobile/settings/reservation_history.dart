@@ -2,8 +2,8 @@ import 'package:TableReserver/api/data/reservation_details.dart';
 import 'package:TableReserver/components/mobile/custom_appbar.dart';
 import 'package:TableReserver/components/mobile/modal_widgets.dart';
 import 'package:TableReserver/models/mobile/reservation_history_model.dart';
-import 'package:TableReserver/themes/theme.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
@@ -230,7 +230,7 @@ class ReservationHistory extends StatelessWidget {
                   buildModalButton(
                     'Delete',
                     () => model.deleteReservation(reservation.id),
-                    AppThemes.errorColor,
+                    MobileTheme.errorColor,
                   )
                 ],
               ),

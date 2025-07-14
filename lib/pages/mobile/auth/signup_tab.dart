@@ -3,8 +3,8 @@ import 'package:TableReserver/api/data/basic_response.dart';
 import 'package:TableReserver/components/mobile/toaster.dart';
 import 'package:TableReserver/models/mobile/authentication_model.dart';
 import 'package:TableReserver/models/mobile/signup_tab_model.dart';
-import 'package:TableReserver/themes/theme.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:TableReserver/utils/sign_up_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -163,7 +163,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-              color: AppThemes.infoColor,
+              color: MobileTheme.infoColor,
               width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
@@ -208,7 +208,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-              color: AppThemes.infoColor,
+              color: MobileTheme.infoColor,
               width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
@@ -252,7 +252,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-              color: AppThemes.infoColor,
+              color: MobileTheme.infoColor,
               width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
@@ -307,7 +307,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-              color: AppThemes.infoColor,
+              color: MobileTheme.infoColor,
               width: .5,
             ),
             borderRadius: BorderRadius.circular(8),
@@ -355,7 +355,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
             options: FFButtonOptions(
               width: 270,
               height: 50,
-              color: AppThemes.successColor,
+              color: MobileTheme.successColor,
               textStyle: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,

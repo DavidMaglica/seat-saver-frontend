@@ -1,7 +1,7 @@
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/api/venue_api.dart';
-import 'package:TableReserver/themes/theme.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:TableReserver/utils/extensions.dart';
 import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -168,7 +168,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
                 style: Theme.of(context)
                     .textTheme
                     .titleSmall
-                    ?.copyWith(color: AppThemes.accent1)),
+                    ?.copyWith(color: MobileTheme.accent1)),
             Text(type.isNotEmpty ? type.toTitleCase() : '',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onPrimary,

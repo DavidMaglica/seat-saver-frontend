@@ -5,8 +5,8 @@ import 'package:TableReserver/api/data/user_response.dart';
 import 'package:TableReserver/components/mobile/toaster.dart';
 import 'package:TableReserver/models/mobile/authentication_model.dart';
 import 'package:TableReserver/models/mobile/login_tab_model.dart';
-import 'package:TableReserver/themes/theme.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:TableReserver/utils/routes.dart';
 import 'package:TableReserver/utils/sign_up_methods.dart';
 import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -90,7 +90,7 @@ class _LogInTabState extends State<LogInTab> {
                   width: 230,
                   height: 16,
                   decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                    color: Theme.of(context).colorScheme.surface,
                   ),
                 ),
               Text(
@@ -99,7 +99,7 @@ class _LogInTabState extends State<LogInTab> {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 24),
+                padding: const EdgeInsets.only(top: 4, bottom: 24),
                 child: Text(
                   'Fill out the information below in order to access your account.',
                   textAlign: TextAlign.start,
@@ -107,14 +107,14 @@ class _LogInTabState extends State<LogInTab> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
+                padding: const EdgeInsets.only(bottom: 16),
                 child: SizedBox(
                   width: double.infinity,
                   child: _buildEmailField(),
                 ),
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 32),
+                padding: const EdgeInsets.only(bottom: 32),
                 child: SizedBox(
                   width: double.infinity,
                   child: _buildPasswordField(),
@@ -124,7 +124,7 @@ class _LogInTabState extends State<LogInTab> {
               Align(
                 alignment: const AlignmentDirectional(0, 0),
                 child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 8),
+                  padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
                     'Or log in with',
                     textAlign: TextAlign.center,
@@ -175,7 +175,7 @@ class _LogInTabState extends State<LogInTab> {
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: AppThemes.infoColor,
+            color: MobileTheme.infoColor,
             width: .5,
           ),
           borderRadius: BorderRadius.circular(8),
@@ -235,7 +235,7 @@ class _LogInTabState extends State<LogInTab> {
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: AppThemes.infoColor,
+            color: MobileTheme.infoColor,
             width: .5,
           ),
           borderRadius: BorderRadius.circular(8),
@@ -272,7 +272,7 @@ class _LogInTabState extends State<LogInTab> {
           options: FFButtonOptions(
             width: 270,
             height: 50,
-            color: AppThemes.successColor,
+            color: MobileTheme.successColor,
             textStyle: const TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -357,7 +357,7 @@ class _LogInTabState extends State<LogInTab> {
             'Forgot password? Reset here.',
             style: TextStyle(
               fontSize: 12,
-              color: AppThemes.infoColor,
+              color: MobileTheme.infoColor,
               decoration: TextDecoration.underline,
             ),
           ),

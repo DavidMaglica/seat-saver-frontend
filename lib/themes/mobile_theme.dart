@@ -33,7 +33,7 @@ const Color darkShadowColor = Color(0xFF1B1B1B);
 
 const Color darkErrorColor = Color(0xFFB70031);
 
-class AppThemes {
+class MobileTheme {
   static const transparentColour = Color(0x00000000);
 
   static const Color successColor = Color(0xFF2E7D32);

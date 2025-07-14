@@ -13,8 +13,12 @@ import 'package:TableReserver/pages/mobile/views/search.dart';
 import 'package:TableReserver/pages/mobile/views/successful_reservation.dart';
 import 'package:TableReserver/pages/mobile/views/venue_page.dart';
 import 'package:TableReserver/pages/mobile/views/venues_by_type.dart';
-import 'package:TableReserver/themes/theme.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/pages/web/auth/authentication.dart';
+import 'package:TableReserver/pages/web/views/landing.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:TableReserver/themes/web_theme.dart';
+import 'package:TableReserver/utils/routes.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -43,10 +47,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb) {
+      return _buildWebMaterialApp();
+    }
+    return _buildMobileMaterialApp();
+  }
+
+  MaterialApp _buildMobileMaterialApp() {
     return MaterialApp(
       title: 'TableReserver',
-      theme: AppThemes.lightTheme,
-      darkTheme: AppThemes.darkTheme,
+      theme: MobileTheme.lightTheme,
+      darkTheme: MobileTheme.darkTheme,
       themeMode: ThemeMode.system,
       home: const Landing(),
       debugShowCheckedModeBanner: false,
@@ -112,6 +123,21 @@ class MyApp extends StatelessWidget {
               userId: getRequiredArg<int>(context, 'userId'),
               userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),
+      },
+    );
+  }
+
+  MaterialApp _buildWebMaterialApp() {
+    return MaterialApp(
+      title: 'TableReserver',
+      theme: WebTheme.lightTheme,
+      darkTheme: WebTheme.darkTheme,
+      themeMode: ThemeMode.system,
+      home: const WebLanding(),
+      debugShowCheckedModeBanner: false,
+      routes: {
+        Routes.webLanding: (context) => const WebLanding(),
+        Routes.webAuthentication: (context) => const WebAuthentication(),
       },
     );
   }
