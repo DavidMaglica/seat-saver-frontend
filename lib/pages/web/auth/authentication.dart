@@ -27,7 +27,7 @@ class _WebAuthenticationState extends State<WebAuthentication>
     _model.tabBarController = TabController(
       vsync: this,
       length: 2,
-      initialIndex: 1,
+      initialIndex: 0,
     )..addListener(() => safeSetState(() {}));
   }
 

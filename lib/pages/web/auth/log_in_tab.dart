@@ -51,7 +51,7 @@ class _LogInTabState extends State<LogInTab> {
               const SizedBox(height: 16),
               _buildGoogleButton(context),
               const SizedBox(height: 16),
-              _buildForgotPassword2(),
+              _buildForgotPassword(),
             ],
           ),
         ).animateOnPageLoad(
@@ -78,7 +78,7 @@ class _LogInTabState extends State<LogInTab> {
         obscureText: false,
         decoration: InputDecoration(
           labelText: 'Email',
-          labelStyle: Theme.of(context).textTheme.bodyLarge,
+          labelStyle: Theme.of(context).textTheme.bodyMedium,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.onSecondary,
@@ -195,7 +195,7 @@ class _LogInTabState extends State<LogInTab> {
         ),
         options: FFButtonOptions(
           width: 230,
-          height: 44,
+          height: 52,
           color: WebTheme.infoColor,
           textStyle: TextStyle(
             color: Theme.of(context).colorScheme.surface,
@@ -209,7 +209,7 @@ class _LogInTabState extends State<LogInTab> {
     );
   }
 
-  Widget _buildForgotPassword2() {
+  Widget _buildForgotPassword() {
     return Align(
       alignment: const AlignmentDirectional(0, 0),
       child: TextButton(

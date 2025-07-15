@@ -48,14 +48,9 @@ class _SignUpTabState extends State<SignUpTab> {
               const SizedBox(height: 32),
               _buildSignUpButton(context),
               const SizedBox(height: 16),
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  _buildText(context),
-                  const SizedBox(height: 16),
-                  _buildGoogleButton(context),
-                ],
-              ),
+              _buildText(context),
+              const SizedBox(height: 16),
+              _buildGoogleButton(context),
             ],
           ),
         ).animateOnPageLoad(
