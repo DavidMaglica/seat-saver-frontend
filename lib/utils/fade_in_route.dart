@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 class FadeInRoute extends PageRouteBuilder {
   final Widget page;
 
-  FadeInRoute({required this.page, required String routeName})
-      : super(
-          settings: RouteSettings(name: routeName), // set name here
+  FadeInRoute({
+    required this.page,
+    required String routeName,
+  }) : super(
+          settings: RouteSettings(name: routeName),
           pageBuilder: (
             BuildContext context,
             Animation<double> animation,

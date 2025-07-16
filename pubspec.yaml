@@ -37,6 +37,7 @@ dependencies:
   geocoding: 2.0.4
   http: 0.13.3
   logger: 2.5.0
+  percent_indicator: 4.2.2
   provider: 6.0.4
   rating_summary: 1.0.4
   url_launcher: 6.2.2

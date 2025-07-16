@@ -1,6 +1,6 @@
 import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/components/mobile/toaster.dart';
+import 'package:TableReserver/components/common/toaster.dart';
 import 'package:TableReserver/models/mobile/authentication_model.dart';
 import 'package:TableReserver/models/mobile/signup_tab_model.dart';
 import 'package:TableReserver/themes/mobile_theme.dart';
@@ -36,7 +36,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _performSignUp(SignUpMethodEnum signUpMethod) async {
+  void _performSignUp(SignUpMethod signUpMethod) async {
     BasicResponse<int> response = await _model.signUp(signUpMethod);
     if (response.success && response.data != null) {
       _goToHomepage(response.data!);
@@ -350,7 +350,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
         child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
           child: FFButtonWidget(
-            onPressed: () => _performSignUp(SignUpMethodEnum.custom),
+            onPressed: () => _performSignUp(SignUpMethod.custom),
             text: 'Sign up',
             options: FFButtonOptions(
               width: 270,
@@ -372,7 +372,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
         child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
           child: FFButtonWidget(
-            onPressed: () => _performSignUp(SignUpMethodEnum.google),
+            onPressed: () => _performSignUp(SignUpMethod.google),
             text: 'Continue with Google',
             icon: const Icon(
               FontAwesomeIcons.google,
@@ -401,7 +401,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
         child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
           child: FFButtonWidget(
-            onPressed: () => _performSignUp(SignUpMethodEnum.apple),
+            onPressed: () => _performSignUp(SignUpMethod.apple),
             text: 'Continue with Apple',
             icon: const Icon(
               Icons.apple,

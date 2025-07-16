@@ -1,8 +1,10 @@
+import 'package:TableReserver/components/common/toaster.dart';
 import 'package:TableReserver/models/web/authentication_model.dart';
-import 'package:TableReserver/pages/web/views/landing.dart';
+import 'package:TableReserver/pages/web/views/homepage.dart';
 import 'package:TableReserver/themes/web_theme.dart';
 import 'package:TableReserver/utils/fade_in_route.dart';
 import 'package:TableReserver/utils/routes.dart';
+import 'package:TableReserver/utils/sign_up_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
@@ -18,11 +20,15 @@ class SignUpTab extends StatefulWidget {
 }
 
 class _SignUpTabState extends State<SignUpTab> {
-  Future<void> _signUp() async {
+  Future<void> _signUp(SignUpMethod signUpMethod) async {
+    if (signUpMethod == SignUpMethod.google) {
+      Toaster.displayInfo(context, 'Google sign-in is not implemented yet.');
+      return;
+    }
     Navigator.of(context).push(
       FadeInRoute(
         routeName: Routes.webHomepage,
-        page: const WebLanding(),
+        page: const WebHomepage(),
       ),
     );
   }
@@ -200,7 +206,7 @@ class _SignUpTabState extends State<SignUpTab> {
     return Align(
       alignment: const AlignmentDirectional(0, 0),
       child: FFButtonWidget(
-        onPressed: _signUp,
+        onPressed: () => _signUp(SignUpMethod.custom),
         text: 'Sign Up',
         options: FFButtonOptions(
           width: 230,
@@ -233,7 +239,7 @@ class _SignUpTabState extends State<SignUpTab> {
     return Align(
       alignment: const AlignmentDirectional(0, 0),
       child: FFButtonWidget(
-        onPressed: _signUp,
+        onPressed: () => _signUp(SignUpMethod.google),
         text: 'Continue with Google',
         icon: const Icon(
           FontAwesomeIcons.google,

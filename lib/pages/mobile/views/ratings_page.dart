@@ -1,6 +1,6 @@
 import 'package:TableReserver/components/mobile/custom_appbar.dart';
 import 'package:TableReserver/components/mobile/modal_widgets.dart';
-import 'package:TableReserver/components/mobile/toaster.dart';
+import 'package:TableReserver/components/common/toaster.dart';
 import 'package:TableReserver/models/mobile/ratings_model.dart';
 import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:flutter/cupertino.dart';

@@ -17,15 +17,15 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
   @override
   void initState(BuildContext context) {}
 
-  Future<BasicResponse<int>> logIn(SignUpMethodEnum? signUpMethod) async {
+  Future<BasicResponse<int>> logIn(SignUpMethod? signUpMethod) async {
     switch (signUpMethod) {
-      case SignUpMethodEnum.apple:
+      case SignUpMethod.apple:
         return _appleLogIn();
 
-      case SignUpMethodEnum.google:
+      case SignUpMethod.google:
         return _googleLogIn();
 
-      case SignUpMethodEnum.custom:
+      case SignUpMethod.custom:
         return _customLogIn(
           widget.model.emailAddressLogInTextController.text,
           widget.model.passwordLogInTextController.text,

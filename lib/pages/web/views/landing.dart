@@ -122,8 +122,8 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
                     FadeInRoute(
-                      page: const WebAuthentication(),
                       routeName: Routes.webAuthentication,
+                      page: const WebAuthentication(),
                     ),
                   );
                 },

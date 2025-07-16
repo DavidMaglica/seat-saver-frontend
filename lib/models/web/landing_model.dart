@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class LandingModel extends FlutterFlowModel<WebLanding> {
-  final animationsMap = <String, AnimationInfo>{};
+  final Map<String, AnimationInfo> animationsMap = Animations.landingAnimations;
 
   @override
-  void initState(BuildContext context) {
-    animationsMap.addAll(Animations.landingAnimations);
-  }
+  void initState(BuildContext context) {}
 
   @override
   void dispose() {}

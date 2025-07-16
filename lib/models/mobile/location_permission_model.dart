@@ -1,7 +1,7 @@
 import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/api/data/basic_response.dart';
 import 'package:TableReserver/api/data/notification_settings.dart';
-import 'package:TableReserver/components/mobile/toaster.dart';
+import 'package:TableReserver/components/common/toaster.dart';
 import 'package:TableReserver/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';

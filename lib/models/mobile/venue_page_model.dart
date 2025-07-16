@@ -4,7 +4,7 @@ import 'package:TableReserver/api/data/basic_response.dart';
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/api/reservation_api.dart';
 import 'package:TableReserver/api/venue_api.dart';
-import 'package:TableReserver/components/mobile/toaster.dart';
+import 'package:TableReserver/components/common/toaster.dart';
 import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:TableReserver/utils/routes.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';

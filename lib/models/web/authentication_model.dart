@@ -32,16 +32,11 @@ class AuthenticationModel extends FlutterFlowModel<WebAuthentication> {
   TextEditingController passwordTextController = TextEditingController();
   bool passwordVisibility = false;
 
-  final animationsMap = <String, AnimationInfo>{};
+  final Map<String, AnimationInfo> animationsMap =
+      Animations.authenticationAnimations;
 
   @override
-  void initState(BuildContext context) {
-    _initAnimations();
-  }
-
-  void _initAnimations() {
-    return animationsMap.addAll(Animations.authenticationAnimations);
-  }
+  void initState(BuildContext context) {}
 
   @override
   void dispose() {
