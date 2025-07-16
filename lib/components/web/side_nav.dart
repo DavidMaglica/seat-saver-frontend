@@ -39,10 +39,10 @@ class _SideNavState extends State<SideNav> {
       width: 270,
       height: double.infinity,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(0),
         border: Border.all(
-          color: FlutterFlowTheme.of(context).alternate,
+          color: Theme.of(context).colorScheme.outline,
           width: 1,
         ),
       ),
@@ -107,12 +107,11 @@ class _SideNavState extends State<SideNav> {
                 ],
               ),
             ),
-            Divider(
+            const Divider(
               height: 12,
               thickness: 2,
               indent: 16,
               endIndent: 16,
-              color: FlutterFlowTheme.of(context).primaryText,
             ),
             Expanded(
               child: Column(
@@ -150,7 +149,7 @@ class _SideNavState extends State<SideNav> {
                           width: double.infinity,
                           height: 44,
                           decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context).primary,
+                            color: Theme.of(context).colorScheme.primary,
                             borderRadius: BorderRadius.circular(8),
                             shape: BoxShape.rectangle,
                           ),
@@ -162,8 +161,7 @@ class _SideNavState extends State<SideNav> {
                               children: [
                                 Icon(
                                   Icons.space_dashboard,
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
+                                  color: Theme.of(context).colorScheme.primary,
                                   size: 24,
                                 ),
                                 Padding(
@@ -206,8 +204,7 @@ class _SideNavState extends State<SideNav> {
                           width: double.infinity,
                           height: 44,
                           decoration: BoxDecoration(
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
+                            color: Theme.of(context).colorScheme.primary,
                             borderRadius: BorderRadius.circular(8),
                             shape: BoxShape.rectangle,
                           ),
@@ -219,8 +216,7 @@ class _SideNavState extends State<SideNav> {
                               children: [
                                 Icon(
                                   Icons.table_restaurant_sharp,
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
+                                  color: Theme.of(context).colorScheme.primary,
                                   size: 24,
                                 ),
                                 Padding(
@@ -263,8 +259,7 @@ class _SideNavState extends State<SideNav> {
                           width: double.infinity,
                           height: 44,
                           decoration: BoxDecoration(
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
+                            color: Theme.of(context).colorScheme.primary,
                             borderRadius: BorderRadius.circular(8),
                             shape: BoxShape.rectangle,
                           ),
@@ -276,8 +271,7 @@ class _SideNavState extends State<SideNav> {
                               children: [
                                 Icon(
                                   Icons.rsvp,
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
+                                  color: Theme.of(context).colorScheme.primary,
                                   size: 24,
                                 ),
                                 Padding(
@@ -327,8 +321,7 @@ class _SideNavState extends State<SideNav> {
                           width: double.infinity,
                           height: 44,
                           decoration: BoxDecoration(
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
+                            color: Theme.of(context).colorScheme.primary,
                             borderRadius: BorderRadius.circular(8),
                             shape: BoxShape.rectangle,
                           ),
@@ -340,8 +333,7 @@ class _SideNavState extends State<SideNav> {
                               children: [
                                 Icon(
                                   Icons.account_circle,
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
+                                  color: Theme.of(context).colorScheme.primary,
                                   size: 24,
                                 ),
                                 Padding(
@@ -371,10 +363,10 @@ class _SideNavState extends State<SideNav> {
                   width: 250,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).primaryBackground,
+                    color: Theme.of(context).colorScheme.primary,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: FlutterFlowTheme.of(context).alternate,
+                      color: Theme.of(context).colorScheme.primary,
                       width: 1,
                     ),
                   ),
@@ -399,18 +391,16 @@ class _SideNavState extends State<SideNav> {
                               decoration: BoxDecoration(
                                 color: Theme.of(context).brightness ==
                                         Brightness.light
-                                    ? FlutterFlowTheme.of(context).secondary
-                                    : FlutterFlowTheme.of(context)
-                                        .primaryBackground,
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).colorScheme.primary,
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
                                   color: valueOrDefault<Color>(
                                     Theme.of(context).brightness ==
                                             Brightness.light
-                                        ? FlutterFlowTheme.of(context).secondary
-                                        : FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                    FlutterFlowTheme.of(context).alternate,
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context).colorScheme.primary,
+                                    Theme.of(context).colorScheme.primary,
                                   ),
                                   width: 1,
                                 ),
@@ -423,10 +413,8 @@ class _SideNavState extends State<SideNav> {
                                     Icons.wb_sunny_rounded,
                                     color: Theme.of(context).brightness ==
                                             Brightness.light
-                                        ? FlutterFlowTheme.of(context)
-                                            .primaryText
-                                        : FlutterFlowTheme.of(context)
-                                            .secondaryText,
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context).colorScheme.primary,
                                     size: 16,
                                   ),
                                   Padding(
@@ -460,19 +448,16 @@ class _SideNavState extends State<SideNav> {
                               decoration: BoxDecoration(
                                 color: Theme.of(context).brightness ==
                                         Brightness.dark
-                                    ? FlutterFlowTheme.of(context).secondary
-                                    : FlutterFlowTheme.of(context)
-                                        .primaryBackground,
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).colorScheme.primary,
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
                                   color: valueOrDefault<Color>(
                                     Theme.of(context).brightness ==
                                             Brightness.dark
-                                        ? FlutterFlowTheme.of(context).secondary
-                                        : FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                    FlutterFlowTheme.of(context)
-                                        .primaryBackground,
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context).colorScheme.primary,
+                                    Theme.of(context).colorScheme.primary,
                                   ),
                                   width: 1,
                                 ),
@@ -485,10 +470,8 @@ class _SideNavState extends State<SideNav> {
                                     Icons.nightlight_round,
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
-                                        ? FlutterFlowTheme.of(context)
-                                            .primaryText
-                                        : FlutterFlowTheme.of(context)
-                                            .secondaryText,
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context).colorScheme.primary,
                                     size: 16,
                                   ),
                                   Padding(

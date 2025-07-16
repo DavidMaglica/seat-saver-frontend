@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
@@ -24,10 +23,10 @@ class PerformanceCard extends StatelessWidget {
         width: double.infinity,
         constraints: const BoxConstraints(maxWidth: 1000.0),
         decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).secondaryBackground,
+          color: Theme.of(context).colorScheme.background,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: FlutterFlowTheme.of(context).alternate,
+            color: Theme.of(context).colorScheme.outline,
             width: 1,
           ),
         ),
@@ -43,11 +42,11 @@ class PerformanceCard extends StatelessWidget {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                    color: Theme.of(context).colorScheme.background,
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 0,
-                        color: FlutterFlowTheme.of(context).alternate,
+                        color: Theme.of(context).colorScheme.outline,
                         offset: const Offset(
                           0,
                           1,
@@ -113,10 +112,8 @@ class PerformanceCard extends StatelessWidget {
                     Expanded(
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: CachedNetworkImage(
-                          fadeInDuration: const Duration(milliseconds: 500),
-                          fadeOutDuration: const Duration(milliseconds: 500),
-                          imageUrl: 'https://picsum.photos/seed/575/600',
+                        child: Image.network(
+                          'https://picsum.photos/seed/575/600',
                           height: 200,
                           fit: BoxFit.cover,
                         ),

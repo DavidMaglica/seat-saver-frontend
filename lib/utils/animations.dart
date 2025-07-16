@@ -6,7 +6,7 @@ class Animations {
   static Map<String, AnimationInfo> authenticationAnimations = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         VisibilityEffect(duration: 1.ms),
         FadeEffect(
           curve: Curves.easeInOut,
@@ -33,7 +33,7 @@ class Animations {
     ),
     'columnOnPageLoadAnimation1': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         VisibilityEffect(duration: 300.ms),
         FadeEffect(
           curve: Curves.easeInOut,
@@ -53,7 +53,7 @@ class Animations {
     ),
     'columnOnPageLoadAnimation2': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         VisibilityEffect(duration: 300.ms),
         FadeEffect(
           curve: Curves.easeInOut,
@@ -76,7 +76,7 @@ class Animations {
   static Map<String, AnimationInfo> landingAnimations = {
     'containerOnPageLoadAnimation1': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         VisibilityEffect(duration: 1.ms),
         FadeEffect(
           curve: Curves.easeInOut,
@@ -96,7 +96,7 @@ class Animations {
     ),
     'containerOnPageLoadAnimation2': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         VisibilityEffect(duration: 500.ms),
         FadeEffect(
           curve: Curves.easeInOut,
@@ -116,7 +116,7 @@ class Animations {
     ),
     'textOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         VisibilityEffect(duration: 550.ms),
         FadeEffect(
           curve: Curves.easeInOut,
@@ -136,7 +136,7 @@ class Animations {
     ),
     'rowOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         VisibilityEffect(duration: 600.ms),
         FadeEffect(
           curve: Curves.easeInOut,
@@ -159,7 +159,7 @@ class Animations {
   static Map<String, AnimationInfo> homepageAnimations = {
     'titleOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 0.0.ms,
@@ -178,7 +178,7 @@ class Animations {
     ),
     'topStatsOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 0.0.ms,
@@ -197,7 +197,7 @@ class Animations {
     ),
     'circularStatsOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 300.0.ms,
@@ -216,7 +216,7 @@ class Animations {
     ),
     'containerOnPageLoadAnimation1': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 300.0.ms,
@@ -235,7 +235,7 @@ class Animations {
     ),
     'containerOnPageLoadAnimation2': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 600.0.ms,
@@ -247,7 +247,7 @@ class Animations {
     ),
     'containerOnPageLoadAnimation3': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 600.0.ms,
@@ -259,7 +259,7 @@ class Animations {
     ),
     'containerOnPageLoadAnimation4': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 600.0.ms,
@@ -271,7 +271,7 @@ class Animations {
     ),
     'containerOnPageLoadAnimation5': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 600.0.ms,
@@ -283,7 +283,7 @@ class Animations {
     ),
     'containerOnPageLoadAnimation6': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 600.0.ms,
@@ -295,7 +295,7 @@ class Animations {
     ),
     'containerOnPageLoadAnimation7': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 600.0.ms,
@@ -307,7 +307,7 @@ class Animations {
     ),
     'containerOnPageLoadAnimation8': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 600.0.ms,
@@ -319,7 +319,7 @@ class Animations {
     ),
     'containerOnPageLoadAnimation9': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 600.0.ms,
@@ -331,7 +331,7 @@ class Animations {
     ),
     'containerOnPageLoadAnimation10': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 600.0.ms,
@@ -343,7 +343,7 @@ class Animations {
     ),
     'containerOnPageLoadAnimation11': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 600.0.ms,
@@ -355,7 +355,7 @@ class Animations {
     ),
     'rowOnPageLoadAnimation3': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      effects: [
+      effectsBuilder: () => [
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 300.0.ms,

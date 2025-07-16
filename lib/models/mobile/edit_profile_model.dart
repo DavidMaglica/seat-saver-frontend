@@ -1,9 +1,9 @@
 import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/api/data/user.dart';
+import 'package:TableReserver/components/common/toaster.dart';
 import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:geolocator/geolocator.dart';
 
 class EditProfileModel extends ChangeNotifier {
@@ -186,16 +186,7 @@ class EditProfileModel extends ChangeNotifier {
   void cancel() => Navigator.of(context).pop();
 
   void _showToast(String message, Color color) {
-    showToast(
-      message,
-      context: context,
-      backgroundColor: color,
-      textStyle: const TextStyle(color: Colors.white, fontSize: 16),
-      borderRadius: BorderRadius.circular(8),
-      textPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-      alignment: Alignment.bottomLeft,
-      duration: const Duration(seconds: 4),
-    );
+    Toaster.display(context, message, color);
   }
 
   void _hideKeyboard() =>

@@ -118,12 +118,14 @@ class _WebAuthenticationState extends State<WebAuthentication>
 
   TabBar _buildTabBar(BuildContext context) {
     return TabBar(
-      labelColor: Theme.of(context).colorScheme.onPrimary,
+      labelColor: WebTheme.accent1,
       unselectedLabelColor: Theme.of(context).colorScheme.onSecondary,
       labelStyle: Theme.of(context).textTheme.titleMedium,
       unselectedLabelStyle: Theme.of(context).textTheme.titleSmall,
-      indicatorColor: WebTheme.successColor,
+      indicatorColor: WebTheme.accent1,
+      indicatorSize: TabBarIndicatorSize.tab,
       indicatorWeight: 3,
+      dividerColor: Colors.transparent,
       tabs: const [
         Tab(
           text: 'Sign Up',

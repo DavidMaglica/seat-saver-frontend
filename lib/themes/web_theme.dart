@@ -110,6 +110,7 @@ class WebTheme {
       tertiary: darkTertiaryColor,
       onTertiary: darkAlternateColor,
       surface: darkSecondaryBackgroundColor,
+      surfaceBright: darkPrimaryBackgroundColor,
       surfaceVariant: mutedDarkSecondaryBackgroundColor,
       background: darkPrimaryBackgroundColor,
       onPrimary: darkPrimaryTextColor,

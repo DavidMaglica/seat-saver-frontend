@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-
 class Authentication extends StatefulWidget {
   const Authentication({super.key});
 
@@ -115,11 +114,13 @@ class _AuthenticationState extends State<Authentication>
                                 unselectedLabelColor:
                                     Theme.of(context).colorScheme.onPrimary,
                                 labelStyle:
-                                    Theme.of(context).textTheme.titleSmall,
+                                    Theme.of(context).textTheme.titleMedium,
                                 unselectedLabelStyle:
                                     Theme.of(context).textTheme.titleSmall,
                                 indicatorColor: MobileTheme.accent1,
                                 indicatorWeight: 3,
+                                indicatorSize: TabBarIndicatorSize.tab,
+                                dividerColor: Colors.transparent,
                                 padding: const EdgeInsetsDirectional.fromSTEB(
                                     16, 0, 16, 0),
                                 tabs: const [

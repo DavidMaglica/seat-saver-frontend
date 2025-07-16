@@ -38,7 +38,7 @@ class _SubmitBugModalState extends State<SubmitBugModal>
     animationsMap.addAll({
       'containerOnPageLoadAnimation': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
-        effects: [
+        effectsBuilder: () => [
           VisibilityEffect(duration: 300.ms),
           FadeEffect(
             curve: Curves.easeInOut,
@@ -92,7 +92,7 @@ class _SubmitBugModalState extends State<SubmitBugModal>
                 maxWidth: 670,
               ),
               decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).secondaryBackground,
+                color: Theme.of(context).colorScheme.primary,
                 boxShadow: const [
                   BoxShadow(
                     blurRadius: 12,
@@ -139,35 +139,34 @@ class _SubmitBugModalState extends State<SubmitBugModal>
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color:
-                                      FlutterFlowTheme.of(context).primaryText,
+                                  Theme.of(context).colorScheme.primary,
                                   width: 1,
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  color: Theme.of(context).colorScheme.primary,
                                   width: 1,
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               errorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
+                                  color: Theme.of(context).colorScheme.primary,
                                   width: 1,
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               focusedErrorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
+                                  color: Theme.of(context).colorScheme.primary,
                                   width: 1,
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               filled: true,
-                              fillColor: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
+                              fillColor: Theme.of(context).colorScheme.primary,
                               contentPadding:
                                   const EdgeInsetsDirectional.fromSTEB(
                                       20, 24, 20, 24),
@@ -175,7 +174,7 @@ class _SubmitBugModalState extends State<SubmitBugModal>
                             style: Theme.of(context).textTheme.bodyMedium,
                             maxLines: null,
                             minLines: 2,
-                            cursorColor: FlutterFlowTheme.of(context).primary,
+                            cursorColor: Theme.of(context).colorScheme.primary,
                             validator: _model.yourNameTextControllerValidator
                                 .asValidator(context),
                           ),
@@ -263,12 +262,12 @@ class _SubmitBugModalState extends State<SubmitBugModal>
                                   24, 0, 24, 0),
                               iconPadding: const EdgeInsetsDirectional.fromSTEB(
                                   0, 0, 0, 0),
-                              color: FlutterFlowTheme.of(context).error,
+                              color: Theme.of(context).colorScheme.primary,
                               textStyle:
                                   Theme.of(context).textTheme.titleMedium,
                               elevation: 0,
                               borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).alternate,
+                                color: Theme.of(context).colorScheme.primary,
                                 width: 2,
                               ),
                               borderRadius: BorderRadius.circular(8),
@@ -288,7 +287,7 @@ class _SubmitBugModalState extends State<SubmitBugModal>
                                   24, 0, 24, 0),
                               iconPadding: const EdgeInsetsDirectional.fromSTEB(
                                   0, 0, 0, 0),
-                              color: FlutterFlowTheme.of(context).primary,
+                              color: Theme.of(context).colorScheme.primary,
                               textStyle:
                                   Theme.of(context).textTheme.titleMedium,
                               elevation: 3,

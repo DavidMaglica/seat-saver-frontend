@@ -37,10 +37,10 @@ Position? getPositionFromLatAndLong(
 LinearGradient fallbackImageGradient() {
   return LinearGradient(
     colors: [
-      const Color(0xFF1B5E20).withOpacity(0.8),
-      const Color(0xFF43A047).withOpacity(0.8),
-      const Color(0xFFFF7043).withOpacity(0.8),
-      const Color(0xFFFF5722).withOpacity(0.8),
+      const Color(0xFF1B5E20).withValues(alpha: 0.8),
+      const Color(0xFF43A047).withValues(alpha: 0.8),
+      const Color(0xFFFF7043).withValues(alpha: 0.8),
+      const Color(0xFFFF5722).withValues(alpha: 0.8),
     ],
     begin: Alignment.bottomLeft,
     end: Alignment.topRight,
@@ -51,10 +51,10 @@ LinearGradient fallbackImageGradient() {
 LinearGradient fallbackImageGradientReverted() {
   return LinearGradient(
     colors: [
-      const Color(0xFFFF5722).withOpacity(0.8),
-      const Color(0xFFFF7043).withOpacity(0.6),
-      const Color(0xFF43A047).withOpacity(0.8),
-      const Color(0xFF1B5E20).withOpacity(0.8),
+      const Color(0xFFFF5722).withValues(alpha: 0.8),
+      const Color(0xFFFF7043).withValues(alpha: 0.8),
+      const Color(0xFF43A047).withValues(alpha: 0.8),
+      const Color(0xFF1B5E20).withValues(alpha: 0.8),
     ],
     begin: Alignment.bottomLeft,
     end: Alignment.topRight,

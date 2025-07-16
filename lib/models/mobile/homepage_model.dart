@@ -12,7 +12,8 @@ import 'package:TableReserver/components/mobile/location_permission.dart';
 import 'package:TableReserver/utils/routes.dart';
 import 'package:TableReserver/utils/utils.dart';
 import 'package:carousel_slider/carousel_controller.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' show ScaffoldState, ScaffoldMessenger, Colors, Theme, showModalBottomSheet;
 import 'package:flutter/scheduler.dart';
 import 'package:geolocator/geolocator.dart';
 

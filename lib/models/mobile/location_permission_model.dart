@@ -4,7 +4,6 @@ import 'package:TableReserver/api/data/notification_settings.dart';
 import 'package:TableReserver/components/common/toaster.dart';
 import 'package:TableReserver/utils/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -75,11 +74,8 @@ class LocationPermissionPopUpModel extends ChangeNotifier {
     String? currentCity = await _getCity(userLocation);
     if (currentCity == null || currentCity.isEmpty) {
       if (!context.mounted) return;
-      showToast('Failed to get current location',
-          context: context,
-          animation: StyledToastAnimation.scale,
-          position: StyledToastPosition.center,
-          duration: const Duration(seconds: 4));
+      Toaster.displayError(
+          context, 'Failed to get current city. Please try again later.');
     }
 
     _accountApi.updateUserLocation(userId, userLocation);

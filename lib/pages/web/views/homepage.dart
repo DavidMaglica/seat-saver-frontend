@@ -161,10 +161,10 @@ class _WebHomepageState extends State<WebHomepage>
               maxWidth: 1270,
             ),
             decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).secondaryBackground,
+              color: Theme.of(context).colorScheme.primary,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: FlutterFlowTheme.of(context).alternate,
+                color: Theme.of(context).colorScheme.primary,
                 width: 1,
               ),
             ),
@@ -216,8 +216,8 @@ class _WebHomepageState extends State<WebHomepage>
                           padding: const EdgeInsetsDirectional.fromSTEB(
                               16, 0, 16, 0),
                           iconColor:
-                              FlutterFlowTheme.of(context).primaryBackground,
-                          color: FlutterFlowTheme.of(context).primary,
+                          Theme.of(context).colorScheme.primary,
+                          color: Theme.of(context).colorScheme.primary,
                           textStyle: Theme.of(context).textTheme.titleLarge,
                           elevation: 3,
                           borderSide: const BorderSide(
@@ -235,7 +235,7 @@ class _WebHomepageState extends State<WebHomepage>
                       width: double.infinity,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
+                        color: Theme.of(context).colorScheme.primary,
                         borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(0),
                           bottomRight: Radius.circular(0),
@@ -322,13 +322,11 @@ class _WebHomepageState extends State<WebHomepage>
                         child: Container(
                           width: 100,
                           decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
+                            color: Theme.of(context).colorScheme.primary,
                             boxShadow: [
                               BoxShadow(
                                 blurRadius: 0,
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
+                                color: Theme.of(context).colorScheme.primary,
                                 offset: const Offset(0, 1),
                               )
                             ],
@@ -393,7 +391,7 @@ class _WebHomepageState extends State<WebHomepage>
                                     height: 32,
                                     decoration: BoxDecoration(
                                       color:
-                                          FlutterFlowTheme.of(context).success,
+                                      Theme.of(context).colorScheme.primary,
                                       borderRadius: BorderRadius.circular(40),
                                     ),
                                     alignment: const AlignmentDirectional(0, 0),
@@ -422,7 +420,7 @@ class _WebHomepageState extends State<WebHomepage>
                                       icon: Icon(
                                         Icons.edit_sharp,
                                         color:
-                                            FlutterFlowTheme.of(context).info,
+                                        Theme.of(context).colorScheme.primary,
                                         size: 20,
                                       ),
                                       onPressed: () async {
@@ -459,7 +457,7 @@ class _WebHomepageState extends State<WebHomepage>
                                       icon: Icon(
                                         Icons.delete_forever,
                                         color:
-                                            FlutterFlowTheme.of(context).error,
+                                        Theme.of(context).colorScheme.primary,
                                         size: 20,
                                       ),
                                       onPressed: () async {

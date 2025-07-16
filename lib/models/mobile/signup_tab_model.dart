@@ -31,9 +31,7 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
             widget.model.passwordSignUpTextController.text,
             widget.model.passwordConfirmTextController.text);
 
-      default:
-        return BasicResponse(success: false, message: 'Unknown sign up method');
-    }
+      }
   }
 
   BasicResponse<int> _appleSignUp() {
