@@ -26,7 +26,7 @@ class CircularStatCard extends StatelessWidget {
           maxWidth: 1000,
         ),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.onSurface,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: Theme.of(context).colorScheme.outline,

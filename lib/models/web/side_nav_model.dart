@@ -1,7 +1,9 @@
 import 'package:TableReserver/components/web/side_nav.dart';
 import 'package:TableReserver/utils/fade_in_route.dart';
+import 'package:TableReserver/utils/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:provider/provider.dart';
 
 class SideNavModel extends FlutterFlowModel<SideNav> {
   @override
@@ -20,12 +22,7 @@ class SideNavModel extends FlutterFlowModel<SideNav> {
   }
 
   void setDarkModeSetting(BuildContext context, bool isDarkMode) {
-    final theme = Theme.of(context);
-    if (isDarkMode) {
-      // TODO implement with store management
-      // theme.setThemeMode(ThemeMode.dark);
-    } else {
-      // theme.setThemeMode(ThemeMode.light);
-    }
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    themeProvider.toggleDarkTheme(isDarkMode);
   }
 }

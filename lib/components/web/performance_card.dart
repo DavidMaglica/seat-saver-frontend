@@ -23,7 +23,7 @@ class PerformanceCard extends StatelessWidget {
         width: double.infinity,
         constraints: const BoxConstraints(maxWidth: 1000.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.onSurface,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: Theme.of(context).colorScheme.outline,
@@ -42,7 +42,7 @@ class PerformanceCard extends StatelessWidget {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
+                    color: Theme.of(context).colorScheme.onSurface,
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 0,

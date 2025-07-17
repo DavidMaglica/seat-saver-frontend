@@ -19,13 +19,20 @@ import 'package:TableReserver/pages/web/views/landing.dart';
 import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:TableReserver/themes/web_theme.dart';
 import 'package:TableReserver/utils/routes.dart';
+import 'package:TableReserver/utils/theme_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -54,7 +61,7 @@ class MyApp extends StatelessWidget {
     return _buildMobileMaterialApp();
   }
 
-  MaterialApp _buildMobileMaterialApp() {
+  Widget _buildMobileMaterialApp() {
     return MaterialApp(
       title: 'TableReserver',
       theme: MobileTheme.lightTheme,
@@ -128,18 +135,22 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  MaterialApp _buildWebMaterialApp() {
-    return MaterialApp(
-      title: 'TableReserver',
-      theme: WebTheme.lightTheme,
-      darkTheme: WebTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      home: const WebLanding(),
-      debugShowCheckedModeBanner: false,
-      routes: {
-        Routes.webLanding: (context) => const WebLanding(),
-        Routes.webAuthentication: (context) => const WebAuthentication(),
-        Routes.webHomepage: (context) => const WebHomepage(),
+  Widget _buildWebMaterialApp() {
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, _) {
+        return MaterialApp(
+          title: 'TableReserver',
+          theme: WebTheme.lightTheme,
+          darkTheme: WebTheme.darkTheme,
+          themeMode: themeProvider.themeMode,
+          home: const WebLanding(),
+          debugShowCheckedModeBanner: false,
+          routes: {
+            Routes.webLanding: (context) => const WebLanding(),
+            Routes.webAuthentication: (context) => const WebAuthentication(),
+            Routes.webHomepage: (context) => const WebHomepage(),
+          },
+        );
       },
     );
   }

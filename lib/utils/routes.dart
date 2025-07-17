@@ -18,4 +18,7 @@ class Routes {
   static const String webLanding = '/landing';
   static const String webAuthentication = '/authentication';
   static const String webHomepage = '/homepage';
+  static const String webVenues = '/venues';
+  static const String webReservations = '/reservations';
+  static const String webAccount = '/account';
 }
