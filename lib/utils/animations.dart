@@ -373,4 +373,133 @@ class Animations {
       ],
     ),
   };
+
+  static Map<String, AnimationInfo> accountAnimations = {
+    'columnOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 800.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation1': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 300.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 400.0.ms,
+          duration: 300.0.ms,
+          begin: Offset(0.0, 100.0),
+          end: Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation2': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: Offset(0.0, 90.0),
+          end: Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation3': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: Offset(0.0, 90.0),
+          end: Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation4': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 300.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 400.0.ms,
+          duration: 300.0.ms,
+          begin: Offset(0.0, 100.0),
+          end: Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation5': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 300.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 400.0.ms,
+          duration: 300.0.ms,
+          begin: Offset(0.0, 100.0),
+          end: Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+    'buttonOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 300.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 400.0.ms,
+          duration: 300.0.ms,
+          begin: Offset(0.0, 100.0),
+          end: Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+  };
 }

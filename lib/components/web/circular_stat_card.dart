@@ -5,11 +5,13 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 class CircularStatCard extends StatelessWidget {
   final String title;
   final String description;
+  final String? hint;
 
   const CircularStatCard({
     super.key,
     required this.title,
     required this.description,
+    this.hint,
   });
 
   @override
@@ -22,16 +24,9 @@ class CircularStatCard extends StatelessWidget {
       ),
       child: Container(
         width: double.infinity,
-        constraints: const BoxConstraints(
-          maxWidth: 1000,
-        ),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.onSurface,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: Theme.of(context).colorScheme.outline,
-            width: 1,
-          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -46,6 +41,14 @@ class CircularStatCard extends StatelessWidget {
               endIndent: 16,
             ),
             _buildCircularIndicator(context),
+            if (hint != null)
+              Padding(
+                padding: const EdgeInsets.only(left: 16, bottom: 6),
+                child: Text(
+                  '*${hint!}',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
           ],
         ),
       ),
@@ -99,7 +102,7 @@ class CircularStatCard extends StatelessWidget {
         ),
         child: CircularPercentIndicator(
           percent: title == 'Rating' ? ratingRatio : utilisationRatio,
-          radius: 80,
+          radius: 55,
           lineWidth: 8,
           animation: true,
           animateFromLastPercent: true,
@@ -116,7 +119,9 @@ class CircularStatCard extends StatelessWidget {
                       : WebTheme.successColor,
           backgroundColor: Theme.of(context).colorScheme.outline,
           center: Text(
-            title == 'Rating' ? '${rating.toDouble()}' : '${utilisationRatio * 100}%',
+            title == 'Rating'
+                ? '${rating.toDouble()}'
+                : '${utilisationRatio * 100}%',
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),

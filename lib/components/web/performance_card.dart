@@ -25,10 +25,6 @@ class PerformanceCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.onSurface,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: Theme.of(context).colorScheme.outline,
-            width: 1,
-          ),
         ),
         child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
@@ -38,54 +34,19 @@ class PerformanceCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(1, 1, 1, 0),
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 0,
-                        color: Theme.of(context).colorScheme.outline,
-                        offset: const Offset(
-                          0,
-                          1,
-                        ),
-                      )
-                    ],
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(0),
-                      bottomRight: Radius.circular(0),
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                0, 16, 0, 16),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  title,
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                padding: const EdgeInsets.only(
+                    left: 16, top: 16, right: 16, bottom: 8),
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
+              ),
+              Divider(
+                height: 1,
+                thickness: 1,
+                indent: 16,
+                endIndent: 16,
+                color: Theme.of(context).colorScheme.outline,
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),

@@ -1,9 +1,14 @@
+import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/components/web/circular_stat_card.dart';
 import 'package:TableReserver/components/web/performance_card.dart';
 import 'package:TableReserver/components/web/side_nav.dart';
 import 'package:TableReserver/components/web/stat_card.dart';
 import 'package:TableReserver/models/web/homepage_model.dart';
+import 'package:TableReserver/themes/web_theme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_table/flutter_advanced_table.dart';
+import 'package:flutter_advanced_table/params.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class WebHomepage extends StatefulWidget {
@@ -59,30 +64,24 @@ class _WebHomepageState extends State<WebHomepage>
                 child: Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(),
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 64),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          _buildTitle(context),
-                          _buildTopStats(context),
-                          Row(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 64),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildTitle(context),
+                        _buildTopStats(context),
+                        Row(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _buildCircularStats(),
-                              _buildVenuesTable(context),
-                            ]
-                                .divide(const SizedBox(width: 16))
-                                .addToStart(const SizedBox(width: 16)),
-                          ),
-                          _buildPerformance(context),
-                        ]
-                            .addToStart(const SizedBox(height: 24))
-                            .addToEnd(const SizedBox(height: 24)),
-                      ),
+                              _buildVenues(context),
+                            ].divide(const SizedBox(width: 16))),
+                        const SizedBox(height: 16),
+                        _buildPerformance(context),
+                      ].addToStart(const SizedBox(height: 24)),
                     ),
                   ),
                 ),
@@ -95,39 +94,34 @@ class _WebHomepageState extends State<WebHomepage>
   }
 
   Widget _buildTitle(BuildContext context) {
-    return Text(
-      'Overview',
-      style: Theme.of(context).textTheme.titleLarge,
-    ).animateOnPageLoad(_model.animationsMap['titleOnPageLoadAnimation']!);
+    return Padding(
+      padding: const EdgeInsets.only(left: 14),
+      child: Text(
+        'Overview',
+        style: Theme.of(context).textTheme.titleLarge,
+      ).animateOnPageLoad(_model.animationsMap['titleOnPageLoadAnimation']!),
+    );
   }
 
-  Align _buildTopStats(BuildContext context) {
+  Widget _buildTopStats(BuildContext context) {
     return Align(
       alignment: const AlignmentDirectional(-1, 0),
-      child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
               const StatCard(title: 'Reservations this Month', value: 208),
               const StatCard(title: 'Total Reservations Received', value: 2208),
               const StatCard(title: 'Total Reviews Received', value: 2193),
-            ]
-                .divide(const SizedBox(width: 16))
-                .addToStart(const SizedBox(width: 16))
-                .addToEnd(const SizedBox(width: 16)),
-          ),
-        ).animateOnPageLoad(
-            _model.animationsMap['topStatsOnPageLoadAnimation']!),
-      ),
+            ].divide(const SizedBox(width: 16))),
+      ).animateOnPageLoad(_model.animationsMap['topStatsOnPageLoadAnimation']!),
     );
   }
 
-  Flexible _buildCircularStats() {
+  Widget _buildCircularStats() {
     return Flexible(
-      flex: 6,
+      flex: 5,
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -137,18 +131,20 @@ class _WebHomepageState extends State<WebHomepage>
           const CircularStatCard(
             title: 'Overall Utilization Rate',
             description:
-                'The overall utilization rate of your venues. (Sum of (available_capacity) / Sum of (maximum_capacity)) × 100',
+                'The overall utilization rate of your venues.',
+            hint: '(Sum of (available_capacity) / Sum of (maximum_capacity)) × 100',
           ),
         ].divide(const SizedBox(height: 16)),
-      ).animateOnPageLoad(_model.animationsMap['circularStatsOnPageLoadAnimation']!),
+      ).animateOnPageLoad(
+          _model.animationsMap['circularStatsOnPageLoadAnimation']!),
     );
   }
 
-  Expanded _buildVenuesTable(BuildContext context) {
+  Widget _buildVenues(BuildContext context) {
     return Expanded(
       flex: 12,
       child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 16, 0),
+        padding: const EdgeInsets.all(0),
         child: Material(
           color: Colors.transparent,
           elevation: 3,
@@ -161,12 +157,8 @@ class _WebHomepageState extends State<WebHomepage>
               maxWidth: 1270,
             ),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).colorScheme.onSurface,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: Theme.of(context).colorScheme.primary,
-                width: 1,
-              ),
             ),
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -183,21 +175,14 @@ class _WebHomepageState extends State<WebHomepage>
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  0, 0, 12, 0),
-                              child: Text(
-                                'Your Venues',
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
+                            Text(
+                              'Your Venues',
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
-                            Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  0, 4, 12, 0),
-                              child: Text(
-                                'View and edit or delete your venues',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'View and edit or delete your venues in this scrollable table.',
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
                         ),
@@ -208,292 +193,26 @@ class _WebHomepageState extends State<WebHomepage>
                         },
                         text: 'Add New Venue',
                         icon: const Icon(
-                          Icons.add_rounded,
-                          size: 15,
+                          CupertinoIcons.add_circled,
+                          size: 24,
                         ),
                         options: FFButtonOptions(
                           height: 40,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              16, 0, 16, 0),
-                          iconColor:
-                          Theme.of(context).colorScheme.primary,
-                          color: Theme.of(context).colorScheme.primary,
-                          textStyle: Theme.of(context).textTheme.titleLarge,
-                          elevation: 3,
-                          borderSide: const BorderSide(
-                            color: Colors.transparent,
-                            width: 1,
+                          iconColor: Theme.of(context).colorScheme.primary,
+                          color: WebTheme.successColor,
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            color: Color(0xFFFFFBF4),
                           ),
+                          elevation: 3,
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                    child: Container(
-                      width: double.infinity,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(0),
-                          bottomRight: Radius.circular(0),
-                          topLeft: Radius.circular(8),
-                          topRight: Radius.circular(8),
-                        ),
-                      ),
-                      child: Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              flex: 1,
-                              child: Text(
-                                'Name',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Text(
-                                'Location',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Text(
-                                'Working Hours',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Text(
-                                'Maximum capacity',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Text(
-                                'Available capacity',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Text(
-                                'Average rating',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Text(
-                                'Actions',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ),
-                          ].divide(const SizedBox(width: 4)),
-                        ),
-                      ),
-                    ),
-                  ),
-                  ListView(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    children: [
-                      Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 1),
-                        child: Container(
-                          width: 100,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 0,
-                                color: Theme.of(context).colorScheme.primary,
-                                offset: const Offset(0, 1),
-                              )
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                16, 0, 16, 0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Flexible(
-                                  flex: 1,
-                                  child: Text(
-                                    'Lamai',
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  child: Text(
-                                    'Porec',
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  child: Text(
-                                    '08:00 - 16:00',
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  child: Text(
-                                    '120',
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  child: Text(
-                                    '80',
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      16, 0, 0, 0),
-                                  child: Container(
-                                    height: 32,
-                                    decoration: BoxDecoration(
-                                      color:
-                                      Theme.of(context).colorScheme.primary,
-                                      borderRadius: BorderRadius.circular(40),
-                                    ),
-                                    alignment: const AlignmentDirectional(0, 0),
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              12, 0, 12, 0),
-                                      child: Text(
-                                        '4.5',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
-                                      ),
-                                    ),
-                                  ).animateOnPageLoad(_model.animationsMap[
-                                      'containerOnPageLoadAnimation2']!),
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    FlutterFlowIconButton(
-                                      borderColor: Colors.transparent,
-                                      borderRadius: 30,
-                                      borderWidth: 1,
-                                      buttonSize: 44,
-                                      icon: Icon(
-                                        Icons.edit_sharp,
-                                        color:
-                                        Theme.of(context).colorScheme.primary,
-                                        size: 20,
-                                      ),
-                                      onPressed: () async {
-                                        await showModalBottomSheet(
-                                          isScrollControlled: true,
-                                          backgroundColor: Colors.transparent,
-                                          enableDrag: false,
-                                          context: context,
-                                          builder: (context) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                FocusScope.of(context)
-                                                    .unfocus();
-                                                FocusManager
-                                                    .instance.primaryFocus
-                                                    ?.unfocus();
-                                              },
-                                              child: Padding(
-                                                padding:
-                                                    MediaQuery.viewInsetsOf(
-                                                        context),
-                                                // child: EditVenueWidget(),
-                                              ),
-                                            );
-                                          },
-                                        ).then((value) => safeSetState(() {}));
-                                      },
-                                    ),
-                                    FlutterFlowIconButton(
-                                      borderColor: Colors.transparent,
-                                      borderRadius: 30,
-                                      borderWidth: 1,
-                                      buttonSize: 44,
-                                      icon: Icon(
-                                        Icons.delete_forever,
-                                        color:
-                                        Theme.of(context).colorScheme.primary,
-                                        size: 20,
-                                      ),
-                                      onPressed: () async {
-                                        await showModalBottomSheet(
-                                          isScrollControlled: true,
-                                          backgroundColor: Colors.transparent,
-                                          enableDrag: false,
-                                          context: context,
-                                          builder: (context) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                FocusScope.of(context)
-                                                    .unfocus();
-                                                FocusManager
-                                                    .instance.primaryFocus
-                                                    ?.unfocus();
-                                              },
-                                              child: Padding(
-                                                padding:
-                                                    MediaQuery.viewInsetsOf(
-                                                        context),
-                                                // child: DeleteVenueWidget(),
-                                              ),
-                                            );
-                                          },
-                                        ).then((value) => safeSetState(() {}));
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ].divide(const SizedBox(width: 4)),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                  SizedBox(
+                    height: 360,
+                    child: _buildTable(context),
                   ),
                 ],
               ),
@@ -505,29 +224,173 @@ class _WebHomepageState extends State<WebHomepage>
     );
   }
 
+  dynamic _buildTable(BuildContext context) {
+    return AdvancedTableWidget(
+      headerBuilder: (context, header) {
+        return _buildHeader(context, header);
+      },
+      headerDecoration: const BoxDecoration(
+        color: WebTheme.accent1,
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+      ),
+      rowElementsBuilder: (context, rowParams) {
+        return _buildRows(
+          context,
+          rowParams,
+          _model.venues,
+        );
+      },
+      items: _model.venues,
+      isLoadingAll: ValueNotifier(false),
+      fullLoadingPlaceHolder: const Center(
+        child: CircularProgressIndicator(),
+      ),
+      headerItems: _model.headers,
+      actionBuilder: (context, actionParams) {
+        return _buildActions(context);
+      },
+      actions: const [
+        {
+          "label": "edit and delete",
+        },
+      ],
+      rowDecorationBuilder: (index, isHovered) {
+        return _buildRowDecoration(context, index, isHovered);
+      },
+    );
+  }
+
+  Row _buildActions(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(
+            Icons.edit_outlined,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
+          onPressed: () {
+            print('Edit');
+          },
+        ),
+        IconButton(
+          icon: Icon(
+            CupertinoIcons.trash,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
+          onPressed: () {
+            print('delete');
+          },
+        )
+      ],
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, HeaderBuilder header) {
+    return Container(
+      width: header.defualtWidth,
+      padding: const EdgeInsets.all(8),
+      alignment: Alignment.centerLeft,
+      child: Center(
+        child: Text(
+          header.value,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+      ),
+    );
+  }
+
+  List<SizedBox> _buildRows(
+    BuildContext context,
+    RowBuilderParams rowParams,
+    List<Venue> venues,
+  ) {
+    final venue = venues[rowParams.index];
+    return [
+      SizedBox(
+        width: rowParams.defualtWidth,
+        child: Center(child: Text(venue.name)),
+      ),
+      SizedBox(
+        width: rowParams.defualtWidth,
+        child: Center(child: Text(venue.location)),
+      ),
+      SizedBox(
+        width: rowParams.defualtWidth,
+        child: Center(child: Text(venue.workingHours)),
+      ),
+      SizedBox(
+        width: rowParams.defualtWidth,
+        child: Center(child: Text(venue.maximumCapacity.toString())),
+      ),
+      SizedBox(
+        width: rowParams.defualtWidth,
+        child: Center(child: Text(venue.availableCapacity.toString())),
+      ),
+      SizedBox(
+        width: rowParams.defualtWidth,
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: venue.rating >= 4.0
+                ? WebTheme.successColor
+                : venue.rating >= 2.5
+                    ? WebTheme.warningColor
+                    : WebTheme.errorColor,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Center(
+              child: Text(
+                venue.rating.toString(),
+                style: const TextStyle(
+                  color: Color(0xFFFFFBF4),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ];
+  }
+
+  BoxDecoration _buildRowDecoration(
+    BuildContext context,
+    int index,
+    bool isHover,
+  ) {
+    final isOdd = index % 2 == 0;
+    return BoxDecoration(
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      color: isHover
+          ? Theme.of(context).colorScheme.outline
+          : !isOdd
+              ? Colors.transparent
+              : Theme.of(context).colorScheme.surface,
+    );
+  }
+
   Widget _buildPerformance(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Expanded(
-            child: PerformanceCard(
-              title: 'Best Performing Venue',
-              venueId: 1,
-            ),
-          ),
-          const Expanded(
-            child: PerformanceCard(
-              title: 'Worst Performing Venue',
-              venueId: 1,
-            ),
-          ),
-        ]
-            .divide(const SizedBox(width: 16))
-            .addToStart(const SizedBox(width: 16)),
-      ).animateOnPageLoad(_model.animationsMap['rowOnPageLoadAnimation3']!),
+    return Row(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Expanded(
+                child: PerformanceCard(
+                  title: 'Best Performing Venue',
+                  venueId: 1,
+                ),
+              ),
+              const Expanded(
+                child: PerformanceCard(
+                  title: 'Worst Performing Venue',
+                  venueId: 1,
+                ),
+              ),
+            ].divide(const SizedBox(width: 16)))
+        .animateOnPageLoad(
+      _model.animationsMap['rowOnPageLoadAnimation3']!,
     );
   }
 }
