@@ -25,7 +25,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
         buttonSize: 60,
         icon: Icon(
           CupertinoIcons.chevron_left,
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.onSurface,
           size: 24,
         ),
         onPressed: onBack ?? () => Navigator.of(context).pop(),

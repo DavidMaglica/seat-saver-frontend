@@ -25,7 +25,7 @@ class LocationPermissionPopUp extends StatelessWidget {
           alignment: const AlignmentDirectional(0, 0),
           child: Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
+              color: Theme.of(context).colorScheme.onSurface,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
@@ -106,7 +106,7 @@ class LocationPermissionPopUp extends StatelessWidget {
         height: 40,
         padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
         iconPadding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-        color: Theme.of(ctx).colorScheme.background,
+        color: Theme.of(ctx).colorScheme.onSurface,
         textStyle: TextStyle(
           color: Theme.of(ctx).colorScheme.onPrimary,
           fontSize: 16,
@@ -135,7 +135,7 @@ class LocationPermissionPopUp extends StatelessWidget {
         iconPadding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
         color: Theme.of(ctx).colorScheme.primary,
         textStyle: TextStyle(
-          color: Theme.of(ctx).colorScheme.background,
+          color: Theme.of(ctx).colorScheme.onSurface,
           fontSize: 16,
         ),
         elevation: 3,

@@ -56,7 +56,7 @@ class ReservationHistory extends StatelessWidget {
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.background,
+                          color: Theme.of(context).colorScheme.onSurface,
                           boxShadow: [
                             BoxShadow(
                               blurRadius: 3,
@@ -133,7 +133,7 @@ class ReservationHistory extends StatelessWidget {
                                   color: Theme.of(ctx)
                                       .colorScheme
                                       .onPrimary
-                                      .withOpacity(.6),
+                                      .withValues(alpha: 0.6),
                                 ),
                           ),
                         ),
@@ -159,7 +159,7 @@ class ReservationHistory extends StatelessWidget {
     return Divider(
       height: 1,
       thickness: 0.5,
-      color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(0.5),
+      color: Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.5),
     );
   }
 
@@ -193,7 +193,7 @@ class ReservationHistory extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .onPrimary
-                          .withOpacity(0.5),
+                          .withValues(alpha: 0.5),
                       thickness: 0.5,
                     ),
                     _buildDetailRow(
@@ -205,7 +205,7 @@ class ReservationHistory extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .onPrimary
-                          .withOpacity(0.5),
+                          .withValues(alpha: 0.5),
                       thickness: 0.5,
                     ),
                     _buildDetailRow(

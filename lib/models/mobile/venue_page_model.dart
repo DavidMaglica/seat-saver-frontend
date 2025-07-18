@@ -263,7 +263,7 @@ class VenuePageModel extends ChangeNotifier {
       ),
       enabledCellsTextStyle: Theme.of(ctx).textTheme.bodyMedium,
       disabledCellsTextStyle: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(0.4),
+            color: Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.4),
           ),
       leadingDateTextStyle: Theme.of(ctx)
           .textTheme

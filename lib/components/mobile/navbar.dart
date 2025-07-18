@@ -23,7 +23,7 @@ class NavBar extends StatelessWidget {
         onTap: (index) => onTap(index, context),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
         selectedItemColor: MobileTheme.accent1,
-        unselectedItemColor: Theme.of(context).colorScheme.background,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurface,
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(

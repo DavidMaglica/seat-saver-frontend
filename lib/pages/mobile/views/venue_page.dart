@@ -123,10 +123,10 @@ class VenuePage extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        const Color(0xFF1B5E20).withOpacity(0.8),
-                        const Color(0xFF43A047).withOpacity(0.8),
-                        const Color(0xFFFF7043).withOpacity(0.8),
-                        const Color(0xFFFF5722).withOpacity(0.8),
+                        const Color(0xFF1B5E20).withValues(alpha: 0.8),
+                        const Color(0xFF43A047).withValues(alpha: 0.8),
+                        const Color(0xFFFF7043).withValues(alpha: 0.8),
+                        const Color(0xFFFF5722).withValues(alpha: 0.8),
                       ],
                       begin: Alignment.bottomLeft,
                       end: Alignment.topRight,
@@ -291,7 +291,7 @@ class VenuePage extends StatelessWidget {
             CupertinoIcons.star_fill,
             color: MobileTheme.accent1,
           ),
-          unratedColor: const Color(0xFF57636C).withOpacity(0.5),
+          unratedColor: const Color(0xFF57636C).withValues(alpha: 0.5),
           direction: Axis.horizontal,
           glow: false,
           ignoreGestures: true,
@@ -408,7 +408,7 @@ class VenuePage extends StatelessWidget {
           style: Theme.of(ctx).textTheme.bodyLarge,
         ),
         style: Theme.of(ctx).textTheme.bodyLarge,
-        dropdownColor: Theme.of(ctx).colorScheme.background,
+        dropdownColor: Theme.of(ctx).colorScheme.onSurface,
         underline: Container(),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         items: List.generate(12, (i) => i + 1)
@@ -493,7 +493,7 @@ class VenuePage extends StatelessWidget {
         style: Theme.of(ctx).textTheme.bodyLarge,
       ),
       style: Theme.of(ctx).textTheme.bodyLarge,
-      dropdownColor: Theme.of(ctx).colorScheme.background,
+      dropdownColor: Theme.of(ctx).colorScheme.onSurface,
       underline: Container(),
       borderRadius: const BorderRadius.all(Radius.circular(10)),
       items: model.timeOptions.map((time) {
@@ -526,11 +526,11 @@ class VenuePage extends StatelessWidget {
           color: isDisabled ? Colors.grey : MobileTheme.successColor,
           splashColor: isDisabled
               ? MobileTheme.transparentColour
-              : Theme.of(ctx).colorScheme.surfaceVariant,
+              : Theme.of(ctx).colorScheme.surfaceDim,
           textStyle: TextStyle(
             color: isDisabled
-                ? Theme.of(ctx).colorScheme.background.withOpacity(0.4)
-                : Theme.of(ctx).colorScheme.background,
+                ? Theme.of(ctx).colorScheme.onSurface.withValues(alpha: 0.4)
+                : Theme.of(ctx).colorScheme.onSurface,
             fontSize: 16,
           ),
           elevation: 3,
@@ -545,7 +545,7 @@ class VenuePage extends StatelessWidget {
       thickness: 1,
       indent: 16,
       endIndent: 16,
-      color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(0.4),
+      color: Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.4),
     );
   }
 

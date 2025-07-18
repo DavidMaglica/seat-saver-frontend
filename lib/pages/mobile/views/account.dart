@@ -115,7 +115,7 @@ class Account extends StatelessWidget {
       child: Container(
         height: 60,
         decoration: BoxDecoration(
-          color: Theme.of(ctx).colorScheme.background,
+          color: Theme.of(ctx).colorScheme.onSurface,
           boxShadow: [
             BoxShadow(
               blurRadius: 3,
@@ -224,11 +224,11 @@ class Account extends StatelessWidget {
       child: Container(
         height: 60,
         decoration: BoxDecoration(
-          color: Theme.of(ctx).colorScheme.background,
+          color: Theme.of(ctx).colorScheme.onSurface,
           boxShadow: [
             BoxShadow(
               blurRadius: 10,
-              color: color.withOpacity(0.8),
+              color: color.withValues(alpha: 0.8),
             ),
           ],
           borderRadius: BorderRadius.circular(8),
@@ -244,7 +244,7 @@ class Account extends StatelessWidget {
                   style: Theme.of(ctx)
                       .textTheme
                       .titleMedium
-                      ?.copyWith(color: color.withOpacity(0.8)),
+                      ?.copyWith(color: color.withValues(alpha: 0.8)),
                 ),
                 const Spacer(),
                 Icon(CupertinoIcons.chevron_forward, color: color, size: 14),

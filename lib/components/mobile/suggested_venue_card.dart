@@ -76,11 +76,11 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
       width: 248,
       height: 196,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).colorScheme.onSurface,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 2,
             spreadRadius: 2,
             offset: const Offset(0, 2),
@@ -191,7 +191,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
           Text(
             widget.venue.location,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
+              color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
               fontWeight: FontWeight.w800,
               fontSize: 10,
             ),
@@ -241,7 +241,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
                 ),
                 direction: Axis.horizontal,
                 rating: rating,
-                unratedColor: const Color(0xFF57636C).withOpacity(0.5),
+                unratedColor: const Color(0xFF57636C).withValues(alpha: 0.5),
                 itemCount: 5,
                 itemSize: 14,
               ),

@@ -65,7 +65,7 @@ class _VenueCardState extends State<VenueCard> {
       width: 148,
       height: 148,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).colorScheme.onSurface,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
@@ -180,7 +180,7 @@ class _VenueCardState extends State<VenueCard> {
           Text(
             location,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
+              color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
               fontWeight: FontWeight.w800,
               fontSize: 9,
             ),
@@ -225,7 +225,7 @@ class _VenueCardState extends State<VenueCard> {
             ),
             direction: Axis.horizontal,
             rating: rating,
-            unratedColor: const Color(0xFF57636C).withOpacity(0.5),
+            unratedColor: const Color(0xFF57636C).withValues(alpha: 0.5),
             itemCount: 5,
             itemSize: 12,
           ),

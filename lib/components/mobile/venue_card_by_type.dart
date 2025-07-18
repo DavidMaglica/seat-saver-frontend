@@ -28,7 +28,7 @@ class VenueCardByType extends StatelessWidget {
           return Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
+              color: Theme.of(context).colorScheme.onSurface,
               boxShadow: [
                 BoxShadow(
                   blurRadius: 3,

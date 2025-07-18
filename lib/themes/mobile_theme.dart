@@ -30,7 +30,6 @@ const Color mutedDarkSecondaryBackgroundColor = Color(0xB3424242);
 
 const Color darkShadowColor = Color(0xFF1B1B1B);
 
-
 const Color darkErrorColor = Color(0xFFB70031);
 
 class MobileTheme {
@@ -56,10 +55,8 @@ class MobileTheme {
       tertiary: lightTertiaryColor,
       onTertiary: lightAlternateColor,
       surface: lightSecondaryBackgroundColor,
-      onSurface: lightPrimaryTextColor,
-      surfaceVariant: mutedLightSecondaryBackgroundColor,
-      background: lightPrimaryBackgroundColor,
-      onBackground: lightPrimaryTextColor,
+      onSurface: lightPrimaryBackgroundColor,
+      surfaceDim: mutedLightSecondaryBackgroundColor,
       error: lightErrorColor,
       onError: errorColor,
       outline: lightShadowColor,
@@ -106,16 +103,14 @@ class MobileTheme {
     colorScheme: const ColorScheme(
       brightness: Brightness.dark,
       primary: darkPrimaryColor,
+      onPrimary: darkPrimaryTextColor,
       secondary: darkSecondaryColor,
+      onSecondary: darkSecondaryTextColor,
       tertiary: darkTertiaryColor,
       onTertiary: darkAlternateColor,
       surface: darkSecondaryBackgroundColor,
-      surfaceVariant: mutedDarkSecondaryBackgroundColor,
-      background: darkPrimaryBackgroundColor,
-      onPrimary: darkPrimaryTextColor,
-      onSecondary: darkSecondaryTextColor,
-      onSurface: darkPrimaryTextColor,
-      onBackground: darkPrimaryTextColor,
+      onSurface: darkPrimaryBackgroundColor,
+      surfaceDim: mutedDarkSecondaryBackgroundColor,
       error: darkErrorColor,
       onError: errorColor,
       outline: darkShadowColor,

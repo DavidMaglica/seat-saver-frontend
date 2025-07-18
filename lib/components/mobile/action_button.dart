@@ -28,7 +28,7 @@ class ActionButton extends StatelessWidget {
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                 color: Theme.of(context).colorScheme.primary,
                 textStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.background,
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 16,
                 ),
                 elevation: 3,

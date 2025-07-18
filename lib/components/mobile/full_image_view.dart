@@ -15,7 +15,7 @@ class FullScreenImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.onSurface,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,

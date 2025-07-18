@@ -93,7 +93,7 @@ class SuccessfulReservation extends StatelessWidget {
                                     height: 50,
                                     color: Theme.of(context)
                                         .colorScheme
-                                        .background,
+                                        .onSurface,
                                     textStyle: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme

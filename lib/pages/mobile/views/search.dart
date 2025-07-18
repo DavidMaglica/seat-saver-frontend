@@ -70,7 +70,7 @@ class Search extends StatelessWidget {
                           child: Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.background,
+                              color: Theme.of(context).colorScheme.onSurface,
                               boxShadow: [
                                 BoxShadow(
                                   blurRadius: 4,
@@ -163,7 +163,7 @@ class Search extends StatelessWidget {
                   hintText: 'Type to search for venues',
                   hintStyle: Theme.of(ctx).textTheme.bodyLarge?.copyWith(
                       color:
-                          Theme.of(ctx).colorScheme.onPrimary.withOpacity(0.5)),
+                          Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.5)),
                   prefixIcon: Icon(
                     CupertinoIcons.search,
                     color: Theme.of(ctx).colorScheme.onPrimary,
@@ -208,7 +208,7 @@ class Search extends StatelessWidget {
         subtitle: Text(
           venueType != null ? venueType.toTitleCase() : 'Loading...',
           style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(.6),
+                color: Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.6),
               ),
         ),
         trailing: Icon(
@@ -231,7 +231,7 @@ class Search extends StatelessWidget {
         indent: 36,
         endIndent: 36,
         thickness: .5,
-        color: Theme.of(ctx).colorScheme.onBackground,
+        color: Theme.of(ctx).colorScheme.onPrimary,
       ),
     );
   }
@@ -245,7 +245,7 @@ class Search extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 decoration: BoxDecoration(
-                  color: Theme.of(ctx).colorScheme.surfaceVariant,
+                  color: Theme.of(ctx).colorScheme.surfaceDim,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -290,7 +290,7 @@ class Search extends StatelessWidget {
               height: 456,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
+                color: Theme.of(context).colorScheme.onSurface,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(24),
                   topRight: Radius.circular(24),

@@ -199,7 +199,7 @@ class Homepage extends StatelessWidget {
       padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 0, 0),
       child: Container(
         decoration: BoxDecoration(
-          color: MobileTheme.successColor.withOpacity(0.4),
+          color: MobileTheme.successColor.withValues(alpha: 0.4),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16),
             bottomLeft: Radius.circular(16),
@@ -302,7 +302,7 @@ class Homepage extends StatelessWidget {
             options: FFButtonOptions(
               width: 80,
               height: 24,
-              color: Theme.of(ctx).colorScheme.background,
+              color: Theme.of(ctx).colorScheme.onSurface,
               textStyle: const TextStyle(
                 color: MobileTheme.accent1,
                 fontSize: 12,

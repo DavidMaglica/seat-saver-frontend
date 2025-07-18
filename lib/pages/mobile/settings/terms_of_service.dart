@@ -104,7 +104,7 @@ class _TermsOfServiceState extends State<TermsOfService> {
   Widget _buildDivider() {
     return Divider(
       thickness: .3,
-      color: Theme.of(context).colorScheme.onBackground,
+      color: Theme.of(context).colorScheme.onPrimary,
     );
   }
 

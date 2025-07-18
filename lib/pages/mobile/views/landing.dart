@@ -73,7 +73,7 @@ class Landing extends StatelessWidget {
                             height: 44,
                             color: MobileTheme.successColor,
                             textStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.background,
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontSize: 16,
                             ),
                             elevation: 5,

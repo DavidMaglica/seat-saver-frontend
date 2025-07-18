@@ -189,7 +189,7 @@ class _WebHomepageState extends State<WebHomepage>
                       ),
                       FFButtonWidget(
                         onPressed: () {
-                          print('Button pressed ...');
+                          debugPrint('Button pressed ...');
                         },
                         text: 'Add New Venue',
                         icon: const Icon(
@@ -269,7 +269,7 @@ class _WebHomepageState extends State<WebHomepage>
             color: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () {
-            print('Edit');
+            debugPrint('Edit');
           },
         ),
         IconButton(
@@ -278,7 +278,7 @@ class _WebHomepageState extends State<WebHomepage>
             color: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () {
-            print('delete');
+            debugPrint('delete');
           },
         )
       ],

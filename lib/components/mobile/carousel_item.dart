@@ -14,7 +14,7 @@ class CarouselItem extends StatelessWidget {
     return Container(
       height: 256,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).colorScheme.onSurface,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(

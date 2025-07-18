@@ -115,7 +115,7 @@ class RatingsPage extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Theme.of(ctx).colorScheme.background,
+        color: Theme.of(ctx).colorScheme.onSurface,
         boxShadow: [
           BoxShadow(
             blurRadius: 3,
@@ -161,7 +161,7 @@ class RatingsPage extends StatelessWidget {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Theme.of(ctx).colorScheme.background,
+            color: Theme.of(ctx).colorScheme.onSurface,
             boxShadow: [
               BoxShadow(
                 blurRadius: 3,
@@ -198,7 +198,7 @@ class RatingsPage extends StatelessWidget {
                               direction: Axis.horizontal,
                               rating: rating.rating.roundToDouble(),
                               unratedColor:
-                                  const Color(0xFF57636C).withOpacity(0.5),
+                                  const Color(0xFF57636C).withValues(alpha: 0.5),
                               itemCount: 5,
                               itemSize: 24,
                             ),
@@ -254,9 +254,9 @@ class RatingsPage extends StatelessWidget {
           height: 60,
           padding: const EdgeInsetsDirectional.all(0),
           color: MobileTheme.successColor,
-          splashColor: Theme.of(ctx).colorScheme.surfaceVariant,
+          splashColor: Theme.of(ctx).colorScheme.surfaceDim,
           textStyle: TextStyle(
-            color: Theme.of(ctx).colorScheme.background,
+            color: Theme.of(ctx).colorScheme.onSurface,
             fontSize: 16,
           ),
           elevation: 3,
@@ -291,7 +291,7 @@ class RatingsPage extends StatelessWidget {
                       height: 216,
                       width: MediaQuery.sizeOf(context).width * 0.9,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
+                        color: Theme.of(context).colorScheme.onSurface,
                         borderRadius: const BorderRadius.all(
                           Radius.circular(24),
                         ),
@@ -317,7 +317,7 @@ class RatingsPage extends StatelessWidget {
                                       Theme.of(context).colorScheme.onTertiary,
                                 ),
                                 unratedColor:
-                                    const Color(0xFF57636C).withOpacity(0.5),
+                                    const Color(0xFF57636C).withValues(alpha: 0.5),
                                 direction: Axis.horizontal,
                                 glow: false,
                                 ignoreGestures: false,
@@ -327,10 +327,6 @@ class RatingsPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          // _buildAnimatedText(context, rating),
-                          // rating != 0
-                          //     ? const SizedBox(height: 29)
-                          //     : const SizedBox(height: 48),
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width * 0.8,
                             child: _buildCommentTextField(context, model),
@@ -437,7 +433,7 @@ class RatingsPage extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Theme.of(ctx).colorScheme.background,
+        color: Theme.of(ctx).colorScheme.onSurface,
       ),
       child: Padding(
         padding:

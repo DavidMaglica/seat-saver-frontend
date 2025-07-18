@@ -300,9 +300,9 @@ class _LogInTabState extends State<LogInTab> {
           options: FFButtonOptions(
             width: 270,
             height: 50,
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.onSurface,
             textStyle: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(.3),
+              color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.3),
               fontSize: 18,
             ),
             borderSide: BorderSide(
@@ -331,9 +331,9 @@ class _LogInTabState extends State<LogInTab> {
           options: FFButtonOptions(
             width: 270,
             height: 50,
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.onSurface,
             textStyle: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(.3),
+              color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.3),
               fontSize: 18,
             ),
             borderSide: BorderSide(

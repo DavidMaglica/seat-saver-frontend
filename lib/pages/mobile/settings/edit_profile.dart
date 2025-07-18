@@ -67,7 +67,7 @@ class EditProfile extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Theme.of(ctx).colorScheme.background,
+          color: Theme.of(ctx).colorScheme.onSurface,
           boxShadow: [
             BoxShadow(
               blurRadius: 2,
@@ -98,7 +98,7 @@ class EditProfile extends StatelessWidget {
 
   Widget _buildDivider(BuildContext ctx) {
     return Divider(
-      color: Theme.of(ctx).colorScheme.onPrimary.withOpacity(.5),
+      color: Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.5),
       thickness: .5,
     );
   }
@@ -122,7 +122,7 @@ class EditProfile extends StatelessWidget {
                           color: Theme.of(ctx)
                               .colorScheme
                               .onPrimary
-                              .withOpacity(.6),
+                              .withValues(alpha: 0.6),
                         ),
                   ),
                 ),
@@ -158,7 +158,7 @@ class EditProfile extends StatelessWidget {
                           color: Theme.of(ctx)
                               .colorScheme
                               .onPrimary
-                              .withOpacity(.6),
+                              .withValues(alpha: 0.6),
                         ),
                   ),
                 ),
