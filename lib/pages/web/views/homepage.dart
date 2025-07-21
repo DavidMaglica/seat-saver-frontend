@@ -130,9 +130,9 @@ class _WebHomepageState extends State<WebHomepage>
               description: 'Your average rating across all venues.'),
           const CircularStatCard(
             title: 'Overall Utilization Rate',
-            description:
-                'The overall utilization rate of your venues.',
-            hint: '(Sum of (available_capacity) / Sum of (maximum_capacity)) × 100',
+            description: 'The overall utilization rate of your venues.',
+            hint:
+                'Sum of available capacity divided by sum of maximum capacity times 100',
           ),
         ].divide(const SizedBox(height: 16)),
       ).animateOnPageLoad(

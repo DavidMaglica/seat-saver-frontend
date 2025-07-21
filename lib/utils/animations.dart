@@ -3,11 +3,17 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class Animations {
+  static VisibilityEffect visibilityQuick = VisibilityEffect(duration: 1.ms);
+
+  static VisibilityEffect visibilityMedium = VisibilityEffect(duration: 300.ms);
+
+  static VisibilityEffect visibilitySlow = VisibilityEffect(duration: 500.ms);
+
   static Map<String, AnimationInfo> authenticationAnimations = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effectsBuilder: () => [
-        VisibilityEffect(duration: 1.ms),
+        visibilityQuick,
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 0.0.ms,
@@ -34,7 +40,7 @@ class Animations {
     'columnOnPageLoadAnimation1': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effectsBuilder: () => [
-        VisibilityEffect(duration: 300.ms),
+        visibilityMedium,
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 300.0.ms,
@@ -54,7 +60,7 @@ class Animations {
     'columnOnPageLoadAnimation2': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effectsBuilder: () => [
-        VisibilityEffect(duration: 300.ms),
+        visibilityMedium,
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 300.0.ms,
@@ -77,7 +83,7 @@ class Animations {
     'containerOnPageLoadAnimation1': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effectsBuilder: () => [
-        VisibilityEffect(duration: 1.ms),
+        visibilityQuick,
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 0.0.ms,
@@ -97,7 +103,7 @@ class Animations {
     'containerOnPageLoadAnimation2': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effectsBuilder: () => [
-        VisibilityEffect(duration: 500.ms),
+        visibilitySlow,
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 500.0.ms,
@@ -117,7 +123,7 @@ class Animations {
     'textOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effectsBuilder: () => [
-        VisibilityEffect(duration: 550.ms),
+        Animations.visibilitySlow,
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 550.0.ms,
@@ -137,7 +143,7 @@ class Animations {
     'rowOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effectsBuilder: () => [
-        VisibilityEffect(duration: 600.ms),
+        visibilitySlow,
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 600.0.ms,
@@ -420,7 +426,7 @@ class Animations {
           curve: Curves.easeInOut,
           delay: 0.0.ms,
           duration: 600.0.ms,
-          begin: const Offset(0.0, 90.0),
+          begin: const Offset(0.0, 100.0),
           end: const Offset(0.0, 0.0),
         ),
       ],
@@ -447,6 +453,7 @@ class Animations {
     'containerOnPageLoadAnimation4': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effectsBuilder: () => [
+        VisibilityEffect(duration: 300.ms),
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 300.0.ms,
@@ -496,6 +503,29 @@ class Animations {
           curve: Curves.easeInOut,
           delay: 400.0.ms,
           duration: 300.0.ms,
+          begin: const Offset(0.0, 100.0),
+          end: const Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+  };
+
+  static Map<String, AnimationInfo> modalAnimations = {
+    'containerOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        visibilityQuick,
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 300.0.ms,
+          duration: 400.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 300.0.ms,
+          duration: 400.0.ms,
           begin: const Offset(0.0, 100.0),
           end: const Offset(0.0, 0.0),
         ),

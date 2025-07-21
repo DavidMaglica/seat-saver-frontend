@@ -14,6 +14,7 @@ import 'package:TableReserver/pages/mobile/views/successful_reservation.dart';
 import 'package:TableReserver/pages/mobile/views/venue_page.dart';
 import 'package:TableReserver/pages/mobile/views/venues_by_type.dart';
 import 'package:TableReserver/pages/web/auth/authentication.dart';
+import 'package:TableReserver/pages/web/views/account.dart';
 import 'package:TableReserver/pages/web/views/homepage.dart';
 import 'package:TableReserver/pages/web/views/landing.dart';
 import 'package:TableReserver/themes/mobile_theme.dart';
@@ -149,6 +150,7 @@ class MyApp extends StatelessWidget {
             Routes.webLanding: (context) => const WebLanding(),
             Routes.webAuthentication: (context) => const WebAuthentication(),
             Routes.webHomepage: (context) => const WebHomepage(),
+            Routes.webAccount: (context) => const WebAccount(),
           },
         );
       },

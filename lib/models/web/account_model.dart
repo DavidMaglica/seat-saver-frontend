@@ -7,7 +7,7 @@ import 'package:TableReserver/pages/web/views/account.dart';
 import 'package:TableReserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 
-class AccountModel extends FlutterFlowModel<AccountWidget> {
+class AccountModel extends FlutterFlowModel<WebAccount> {
   late SideNavModel sideNavModel;
 
   final Map<String, AnimationInfo> animationsMap = Animations.accountAnimations;

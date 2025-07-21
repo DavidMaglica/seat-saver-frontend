@@ -217,7 +217,7 @@ class _SignUpTabState extends State<SignUpTab> {
             fontSize: 18,
             fontFamily: 'Oswald',
           ),
-          elevation: 23,
+          elevation: 3,
           borderRadius: BorderRadius.circular(8),
         ),
       ),

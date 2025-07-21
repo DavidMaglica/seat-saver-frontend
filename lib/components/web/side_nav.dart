@@ -350,7 +350,7 @@ class _SideNavState extends State<SideNav> {
         highlightColor: Colors.transparent,
         onTap: () => _model.goTo(
           context,
-          const AccountWidget(),
+          const WebAccount(),
           Routes.webAccount,
         ),
         child: Material(

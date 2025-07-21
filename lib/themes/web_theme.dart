@@ -30,7 +30,6 @@ const Color mutedDarkSecondaryBackgroundColor = Color(0xB3424242);
 
 const Color darkShadowColor = Color(0xFF1B1B1B);
 
-
 const Color darkErrorColor = Color(0xFFB70031);
 
 class WebTheme {
