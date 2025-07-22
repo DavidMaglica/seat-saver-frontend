@@ -5,6 +5,7 @@ import 'package:TableReserver/themes/web_theme.dart';
 import 'package:TableReserver/utils/fade_in_route.dart';
 import 'package:TableReserver/utils/routes.dart';
 import 'package:TableReserver/utils/sign_up_methods.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -84,18 +85,18 @@ class _LogInTabState extends State<LogInTab> {
         obscureText: false,
         decoration: InputDecoration(
           labelText: 'Email',
-          labelStyle: Theme.of(context).textTheme.bodyMedium,
+          labelStyle: Theme.of(context).textTheme.bodyLarge,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onSecondary,
-              width: 2,
+              color: Theme.of(context).colorScheme.onPrimary,
+              width: 1,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-              color: WebTheme.successColor,
-              width: 2,
+              color: WebTheme.infoColor,
+              width: 1,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -118,18 +119,18 @@ class _LogInTabState extends State<LogInTab> {
         obscureText: !widget.model.passwordVisibility,
         decoration: InputDecoration(
           labelText: 'Password',
-          labelStyle: Theme.of(context).textTheme.bodyMedium,
+          labelStyle: Theme.of(context).textTheme.bodyLarge,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onSecondary,
-              width: 2,
+              color: Theme.of(context).colorScheme.onPrimary,
+              width: 1,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
               color: WebTheme.infoColor,
-              width: 2,
+              width: 1,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -142,8 +143,8 @@ class _LogInTabState extends State<LogInTab> {
             focusNode: FocusNode(skipTraversal: true),
             child: Icon(
               widget.model.passwordVisibility
-                  ? Icons.visibility_outlined
-                  : Icons.visibility_off_outlined,
+                  ? CupertinoIcons.eye_fill
+                  : CupertinoIcons.eye_slash_fill,
               color: Theme.of(context).colorScheme.onPrimary,
               size: 24,
             ),

@@ -1,3 +1,6 @@
+import 'package:TableReserver/components/web/change_email_modal.dart';
+import 'package:TableReserver/components/web/change_password_modal.dart';
+import 'package:TableReserver/components/web/change_username_modal.dart';
 import 'package:TableReserver/components/web/side_nav.dart';
 import 'package:TableReserver/components/web/support_modal.dart';
 import 'package:TableReserver/models/web/account_model.dart';
@@ -229,17 +232,21 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
           children: [
             _buildTitle(context, 'My Account Information'),
             _buildModalButton(
-              context, 'Change Email', const SizedBox(), // ChangeEmailWidget(),
+              context,
+              'Change Email',
+              const ChangeEmailModal(),
             ),
             _buildDivider(context),
             _buildModalButton(
-              context, 'Change Username',
-              const SizedBox(), // ChangeUsernameWidget(),
+              context,
+              'Change Username',
+              const ChangeUsernameModal(),
             ),
             _buildDivider(context),
             _buildModalButton(
-              context, 'Change Password',
-              const SizedBox(), // ChangePasswordWidget(),
+              context,
+              'Change Password',
+              const ChangePasswordModal(),
             ),
             const SizedBox(height: 8),
           ],

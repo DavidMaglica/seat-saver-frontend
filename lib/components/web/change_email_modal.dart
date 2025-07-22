@@ -1,26 +1,19 @@
-import 'package:TableReserver/models/web/support_model.dart';
+import 'package:TableReserver/models/web/change_email_model.dart';
 import 'package:TableReserver/themes/web_theme.dart';
 import 'package:TableReserver/utils/modal_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-enum ModalTypes {
-  featureRequest,
-  bugReport,
-}
-
-class SupportModal extends StatefulWidget {
-  const SupportModal({super.key, required this.modalType});
-
-  final ModalTypes modalType;
+class ChangeEmailModal extends StatefulWidget {
+  const ChangeEmailModal({super.key});
 
   @override
-  State<SupportModal> createState() => _SupportModalState();
+  State<ChangeEmailModal> createState() => _ChangeEmailModalState();
 }
 
-class _SupportModalState extends State<SupportModal>
+class _ChangeEmailModalState extends State<ChangeEmailModal>
     with TickerProviderStateMixin {
-  late SupportModalModel _model;
+  late ChangeEmailModel _model;
 
   @override
   void setState(VoidCallback callback) {
@@ -31,7 +24,7 @@ class _SupportModalState extends State<SupportModal>
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SupportModalModel());
+    _model = createModel(context, () => ChangeEmailModel());
   }
 
   @override
@@ -62,23 +55,14 @@ class _SupportModalState extends State<SupportModal>
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildTitle(
-                  context,
-                  widget.modalType == ModalTypes.bugReport
-                      ? 'Submit a bug'
-                      : 'Request a feature',
-                ),
+                buildTitle(context, 'Change Email'),
                 const SizedBox(height: 16),
                 _buildBody(context),
                 const SizedBox(height: 8),
                 buildButtons(
                   context,
-                  widget.modalType == ModalTypes.bugReport
-                      ? _model.submitBugReport
-                      : _model.submitFeatureRequest,
-                  widget.modalType == ModalTypes.bugReport
-                      ? 'Submit bug'
-                      : 'Request feature',
+                  _model.updateEmail,
+                  'Change Email',
                 ),
               ],
             ),
@@ -97,13 +81,11 @@ class _SupportModalState extends State<SupportModal>
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: TextFormField(
-            controller: _model.descriptionTextController,
-            focusNode: _model.descriptionFocusNode,
+            controller: _model.emailTextController,
+            focusNode: _model.emailFocusNode,
             obscureText: false,
             decoration: InputDecoration(
-              labelText: widget.modalType == ModalTypes.bugReport
-                  ? 'Describe the bug'
-                  : 'Describe new feature in as much detail as possible',
+              labelText: 'Enter your new email',
               labelStyle: Theme.of(context).textTheme.bodyLarge,
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -123,8 +105,9 @@ class _SupportModalState extends State<SupportModal>
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
             ),
             style: Theme.of(context).textTheme.bodyMedium,
-            maxLines: null,
+            maxLines: 1,
             minLines: 1,
+            keyboardType: TextInputType.emailAddress,
             cursorColor: Theme.of(context).colorScheme.onPrimary,
           ),
         ),

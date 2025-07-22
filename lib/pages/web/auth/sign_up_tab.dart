@@ -83,18 +83,18 @@ class _SignUpTabState extends State<SignUpTab> {
         obscureText: false,
         decoration: InputDecoration(
           labelText: 'Email',
-          labelStyle: Theme.of(context).textTheme.bodyMedium,
+          labelStyle: Theme.of(context).textTheme.bodyLarge,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onSecondary,
-              width: 2,
+              color: Theme.of(context).colorScheme.onPrimary,
+              width: 1,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-              color: WebTheme.successColor,
-              width: 2,
+              color: WebTheme.infoColor,
+              width: 1,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -117,18 +117,18 @@ class _SignUpTabState extends State<SignUpTab> {
         obscureText: !widget.model.passwordCreateVisibility,
         decoration: InputDecoration(
           labelText: 'Password',
-          labelStyle: Theme.of(context).textTheme.bodyMedium,
+          labelStyle: Theme.of(context).textTheme.bodyLarge,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onSecondary,
-              width: 2,
+              color: Theme.of(context).colorScheme.onPrimary,
+              width: 1,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-              color: WebTheme.successColor,
-              width: 2,
+              color: WebTheme.infoColor,
+              width: 1,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -164,18 +164,18 @@ class _SignUpTabState extends State<SignUpTab> {
         obscureText: !widget.model.passwordCreateConfirmVisibility,
         decoration: InputDecoration(
           labelText: 'Confirm password',
-          labelStyle: Theme.of(context).textTheme.bodyMedium,
+          labelStyle: Theme.of(context).textTheme.bodyLarge,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onSecondary,
-              width: 2,
+              color: Theme.of(context).colorScheme.onPrimary,
+              width: 1,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-              color: WebTheme.successColor,
-              width: 2,
+              color: WebTheme.infoColor,
+              width: 1,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
