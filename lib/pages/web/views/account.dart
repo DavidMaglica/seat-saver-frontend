@@ -304,13 +304,14 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
       highlightColor: Colors.transparent,
       onTap: () async {
         await showModalBottomSheet(
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            enableDrag: false,
-            context: context,
-            builder: (context) {
-              return modal;
-            }).then((value) => safeSetState(() {}));
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          enableDrag: false,
+          context: context,
+          builder: (_) {
+            return modal;
+          },
+        );
       },
       child: SizedBox(
         width: double.infinity,

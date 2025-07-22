@@ -1,5 +1,6 @@
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/components/web/circular_stat_card.dart';
+import 'package:TableReserver/components/web/delete_venue_modal.dart';
 import 'package:TableReserver/components/web/performance_card.dart';
 import 'package:TableReserver/components/web/side_nav.dart';
 import 'package:TableReserver/components/web/stat_card.dart';
@@ -8,7 +9,7 @@ import 'package:TableReserver/themes/web_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_table/flutter_advanced_table.dart';
-import 'package:flutter_advanced_table/params.dart';
+import 'package:flutter_advanced_table/params.dart' hide ActionParamBuilder;
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class WebHomepage extends StatefulWidget {
@@ -225,6 +226,8 @@ class _WebHomepageState extends State<WebHomepage>
   }
 
   dynamic _buildTable(BuildContext context) {
+    List<int> venueIds = _model.venues.map((venue) => venue.id).toList();
+
     return AdvancedTableWidget(
       headerBuilder: (context, header) {
         return _buildHeader(context, header);
@@ -247,7 +250,8 @@ class _WebHomepageState extends State<WebHomepage>
       ),
       headerItems: _model.headers,
       actionBuilder: (context, actionParams) {
-        return _buildActions(context);
+        final venueId = venueIds[actionParams.rowIndex];
+        return _buildActions(context, venueId);
       },
       actions: const [
         {
@@ -260,7 +264,7 @@ class _WebHomepageState extends State<WebHomepage>
     );
   }
 
-  Row _buildActions(BuildContext context) {
+  Row _buildActions(BuildContext context, int venueId) {
     return Row(
       children: [
         IconButton(
@@ -277,9 +281,17 @@ class _WebHomepageState extends State<WebHomepage>
             CupertinoIcons.trash,
             color: Theme.of(context).colorScheme.onPrimary,
           ),
-          onPressed: () {
-            debugPrint('delete');
-          },
+            onPressed: () async {
+              await showModalBottomSheet(
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                enableDrag: false,
+                context: context,
+                builder: (_) {
+                return DeleteVenueModal(venueId: venueId);
+              },
+              );
+            },
         )
       ],
     );

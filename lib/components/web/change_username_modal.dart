@@ -1,6 +1,6 @@
 import 'package:TableReserver/models/web/change_username_model.dart';
 import 'package:TableReserver/themes/web_theme.dart';
-import 'package:TableReserver/utils/modal_utils.dart';
+import 'package:TableReserver/components/web/modal_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
