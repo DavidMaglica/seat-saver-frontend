@@ -1,4 +1,4 @@
-import 'package:TableReserver/components/web/change_username_modal.dart';
+import 'package:TableReserver/components/web/modals/change_username_modal.dart';
 import 'package:TableReserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';

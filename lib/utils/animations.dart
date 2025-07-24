@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class Animations {
-  static VisibilityEffect visibilityQuick = VisibilityEffect(duration: 1.ms);
+  static VisibilityEffect visibilityFast = VisibilityEffect(duration: 1.ms);
 
   static VisibilityEffect visibilityMedium = VisibilityEffect(duration: 300.ms);
 
@@ -13,7 +13,7 @@ class Animations {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effectsBuilder: () => [
-        visibilityQuick,
+        visibilityFast,
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 0.0.ms,
@@ -83,7 +83,7 @@ class Animations {
     'containerOnPageLoadAnimation1': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effectsBuilder: () => [
-        visibilityQuick,
+        visibilityFast,
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 0.0.ms,
@@ -510,11 +510,34 @@ class Animations {
     ),
   };
 
+  static Map<String, AnimationInfo> reservationsAnimations = {
+    'containerOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        visibilityFast,
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 300.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 400.0.ms,
+          duration: 300.0.ms,
+          begin: const Offset(0.0, 100.0),
+          end: const Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+  };
+
   static Map<String, AnimationInfo> modalAnimations = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effectsBuilder: () => [
-        visibilityQuick,
+        visibilityFast,
         FadeEffect(
           curve: Curves.easeInOut,
           delay: 300.0.ms,

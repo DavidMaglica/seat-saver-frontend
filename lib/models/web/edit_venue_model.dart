@@ -1,66 +1,87 @@
-// import 'package:flutterflow_ui/flutterflow_ui.dart';
-//
-// import '/flutter_flow/flutter_flow_animations.dart';
-// import '/flutter_flow/flutter_flow_drop_down.dart';
-// import '/flutter_flow/flutter_flow_theme.dart';
-// import '/flutter_flow/flutter_flow_util.dart';
-// import '/flutter_flow/flutter_flow_widgets.dart';
-// import '/flutter_flow/form_field_controller.dart';
-// import 'dart:math';
-// import 'dart:ui';
-// import 'edit_venue_widget.dart' show EditVenueWidget;
-// import 'package:flutter/material.dart';
-// import 'package:flutter/scheduler.dart';
-// import 'package:flutter_animate/flutter_animate.dart';
-// import 'package:flutter_spinkit/flutter_spinkit.dart';
-// import 'package:google_fonts/google_fonts.dart';
-// import 'package:provider/provider.dart';
-//
-// class EditVenueModel extends FlutterFlowModel<EditVenueWidget> {
-//   ///  State fields for stateful widgets in this component.
-//
-//   // State field(s) for name widget.
-//   FocusNode? nameFocusNode1;
-//   TextEditingController? nameTextController1;
-//   String? Function(BuildContext, String?)? nameTextController1Validator;
-//   // State field(s) for location widget.
-//   FocusNode? locationFocusNode;
-//   TextEditingController? locationTextController;
-//   String? Function(BuildContext, String?)? locationTextControllerValidator;
-//   // State field(s) for maxCapacity widget.
-//   FocusNode? maxCapacityFocusNode;
-//   TextEditingController? maxCapacityTextController;
-//   String? Function(BuildContext, String?)? maxCapacityTextControllerValidator;
-//   // State field(s) for DropDown widget.
-//   String? dropDownValue;
-//   FormFieldController<String>? dropDownValueController;
-//   // State field(s) for name widget.
-//   FocusNode? nameFocusNode2;
-//   TextEditingController? nameTextController2;
-//   String? Function(BuildContext, String?)? nameTextController2Validator;
-//   // State field(s) for name widget.
-//   FocusNode? nameFocusNode3;
-//   TextEditingController? nameTextController3;
-//   String? Function(BuildContext, String?)? nameTextController3Validator;
-//
-//   @override
-//   void initState(BuildContext context) {}
-//
-//   @override
-//   void dispose() {
-//     nameFocusNode1?.dispose();
-//     nameTextController1?.dispose();
-//
-//     locationFocusNode?.dispose();
-//     locationTextController?.dispose();
-//
-//     maxCapacityFocusNode?.dispose();
-//     maxCapacityTextController?.dispose();
-//
-//     nameFocusNode2?.dispose();
-//     nameTextController2?.dispose();
-//
-//     nameFocusNode3?.dispose();
-//     nameTextController3?.dispose();
-//   }
-// }
+import 'package:TableReserver/api/data/venue.dart';
+import 'package:TableReserver/components/web/modals/edit_venue_modal.dart';
+import 'package:TableReserver/utils/animations.dart';
+import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
+
+class EditVenueModel extends FlutterFlowModel<EditVenueModal> {
+  FocusNode nameFocusNode = FocusNode();
+  TextEditingController nameTextController = TextEditingController();
+
+  FocusNode locationFocusNode = FocusNode();
+  TextEditingController locationTextController = TextEditingController();
+
+  FocusNode maxCapacityFocusNode = FocusNode();
+  TextEditingController maxCapacityTextController = TextEditingController();
+
+  String? dropDownValue;
+  FormFieldController<String> dropDownValueController = FormFieldController<String>(null);
+
+  FocusNode workingHoursFocusNode = FocusNode();
+  TextEditingController workingHoursTextController = TextEditingController();
+
+  FocusNode descriptionFocusNode = FocusNode();
+  TextEditingController descriptionTextController = TextEditingController();
+
+  final Map<String, AnimationInfo> animationsMap = Animations.modalAnimations;
+
+  Venue? loadedVenue;
+  List<String> venueTypes = [
+    'Restaurant',
+    'Cafe',
+    'Bar',
+    'Club',
+    'Event Hall',
+  ];
+
+  @override
+  void initState(BuildContext context) {
+    loadedVenue = Venue(
+      id: 1,
+      name: 'Lamai',
+      location: 'Llota',
+      workingHours: '09:00 - 21:00',
+      maximumCapacity: 100,
+      availableCapacity: 100,
+      rating: 4.0,
+      typeId: 1,
+      description: 'A brief description of the venue.',
+    );
+    if (loadedVenue != null) {
+      nameTextController.text = loadedVenue!.name;
+      locationTextController.text = loadedVenue!.location;
+      maxCapacityTextController.text = loadedVenue!.maximumCapacity.toString();
+      dropDownValue = loadedVenue!.typeId.toString();
+      workingHoursTextController.text = loadedVenue!.workingHours;
+      descriptionTextController.text = loadedVenue!.description ?? '';
+    }
+  }
+
+  @override
+  void dispose() {
+    nameFocusNode.dispose();
+    nameTextController.dispose();
+
+    locationFocusNode.dispose();
+    locationTextController.dispose();
+
+    maxCapacityFocusNode.dispose();
+    maxCapacityTextController.dispose();
+
+    workingHoursFocusNode.dispose();
+    workingHoursTextController.dispose();
+
+    descriptionFocusNode.dispose();
+    descriptionTextController.dispose();
+  }
+
+  Future<void> editVenue() async {
+    debugPrint('Editing venue with ID: ${loadedVenue?.id}');
+    debugPrint('New Name: ${nameTextController.text}');
+    debugPrint('New Location: ${locationTextController.text}');
+    debugPrint('New Max Capacity: ${maxCapacityTextController.text}');
+    debugPrint('New Type ID: $dropDownValue');
+    debugPrint('New Working Hours: ${workingHoursTextController.text}');
+    debugPrint('New Description: ${descriptionTextController.text}');
+  }
+}

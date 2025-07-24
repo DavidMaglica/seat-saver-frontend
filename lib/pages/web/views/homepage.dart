@@ -1,8 +1,10 @@
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/components/web/circular_stat_card.dart';
-import 'package:TableReserver/components/web/delete_venue_modal.dart';
+import 'package:TableReserver/components/web/modals/delete_modal.dart';
+import 'package:TableReserver/components/web/modals/edit_venue_modal.dart';
+import 'package:TableReserver/components/web/modals/modal_widgets.dart';
 import 'package:TableReserver/components/web/performance_card.dart';
-import 'package:TableReserver/components/web/side_nav.dart';
+import 'package:TableReserver/components/web/modals/side_nav.dart';
 import 'package:TableReserver/components/web/stat_card.dart';
 import 'package:TableReserver/models/web/homepage_model.dart';
 import 'package:TableReserver/themes/web_theme.dart';
@@ -272,8 +274,23 @@ class _WebHomepageState extends State<WebHomepage>
             Icons.edit_outlined,
             color: Theme.of(context).colorScheme.onPrimary,
           ),
-          onPressed: () {
-            debugPrint('Edit');
+          onPressed: () async {
+            await showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (context) {
+                return Dialog(
+                  insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                  backgroundColor: Colors.transparent,
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1000),
+                      child: EditVenueModal(venueId: venueId),
+                    ),
+                  ),
+                );
+              },
+            );
           },
         ),
         IconButton(
@@ -281,17 +298,20 @@ class _WebHomepageState extends State<WebHomepage>
             CupertinoIcons.trash,
             color: Theme.of(context).colorScheme.onPrimary,
           ),
-            onPressed: () async {
-              await showModalBottomSheet(
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                enableDrag: false,
-                context: context,
-                builder: (_) {
-                return DeleteVenueModal(venueId: venueId);
+          onPressed: () async {
+            await showModalBottomSheet(
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              enableDrag: false,
+              context: context,
+              builder: (_) {
+                return DeleteModal(
+                  modalType: DeleteModalType.venue,
+                  venueId: venueId,
+                );
               },
-              );
-            },
+            );
+          },
         )
       ],
     );
@@ -376,7 +396,7 @@ class _WebHomepageState extends State<WebHomepage>
     return BoxDecoration(
       borderRadius: const BorderRadius.all(Radius.circular(8)),
       color: isHover
-          ? Theme.of(context).colorScheme.outline
+          ? WebTheme.infoColor
           : !isOdd
               ? Colors.transparent
               : Theme.of(context).colorScheme.surface,

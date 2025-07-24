@@ -2,6 +2,16 @@ import 'package:TableReserver/themes/web_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
+enum SupportModalType {
+  featureRequest,
+  bugReport,
+}
+
+enum DeleteModalType {
+  venue,
+  reservation,
+}
+
 Widget buildButtons(
   BuildContext context,
   VoidCallback onSubmit,
@@ -30,7 +40,7 @@ Widget buildButtons(
           ),
         ),
         FFButtonWidget(
-          onPressed: () => onSubmit,
+          onPressed: () => onSubmit(),
           text: label,
           options: FFButtonOptions(
             height: 44,

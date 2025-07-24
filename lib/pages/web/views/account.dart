@@ -1,8 +1,9 @@
-import 'package:TableReserver/components/web/change_email_modal.dart';
-import 'package:TableReserver/components/web/change_password_modal.dart';
-import 'package:TableReserver/components/web/change_username_modal.dart';
-import 'package:TableReserver/components/web/side_nav.dart';
-import 'package:TableReserver/components/web/support_modal.dart';
+import 'package:TableReserver/components/web/modals/change_email_modal.dart';
+import 'package:TableReserver/components/web/modals/change_password_modal.dart';
+import 'package:TableReserver/components/web/modals/change_username_modal.dart';
+import 'package:TableReserver/components/web/modals/modal_widgets.dart';
+import 'package:TableReserver/components/web/modals/side_nav.dart';
+import 'package:TableReserver/components/web/modals/support_modal.dart';
 import 'package:TableReserver/models/web/account_model.dart';
 import 'package:TableReserver/themes/web_theme.dart';
 import 'package:flutter/cupertino.dart';
@@ -280,13 +281,13 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
             _buildModalButton(
               context,
               'Submit a Bug',
-              const SupportModal(modalType: ModalTypes.bugReport),
+              const SupportModal(modalType: SupportModalType.bugReport),
             ),
             _buildDivider(context),
             _buildModalButton(
               context,
               'Request a feature',
-              const SupportModal(modalType: ModalTypes.featureRequest),
+              const SupportModal(modalType: SupportModalType.featureRequest),
             ),
             const SizedBox(height: 8),
           ],

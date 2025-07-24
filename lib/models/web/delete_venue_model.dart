@@ -1,9 +1,9 @@
-import 'package:TableReserver/components/web/delete_venue_modal.dart';
+import 'package:TableReserver/components/web/modals/delete_modal.dart';
 import 'package:TableReserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-class DeleteVenueModel extends FlutterFlowModel<DeleteVenueModal> {
+class DeleteModalModel extends FlutterFlowModel<DeleteModal> {
   final Map<String, AnimationInfo> animationsMap = Animations.modalAnimations;
 
   @override

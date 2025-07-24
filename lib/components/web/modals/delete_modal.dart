@@ -1,20 +1,27 @@
-import 'package:TableReserver/components/web/modal_widgets.dart';
+import 'package:TableReserver/components/web/modals/modal_widgets.dart';
 import 'package:TableReserver/models/web/delete_venue_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-class DeleteVenueModal extends StatefulWidget {
-  final int venueId;
+class DeleteModal extends StatefulWidget {
+  final DeleteModalType modalType;
+  final int? venueId;
+  final int? reservationId;
 
-  const DeleteVenueModal({super.key, required this.venueId});
+  const DeleteModal({
+    super.key,
+    required this.modalType,
+    this.venueId,
+    this.reservationId,
+  });
 
   @override
-  State<DeleteVenueModal> createState() => _DeleteVenueModalState();
+  State<DeleteModal> createState() => _DeleteModalState();
 }
 
-class _DeleteVenueModalState extends State<DeleteVenueModal>
+class _DeleteModalState extends State<DeleteModal>
     with TickerProviderStateMixin {
-  late DeleteVenueModel _model;
+  late DeleteModalModel _model;
 
   @override
   void setState(VoidCallback callback) {
@@ -25,7 +32,7 @@ class _DeleteVenueModalState extends State<DeleteVenueModal>
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => DeleteVenueModel());
+    _model = createModel(context, () => DeleteModalModel());
   }
 
   @override
@@ -56,11 +63,22 @@ class _DeleteVenueModalState extends State<DeleteVenueModal>
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildTitle(context, 'Delete Venue'),
+                buildTitle(
+                  context,
+                  widget.modalType == DeleteModalType.venue
+                      ? 'Delete Venue'
+                      : 'Delete Reservation',
+                ),
                 const SizedBox(height: 16),
                 _buildBody(context),
                 const SizedBox(height: 8),
-                buildButtons(context, () => {}, 'Delete Venue'),
+                buildButtons(
+                  context,
+                  () => {},
+                  widget.modalType == DeleteModalType.venue
+                      ? 'Delete Venue'
+                      : 'Delete Reservation',
+                ),
               ].divide(const SizedBox(height: 16)),
             ),
           ).animateOnPageLoad(
@@ -73,10 +91,15 @@ class _DeleteVenueModalState extends State<DeleteVenueModal>
   Padding _buildBody(BuildContext context) {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
-      child: Text(
-        'Are you sure you want to delete ${widget.venueId} \$venueName?',
-        style: Theme.of(context).textTheme.bodyLarge,
-      ),
+      child: widget.modalType == DeleteModalType.venue
+          ? Text(
+              'Are you sure you want to delete venue with Id${widget.venueId}?',
+              style: Theme.of(context).textTheme.bodyLarge,
+            )
+          : Text(
+              'Are you sure you want to delete reservation with Id ${widget.reservationId}?',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
     );
   }
 }
