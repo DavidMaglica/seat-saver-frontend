@@ -1,4 +1,4 @@
-import 'package:TableReserver/components/web/modals/side_nav.dart';
+import 'package:TableReserver/components/web/side_nav.dart';
 import 'package:TableReserver/utils/fade_in_route.dart';
 import 'package:TableReserver/utils/theme_provider.dart';
 import 'package:flutter/material.dart';

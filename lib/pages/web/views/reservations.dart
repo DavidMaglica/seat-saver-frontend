@@ -2,7 +2,7 @@ import 'package:TableReserver/api/data/reservation_details.dart';
 import 'package:TableReserver/components/web/modals/delete_modal.dart';
 import 'package:TableReserver/components/web/modals/edit_reservation_modal.dart';
 import 'package:TableReserver/components/web/modals/modal_widgets.dart';
-import 'package:TableReserver/components/web/modals/side_nav.dart';
+import 'package:TableReserver/components/web/side_nav.dart';
 import 'package:TableReserver/models/web/reservation_model.dart';
 import 'package:TableReserver/themes/web_theme.dart';
 import 'package:flutter/cupertino.dart';

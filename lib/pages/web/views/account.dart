@@ -2,7 +2,7 @@ import 'package:TableReserver/components/web/modals/change_email_modal.dart';
 import 'package:TableReserver/components/web/modals/change_password_modal.dart';
 import 'package:TableReserver/components/web/modals/change_username_modal.dart';
 import 'package:TableReserver/components/web/modals/modal_widgets.dart';
-import 'package:TableReserver/components/web/modals/side_nav.dart';
+import 'package:TableReserver/components/web/side_nav.dart';
 import 'package:TableReserver/components/web/modals/support_modal.dart';
 import 'package:TableReserver/models/web/account_model.dart';
 import 'package:TableReserver/themes/web_theme.dart';

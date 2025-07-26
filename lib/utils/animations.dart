@@ -380,6 +380,28 @@ class Animations {
     ),
   };
 
+  static Map<String, AnimationInfo> venuePageAnimations = {
+    'gridViewOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 300.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 400.0.ms,
+          duration: 300.0.ms,
+          begin: const Offset(100.0, 0.0),
+          end: const Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+  };
+
   static Map<String, AnimationInfo> accountAnimations = {
     'columnOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,

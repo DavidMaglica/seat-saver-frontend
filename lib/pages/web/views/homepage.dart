@@ -4,7 +4,7 @@ import 'package:TableReserver/components/web/modals/delete_modal.dart';
 import 'package:TableReserver/components/web/modals/edit_venue_modal.dart';
 import 'package:TableReserver/components/web/modals/modal_widgets.dart';
 import 'package:TableReserver/components/web/performance_card.dart';
-import 'package:TableReserver/components/web/modals/side_nav.dart';
+import 'package:TableReserver/components/web/side_nav.dart';
 import 'package:TableReserver/components/web/stat_card.dart';
 import 'package:TableReserver/models/web/homepage_model.dart';
 import 'package:TableReserver/themes/web_theme.dart';

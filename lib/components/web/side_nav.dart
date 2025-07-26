@@ -1,8 +1,8 @@
 import 'package:TableReserver/models/web/side_nav_model.dart';
-import 'package:TableReserver/pages/mobile/views/homepage.dart';
 import 'package:TableReserver/pages/web/views/account.dart';
 import 'package:TableReserver/pages/web/views/homepage.dart';
 import 'package:TableReserver/pages/web/views/reservations.dart';
+import 'package:TableReserver/pages/web/views/venues.dart';
 import 'package:TableReserver/themes/web_theme.dart';
 import 'package:TableReserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
@@ -231,8 +231,8 @@ class _SideNavState extends State<SideNav> {
         highlightColor: Colors.transparent,
         onTap: () => _model.goTo(
           context,
-          const Homepage(),
-          Routes.webHomepage,
+          const WebVenuesPage(),
+          Routes.webVenues,
         ),
         child: Material(
           color: Colors.transparent,

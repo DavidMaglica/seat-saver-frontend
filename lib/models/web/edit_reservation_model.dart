@@ -63,10 +63,5 @@ class EditReservationModel extends FlutterFlowModel<EditReservationModal> {
     reservationDateTextController.dispose();
   }
 
-  Future<void> editReservation() async {
-    debugPrint('Editing reservation with ID: ${reservationDetails?.id}');
-    debugPrint('New Venue: ${venueNameTextController.text}');
-    debugPrint('New Number of Guests: ${numberOfGuestsTextController.text}');
-    debugPrint('New Reservation Date: ${reservationDateTextController.text}');
-  }
+  Future<void> editReservation() async {}
 }
