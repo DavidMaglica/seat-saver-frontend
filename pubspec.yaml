@@ -30,6 +30,7 @@ dependencies:
   geolocator: 8.2.0
   geocoding: 2.0.4
   http: 1.2.1
+  html: 0.15.6
   logger: 2.5.0
   percent_indicator: 4.2.2
   provider: 6.1.2

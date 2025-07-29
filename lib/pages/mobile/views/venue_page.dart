@@ -1,5 +1,5 @@
 import 'package:TableReserver/components/mobile/custom_appbar.dart';
-import 'package:TableReserver/components/mobile/full_image_view.dart';
+import 'package:TableReserver/components/common/full_image_view.dart';
 import 'package:TableReserver/components/mobile/venue_images_tab.dart';
 import 'package:TableReserver/models/mobile/venue_page_model.dart';
 import 'package:TableReserver/themes/mobile_theme.dart';
@@ -121,17 +121,7 @@ class VenuePage extends StatelessWidget {
                   width: double.infinity,
                   height: 320,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        const Color(0xFF1B5E20).withValues(alpha: 0.8),
-                        const Color(0xFF43A047).withValues(alpha: 0.8),
-                        const Color(0xFFFF7043).withValues(alpha: 0.8),
-                        const Color(0xFFFF5722).withValues(alpha: 0.8),
-                      ],
-                      begin: Alignment.bottomLeft,
-                      end: Alignment.topRight,
-                      stops: const [0.0, 0.5, 0.9, 1.0],
-                    ),
+                    gradient: fallbackImageGradient(),
                   ),
                   alignment: Alignment.center,
                   child: Text(
