@@ -40,6 +40,8 @@ class WebTheme {
   static const Color warningColor = Color(0xFFFF8F00);
   static const Color infoColor = Color(0xFF4392E1);
 
+  static const Color offWhite = Color(0xFFFFFBF4);
+
   static const Color accent1 = Color(0xFFFF5722);
   static const Color accent2 = Color(0xFFE91E63);
   static const Color accent3 = Color(0xFFBA68C8);

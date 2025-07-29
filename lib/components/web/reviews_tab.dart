@@ -169,7 +169,7 @@ class ReviewsTab extends StatelessWidget {
               rating.toStringAsFixed(1),
               style: const TextStyle(
                 fontSize: 14,
-                color: Color(0xFFFFFBF4),
+                color: WebTheme.offWhite,
               ),
             ),
           ),

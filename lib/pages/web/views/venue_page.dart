@@ -216,7 +216,7 @@ class _WebVenuePageState extends State<WebVenuePage>
               color: WebTheme.infoColor,
               textStyle: const TextStyle(
                 fontSize: 16,
-                color: Color(0xFFFFFBF4),
+                color: WebTheme.offWhite,
               ),
               elevation: 3,
               borderRadius: BorderRadius.circular(8),

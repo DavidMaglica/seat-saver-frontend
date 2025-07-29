@@ -198,7 +198,7 @@ class _SideNavState extends State<SideNav> {
                   Icon(
                     Icons.space_dashboard_outlined,
                     color: route == Routes.webHomepage
-                        ? const Color(0xFFFFFBF4)
+                        ? WebTheme.offWhite
                         : Theme.of(context).colorScheme.onPrimary,
                     size: 24,
                   ),
@@ -207,7 +207,7 @@ class _SideNavState extends State<SideNav> {
                     'Dashboard',
                     style: TextStyle(
                       color: route == Routes.webHomepage
-                          ? const Color(0xFFFFFBF4)
+                          ? WebTheme.offWhite
                           : Theme.of(context).colorScheme.onPrimary,
                       fontSize: 14,
                     ),
@@ -258,7 +258,7 @@ class _SideNavState extends State<SideNav> {
                   Icon(
                     Icons.table_restaurant_outlined,
                     color: route == Routes.webVenues
-                        ? const Color(0xFFFFFBF4)
+                        ? WebTheme.offWhite
                         : Theme.of(context).colorScheme.onPrimary,
                     size: 24,
                   ),
@@ -267,7 +267,7 @@ class _SideNavState extends State<SideNav> {
                     'Venues',
                     style: TextStyle(
                       color: route == Routes.webVenues
-                          ? const Color(0xFFFFFBF4)
+                          ? WebTheme.offWhite
                           : Theme.of(context).colorScheme.onPrimary,
                       fontSize: 14,
                     ),
@@ -318,7 +318,7 @@ class _SideNavState extends State<SideNav> {
                   Icon(
                     Icons.rsvp_rounded,
                     color: route == Routes.webReservations
-                        ? const Color(0xFFFFFBF4)
+                        ? WebTheme.offWhite
                         : Theme.of(context).colorScheme.onPrimary,
                     size: 24,
                   ),
@@ -327,7 +327,7 @@ class _SideNavState extends State<SideNav> {
                     'Reservations',
                     style: TextStyle(
                       color: route == Routes.webReservations
-                          ? const Color(0xFFFFFBF4)
+                          ? WebTheme.offWhite
                           : Theme.of(context).colorScheme.onPrimary,
                       fontSize: 14,
                     ),
@@ -378,7 +378,7 @@ class _SideNavState extends State<SideNav> {
                   Icon(
                     CupertinoIcons.person,
                     color: route == Routes.webAccount
-                        ? const Color(0xFFFFFBF4)
+                        ? WebTheme.offWhite
                         : Theme.of(context).colorScheme.onPrimary,
                     size: 24,
                   ),
@@ -387,7 +387,7 @@ class _SideNavState extends State<SideNav> {
                     'Account',
                     style: TextStyle(
                       color: route == Routes.webAccount
-                          ? const Color(0xFFFFFBF4)
+                          ? WebTheme.offWhite
                           : Theme.of(context).colorScheme.onPrimary,
                       fontSize: 14,
                     ),

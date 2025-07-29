@@ -205,7 +205,7 @@ class _WebHomepageState extends State<WebHomepage>
                           color: WebTheme.successColor,
                           textStyle: const TextStyle(
                             fontSize: 16,
-                            color: Color(0xFFFFFBF4),
+                            color: WebTheme.offWhite,
                           ),
                           elevation: 3,
                           borderRadius: BorderRadius.circular(8),
@@ -280,7 +280,8 @@ class _WebHomepageState extends State<WebHomepage>
               barrierDismissible: true,
               builder: (context) {
                 return Dialog(
-                  insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                  insetPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
                   backgroundColor: Colors.transparent,
                   child: Center(
                     child: ConstrainedBox(
@@ -327,6 +328,7 @@ class _WebHomepageState extends State<WebHomepage>
           header.value,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.bold,
+                color: WebTheme.offWhite,
               ),
         ),
       ),
@@ -377,7 +379,7 @@ class _WebHomepageState extends State<WebHomepage>
               child: Text(
                 venue.rating.toString(),
                 style: const TextStyle(
-                  color: Color(0xFFFFFBF4),
+                  color: WebTheme.offWhite,
                 ),
               ),
             ),

@@ -31,7 +31,7 @@ Widget buildButtons(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             color: WebTheme.errorColor,
             textStyle: const TextStyle(
-              color: Color(0xFFFFFBF4),
+              color: WebTheme.offWhite,
               fontFamily: 'Oswald',
               fontSize: 18,
             ),
@@ -47,7 +47,7 @@ Widget buildButtons(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             color: WebTheme.successColor,
             textStyle: const TextStyle(
-              color: Color(0xFFFFFBF4),
+              color: WebTheme.offWhite,
               fontFamily: 'Oswald',
               fontSize: 18,
             ),

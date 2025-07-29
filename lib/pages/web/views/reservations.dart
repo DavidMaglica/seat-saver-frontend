@@ -131,7 +131,7 @@ class _WebReservationsState extends State<WebReservations>
             color: WebTheme.successColor,
             textStyle: const TextStyle(
               fontSize: 16,
-              color: Color(0xFFFFFBF4),
+              color: WebTheme.offWhite,
             ),
             elevation: 3,
             borderRadius: BorderRadius.circular(8),

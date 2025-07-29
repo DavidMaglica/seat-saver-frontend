@@ -385,7 +385,7 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
         height: 50,
         color: WebTheme.errorColor,
         textStyle: const TextStyle(
-          color: Color(0xFFFFFBF4),
+          color: WebTheme.offWhite,
           fontSize: 16,
           fontFamily: 'Oswald',
         ),
