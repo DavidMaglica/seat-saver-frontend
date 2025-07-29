@@ -231,12 +231,12 @@ class _WebVenuePageState extends State<WebVenuePage>
     return Align(
       alignment: const Alignment(0, 0),
       child: TabBar(
-        labelColor: WebTheme.successColor,
+        labelColor: WebTheme.accent1,
         unselectedLabelColor: Theme.of(context).colorScheme.onPrimary,
         labelPadding: const EdgeInsets.only(top: 16),
         labelStyle: Theme.of(context).textTheme.titleLarge,
         unselectedLabelStyle: Theme.of(context).textTheme.titleMedium,
-        indicatorColor: WebTheme.successColor,
+        indicatorColor: WebTheme.accent1,
         indicatorSize: TabBarIndicatorSize.tab,
         indicatorPadding: const EdgeInsets.symmetric(horizontal: 16),
         tabs: const [
