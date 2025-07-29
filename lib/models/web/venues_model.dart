@@ -8,7 +8,7 @@ class VenuesModel extends FlutterFlowModel<WebVenuesPage> {
   late SideNavModel sideNavModel;
 
   final Map<String, AnimationInfo> animationsMap =
-      Animations.venuePageAnimations;
+      Animations.venuesAnimations;
 
   @override
   void initState(BuildContext context) {

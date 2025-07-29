@@ -19,6 +19,7 @@ class Routes {
   static const String webAuthentication = '/authentication';
   static const String webHomepage = '/homepage';
   static const String webVenues = '/venues';
+  static const String webVenue = '/venue';
   static const String webReservations = '/reservations';
   static const String webAccount = '/account';
 }

@@ -1,6 +1,6 @@
 import 'package:TableReserver/components/web/side_nav.dart';
 import 'package:TableReserver/models/web/venues_model.dart';
-import 'package:TableReserver/pages/web/views/homepage.dart';
+import 'package:TableReserver/pages/web/views/venue_page.dart';
 import 'package:TableReserver/utils/fade_in_route.dart';
 import 'package:TableReserver/utils/routes.dart';
 import 'package:flutter/material.dart';
@@ -86,8 +86,11 @@ class _WebVenuesPageState extends State<WebVenuesPage>
       onTap: () async {
         Navigator.of(context).push(
           FadeInRoute(
-            page: const WebHomepage(),
-            routeName: Routes.webHomepage,
+            page: WebVenuePage(venueId: index),
+            routeName: Routes.webVenue,
+            arguments: {
+              'venueId': index,
+            },
           ),
         );
       },

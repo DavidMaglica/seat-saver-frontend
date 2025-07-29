@@ -380,8 +380,311 @@ class Animations {
     ),
   };
 
-  static Map<String, AnimationInfo> venuePageAnimations = {
+  static Map<String, AnimationInfo> venuesAnimations = {
     'gridViewOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 300.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 400.0.ms,
+          duration: 300.0.ms,
+          begin: const Offset(100.0, 0.0),
+          end: const Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+  };
+
+  static Map<String, AnimationInfo> venuePageAnimations = {
+    'imageOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: const Offset(0.0, 40.0),
+          end: const Offset(0.0, 0.0),
+        ),
+        ScaleEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: const Offset(0.6, 0.6),
+          end: const Offset(1.0, 1.0),
+        ),
+      ],
+    ),
+    'textOnPageLoadAnimation1': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: const Offset(50.0, 0.0),
+          end: const Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+    'textOnPageLoadAnimation2': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        VisibilityEffect(duration: 1.ms),
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'textOnPageLoadAnimation3': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        VisibilityEffect(duration: 100.ms),
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 100.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'textOnPageLoadAnimation4': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        VisibilityEffect(duration: 1.ms),
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 100.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'textOnPageLoadAnimation5': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        VisibilityEffect(duration: 100.ms),
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 100.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'dividerOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: const Offset(50.0, 0.0),
+          end: const Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+    'rowOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: const Offset(0.0, 80.0),
+          end: const Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation1': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 0.0.ms,
+          duration: 600.0.ms,
+          begin: const Offset(0.0, 100.0),
+          end: const Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation2': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 600.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation3': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 800.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation4': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 600.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation5': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 600.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation6': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 600.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation7': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 600.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation8': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 600.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation9': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 600.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'containerOnPageLoadAnimation10': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 600.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'gridViewOnPageLoadAnimation1': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effectsBuilder: () => [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 300.0.ms,
+          duration: 600.0.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 400.0.ms,
+          duration: 300.0.ms,
+          begin: const Offset(100.0, 0.0),
+          end: const Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+    'gridViewOnPageLoadAnimation2': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effectsBuilder: () => [
         FadeEffect(
