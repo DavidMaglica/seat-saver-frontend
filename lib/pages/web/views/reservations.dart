@@ -118,6 +118,7 @@ class _WebReservationsState extends State<WebReservations>
         ),
         FFButtonWidget(
           onPressed: () {
+            // TODO open modal to add new reservation
             debugPrint('Button pressed ...');
           },
           text: 'Add New Reservation',

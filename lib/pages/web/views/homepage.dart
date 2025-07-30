@@ -1,5 +1,6 @@
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/components/web/circular_stat_card.dart';
+import 'package:TableReserver/components/web/modals/add_venue_modal.dart';
 import 'package:TableReserver/components/web/modals/delete_modal.dart';
 import 'package:TableReserver/components/web/modals/edit_venue_modal.dart';
 import 'package:TableReserver/components/web/modals/modal_widgets.dart';
@@ -191,8 +192,24 @@ class _WebHomepageState extends State<WebHomepage>
                         ),
                       ),
                       FFButtonWidget(
-                        onPressed: () {
-                          debugPrint('Button pressed ...');
+                        onPressed: () async {
+                          await showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (context) {
+                              return Dialog(
+                                insetPadding:
+                                const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                                backgroundColor: Colors.transparent,
+                                child: Center(
+                                  child: ConstrainedBox(
+                                    constraints: const BoxConstraints(maxWidth: 1000),
+                                    child: const AddVenueModal(),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
                         },
                         text: 'Add New Venue',
                         icon: const Icon(
@@ -210,6 +227,7 @@ class _WebHomepageState extends State<WebHomepage>
                           elevation: 3,
                           borderRadius: BorderRadius.circular(8),
                         ),
+                        showLoadingIndicator: false,
                       ),
                     ],
                   ),
