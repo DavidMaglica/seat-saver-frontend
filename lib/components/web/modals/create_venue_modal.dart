@@ -389,10 +389,6 @@ class _CreateVenueModalState extends State<CreateVenueModal>
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: WebTheme.infoColor,
-          width: 1,
-        ),
       ),
       child: FFButtonWidget(
         text: label,
@@ -400,14 +396,14 @@ class _CreateVenueModalState extends State<CreateVenueModal>
         options: FFButtonOptions(
           width: 200,
           height: 40,
-          color: Theme.of(context).colorScheme.onSurface,
-          textStyle: const TextStyle(
+          color: Theme.of(context).colorScheme.onPrimary,
+          textStyle: TextStyle(
             fontSize: 14,
-            color: WebTheme.infoColor,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
           borderRadius: BorderRadius.circular(8),
-          splashColor: Theme.of(context).colorScheme.onSurface,
-          hoverColor: Theme.of(context).colorScheme.onSurface,
+          splashColor: Theme.of(context).colorScheme.onPrimary,
+          hoverColor: Theme.of(context).colorScheme.onPrimary,
         ),
         showLoadingIndicator: false,
       ),

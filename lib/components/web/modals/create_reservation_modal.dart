@@ -234,7 +234,7 @@ class _CreateReservationModalState extends State<CreateReservationModal>
           }
         },
         decoration: InputDecoration(
-          labelText: 'Reservation Date',
+          labelText: 'Reservation Date *',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
           errorText: widget.model.reservationDateErrorText,
           errorStyle: TextStyle(

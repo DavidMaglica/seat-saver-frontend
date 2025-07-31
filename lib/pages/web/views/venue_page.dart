@@ -36,7 +36,7 @@ class _WebVenuePageState extends State<WebVenuePage>
     _model.tabBarController = TabController(
       vsync: this,
       length: 3,
-      initialIndex: 2,
+      initialIndex: 0,
     )..addListener(() => safeSetState(() {}));
   }
 
@@ -210,7 +210,6 @@ class _WebVenuePageState extends State<WebVenuePage>
               Icons.edit_outlined,
               size: 24,
             ),
-            showLoadingIndicator: false,
             options: FFButtonOptions(
               height: 40,
               color: WebTheme.infoColor,
