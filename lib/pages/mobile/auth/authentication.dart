@@ -1,7 +1,7 @@
 import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/models/mobile/authentication_model.dart';
-import 'package:TableReserver/pages/mobile/auth/login_tab.dart';
-import 'package:TableReserver/pages/mobile/auth/signup_tab.dart';
+import 'package:TableReserver/pages/mobile/auth/log_in_tab.dart';
+import 'package:TableReserver/pages/mobile/auth/sign_up_tab.dart';
 import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:TableReserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';

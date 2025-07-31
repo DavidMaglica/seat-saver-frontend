@@ -58,7 +58,14 @@ class AccountApi {
         },
       );
 
-      final int userId = response.data['data'] as int;
+      final int? userId = response.data['data'] as int?;
+
+      if (userId == null) {
+        return BasicResponse(
+          success: false,
+          message: 'User already exists.',
+        );
+      }
 
       return BasicResponse<int>(
         success: true,
