@@ -1,26 +1,42 @@
-import 'package:TableReserver/pages/auth/authentication.dart';
-import 'package:TableReserver/pages/settings/edit_profile.dart';
-import 'package:TableReserver/pages/settings/notification_settings.dart';
-import 'package:TableReserver/pages/settings/reservation_history.dart';
-import 'package:TableReserver/pages/settings/support.dart';
-import 'package:TableReserver/pages/settings/terms_of_service.dart';
-import 'package:TableReserver/pages/views/account.dart';
-import 'package:TableReserver/pages/views/homepage.dart';
-import 'package:TableReserver/pages/views/landing.dart';
-import 'package:TableReserver/pages/views/nearby.dart';
-import 'package:TableReserver/pages/views/ratings_page.dart';
-import 'package:TableReserver/pages/views/search.dart';
-import 'package:TableReserver/pages/views/successful_reservation.dart';
-import 'package:TableReserver/pages/views/venue_page.dart';
-import 'package:TableReserver/pages/views/venues_by_type.dart';
-import 'package:TableReserver/themes/theme.dart';
-import 'package:TableReserver/utils/constants.dart';
+import 'package:TableReserver/pages/mobile/auth/authentication.dart';
+import 'package:TableReserver/pages/mobile/settings/edit_profile.dart';
+import 'package:TableReserver/pages/mobile/settings/notification_settings.dart';
+import 'package:TableReserver/pages/mobile/settings/reservation_history.dart';
+import 'package:TableReserver/pages/mobile/settings/support.dart';
+import 'package:TableReserver/pages/mobile/settings/terms_of_service.dart';
+import 'package:TableReserver/pages/mobile/views/account.dart';
+import 'package:TableReserver/pages/mobile/views/homepage.dart';
+import 'package:TableReserver/pages/mobile/views/landing.dart';
+import 'package:TableReserver/pages/mobile/views/nearby.dart';
+import 'package:TableReserver/pages/mobile/views/ratings_page.dart';
+import 'package:TableReserver/pages/mobile/views/search.dart';
+import 'package:TableReserver/pages/mobile/views/successful_reservation.dart';
+import 'package:TableReserver/pages/mobile/views/venue_page.dart';
+import 'package:TableReserver/pages/mobile/views/venues_by_type.dart';
+import 'package:TableReserver/pages/web/auth/authentication.dart';
+import 'package:TableReserver/pages/web/views/account.dart';
+import 'package:TableReserver/pages/web/views/homepage.dart';
+import 'package:TableReserver/pages/web/views/landing.dart';
+import 'package:TableReserver/pages/web/views/reservations.dart';
+import 'package:TableReserver/pages/web/views/venue_page.dart';
+import 'package:TableReserver/pages/web/views/venues.dart';
+import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:TableReserver/themes/web_theme.dart';
+import 'package:TableReserver/utils/routes.dart';
+import 'package:TableReserver/utils/theme_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -43,10 +59,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb) {
+      return _buildWebMaterialApp();
+    }
+    return _buildMobileMaterialApp();
+  }
+
+  Widget _buildMobileMaterialApp() {
     return MaterialApp(
       title: 'TableReserver',
-      theme: AppThemes.lightTheme,
-      darkTheme: AppThemes.darkTheme,
+      theme: MobileTheme.lightTheme,
+      darkTheme: MobileTheme.darkTheme,
       themeMode: ThemeMode.system,
       home: const Landing(),
       debugShowCheckedModeBanner: false,
@@ -112,6 +135,32 @@ class MyApp extends StatelessWidget {
               userId: getRequiredArg<int>(context, 'userId'),
               userLocation: getOptionalArg<Position>(context, 'userLocation'),
             ),
+      },
+    );
+  }
+
+  Widget _buildWebMaterialApp() {
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, _) {
+        return MaterialApp(
+          title: 'TableReserver',
+          theme: WebTheme.lightTheme,
+          darkTheme: WebTheme.darkTheme,
+          themeMode: themeProvider.themeMode,
+          home: const WebLanding(),
+          debugShowCheckedModeBanner: false,
+          routes: {
+            Routes.webLanding: (context) => const WebLanding(),
+            Routes.webAuthentication: (context) => const WebAuthentication(),
+            Routes.webHomepage: (context) => const WebHomepage(),
+            Routes.webVenues: (context) => const WebVenuesPage(),
+            Routes.webVenue: (context) => WebVenuePage(
+                  venueId: getOptionalArg<int>(context, 'venueId') ?? 1,
+                ),
+            Routes.webReservations: (context) => const WebReservations(),
+            Routes.webAccount: (context) => const WebAccount(),
+          },
+        );
       },
     );
   }
