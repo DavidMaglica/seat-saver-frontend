@@ -2,9 +2,9 @@ import 'package:TableReserver/api/data/rating.dart';
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/pages/web/views/venue_page.dart';
 import 'package:TableReserver/utils/animations.dart';
+import 'package:TableReserver/utils/file_picker/file_picker_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'dart:html';
 
 class VenuePageModel extends FlutterFlowModel<WebVenuePage> {
   TabController? tabBarController;
@@ -73,47 +73,10 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage> {
   }
 
   Future<void> addVenueImages() async {
-    await _setImage();
+    await imagePicker(false);
   }
 
   Future<void> addMenuImages() async {
-    await _setImage();
-  }
-
-  Future<List<String>> _setImage() async {
-    final completer = Completer<List<String>>();
-    FileUploadInputElement uploadInput = FileUploadInputElement()
-      ..multiple = true
-      ..accept = 'image/*';
-    uploadInput.click();
-    uploadInput.addEventListener('change', (e) async {
-      final files = uploadInput.files;
-      if (files == null || files.isEmpty) {
-        completer.completeError('No files selected');
-        return;
-      }
-      Iterable<Future<String>> resultsFutures = files.map((file) {
-        final reader = FileReader();
-        reader.readAsDataUrl(file);
-        reader.onError.listen((error) => completer.completeError(error));
-        return reader.onLoad.first.then((_) => reader.result as String);
-      });
-
-      final results = await Future.wait(resultsFutures);
-      if (!completer.isCompleted) {
-        completer.complete(results);
-      }
-    });
-
-    Future.delayed(const Duration(seconds: 2), () {
-      if (!completer.isCompleted) {
-        completer.complete([]);
-      }
-    });
-
-    document.body?.append(uploadInput);
-    final List<String> images = await completer.future;
-    uploadInput.remove();
-    return images;
+    await imagePicker(false);
   }
 }

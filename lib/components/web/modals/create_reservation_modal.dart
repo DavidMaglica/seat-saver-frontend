@@ -27,11 +27,6 @@ class _CreateReservationModalState extends State<CreateReservationModal>
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   void createReservation(BuildContext context) {
     if (widget.model.isFormValid()) {
       widget.model.createReservation(context);
@@ -229,7 +224,8 @@ class _CreateReservationModalState extends State<CreateReservationModal>
 
               final formattedDateTime = dateFormat.format(combinedDateTime);
 
-              widget.model.reservationDateTextController.text = formattedDateTime;
+              widget.model.reservationDateTextController.text =
+                  formattedDateTime;
             }
           }
         },
@@ -300,16 +296,16 @@ class _CreateReservationModalState extends State<CreateReservationModal>
         ),
       ),
       selectedCellTextStyle:
-      Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
+          Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
       selectedCellDecoration: const BoxDecoration(
         color: WebTheme.infoColor,
         shape: BoxShape.circle,
       ),
       enabledCellsTextStyle: Theme.of(context).textTheme.bodyLarge,
       disabledCellsTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-        color:
-        Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.4),
-      ),
+            color:
+                Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.4),
+          ),
       leadingDateTextStyle: Theme.of(context)
           .textTheme
           .bodyLarge

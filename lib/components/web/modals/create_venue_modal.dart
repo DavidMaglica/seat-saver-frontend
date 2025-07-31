@@ -26,11 +26,6 @@ class _CreateVenueModalState extends State<CreateVenueModal>
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   void createVenue(BuildContext context) {
     if (widget.model.isFormValid()) {
       widget.model.createVenue(context);
