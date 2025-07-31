@@ -1,8 +1,10 @@
 import 'package:TableReserver/api/data/reservation_details.dart';
+import 'package:TableReserver/components/web/modals/create_reservation_modal.dart';
 import 'package:TableReserver/components/web/modals/delete_modal.dart';
 import 'package:TableReserver/components/web/modals/edit_reservation_modal.dart';
 import 'package:TableReserver/components/web/modals/modal_widgets.dart';
 import 'package:TableReserver/components/web/side_nav.dart';
+import 'package:TableReserver/models/web/create_reservation_model.dart';
 import 'package:TableReserver/models/web/reservation_model.dart';
 import 'package:TableReserver/themes/web_theme.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_table/flutter_advanced_table.dart';
 import 'package:flutter_advanced_table/params.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:provider/provider.dart';
 
 class WebReservations extends StatefulWidget {
   const WebReservations({super.key});
@@ -117,11 +120,33 @@ class _WebReservationsState extends State<WebReservations>
           ),
         ),
         FFButtonWidget(
-          onPressed: () {
-            // TODO open modal to add new reservation
-            debugPrint('Button pressed ...');
+          onPressed: () async {
+            await showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (context) {
+                return Dialog(
+                  insetPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                  backgroundColor: Colors.transparent,
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1000),
+                      child: ChangeNotifierProvider(
+                        create: (_) => CreateReservationModel(),
+                        child: Consumer<CreateReservationModel>(
+                          builder: (context, model, _) {
+                            return CreateReservationModal(model: model);
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
           },
-          text: 'Add New Reservation',
+          text: 'Create a Reservation',
           icon: const Icon(
             CupertinoIcons.add_circled,
             size: 24,

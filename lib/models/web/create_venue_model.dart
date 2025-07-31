@@ -1,13 +1,13 @@
 import 'dart:html';
 
-import 'package:TableReserver/components/web/modals/add_venue_modal.dart';
+import 'package:TableReserver/components/web/modals/create_venue_modal.dart';
 import 'package:TableReserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 enum ImageType { heading, venue, menu }
 
-class AddVenueModel extends FlutterFlowModel<AddVenueModal>
+class CreateVenueModel extends FlutterFlowModel<CreateVenueModal>
     with ChangeNotifier {
   FocusNode nameFocusNode = FocusNode();
   TextEditingController nameTextController = TextEditingController();
@@ -64,6 +64,8 @@ class AddVenueModel extends FlutterFlowModel<AddVenueModal>
 
     descriptionFocusNode.dispose();
     descriptionTextController.dispose();
+
+    dropDownValueController.dispose();
   }
 
   Future<void> createVenue(BuildContext context) async {

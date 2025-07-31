@@ -1,13 +1,13 @@
 import 'package:TableReserver/api/data/venue.dart';
 import 'package:TableReserver/components/web/circular_stat_card.dart';
-import 'package:TableReserver/components/web/modals/add_venue_modal.dart';
+import 'package:TableReserver/components/web/modals/create_venue_modal.dart';
 import 'package:TableReserver/components/web/modals/delete_modal.dart';
 import 'package:TableReserver/components/web/modals/edit_venue_modal.dart';
 import 'package:TableReserver/components/web/modals/modal_widgets.dart';
 import 'package:TableReserver/components/web/performance_card.dart';
 import 'package:TableReserver/components/web/side_nav.dart';
 import 'package:TableReserver/components/web/stat_card.dart';
-import 'package:TableReserver/models/web/add_venue_model.dart';
+import 'package:TableReserver/models/web/create_venue_model.dart';
 import 'package:TableReserver/models/web/homepage_model.dart';
 import 'package:TableReserver/themes/web_theme.dart';
 import 'package:flutter/cupertino.dart';
@@ -208,10 +208,10 @@ class _WebHomepageState extends State<WebHomepage>
                                     constraints:
                                         const BoxConstraints(maxWidth: 1000),
                                     child: ChangeNotifierProvider(
-                                      create: (_) => AddVenueModel(),
-                                      child: Consumer<AddVenueModel>(
+                                      create: (_) => CreateVenueModel(),
+                                      child: Consumer<CreateVenueModel>(
                                         builder: (context, model, _) {
-                                          return AddVenueModal(model: model);
+                                          return CreateVenueModal(model: model);
                                         },
                                       ),
                                     ),
@@ -221,7 +221,7 @@ class _WebHomepageState extends State<WebHomepage>
                             },
                           );
                         },
-                        text: 'Add New Venue',
+                        text: 'Create a Venue',
                         icon: const Icon(
                           CupertinoIcons.add_circled,
                           size: 24,
@@ -237,7 +237,6 @@ class _WebHomepageState extends State<WebHomepage>
                           elevation: 3,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        showLoadingIndicator: false,
                       ),
                     ],
                   ),

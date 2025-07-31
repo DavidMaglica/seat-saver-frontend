@@ -1,20 +1,21 @@
 import 'package:TableReserver/components/web/modals/modal_widgets.dart';
-import 'package:TableReserver/models/web/add_venue_model.dart';
+import 'package:TableReserver/models/web/create_reservation_model.dart';
 import 'package:TableReserver/themes/web_theme.dart';
+import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
-class AddVenueModal extends StatefulWidget {
-  final AddVenueModel model;
+class CreateReservationModal extends StatefulWidget {
+  final CreateReservationModel model;
 
-  const AddVenueModal({super.key, required this.model});
+  const CreateReservationModal({super.key, required this.model});
 
   @override
-  State<AddVenueModal> createState() => _AddVenueModalState();
+  State<CreateReservationModal> createState() => _CreateReservationModalState();
 }
 
-class _AddVenueModalState extends State<AddVenueModal>
+class _CreateReservationModalState extends State<CreateReservationModal>
     with TickerProviderStateMixin {
   @override
   void setState(VoidCallback callback) {
@@ -31,9 +32,9 @@ class _AddVenueModalState extends State<AddVenueModal>
     super.dispose();
   }
 
-  void createVenue(BuildContext context) {
+  void createReservation(BuildContext context) {
     if (widget.model.isFormValid()) {
-      widget.model.createVenue(context);
+      widget.model.createReservation(context);
     }
   }
 
@@ -59,12 +60,12 @@ class _AddVenueModalState extends State<AddVenueModal>
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildTitle(context, 'Create a Venue'),
+                buildTitle(context, 'Create a Reservation'),
                 _buildBody(context),
                 buildButtons(
                   context,
-                  () => createVenue(context),
-                  'Create Venue',
+                  () => createReservation(context),
+                  'Create Reservation',
                 ),
               ].divide(const SizedBox(height: 16)),
             ),
@@ -94,10 +95,10 @@ class _AddVenueModalState extends State<AddVenueModal>
               ),
               _buildInputField(
                 context: context,
-                label: 'Venue Location (City, Street) *',
-                controller: widget.model.locationTextController,
-                focusNode: widget.model.locationFocusNode,
-                errorText: widget.model.locationErrorText,
+                label: 'User Email *',
+                controller: widget.model.emailTextController,
+                focusNode: widget.model.emailFocusNode,
+                errorText: widget.model.emailErrorText,
               )
             ].divide(const SizedBox(width: 32)),
           ),
@@ -106,40 +107,18 @@ class _AddVenueModalState extends State<AddVenueModal>
             children: [
               _buildInputField(
                 context: context,
-                label: 'Maximum Capacity *',
-                controller: widget.model.maxCapacityTextController,
-                focusNode: widget.model.maxCapacityFocusNode,
-                errorText: widget.model.maxCapacityErrorText,
+                label: 'Number of Guests *',
+                controller: widget.model.guestsTextController,
+                focusNode: widget.model.guestsFocusNode,
+                errorText: widget.model.guestsErrorText,
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                 ],
               ),
-              _buildTypeDropdown(context),
+              _buildReservationDateInputField(context),
             ].divide(const SizedBox(width: 32)),
           ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              _buildWorkingHoursPicker(context),
-            ].divide(const SizedBox(width: 32)),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              _buildInputField(
-                context: context,
-                label: 'Venue Description',
-                controller: widget.model.descriptionTextController,
-                focusNode: widget.model.descriptionFocusNode,
-                keyboardType: TextInputType.text,
-                isMultiline: true,
-              )
-            ].divide(
-              const SizedBox(width: 16),
-            ),
-          ),
-          _buildImageButtons(context),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -176,10 +155,10 @@ class _AddVenueModalState extends State<AddVenueModal>
         labelText: label,
         labelStyle: Theme.of(context).textTheme.bodyLarge,
         errorText: errorText,
-        errorStyle: Theme.of(context)
-            .textTheme
-            .bodyMedium
-            ?.copyWith(color: WebTheme.errorColor),
+        errorStyle: TextStyle(
+          color: Theme.of(context).colorScheme.error,
+          fontSize: 14,
+        ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.onPrimary,
@@ -224,97 +203,44 @@ class _AddVenueModalState extends State<AddVenueModal>
     return isExpanded ? Expanded(child: inputField) : inputField;
   }
 
-  Widget _buildTypeDropdown(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        FlutterFlowDropDown<String>(
-          controller: widget.model.dropDownValueController,
-          options: widget.model.venueTypes,
-          optionLabels:
-              widget.model.venueTypes.map((type) => '   $type').toList(),
-          onChanged: (val) =>
-              safeSetState(() => widget.model.dropDownValue = val),
-          width: 470,
-          height: 64,
-          searchHintTextStyle: Theme.of(context).textTheme.bodyMedium,
-          searchTextStyle: Theme.of(context).textTheme.bodyMedium,
-          textStyle: Theme.of(context).textTheme.bodyLarge!,
-          hintText: 'Type *',
-          searchHintText: 'Search...',
-          icon: Icon(
-            Icons.keyboard_arrow_down_rounded,
-            color: Theme.of(context).colorScheme.onPrimary,
-            size: 24,
-          ),
-          fillColor: Theme.of(context).colorScheme.surface,
-          elevation: 3,
-          borderColor: widget.model.dropDownErrorText != null
-              ? WebTheme.errorColor
-              : Theme.of(context).colorScheme.onPrimary,
-          borderWidth: 1,
-          borderRadius: 8,
-          margin: const EdgeInsets.symmetric(horizontal: 12),
-          hidesUnderline: true,
-          isOverButton: false,
-          isSearchable: true,
-          isMultiSelect: false,
-        ),
-        if (widget.model.dropDownErrorText != null)
-          Padding(
-            padding: const EdgeInsets.only(left: 16, top: 4),
-            child: Text(
-              widget.model.dropDownErrorText!,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: WebTheme.errorColor),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildWorkingHoursPicker(BuildContext context) {
-    return SizedBox(
-      width: 470,
+  Widget _buildReservationDateInputField(BuildContext context) {
+    return Expanded(
       child: TextFormField(
-        controller: widget.model.workingHoursTextController,
-        focusNode: widget.model.workingHoursFocusNode,
+        controller: widget.model.reservationDateTextController,
+        focusNode: widget.model.reservationDateFocusNode,
         readOnly: true,
         onTap: () async {
-          TimeOfDay? startTime = await _buildTimePicker(context);
+          DateTime? pickedDate = await _buildDatePicker(context);
 
-          if (startTime == null) return;
+          if (pickedDate != null) {
+            if (!context.mounted) return;
+            TimeOfDay? pickedTime = await _buildTimePicker(context);
 
-          if (!context.mounted) return;
-          TimeOfDay? endTime = await _buildTimePicker(
-            context,
-            initialTime: TimeOfDay(
-              hour: startTime.hour + 1,
-              minute: startTime.minute,
-            ),
-          );
+            if (pickedTime != null) {
+              final combinedDateTime = DateTime(
+                pickedDate.year,
+                pickedDate.month,
+                pickedDate.day,
+                pickedTime.hour,
+                pickedTime.minute,
+              );
 
-          if (endTime == null) return;
+              DateFormat dateFormat = DateFormat('dd MMMM, yyyy - HH:mm');
 
-          if (!context.mounted) return;
-          final String formattedStart = startTime.format(context);
-          final String formattedEnd = endTime.format(context);
+              final formattedDateTime = dateFormat.format(combinedDateTime);
 
-          widget.model.workingHoursTextController.text =
-              '$formattedStart - $formattedEnd';
-          widget.model.workingHoursErrorText = null;
+              widget.model.reservationDateTextController.text = formattedDateTime;
+            }
+          }
         },
         decoration: InputDecoration(
-          labelText: 'Working Hours (hh:mm - HH:MM) *',
+          labelText: 'Reservation Date',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
-          errorText: widget.model.workingHoursErrorText,
-          errorStyle: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(color: WebTheme.errorColor),
+          errorText: widget.model.reservationDateErrorText,
+          errorStyle: TextStyle(
+            color: Theme.of(context).colorScheme.error,
+            fontSize: 14,
+          ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.onPrimary,
@@ -354,71 +280,51 @@ class _AddVenueModalState extends State<AddVenueModal>
     );
   }
 
-  Widget _buildImageButtons(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildImageButton(
-          context,
-          'Add heading image',
-          () => widget.model.addImages(ImageType.heading),
-        ),
-        _buildImageButton(
-          context,
-          'Add venue images',
-          () => widget.model.addImages(ImageType.venue),
-        ),
-        _buildImageButton(
-          context,
-          'Add menu images',
-          () => widget.model.addImages(ImageType.menu),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildImageButton(
-    BuildContext context,
-    String label,
-    Function() onPressed,
-  ) {
-    return Container(
-      width: 200,
-      height: 40,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
+  Future<DateTime?> _buildDatePicker(BuildContext context) {
+    return showDatePickerDialog(
+      context: context,
+      height: 420,
+      width: 400,
+      maxDate: DateTime.now().add(const Duration(days: 365)),
+      minDate: DateTime.now(),
+      selectedDate: DateTime.now(),
+      centerLeadingDate: true,
+      slidersColor: Theme.of(context).colorScheme.onPrimary,
+      currentDateTextStyle: Theme.of(context).textTheme.bodyLarge,
+      currentDateDecoration: BoxDecoration(
+        color: WebTheme.transparentColour,
+        shape: BoxShape.circle,
         border: Border.all(
           color: WebTheme.infoColor,
           width: 1,
         ),
       ),
-      child: FFButtonWidget(
-        text: label,
-        onPressed: onPressed,
-        options: FFButtonOptions(
-          width: 200,
-          height: 40,
-          color: Theme.of(context).colorScheme.onSurface,
-          textStyle: const TextStyle(
-            fontSize: 14,
-            color: WebTheme.infoColor,
-          ),
-          borderRadius: BorderRadius.circular(8),
-          splashColor: Theme.of(context).colorScheme.onSurface,
-          hoverColor: Theme.of(context).colorScheme.onSurface,
-        ),
-        showLoadingIndicator: false,
+      selectedCellTextStyle:
+      Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
+      selectedCellDecoration: const BoxDecoration(
+        color: WebTheme.infoColor,
+        shape: BoxShape.circle,
       ),
+      enabledCellsTextStyle: Theme.of(context).textTheme.bodyLarge,
+      disabledCellsTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+        color:
+        Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.4),
+      ),
+      leadingDateTextStyle: Theme.of(context)
+          .textTheme
+          .bodyLarge
+          ?.copyWith(fontWeight: FontWeight.bold),
+      daysOfTheWeekTextStyle: Theme.of(context)
+          .textTheme
+          .bodyMedium
+          ?.copyWith(fontWeight: FontWeight.bold),
     );
   }
 
-  Future<TimeOfDay?> _buildTimePicker(BuildContext context,
-      {TimeOfDay? initialTime}) {
+  Future<TimeOfDay?> _buildTimePicker(BuildContext context) {
     return showTimePicker(
       context: context,
-      initialTime: initialTime ?? TimeOfDay.now(),
+      initialTime: TimeOfDay.now(),
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: Theme.of(context).copyWith(
