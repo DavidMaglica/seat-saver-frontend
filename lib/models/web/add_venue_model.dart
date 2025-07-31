@@ -32,7 +32,6 @@ class AddVenueModel extends FlutterFlowModel<AddVenueModal>
 
   FocusNode descriptionFocusNode = FocusNode();
   TextEditingController descriptionTextController = TextEditingController();
-  String? descriptionErrorText;
 
   final Map<String, AnimationInfo> animationsMap = Animations.modalAnimations;
 
@@ -79,32 +78,41 @@ class AddVenueModel extends FlutterFlowModel<AddVenueModal>
 
   bool isFormValid() {
     bool isValid = true;
+
     if (nameTextController.text.isEmpty) {
-      nameErrorText = 'Please enter a name for the venue.';
+      nameErrorText = 'Please enter the name of your venue.';
       isValid = false;
-    }
-    if (locationTextController.text.isEmpty) {
-      locationErrorText = 'Please enter a location for the venue.';
-      isValid = false;
-    }
-    if (maxCapacityTextController.text.isEmpty) {
-      maxCapacityErrorText = 'Please enter the maximum capacity for the venue.';
-      isValid = false;
-    }
-    if (dropDownValue == null || dropDownValue!.isEmpty) {
-      dropDownErrorText = 'Please select a type for the venue.';
-      isValid = false;
-    }
-    if (workingHoursTextController.text.isEmpty) {
-      workingHoursErrorText = 'Please enter the working hours for the venue.';
-      isValid = false;
-    }
-    if (descriptionTextController.text.isEmpty) {
-      descriptionErrorText = 'Please enter a description for the venue.';
-      isValid = false;
+    } else {
+      nameErrorText = null;
     }
 
-    debugPrint('Form Valid: $isValid');
+    if (locationTextController.text.isEmpty) {
+      locationErrorText = 'Please enter the location of your venue.';
+      isValid = false;
+    } else {
+      locationErrorText = null;
+    }
+
+    if (maxCapacityTextController.text.isEmpty) {
+      maxCapacityErrorText = 'Please enter the maximum capacity of your venue.';
+      isValid = false;
+    } else {
+      maxCapacityErrorText = null;
+    }
+
+    if (dropDownValue == null || dropDownValue!.isEmpty) {
+      dropDownErrorText = 'Please select the type of your venue.';
+      isValid = false;
+    } else {
+      dropDownErrorText = null;
+    }
+
+    if (workingHoursTextController.text.isEmpty) {
+      workingHoursErrorText = 'Please enter the working hours of your venue.';
+      isValid = false;
+    } else {
+      workingHoursErrorText = null;
+    }
 
     notifyListeners();
     return isValid;

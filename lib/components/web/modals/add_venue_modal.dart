@@ -2,6 +2,7 @@ import 'package:TableReserver/components/web/modals/modal_widgets.dart';
 import 'package:TableReserver/models/web/add_venue_model.dart';
 import 'package:TableReserver/themes/web_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
 
@@ -36,50 +37,47 @@ class _AddVenueModalState extends State<AddVenueModal>
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AddVenueModel()..initState(context),
-      child: Consumer(
-        builder: (context, model, _) {
-          return SizedBox(
-            width: double.infinity,
-            height: double.infinity,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: double.infinity,
-                  constraints: const BoxConstraints(
-                    maxWidth: 1000,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      buildTitle(context, 'Create a Venue'),
-                      _buildBody(context),
-                      buildButtons(
-                        context,
-                        () {
-                          if (_model.isFormValid()) {
-                            _model.createVenue(context);
-                          }
-                        },
-                        'Create Venue',
-                      ),
-                    ].divide(const SizedBox(height: 16)),
-                  ),
-                ).animateOnPageLoad(
-                    _model.animationsMap['containerOnPageLoadAnimation']!),
-              ],
-            ),
-          );
-        },
-      ),
+    return Consumer<AddVenueModel>(
+      builder: (context, model, _) {
+        return SizedBox(
+          width: double.infinity,
+          height: double.infinity,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: double.infinity,
+                constraints: const BoxConstraints(
+                  maxWidth: 1000,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildTitle(context, 'Create a Venue'),
+                    _buildBody(context),
+                    buildButtons(
+                      context,
+                      () {
+                        if (_model.isFormValid()) {
+                          _model.createVenue(context);
+                        }
+                      },
+                      'Create Venue',
+                    ),
+                  ].divide(const SizedBox(height: 16)),
+                ),
+              ).animateOnPageLoad(
+                  _model.animationsMap['containerOnPageLoadAnimation']!),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -93,258 +91,228 @@ class _AddVenueModalState extends State<AddVenueModal>
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              _buildNameInputField(context),
-              _buildLocationInputField(context),
+              _buildInputField(
+                context: context,
+                label: 'Venue Name *',
+                controller: _model.nameTextController,
+                focusNode: _model.nameFocusNode,
+                errorText: _model.nameErrorText,
+              ),
+              _buildInputField(
+                context: context,
+                label: 'Venue Location (City, Street) *',
+                controller: _model.locationTextController,
+                focusNode: _model.locationFocusNode,
+                errorText: _model.locationErrorText,
+              )
             ].divide(const SizedBox(width: 32)),
           ),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              _buildMaxCapacityInputField(context),
+              _buildInputField(
+                context: context,
+                label: 'Maximum Capacity *',
+                controller: _model.maxCapacityTextController,
+                focusNode: _model.maxCapacityFocusNode,
+                errorText: _model.maxCapacityErrorText,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+              ),
               _buildTypeDropdown(context),
             ].divide(const SizedBox(width: 32)),
           ),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              _buildWorkingHoursInputField(context),
+              _buildWorkingHoursPicker(context),
             ].divide(const SizedBox(width: 32)),
           ),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              _buildDescriptionInputField(context),
+              _buildInputField(
+                context: context,
+                label: 'Venue Description',
+                controller: _model.descriptionTextController,
+                focusNode: _model.descriptionFocusNode,
+                keyboardType: TextInputType.text,
+                isMultiline: true,
+              )
             ].divide(
               const SizedBox(width: 16),
             ),
           ),
+          _buildImageButtons(context),
           Row(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildImageButton(
-                context,
-                'Add heading image',
-                () => _model.addImages(ImageType.heading),
-              ),
-              _buildImageButton(
-                context,
-                'Add venue images',
-                () => _model.addImages(ImageType.venue),
-              ),
-              _buildImageButton(
-                context,
-                'Add menu images',
-                () => _model.addImages(ImageType.menu),
+              Text(
+                '* Required fields',
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
-          ),
+          )
         ].divide(const SizedBox(height: 16)),
       ),
     );
   }
 
-  Widget _buildNameInputField(BuildContext context) {
-    return Expanded(
-      child: TextFormField(
-        controller: _model.nameTextController,
-        focusNode: _model.nameFocusNode,
-        errorBuilder: (_, __) {
-          return _model.nameErrorText != null
-              ? Text(
-                  _model.nameErrorText!,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: WebTheme.errorColor,
-                      ),
-                )
-              : const Text('');
-        },
-        decoration: InputDecoration(
-          labelText: 'Venue Name',
-          labelStyle: Theme.of(context).textTheme.bodyLarge,
-          errorText: _model.nameErrorText,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onPrimary,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(8),
+  Widget _buildInputField({
+    required BuildContext context,
+    required String label,
+    required TextEditingController controller,
+    required FocusNode focusNode,
+    String? errorText,
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
+    bool isExpanded = true,
+    bool isMultiline = false,
+    double? fixedWidth,
+  }) {
+    final inputField = TextFormField(
+      controller: controller,
+      focusNode: focusNode,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      maxLines: isMultiline ? null : 1,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: Theme.of(context).textTheme.bodyLarge,
+        errorText: errorText,
+        errorStyle: Theme.of(context)
+            .textTheme
+            .bodyMedium
+            ?.copyWith(color: WebTheme.errorColor),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.onPrimary,
+            width: 1,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: WebTheme.infoColor,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: WebTheme.errorColor,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: WebTheme.infoColor,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 24,
-          ),
+          borderRadius: BorderRadius.circular(8),
         ),
-        style: Theme.of(context).textTheme.bodyLarge,
-        cursorColor: Theme.of(context).colorScheme.onPrimary,
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: WebTheme.infoColor,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        errorBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: WebTheme.errorColor,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        focusedErrorBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: WebTheme.infoColor,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 24,
+        ),
       ),
+      style: Theme.of(context).textTheme.bodyLarge,
+      cursorColor: Theme.of(context).colorScheme.onPrimary,
     );
-  }
 
-  Widget _buildLocationInputField(BuildContext context) {
-    return Expanded(
-      child: TextFormField(
-        controller: _model.locationTextController,
-        focusNode: _model.locationFocusNode,
-        decoration: InputDecoration(
-          labelText: 'Venue Location (City, Street)',
-          labelStyle: Theme.of(context).textTheme.bodyLarge,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onPrimary,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: WebTheme.infoColor,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 24,
-          ),
-        ),
-        style: Theme.of(context).textTheme.bodyLarge,
-        cursorColor: Theme.of(context).colorScheme.onPrimary,
-      ),
-    );
-  }
+    if (fixedWidth != null) {
+      return SizedBox(width: fixedWidth, child: inputField);
+    }
 
-  Widget _buildMaxCapacityInputField(BuildContext context) {
-    return Expanded(
-      child: TextFormField(
-        controller: _model.maxCapacityTextController,
-        focusNode: _model.maxCapacityFocusNode,
-        decoration: InputDecoration(
-          labelText: 'Maximum Capacity',
-          labelStyle: Theme.of(context).textTheme.bodyLarge,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onPrimary,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: WebTheme.infoColor,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 24,
-          ),
-        ),
-        style: Theme.of(context).textTheme.bodyLarge,
-        keyboardType: TextInputType.number,
-        cursorColor: Theme.of(context).colorScheme.onPrimary,
-      ),
-    );
+    return isExpanded ? Expanded(child: inputField) : inputField;
   }
 
   Widget _buildTypeDropdown(BuildContext context) {
-    return FlutterFlowDropDown<String>(
-      controller: _model.dropDownValueController,
-      options: _model.venueTypes,
-      optionLabels: _model.venueTypes.map((type) => '   $type').toList(),
-      onChanged: (val) => safeSetState(() => _model.dropDownValue = val),
-      width: 470,
-      height: 64,
-      searchHintTextStyle: Theme.of(context).textTheme.bodyMedium,
-      searchTextStyle: Theme.of(context).textTheme.bodyMedium,
-      textStyle: Theme.of(context).textTheme.bodyLarge!,
-      hintText: 'Type',
-      searchHintText: 'Search...',
-      icon: Icon(
-        Icons.keyboard_arrow_down_rounded,
-        color: Theme.of(context).colorScheme.onPrimary,
-        size: 24,
-      ),
-      fillColor: Theme.of(context).colorScheme.surface,
-      elevation: 3,
-      borderColor: Theme.of(context).colorScheme.onPrimary,
-      borderWidth: 1,
-      borderRadius: 8,
-      margin: const EdgeInsets.symmetric(horizontal: 12),
-      hidesUnderline: true,
-      isOverButton: false,
-      isSearchable: true,
-      isMultiSelect: false,
-    );
-  }
-
-  Widget _buildWorkingHoursInputField(BuildContext context) {
-    return Row(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
+        FlutterFlowDropDown<String>(
+          controller: _model.dropDownValueController,
+          options: _model.venueTypes,
+          optionLabels: _model.venueTypes.map((type) => '   $type').toList(),
+          onChanged: (val) => safeSetState(() => _model.dropDownValue = val),
           width: 470,
-          child: TextFormField(
-            controller: _model.workingHoursTextController,
-            focusNode: _model.workingHoursFocusNode,
-            decoration: InputDecoration(
-              labelText: 'Working Hours (hh:mm - hh:mm)',
-              labelStyle: Theme.of(context).textTheme.bodyLarge,
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: WebTheme.infoColor,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 24,
-              ),
-            ),
-            style: Theme.of(context).textTheme.bodyLarge,
-            cursorColor: Theme.of(context).colorScheme.onPrimary,
+          height: 64,
+          searchHintTextStyle: Theme.of(context).textTheme.bodyMedium,
+          searchTextStyle: Theme.of(context).textTheme.bodyMedium,
+          textStyle: Theme.of(context).textTheme.bodyLarge!,
+          hintText: 'Type *',
+          searchHintText: 'Search...',
+          icon: Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: Theme.of(context).colorScheme.onPrimary,
+            size: 24,
           ),
+          fillColor: Theme.of(context).colorScheme.surface,
+          elevation: 3,
+          borderColor: _model.dropDownErrorText != null
+              ? WebTheme.errorColor
+              : Theme.of(context).colorScheme.onPrimary,
+          borderWidth: 1,
+          borderRadius: 8,
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          hidesUnderline: true,
+          isOverButton: false,
+          isSearchable: true,
+          isMultiSelect: false,
         ),
+        if (_model.dropDownErrorText != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 4),
+            child: Text(
+              _model.dropDownErrorText!,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: WebTheme.errorColor),
+            ),
+          ),
       ],
     );
   }
 
-  Widget _buildDescriptionInputField(BuildContext context) {
-    return Expanded(
+  Widget _buildWorkingHoursPicker(BuildContext context) {
+    return SizedBox(
+      width: 470,
       child: TextFormField(
-        controller: _model.descriptionTextController,
-        focusNode: _model.descriptionFocusNode,
+        controller: _model.workingHoursTextController,
+        focusNode: _model.workingHoursFocusNode,
+        readOnly: true,
+        onTap: () async {
+          TimeOfDay? startTime = await _buildTimePicker(context);
+
+          if (startTime == null) return;
+
+          if (!context.mounted) return;
+          TimeOfDay? endTime = await _buildTimePicker(
+            context,
+            initialTime: TimeOfDay(
+              hour: startTime.hour + 1,
+              minute: startTime.minute,
+            ),
+          );
+
+          if (endTime == null) return;
+
+          if (!context.mounted) return;
+          final String formattedStart = startTime.format(context);
+          final String formattedEnd = endTime.format(context);
+
+          _model.workingHoursTextController.text =
+              '$formattedStart - $formattedEnd';
+          _model.workingHoursErrorText = null;
+        },
         decoration: InputDecoration(
-          labelText: 'Venue Description',
+          labelText: 'Working Hours (hh:mm - HH:MM) *',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
@@ -366,10 +334,32 @@ class _AddVenueModalState extends State<AddVenueModal>
           ),
         ),
         style: Theme.of(context).textTheme.bodyLarge,
-        maxLines: null,
-        minLines: 1,
         cursorColor: Theme.of(context).colorScheme.onPrimary,
       ),
+    );
+  }
+
+  Widget _buildImageButtons(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildImageButton(
+          context,
+          'Add heading image',
+          () => _model.addImages(ImageType.heading),
+        ),
+        _buildImageButton(
+          context,
+          'Add venue images',
+          () => _model.addImages(ImageType.venue),
+        ),
+        _buildImageButton(
+          context,
+          'Add menu images',
+          () => _model.addImages(ImageType.menu),
+        ),
+      ],
     );
   }
 
@@ -406,6 +396,57 @@ class _AddVenueModalState extends State<AddVenueModal>
         ),
         showLoadingIndicator: false,
       ),
+    );
+  }
+
+  Future<TimeOfDay?> _buildTimePicker(BuildContext context,
+      {TimeOfDay? initialTime}) {
+    return showTimePicker(
+      context: context,
+      initialTime: initialTime ?? TimeOfDay.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            timePickerTheme: TimePickerThemeData(
+              backgroundColor: Theme.of(context).colorScheme.onSurface,
+              hourMinuteTextColor: Theme.of(context).colorScheme.onPrimary,
+              hourMinuteColor: Theme.of(context).colorScheme.surface,
+              dialHandColor: WebTheme.infoColor,
+              dialTextColor: Theme.of(context).colorScheme.onPrimary,
+              dialBackgroundColor: Theme.of(context).colorScheme.surface,
+              entryModeIconColor: Theme.of(context).colorScheme.onPrimary,
+              dayPeriodTextColor: Theme.of(context).colorScheme.onPrimary,
+              dayPeriodColor: WebTheme.infoColor,
+              cancelButtonStyle: ButtonStyle(
+                backgroundColor: const WidgetStatePropertyAll<Color>(
+                  WebTheme.errorColor,
+                ),
+                textStyle: WidgetStatePropertyAll<TextStyle>(
+                  Theme.of(context).textTheme.bodyLarge!,
+                ),
+                foregroundColor: WidgetStatePropertyAll<Color>(
+                  Theme.of(context).colorScheme.surface,
+                ),
+                elevation: const WidgetStatePropertyAll<double>(3.0),
+              ),
+              confirmButtonStyle: ButtonStyle(
+                backgroundColor: const WidgetStatePropertyAll<Color>(
+                  WebTheme.successColor,
+                ),
+                textStyle: WidgetStatePropertyAll<TextStyle>(
+                  Theme.of(context).textTheme.bodyLarge!,
+                ),
+                foregroundColor: WidgetStatePropertyAll<Color>(
+                  Theme.of(context).colorScheme.surface,
+                ),
+                elevation: const WidgetStatePropertyAll<double>(3.0),
+              ),
+            ),
+            textTheme: Theme.of(context).textTheme,
+          ),
+          child: child!,
+        );
+      },
     );
   }
 }

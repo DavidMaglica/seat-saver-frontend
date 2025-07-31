@@ -7,6 +7,7 @@ import 'package:TableReserver/components/web/modals/modal_widgets.dart';
 import 'package:TableReserver/components/web/performance_card.dart';
 import 'package:TableReserver/components/web/side_nav.dart';
 import 'package:TableReserver/components/web/stat_card.dart';
+import 'package:TableReserver/models/web/add_venue_model.dart';
 import 'package:TableReserver/models/web/homepage_model.dart';
 import 'package:TableReserver/themes/web_theme.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_table/flutter_advanced_table.dart';
 import 'package:flutter_advanced_table/params.dart' hide ActionParamBuilder;
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:provider/provider.dart';
 
 class WebHomepage extends StatefulWidget {
   const WebHomepage({super.key});
@@ -198,13 +200,17 @@ class _WebHomepageState extends State<WebHomepage>
                             barrierDismissible: true,
                             builder: (context) {
                               return Dialog(
-                                insetPadding:
-                                const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                                insetPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 24),
                                 backgroundColor: Colors.transparent,
                                 child: Center(
                                   child: ConstrainedBox(
-                                    constraints: const BoxConstraints(maxWidth: 1000),
-                                    child: const AddVenueModal(),
+                                    constraints:
+                                        const BoxConstraints(maxWidth: 1000),
+                                    child: ChangeNotifierProvider(
+                                      create: (_) => AddVenueModel(),
+                                      child: const AddVenueModal(),
+                                    ),
                                   ),
                                 ),
                               );
