@@ -209,7 +209,11 @@ class _WebHomepageState extends State<WebHomepage>
                                         const BoxConstraints(maxWidth: 1000),
                                     child: ChangeNotifierProvider(
                                       create: (_) => AddVenueModel(),
-                                      child: const AddVenueModal(),
+                                      child: Consumer<AddVenueModel>(
+                                        builder: (context, model, _) {
+                                          return AddVenueModal(model: model);
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ),

@@ -4,10 +4,11 @@ import 'package:TableReserver/themes/web_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:provider/provider.dart';
 
 class AddVenueModal extends StatefulWidget {
-  const AddVenueModal({super.key});
+  final AddVenueModel model;
+
+  const AddVenueModal({super.key, required this.model});
 
   @override
   State<AddVenueModal> createState() => _AddVenueModalState();
@@ -15,69 +16,62 @@ class AddVenueModal extends StatefulWidget {
 
 class _AddVenueModalState extends State<AddVenueModal>
     with TickerProviderStateMixin {
-  late AddVenueModel _model;
-
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
-    _model.onUpdate();
   }
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => AddVenueModel());
   }
 
   @override
   void dispose() {
-    _model.maybeDispose();
     super.dispose();
+  }
+
+  void createVenue(BuildContext context) {
+    if (widget.model.isFormValid()) {
+      widget.model.createVenue(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AddVenueModel>(
-      builder: (context, model, _) {
-        return SizedBox(
-          width: double.infinity,
-          height: double.infinity,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: double.infinity,
-                constraints: const BoxConstraints(
-                  maxWidth: 1000,
+    return SizedBox(
+      width: double.infinity,
+      height: double.infinity,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: double.infinity,
+            constraints: const BoxConstraints(
+              maxWidth: 1000,
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildTitle(context, 'Create a Venue'),
+                _buildBody(context),
+                buildButtons(
+                  context,
+                  () => createVenue(context),
+                  'Create Venue',
                 ),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    buildTitle(context, 'Create a Venue'),
-                    _buildBody(context),
-                    buildButtons(
-                      context,
-                      () {
-                        if (_model.isFormValid()) {
-                          _model.createVenue(context);
-                        }
-                      },
-                      'Create Venue',
-                    ),
-                  ].divide(const SizedBox(height: 16)),
-                ),
-              ).animateOnPageLoad(
-                  _model.animationsMap['containerOnPageLoadAnimation']!),
-            ],
-          ),
-        );
-      },
+              ].divide(const SizedBox(height: 16)),
+            ),
+          ).animateOnPageLoad(
+              widget.model.animationsMap['containerOnPageLoadAnimation']!),
+        ],
+      ),
     );
   }
 
@@ -94,16 +88,16 @@ class _AddVenueModalState extends State<AddVenueModal>
               _buildInputField(
                 context: context,
                 label: 'Venue Name *',
-                controller: _model.nameTextController,
-                focusNode: _model.nameFocusNode,
-                errorText: _model.nameErrorText,
+                controller: widget.model.nameTextController,
+                focusNode: widget.model.nameFocusNode,
+                errorText: widget.model.nameErrorText,
               ),
               _buildInputField(
                 context: context,
                 label: 'Venue Location (City, Street) *',
-                controller: _model.locationTextController,
-                focusNode: _model.locationFocusNode,
-                errorText: _model.locationErrorText,
+                controller: widget.model.locationTextController,
+                focusNode: widget.model.locationFocusNode,
+                errorText: widget.model.locationErrorText,
               )
             ].divide(const SizedBox(width: 32)),
           ),
@@ -113,9 +107,9 @@ class _AddVenueModalState extends State<AddVenueModal>
               _buildInputField(
                 context: context,
                 label: 'Maximum Capacity *',
-                controller: _model.maxCapacityTextController,
-                focusNode: _model.maxCapacityFocusNode,
-                errorText: _model.maxCapacityErrorText,
+                controller: widget.model.maxCapacityTextController,
+                focusNode: widget.model.maxCapacityFocusNode,
+                errorText: widget.model.maxCapacityErrorText,
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
@@ -136,8 +130,8 @@ class _AddVenueModalState extends State<AddVenueModal>
               _buildInputField(
                 context: context,
                 label: 'Venue Description',
-                controller: _model.descriptionTextController,
-                focusNode: _model.descriptionFocusNode,
+                controller: widget.model.descriptionTextController,
+                focusNode: widget.model.descriptionFocusNode,
                 keyboardType: TextInputType.text,
                 isMultiline: true,
               )
@@ -236,10 +230,12 @@ class _AddVenueModalState extends State<AddVenueModal>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         FlutterFlowDropDown<String>(
-          controller: _model.dropDownValueController,
-          options: _model.venueTypes,
-          optionLabels: _model.venueTypes.map((type) => '   $type').toList(),
-          onChanged: (val) => safeSetState(() => _model.dropDownValue = val),
+          controller: widget.model.dropDownValueController,
+          options: widget.model.venueTypes,
+          optionLabels:
+              widget.model.venueTypes.map((type) => '   $type').toList(),
+          onChanged: (val) =>
+              safeSetState(() => widget.model.dropDownValue = val),
           width: 470,
           height: 64,
           searchHintTextStyle: Theme.of(context).textTheme.bodyMedium,
@@ -254,7 +250,7 @@ class _AddVenueModalState extends State<AddVenueModal>
           ),
           fillColor: Theme.of(context).colorScheme.surface,
           elevation: 3,
-          borderColor: _model.dropDownErrorText != null
+          borderColor: widget.model.dropDownErrorText != null
               ? WebTheme.errorColor
               : Theme.of(context).colorScheme.onPrimary,
           borderWidth: 1,
@@ -265,11 +261,11 @@ class _AddVenueModalState extends State<AddVenueModal>
           isSearchable: true,
           isMultiSelect: false,
         ),
-        if (_model.dropDownErrorText != null)
+        if (widget.model.dropDownErrorText != null)
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 4),
             child: Text(
-              _model.dropDownErrorText!,
+              widget.model.dropDownErrorText!,
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium
@@ -284,8 +280,8 @@ class _AddVenueModalState extends State<AddVenueModal>
     return SizedBox(
       width: 470,
       child: TextFormField(
-        controller: _model.workingHoursTextController,
-        focusNode: _model.workingHoursFocusNode,
+        controller: widget.model.workingHoursTextController,
+        focusNode: widget.model.workingHoursFocusNode,
         readOnly: true,
         onTap: () async {
           TimeOfDay? startTime = await _buildTimePicker(context);
@@ -307,13 +303,18 @@ class _AddVenueModalState extends State<AddVenueModal>
           final String formattedStart = startTime.format(context);
           final String formattedEnd = endTime.format(context);
 
-          _model.workingHoursTextController.text =
+          widget.model.workingHoursTextController.text =
               '$formattedStart - $formattedEnd';
-          _model.workingHoursErrorText = null;
+          widget.model.workingHoursErrorText = null;
         },
         decoration: InputDecoration(
           labelText: 'Working Hours (hh:mm - HH:MM) *',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
+          errorText: widget.model.workingHoursErrorText,
+          errorStyle: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: WebTheme.errorColor),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.onPrimary,
@@ -327,6 +328,20 @@ class _AddVenueModalState extends State<AddVenueModal>
               width: 1,
             ),
             borderRadius: BorderRadius.circular(8),
+          ),
+          errorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: WebTheme.errorColor,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          focusedErrorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: WebTheme.infoColor,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -347,17 +362,17 @@ class _AddVenueModalState extends State<AddVenueModal>
         _buildImageButton(
           context,
           'Add heading image',
-          () => _model.addImages(ImageType.heading),
+          () => widget.model.addImages(ImageType.heading),
         ),
         _buildImageButton(
           context,
           'Add venue images',
-          () => _model.addImages(ImageType.venue),
+          () => widget.model.addImages(ImageType.venue),
         ),
         _buildImageButton(
           context,
           'Add menu images',
-          () => _model.addImages(ImageType.menu),
+          () => widget.model.addImages(ImageType.menu),
         ),
       ],
     );
