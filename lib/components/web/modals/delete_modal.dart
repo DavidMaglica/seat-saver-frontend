@@ -93,7 +93,7 @@ class _DeleteModalState extends State<DeleteModal>
       padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
       child: widget.modalType == DeleteModalType.venue
           ? Text(
-              'Are you sure you want to delete venue with Id${widget.venueId}?',
+              'Are you sure you want to delete venue with Id ${widget.venueId}?',
               style: Theme.of(context).textTheme.bodyLarge,
             )
           : Text(
