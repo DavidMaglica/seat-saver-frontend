@@ -1,23 +1,43 @@
-import 'package:TableReserver/api/account_api.dart';
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/pages/web/auth/sign_up_tab.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/main.dart';
+import 'package:table_reserver/pages/web/auth/sign_up_tab.dart';
 
 class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
   final AccountApi accountApi = AccountApi();
+
   final RegExp emailRegex = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
   );
 
-  final GoogleSignIn signIn = GoogleSignIn.instance;
+  late final StreamSubscription authSubscription;
 
   @override
-  void dispose() {}
+  void initState(BuildContext context) {
+    authListener();
+    googleSignIn.attemptLightweightAuthentication();
+  }
 
   @override
-  void initState(BuildContext context) {}
+  void dispose() {
+    authSubscription.cancel();
+  }
+
+  void authListener() {
+    authSubscription = googleSignIn.authenticationEvents.listen((event) {
+      if (event is GoogleSignInAuthenticationEventSignIn) {
+        final GoogleSignInAccount user = event.user;
+        signUp(user.displayName ?? user.email, user.email, user.id, user.id);
+      } else if (event is GoogleSignInException) {
+        debugPrint('Auth failed: $event');
+      }
+    });
+  }
 
   Future<BasicResponse<int>> signUp(
     String username,

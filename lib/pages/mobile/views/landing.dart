@@ -1,5 +1,5 @@
-import 'package:TableReserver/models/mobile/landing_model.dart';
-import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:table_reserver/models/mobile/landing_model.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';

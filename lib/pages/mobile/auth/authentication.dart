@@ -1,9 +1,9 @@
-import 'package:TableReserver/api/account_api.dart';
-import 'package:TableReserver/models/mobile/authentication_model.dart';
-import 'package:TableReserver/pages/mobile/auth/log_in_tab.dart';
-import 'package:TableReserver/pages/mobile/auth/sign_up_tab.dart';
-import 'package:TableReserver/themes/mobile_theme.dart';
-import 'package:TableReserver/utils/routes.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/models/mobile/authentication_model.dart';
+import 'package:table_reserver/pages/mobile/auth/log_in_tab.dart';
+import 'package:table_reserver/pages/mobile/auth/sign_up_tab.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

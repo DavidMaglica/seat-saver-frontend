@@ -1,6 +1,7 @@
-import 'package:TableReserver/api/account_api.dart';
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/pages/mobile/auth/log_in_tab.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/main.dart';
+import 'package:table_reserver/pages/mobile/auth/log_in_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
@@ -15,7 +16,9 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
   void dispose() {}
 
   @override
-  void initState(BuildContext context) {}
+  void initState(BuildContext context) {
+    googleSignIn.attemptLightweightAuthentication();
+  }
 
   Future<BasicResponse<int>> logIn(String userEmail, String password) async {
     if (userEmail.isEmpty || password.isEmpty) {

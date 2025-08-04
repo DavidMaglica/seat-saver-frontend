@@ -1,4 +1,4 @@
-import 'package:TableReserver/utils/routes.dart';
+import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/material.dart';
 
 class LandingModel extends ChangeNotifier {

@@ -1,9 +1,10 @@
-import 'package:TableReserver/api/account_api.dart';
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/pages/mobile/auth/sign_up_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/main.dart';
+import 'package:table_reserver/pages/mobile/auth/sign_up_tab.dart';
 
 class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
   final AccountApi accountApi = AccountApi();
@@ -17,7 +18,9 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
   void dispose() {}
 
   @override
-  void initState(BuildContext context) {}
+  void initState(BuildContext context) {
+    googleSignIn.attemptLightweightAuthentication();
+  }
 
   Future<BasicResponse<int>> signUp(
     String username,

@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:TableReserver/api/data/paged_response.dart';
-import 'package:TableReserver/api/data/venue.dart';
-import 'package:TableReserver/api/venue_api.dart';
-import 'package:TableReserver/utils/routes.dart';
-import 'package:TableReserver/utils/extensions.dart';
+import 'package:table_reserver/api/data/paged_response.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/api/venue_api.dart';
+import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 

@@ -1,8 +1,8 @@
-import 'package:TableReserver/models/web/authentication_model.dart';
-import 'package:TableReserver/pages/web/auth/log_in_tab.dart';
-import 'package:TableReserver/pages/web/auth/sign_up_tab.dart';
-import 'package:TableReserver/themes/web_theme.dart';
-import 'package:TableReserver/utils/utils.dart';
+import 'package:table_reserver/models/web/authentication_model.dart';
+import 'package:table_reserver/pages/web/auth/log_in_tab.dart';
+import 'package:table_reserver/pages/web/auth/sign_up_tab.dart';
+import 'package:table_reserver/themes/web_theme.dart';
+import 'package:table_reserver/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 

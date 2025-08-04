@@ -1,5 +1,5 @@
-import 'package:TableReserver/models/web/venue_page_model.dart';
-import 'package:TableReserver/themes/web_theme.dart';
+import 'package:table_reserver/models/web/venue_page_model.dart';
+import 'package:table_reserver/themes/web_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 

@@ -1,9 +1,9 @@
-import 'package:TableReserver/api/data/venue.dart';
-import 'package:TableReserver/models/web/side_nav_model.dart';
-import 'package:TableReserver/utils/animations.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/models/web/side_nav_model.dart';
+import 'package:table_reserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:TableReserver/pages/web/views/homepage.dart';
+import 'package:table_reserver/pages/web/views/homepage.dart';
 
 class HomepageModel extends FlutterFlowModel<WebHomepage> {
   late SideNavModel sideNavModel;

@@ -1,8 +1,8 @@
-import 'package:TableReserver/api/data/rating.dart';
-import 'package:TableReserver/api/data/venue.dart';
-import 'package:TableReserver/pages/web/views/venue_page.dart';
-import 'package:TableReserver/utils/animations.dart';
-import 'package:TableReserver/utils/file_picker/file_picker_interface.dart';
+import 'package:table_reserver/api/data/rating.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/pages/web/views/venue_page.dart';
+import 'package:table_reserver/utils/animations.dart';
+import 'package:table_reserver/utils/file_picker/file_picker_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 

@@ -1,4 +1,4 @@
-name: TableReserver
+name: table_reserver
 description: A new Flutter project.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -36,6 +36,7 @@ dependencies:
   percent_indicator: 4.2.2
   provider: 6.1.2
   rating_summary: 1.0.4
+  shared_preferences: 2.5.3
   smooth_page_indicator: 1.2.1
   url_launcher: 6.2.5
 

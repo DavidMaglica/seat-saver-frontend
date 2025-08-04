@@ -1,5 +1,5 @@
-import 'package:TableReserver/pages/web/auth/authentication.dart';
-import 'package:TableReserver/utils/animations.dart';
+import 'package:table_reserver/pages/web/auth/authentication.dart';
+import 'package:table_reserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 

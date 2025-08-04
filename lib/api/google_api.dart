@@ -3,7 +3,7 @@ import 'package:logger/logger.dart';
 
 final logger = Logger();
 final dio = Dio();
-const String apiKey = String.fromEnvironment('GOOGLE_API_KEY',);
+const String apiKey = String.fromEnvironment('GOOGLE_API_KEY');
 
 class GoogleApi {
   Future<String?> getPlaceId(String city) async {
@@ -18,10 +18,7 @@ class GoogleApi {
       Response response = await dio.post(
         url,
         options: Options(headers: headers),
-        data: {
-          'textQuery': city,
-          'includedType': 'locality',
-        },
+        data: {'textQuery': city, 'includedType': 'locality'},
       );
 
       if (response.data == null ||
@@ -87,10 +84,7 @@ class GoogleApi {
     try {
       final response = await dio.get(
         url,
-        options: Options(
-          headers: headers,
-          responseType: ResponseType.json,
-        ),
+        options: Options(headers: headers, responseType: ResponseType.json),
       );
 
       if (response.data == null ||

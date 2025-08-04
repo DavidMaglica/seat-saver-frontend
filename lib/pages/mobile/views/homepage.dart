@@ -1,17 +1,17 @@
-import 'package:TableReserver/api/data/venue.dart';
-import 'package:TableReserver/components/mobile/carousel_item.dart';
-import 'package:TableReserver/components/mobile/homepage_venue_card.dart';
-import 'package:TableReserver/components/mobile/navbar.dart';
-import 'package:TableReserver/components/mobile/suggested_venue_card.dart';
-import 'package:TableReserver/models/mobile/homepage_model.dart';
-import 'package:TableReserver/themes/mobile_theme.dart';
-import 'package:TableReserver/utils/routing_utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/components/mobile/carousel_item.dart';
+import 'package:table_reserver/components/mobile/homepage_venue_card.dart';
+import 'package:table_reserver/components/mobile/navbar.dart';
+import 'package:table_reserver/components/mobile/suggested_venue_card.dart';
+import 'package:table_reserver/models/mobile/homepage_model.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/routing_utils.dart';
 
 class Homepage extends StatelessWidget {
   final int? userId;
@@ -22,92 +22,98 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (_) => HomepageModel(
-              context: context,
-              userId: userId,
-              userLocation: userLocation,
-            )..init(),
-        child: Consumer<HomepageModel>(
-          builder: (context, model, _) {
-            var brightness = Theme.of(context).brightness;
-            return GestureDetector(
-              onTap: () => model.unfocusNode.canRequestFocus
-                  ? FocusScope.of(context).requestFocus(model.unfocusNode)
-                  : FocusScope.of(context).unfocus(),
-              child: WillPopScope(
-                  onWillPop: () async => false,
-                  child: AnnotatedRegion<SystemUiOverlayStyle>(
-                      value: brightness == Brightness.dark
-                          ? SystemUiOverlayStyle.light
-                          : SystemUiOverlayStyle.dark,
-                      child: Scaffold(
-                          key: model.scaffoldKey,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.surface,
-                          body: SafeArea(
-                            child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  0, 16, 0, 0),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    _buildHeader(context, model),
-                                    _buildCarouselComponent(model),
-                                    _buildVenues(
-                                      context,
-                                      'Nearby Venues',
-                                      model.openNearbyVenues,
-                                      model.nearbyVenues ?? [],
-                                    ),
-                                    _buildVenues(
-                                      context,
-                                      'New Venues',
-                                      model.openNewVenues,
-                                      model.newVenues ?? [],
-                                    ),
-                                    _buildVenues(
-                                      context,
-                                      'Trending Venues',
-                                      model.openTrendingVenues,
-                                      model.trendingVenues ?? [],
-                                    ),
-                                    if (model.suggestedVenues != null &&
-                                        model.suggestedVenues!.isNotEmpty)
-                                      _buildSuggestedVenues(
-                                        context,
-                                        model.openSuggestedVenues,
-                                        model.suggestedVenues!,
-                                      )
-                                    else
-                                      const SizedBox.shrink(),
-                                    const SizedBox(height: 24),
-                                  ],
-                                ),
-                              ),
+      create: (_) => HomepageModel(
+        context: context,
+        userId: userId,
+        userLocation: userLocation,
+      )..init(),
+      child: Consumer<HomepageModel>(
+        builder: (context, model, _) {
+          var brightness = Theme.of(context).brightness;
+          return GestureDetector(
+            onTap: () => model.unfocusNode.canRequestFocus
+                ? FocusScope.of(context).requestFocus(model.unfocusNode)
+                : FocusScope.of(context).unfocus(),
+            child: PopScope(
+              child: AnnotatedRegion<SystemUiOverlayStyle>(
+                value: brightness == Brightness.dark
+                    ? SystemUiOverlayStyle.light
+                    : SystemUiOverlayStyle.dark,
+                child: Scaffold(
+                  key: model.scaffoldKey,
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  body: SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                        0,
+                        16,
+                        0,
+                        0,
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            _buildHeader(context, model),
+                            _buildCarouselComponent(model),
+                            _buildVenues(
+                              context,
+                              'Nearby Venues',
+                              model.openNearbyVenues,
+                              model.nearbyVenues ?? [],
                             ),
-                          ),
-                          bottomNavigationBar: NavBar(
-                            currentIndex: model.pageIndex,
-                            onTap: (index, context) => onNavbarItemTapped(
+                            _buildVenues(
+                              context,
+                              'New Venues',
+                              model.openNewVenues,
+                              model.newVenues ?? [],
+                            ),
+                            _buildVenues(
+                              context,
+                              'Trending Venues',
+                              model.openTrendingVenues,
+                              model.trendingVenues ?? [],
+                            ),
+                            if (model.suggestedVenues != null &&
+                                model.suggestedVenues!.isNotEmpty)
+                              _buildSuggestedVenues(
                                 context,
-                                model.pageIndex,
-                                index,
-                                userId,
-                                model.currentUserLocation ?? userLocation),
-                          )))),
-            );
-          },
-        ));
+                                model.openSuggestedVenues,
+                                model.suggestedVenues!,
+                              )
+                            else
+                              const SizedBox.shrink(),
+                            const SizedBox(height: 24),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  bottomNavigationBar: NavBar(
+                    currentIndex: model.pageIndex,
+                    onTap: (index, context) => onNavbarItemTapped(
+                      context,
+                      model.pageIndex,
+                      index,
+                      userId,
+                      model.currentUserLocation ?? userLocation,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
-
 
   Widget _buildCarouselComponent(HomepageModel model) {
     if (model.nearbyCities.isEmpty) {
       return const SizedBox.shrink();
     } else {
       if (model.cityImages.isEmpty) {
-        /// Loading city image is currently commented out as it queries Google Places API which is not free after x queries.
+        /// Loading city image is currently commented out as it queries Google Places API which is not free.
         // model.loadCarouselData(model.nearbyCities);
       }
     }
@@ -125,12 +131,10 @@ class Homepage extends StatelessWidget {
                 items: model.nearbyCities
                     .mapIndexed(
                       (index, city) => Padding(
-                        padding:
-                            const EdgeInsetsDirectional.symmetric(vertical: 12),
-                        child: CarouselItem(
-                          city,
-                          model.cityImages[city],
+                        padding: const EdgeInsetsDirectional.symmetric(
+                          vertical: 12,
                         ),
+                        child: CarouselItem(city, model.cityImages[city]),
                       ),
                     )
                     .toList(),
@@ -166,28 +170,32 @@ class Homepage extends StatelessWidget {
     List<Venue> venues,
   ) {
     return Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-        child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                  child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildTitle(ctx, title),
-                        _buildSeeAllButton(ctx, seeAllFunction),
-                      ],
-                    ),
-                    _buildVenueCards(venues),
-                  ]))
-            ]));
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTitle(ctx, title),
+                    _buildSeeAllButton(ctx, seeAllFunction),
+                  ],
+                ),
+                _buildVenueCards(venues),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildSuggestedVenues(
@@ -222,7 +230,7 @@ class Homepage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildTitle(ctx, 'We suggest'),
-                        _buildSeeAllButton(ctx, seeAllFunction)
+                        _buildSeeAllButton(ctx, seeAllFunction),
                       ],
                     ),
                     _buildVenueSuggestedCards(venues),
@@ -238,45 +246,49 @@ class Homepage extends StatelessWidget {
 
   Widget _buildVenueCards(List<Venue> venues) {
     return Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(4, 12, 0, 0),
-        child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: venues.map((venue) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    child: VenueCard(
-                      venue: venue,
-                      userId: userId,
-                      userLocation: userLocation,
-                      venueIndex: venue.id,
-                    ),
-                  );
-                }).toList())));
+      padding: const EdgeInsetsDirectional.fromSTEB(4, 12, 0, 0),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: venues.map((venue) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              child: VenueCard(
+                venue: venue,
+                userId: userId,
+                userLocation: userLocation,
+                venueIndex: venue.id,
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
   }
 
   Widget _buildVenueSuggestedCards(List<Venue> venues) {
     return Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(4, 12, 0, 0),
-        child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: venues.map((venue) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    child: VenueSuggestedCard(
-                      venue: venue,
-                      userId: userId,
-                      userLocation: userLocation,
-                    ),
-                  );
-                }).toList())));
+      padding: const EdgeInsetsDirectional.fromSTEB(4, 12, 0, 0),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: venues.map((venue) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              child: VenueSuggestedCard(
+                venue: venue,
+                userId: userId,
+                userLocation: userLocation,
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
   }
 
   Widget _buildTitle(BuildContext ctx, String title) {
@@ -284,63 +296,64 @@ class Homepage extends StatelessWidget {
       padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
       child: Text(
         title,
-        style: Theme.of(ctx)
-            .textTheme
-            .titleMedium
-            ?.copyWith(color: Theme.of(ctx).colorScheme.onPrimary),
+        style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
+          color: Theme.of(ctx).colorScheme.onPrimary,
+        ),
       ),
     );
   }
 
   Widget _buildSeeAllButton(BuildContext ctx, Function() onPressed) {
     return Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-        child: FFButtonWidget(
-            showLoadingIndicator: true,
-            onPressed: onPressed,
-            text: 'See all',
-            options: FFButtonOptions(
-              width: 80,
-              height: 24,
-              color: Theme.of(ctx).colorScheme.onSurface,
-              textStyle: const TextStyle(
-                color: MobileTheme.accent1,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-              elevation: 1,
-              borderSide: const BorderSide(
-                color: MobileTheme.accent1,
-                width: 1,
-              ),
-              borderRadius: BorderRadius.circular(8),
-            )));
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+      child: FFButtonWidget(
+        showLoadingIndicator: true,
+        onPressed: onPressed,
+        text: 'See all',
+        options: FFButtonOptions(
+          width: 80,
+          height: 24,
+          color: Theme.of(ctx).colorScheme.onSurface,
+          textStyle: const TextStyle(
+            color: MobileTheme.accent1,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+          elevation: 1,
+          borderSide: const BorderSide(color: MobileTheme.accent1, width: 1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
   }
 
   Widget _buildHeader(BuildContext ctx, HomepageModel model) {
     return Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Expanded(
-              child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
-                  child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                          child: Text(
-                            model.loggedInUser != null
-                                ? 'Welcome, ${model.loggedInUser!.username}'
-                                : 'Welcome',
-                            style: Theme.of(ctx).textTheme.titleLarge,
-                          ),
-                        ),
-                      ])))
-        ]);
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                  child: Text(
+                    model.loggedInUser != null
+                        ? 'Welcome, ${model.loggedInUser!.username}'
+                        : 'Welcome',
+                    style: Theme.of(ctx).textTheme.titleLarge,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

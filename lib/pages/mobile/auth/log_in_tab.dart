@@ -1,19 +1,20 @@
-import 'package:TableReserver/api/account_api.dart';
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/api/data/user.dart';
-import 'package:TableReserver/api/data/user_response.dart';
-import 'package:TableReserver/components/common/toaster.dart';
-import 'package:TableReserver/models/mobile/authentication_model.dart';
-import 'package:TableReserver/models/mobile/login_tab_model.dart';
-import 'package:TableReserver/themes/mobile_theme.dart';
-import 'package:TableReserver/utils/routes.dart';
-import 'package:TableReserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/api/data/user.dart';
+import 'package:table_reserver/api/data/user_response.dart';
+import 'package:table_reserver/components/common/toaster.dart';
+import 'package:table_reserver/main.dart';
+import 'package:table_reserver/models/mobile/authentication_model.dart';
+import 'package:table_reserver/models/mobile/login_tab_model.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/utils.dart';
 
 class LogInTab extends StatefulWidget {
   final AuthenticationModel model;
@@ -257,8 +258,7 @@ class _LogInTabState extends State<LogInTab> {
       child: FFButtonWidget(
         onPressed: () async {
           try {
-            GoogleSignInAccount account = await GoogleSignIn.instance
-                .authenticate();
+            GoogleSignInAccount account = await googleSignIn.authenticate();
             _performLogIn(account.email, account.id);
           } catch (e) {
             if (!mounted) return;

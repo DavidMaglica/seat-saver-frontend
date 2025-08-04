@@ -1,6 +1,6 @@
-import 'package:TableReserver/components/common/toaster.dart';
-import 'package:TableReserver/themes/mobile_theme.dart';
-import 'package:TableReserver/utils/utils.dart';
+import 'package:table_reserver/components/common/toaster.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class CarouselItem extends StatelessWidget {

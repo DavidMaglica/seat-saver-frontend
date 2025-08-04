@@ -1,9 +1,9 @@
-import 'package:TableReserver/models/web/landing_model.dart';
-import 'package:TableReserver/pages/web/auth/authentication.dart';
-import 'package:TableReserver/themes/web_theme.dart';
-import 'package:TableReserver/utils/fade_in_route.dart';
-import 'package:TableReserver/utils/routes.dart';
-import 'package:TableReserver/utils/utils.dart';
+import 'package:table_reserver/models/web/landing_model.dart';
+import 'package:table_reserver/pages/web/auth/authentication.dart';
+import 'package:table_reserver/themes/web_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 

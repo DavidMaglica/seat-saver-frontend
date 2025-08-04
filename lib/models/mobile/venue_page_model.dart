@@ -1,12 +1,12 @@
 import 'dart:typed_data';
 
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/api/data/venue.dart';
-import 'package:TableReserver/api/reservation_api.dart';
-import 'package:TableReserver/api/venue_api.dart';
-import 'package:TableReserver/components/common/toaster.dart';
-import 'package:TableReserver/themes/mobile_theme.dart';
-import 'package:TableReserver/utils/routes.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/api/reservation_api.dart';
+import 'package:table_reserver/api/venue_api.dart';
+import 'package:table_reserver/components/common/toaster.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/routes.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';

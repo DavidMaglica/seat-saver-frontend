@@ -1,5 +1,5 @@
-import 'package:TableReserver/components/web/modals/create_reservation_modal.dart';
-import 'package:TableReserver/utils/animations.dart';
+import 'package:table_reserver/components/web/modals/create_reservation_modal.dart';
+import 'package:table_reserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 

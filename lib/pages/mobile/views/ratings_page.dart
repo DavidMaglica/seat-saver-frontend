@@ -1,8 +1,8 @@
-import 'package:TableReserver/components/mobile/custom_appbar.dart';
-import 'package:TableReserver/components/mobile/modal_widgets.dart';
-import 'package:TableReserver/components/common/toaster.dart';
-import 'package:TableReserver/models/mobile/ratings_model.dart';
-import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:table_reserver/components/mobile/custom_appbar.dart';
+import 'package:table_reserver/components/mobile/modal_widgets.dart';
+import 'package:table_reserver/components/common/toaster.dart';
+import 'package:table_reserver/models/mobile/ratings_model.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';

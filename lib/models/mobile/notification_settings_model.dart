@@ -1,9 +1,9 @@
-import 'package:TableReserver/api/account_api.dart';
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/api/data/notification_settings.dart';
-import 'package:TableReserver/themes/mobile_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/api/data/notification_settings.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
 
 class NotificationSettingsModel extends ChangeNotifier {
   final BuildContext context;
@@ -24,15 +24,10 @@ class NotificationSettingsModel extends ChangeNotifier {
     this.userLocation,
   });
 
-  @override
-  void dispose() {
-    scaffoldKey.currentState?.dispose();
-    super.dispose();
-  }
-
   Future<void> loadNotificationSettings() async {
-    NotificationOptions? response =
-        await accountApi.getNotificationOptions(userId);
+    NotificationOptions? response = await accountApi.getNotificationOptions(
+      userId,
+    );
 
     if (response != null) {
       isActivePushNotifications = response.pushNotificationsTurnedOn;
@@ -72,8 +67,9 @@ class NotificationSettingsModel extends ChangeNotifier {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(response.message),
-        backgroundColor:
-            response.success ? MobileTheme.successColor : MobileTheme.errorColor,
+        backgroundColor: response.success
+            ? MobileTheme.successColor
+            : MobileTheme.errorColor,
       ),
     );
   }

@@ -1,10 +1,10 @@
-import 'package:TableReserver/pages/web/views/landing.dart';
-import 'package:TableReserver/utils/fade_in_route.dart';
-import 'package:TableReserver/utils/routes.dart';
+import 'package:table_reserver/pages/web/views/landing.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:TableReserver/models/web/side_nav_model.dart';
-import 'package:TableReserver/pages/web/views/account.dart';
-import 'package:TableReserver/utils/animations.dart';
+import 'package:table_reserver/models/web/side_nav_model.dart';
+import 'package:table_reserver/pages/web/views/account.dart';
+import 'package:table_reserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 
 class AccountModel extends FlutterFlowModel<WebAccount> {

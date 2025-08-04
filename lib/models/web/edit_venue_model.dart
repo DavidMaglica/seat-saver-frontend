@@ -1,6 +1,6 @@
-import 'package:TableReserver/api/data/venue.dart';
-import 'package:TableReserver/components/web/modals/edit_venue_modal.dart';
-import 'package:TableReserver/utils/animations.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/components/web/modals/edit_venue_modal.dart';
+import 'package:table_reserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 

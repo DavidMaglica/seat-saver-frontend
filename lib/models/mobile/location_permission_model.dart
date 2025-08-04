@@ -1,8 +1,8 @@
-import 'package:TableReserver/api/account_api.dart';
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/api/data/notification_settings.dart';
-import 'package:TableReserver/components/common/toaster.dart';
-import 'package:TableReserver/utils/routes.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/api/data/notification_settings.dart';
+import 'package:table_reserver/components/common/toaster.dart';
+import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';

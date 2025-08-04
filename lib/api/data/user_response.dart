@@ -1,4 +1,4 @@
-import 'package:TableReserver/api/data/user.dart';
+import 'package:table_reserver/api/data/user.dart';
 
 class UserResponse {
   bool success;

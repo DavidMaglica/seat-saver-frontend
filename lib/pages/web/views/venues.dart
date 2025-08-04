@@ -1,8 +1,8 @@
-import 'package:TableReserver/components/web/side_nav.dart';
-import 'package:TableReserver/models/web/venues_model.dart';
-import 'package:TableReserver/pages/web/views/venue_page.dart';
-import 'package:TableReserver/utils/fade_in_route.dart';
-import 'package:TableReserver/utils/routes.dart';
+import 'package:table_reserver/components/web/side_nav.dart';
+import 'package:table_reserver/models/web/venues_model.dart';
+import 'package:table_reserver/pages/web/views/venue_page.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 

@@ -1,15 +1,16 @@
-import 'package:TableReserver/api/account_api.dart';
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/components/common/toaster.dart';
-import 'package:TableReserver/models/mobile/authentication_model.dart';
-import 'package:TableReserver/models/mobile/signup_tab_model.dart';
-import 'package:TableReserver/themes/mobile_theme.dart';
-import 'package:TableReserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/components/common/toaster.dart';
+import 'package:table_reserver/main.dart';
+import 'package:table_reserver/models/mobile/authentication_model.dart';
+import 'package:table_reserver/models/mobile/signup_tab_model.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/routes.dart';
 
 class SignUpTab extends StatefulWidget {
   final AuthenticationModel model;
@@ -393,8 +394,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
         child: FFButtonWidget(
           onPressed: () async {
             try {
-              GoogleSignInAccount account = await GoogleSignIn.instance
-                  .authenticate();
+              GoogleSignInAccount account = await googleSignIn.authenticate();
               _performSignUp(
                 account.email,
                 account.displayName ?? account.email,

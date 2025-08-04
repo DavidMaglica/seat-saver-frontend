@@ -1,10 +1,10 @@
-import 'package:TableReserver/components/mobile/action_button.dart';
-import 'package:TableReserver/components/mobile/custom_appbar.dart';
-import 'package:TableReserver/components/mobile/modal_widgets.dart';
-import 'package:TableReserver/components/mobile/support_banner.dart';
-import 'package:TableReserver/models/mobile/support_model.dart';
-import 'package:TableReserver/themes/mobile_theme.dart';
-import 'package:TableReserver/utils/routes.dart';
+import 'package:table_reserver/components/mobile/action_button.dart';
+import 'package:table_reserver/components/mobile/custom_appbar.dart';
+import 'package:table_reserver/components/mobile/modal_widgets.dart';
+import 'package:table_reserver/components/mobile/support_banner.dart';
+import 'package:table_reserver/models/mobile/support_model.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:TableReserver/utils/routes.dart';
+import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 

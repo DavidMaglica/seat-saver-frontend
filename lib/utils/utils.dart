@@ -1,5 +1,5 @@
-import 'package:TableReserver/themes/mobile_theme.dart';
-import 'package:TableReserver/themes/web_theme.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/themes/web_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 

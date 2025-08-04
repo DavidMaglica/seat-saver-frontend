@@ -1,19 +1,18 @@
-import 'package:TableReserver/api/account_api.dart';
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/api/data/user.dart';
-import 'package:TableReserver/api/data/user_response.dart';
-import 'package:TableReserver/components/common/toaster.dart';
-import 'package:TableReserver/models/web/authentication_model.dart';
-import 'package:TableReserver/models/web/log_in_tab_model.dart';
-import 'package:TableReserver/pages/web/views/homepage.dart';
-import 'package:TableReserver/themes/web_theme.dart';
-import 'package:TableReserver/utils/fade_in_route.dart';
-import 'package:TableReserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in_web/web_only.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/api/data/user.dart';
+import 'package:table_reserver/api/data/user_response.dart';
+import 'package:table_reserver/components/common/toaster.dart';
+import 'package:table_reserver/models/web/authentication_model.dart';
+import 'package:table_reserver/models/web/log_in_tab_model.dart';
+import 'package:table_reserver/pages/web/views/homepage.dart';
+import 'package:table_reserver/themes/web_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 
 class LogInTab extends StatefulWidget {
   final AuthenticationModel model;
@@ -47,9 +46,11 @@ class _LogInTabState extends State<LogInTab> {
 
       UserResponse? userResponse = await accountApi.getUser(userId);
 
-      User user = userResponse!.user!;
+      if (userResponse != null && userResponse.success) {
+        User user = userResponse.user!;
 
-      _goToHomepage(user.id);
+        _goToHomepage(user.id);
+      }
     } else {
       if (!mounted) return;
       Toaster.displayError(context, response.message);
@@ -223,30 +224,12 @@ class _LogInTabState extends State<LogInTab> {
   Widget _buildGoogleButton(BuildContext context) {
     return Align(
       alignment: const AlignmentDirectional(0, 0),
-      child: FFButtonWidget(
-        onPressed: () async {
-          try {
-            GoogleSignInAccount account = await GoogleSignIn.instance
-                .authenticate();
-            _performLogIn(account.email, account.id);
-          } catch (e) {
-            if (!context.mounted) return;
-            Toaster.displayError(context, 'Google sign-in failed: $e');
-          }
-        },
-        text: 'Continue with Google',
-        icon: const Icon(FontAwesomeIcons.google, size: 20),
-        options: FFButtonOptions(
-          width: 230,
-          height: 52,
-          color: WebTheme.infoColor,
-          textStyle: TextStyle(
-            color: Theme.of(context).colorScheme.surface,
-            fontSize: 18,
-            fontFamily: 'Oswald',
-          ),
-          elevation: 3,
-          borderRadius: BorderRadius.circular(8),
+      child: renderButton(
+        configuration: GSIButtonConfiguration(
+          type: GSIButtonType.icon,
+          theme: GSIButtonTheme.outline,
+          size: GSIButtonSize.large,
+          shape: GSIButtonShape.pill,
         ),
       ),
     );
