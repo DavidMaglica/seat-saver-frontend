@@ -228,7 +228,6 @@ class _LogInTabState extends State<LogInTab> {
         configuration: GSIButtonConfiguration(
           type: GSIButtonType.icon,
           theme: GSIButtonTheme.outline,
-          size: GSIButtonSize.large,
           shape: GSIButtonShape.pill,
         ),
       ),

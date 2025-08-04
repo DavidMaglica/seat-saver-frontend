@@ -1,7 +1,7 @@
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/themes/web_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/themes/web_theme.dart';
 
 Color calculateAvailabilityColour(int maximumCapacity, int availableCapacity) {
   final ratio = maximumCapacity > 0 ? availableCapacity / maximumCapacity : 0.0;
@@ -9,8 +9,8 @@ Color calculateAvailabilityColour(int maximumCapacity, int availableCapacity) {
   return ratio >= 0.4
       ? MobileTheme.successColor
       : ratio >= 0.1
-          ? MobileTheme.warningColor
-          : Colors.red;
+      ? MobileTheme.warningColor
+      : Colors.red;
 }
 
 Position? getPositionFromLatAndLong(
@@ -68,7 +68,7 @@ BoxDecoration webBackgroundGradient(BuildContext context) {
       colors: [
         WebTheme.successColor,
         WebTheme.accent1,
-        Theme.of(context).colorScheme.surface
+        Theme.of(context).colorScheme.surface,
       ],
       stops: const [0, 0.5, 1],
       begin: const AlignmentDirectional(-1, -1),
@@ -81,10 +81,11 @@ BoxDecoration webBackgroundAuxiliaryGradient(BuildContext context) {
   return BoxDecoration(
     gradient: LinearGradient(
       colors: [
-        const Color(0x00FFFFFF),
+        WebTheme.transparentColour,
+        Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
         Theme.of(context).colorScheme.surface,
       ],
-      stops: const [0, 1],
+      stops: const [0, 0.8, 1],
       begin: const AlignmentDirectional(0, -1),
       end: const AlignmentDirectional(0, 1),
     ),

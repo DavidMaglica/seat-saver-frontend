@@ -5,8 +5,12 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/components/common/toaster.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/pages/web/auth/sign_up_tab.dart';
+import 'package:table_reserver/pages/web/views/homepage.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 
 class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
   final AccountApi accountApi = AccountApi();
@@ -19,7 +23,7 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
 
   @override
   void initState(BuildContext context) {
-    authListener();
+    authListener(context);
     googleSignIn.attemptLightweightAuthentication();
   }
 
@@ -28,15 +32,37 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
     authSubscription.cancel();
   }
 
-  void authListener() {
-    authSubscription = googleSignIn.authenticationEvents.listen((event) {
+  void authListener(BuildContext context) {
+    authSubscription = googleSignIn.authenticationEvents.listen((event) async {
       if (event is GoogleSignInAuthenticationEventSignIn) {
         final GoogleSignInAccount user = event.user;
-        signUp(user.displayName ?? user.email, user.email, user.id, user.id);
+        if (!context.mounted) return;
+        await _performSignUp(context, user);
       } else if (event is GoogleSignInException) {
         debugPrint('Auth failed: $event');
       }
     });
+  }
+
+  Future<void> _performSignUp(
+    BuildContext context,
+    GoogleSignInAccount user,
+  ) async {
+    final BasicResponse<int> response = await signUp(
+      user.email,
+      user.displayName ?? user.email,
+      user.id,
+      user.id,
+    );
+    if (response.success && response.data != null) {
+      if (!context.mounted) return;
+      Navigator.of(context).push(
+        FadeInRoute(routeName: Routes.webHomepage, page: const WebHomepage()),
+      );
+    } else {
+      if (!context.mounted) return;
+      Toaster.displayError(context, response.message);
+    }
   }
 
   Future<BasicResponse<int>> signUp(

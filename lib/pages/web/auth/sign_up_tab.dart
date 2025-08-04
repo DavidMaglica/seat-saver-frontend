@@ -302,7 +302,6 @@ class _SignUpTabState extends State<SignUpTab> {
         configuration: GSIButtonConfiguration(
           type: GSIButtonType.icon,
           theme: GSIButtonTheme.outline,
-          size: GSIButtonSize.large,
           shape: GSIButtonShape.pill,
         ),
       ),
