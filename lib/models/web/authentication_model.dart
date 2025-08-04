@@ -16,6 +16,9 @@ class AuthenticationModel extends FlutterFlowModel<WebAuthentication> {
   TextEditingController emailAddressCreateTextController =
       TextEditingController();
 
+  FocusNode usernameCreateFocusNode = FocusNode();
+  TextEditingController usernameCreateTextController = TextEditingController();
+
   FocusNode passwordCreateFocusNode = FocusNode();
   TextEditingController passwordCreateTextController = TextEditingController();
   bool passwordCreateVisibility = false;
@@ -41,8 +44,12 @@ class AuthenticationModel extends FlutterFlowModel<WebAuthentication> {
   @override
   void dispose() {
     tabBarController?.dispose();
+
     emailAddressCreateFocusNode.dispose();
     emailAddressCreateTextController.dispose();
+
+    usernameCreateFocusNode.dispose();
+    usernameCreateTextController.dispose();
 
     passwordCreateFocusNode.dispose();
     passwordCreateTextController.dispose();

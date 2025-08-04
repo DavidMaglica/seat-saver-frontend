@@ -1,6 +1,6 @@
 import 'package:TableReserver/api/account_api.dart';
 import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/pages/mobile/auth/sign_up_tab.dart';
+import 'package:TableReserver/pages/web/auth/sign_up_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -47,6 +47,6 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
       return BasicResponse(success: false, message: 'Passwords do not match');
     }
 
-    return await accountApi.signUp(email, username, password, false);
+    return await accountApi.signUp(email, username, password, true);
   }
 }

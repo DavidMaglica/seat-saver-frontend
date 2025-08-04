@@ -31,6 +31,7 @@ class Toaster {
     ScaffoldMessenger.of(ctx).showSnackBar(
       SnackBar(
         content: Text(text),
+        elevation: 3,
         backgroundColor: colour,
         duration: const Duration(seconds: 2),
       ),
