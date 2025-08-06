@@ -52,6 +52,10 @@ void initializeGoogleSignIn() {
   iosGoogleClientId = const String.fromEnvironment('IOS_GOOGLE_CLIENT_ID');
   webGoogleClientId = const String.fromEnvironment('WEB_GOOGLE_CLIENT_ID');
 
+  if (iosGoogleClientId.isEmpty || webGoogleClientId.isEmpty) {
+    throw Exception('Missing required environment variable. Google client Ids must be provided for both iOS and Web.');
+  }
+
   googleSignIn = GoogleSignIn.instance;
   googleSignIn.initialize(
     clientId: kIsWeb ? webGoogleClientId : iosGoogleClientId,

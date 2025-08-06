@@ -87,7 +87,6 @@ class _SignUpTabState extends State<SignUpTab> {
                   const SizedBox(height: 16),
                   _buildText(context),
                   const SizedBox(height: 16),
-                  // _buildGoogleButton(context),
                   _buildGoogleButton(context),
                 ],
               ),
