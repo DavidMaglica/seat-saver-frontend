@@ -1,7 +1,7 @@
-import 'package:TableReserver/api/api_routes.dart';
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/api/data/reservation_details.dart';
-import 'package:TableReserver/api/dio_setup.dart';
+import 'package:table_reserver/api/api_routes.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/api/data/reservation_details.dart';
+import 'package:table_reserver/api/dio_setup.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 

@@ -1,4 +1,4 @@
-import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

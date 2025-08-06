@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:TableReserver/components/common/full_image_view.dart';
-import 'package:TableReserver/themes/mobile_theme.dart';
+import 'package:table_reserver/components/common/full_image_view.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 

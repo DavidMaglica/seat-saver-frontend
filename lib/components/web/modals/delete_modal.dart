@@ -1,5 +1,5 @@
-import 'package:TableReserver/components/web/modals/modal_widgets.dart';
-import 'package:TableReserver/models/web/delete_venue_model.dart';
+import 'package:table_reserver/components/web/modals/modal_widgets.dart';
+import 'package:table_reserver/models/web/delete_venue_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 

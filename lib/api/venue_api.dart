@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:TableReserver/api/api_routes.dart';
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/api/data/paged_response.dart';
-import 'package:TableReserver/api/data/rating.dart';
-import 'package:TableReserver/api/data/venue.dart';
-import 'package:TableReserver/api/data/venue_type.dart';
-import 'package:TableReserver/api/dio_setup.dart';
+import 'package:table_reserver/api/api_routes.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/api/data/paged_response.dart';
+import 'package:table_reserver/api/data/rating.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/api/data/venue_type.dart';
+import 'package:table_reserver/api/dio_setup.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 

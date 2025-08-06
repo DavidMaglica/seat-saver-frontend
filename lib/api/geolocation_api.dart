@@ -1,6 +1,6 @@
-import 'package:TableReserver/api/api_routes.dart';
-import 'package:TableReserver/api/data/user_location.dart';
-import 'package:TableReserver/api/dio_setup.dart';
+import 'package:table_reserver/api/api_routes.dart';
+import 'package:table_reserver/api/data/user_location.dart';
+import 'package:table_reserver/api/dio_setup.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 

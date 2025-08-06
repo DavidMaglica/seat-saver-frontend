@@ -1,8 +1,8 @@
-import 'package:TableReserver/components/web/modals/create_venue_modal.dart';
-import 'package:TableReserver/utils/animations.dart';
+import 'package:table_reserver/components/web/modals/create_venue_modal.dart';
+import 'package:table_reserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:TableReserver/utils/file_picker/file_picker_interface.dart';
+import 'package:table_reserver/utils/file_picker/file_picker_interface.dart';
 
 enum ImageType { heading, venue, menu }
 

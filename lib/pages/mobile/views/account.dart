@@ -1,9 +1,9 @@
-import 'package:TableReserver/api/data/user.dart';
-import 'package:TableReserver/components/mobile/navbar.dart';
-import 'package:TableReserver/models/mobile/account_model.dart';
-import 'package:TableReserver/themes/mobile_theme.dart';
-import 'package:TableReserver/utils/routes.dart';
-import 'package:TableReserver/utils/routing_utils.dart';
+import 'package:table_reserver/api/data/user.dart';
+import 'package:table_reserver/components/mobile/navbar.dart';
+import 'package:table_reserver/models/mobile/account_model.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/routing_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

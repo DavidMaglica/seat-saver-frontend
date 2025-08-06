@@ -1,10 +1,10 @@
-import 'package:TableReserver/models/web/side_nav_model.dart';
-import 'package:TableReserver/pages/web/views/account.dart';
-import 'package:TableReserver/pages/web/views/homepage.dart';
-import 'package:TableReserver/pages/web/views/reservations.dart';
-import 'package:TableReserver/pages/web/views/venues.dart';
-import 'package:TableReserver/themes/web_theme.dart';
-import 'package:TableReserver/utils/routes.dart';
+import 'package:table_reserver/models/web/side_nav_model.dart';
+import 'package:table_reserver/pages/web/views/account.dart';
+import 'package:table_reserver/pages/web/views/homepage.dart';
+import 'package:table_reserver/pages/web/views/reservations.dart';
+import 'package:table_reserver/pages/web/views/venues.dart';
+import 'package:table_reserver/themes/web_theme.dart';
+import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';

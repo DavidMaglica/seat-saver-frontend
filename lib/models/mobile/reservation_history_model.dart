@@ -1,7 +1,7 @@
-import 'package:TableReserver/api/data/reservation_details.dart';
-import 'package:TableReserver/api/reservation_api.dart';
-import 'package:TableReserver/api/venue_api.dart';
-import 'package:TableReserver/components/common/toaster.dart';
+import 'package:table_reserver/api/data/reservation_details.dart';
+import 'package:table_reserver/api/reservation_api.dart';
+import 'package:table_reserver/api/venue_api.dart';
+import 'package:table_reserver/components/common/toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 

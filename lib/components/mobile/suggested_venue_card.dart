@@ -1,9 +1,9 @@
-import 'package:TableReserver/api/data/venue.dart';
-import 'package:TableReserver/api/venue_api.dart';
-import 'package:TableReserver/themes/mobile_theme.dart';
-import 'package:TableReserver/utils/routes.dart';
-import 'package:TableReserver/utils/extensions.dart';
-import 'package:TableReserver/utils/utils.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/api/venue_api.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/extensions.dart';
+import 'package:table_reserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';

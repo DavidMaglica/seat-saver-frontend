@@ -1,4 +1,4 @@
-import 'package:TableReserver/models/mobile/successful_reservation_model.dart';
+import 'package:table_reserver/models/mobile/successful_reservation_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

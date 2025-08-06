@@ -1,7 +1,7 @@
-import 'package:TableReserver/api/data/reservation_details.dart';
-import 'package:TableReserver/models/web/side_nav_model.dart';
-import 'package:TableReserver/pages/web/views/reservations.dart';
-import 'package:TableReserver/utils/animations.dart';
+import 'package:table_reserver/api/data/reservation_details.dart';
+import 'package:table_reserver/models/web/side_nav_model.dart';
+import 'package:table_reserver/pages/web/views/reservations.dart';
+import 'package:table_reserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 

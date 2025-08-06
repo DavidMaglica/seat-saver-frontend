@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:TableReserver/api/data/venue.dart';
-import 'package:TableReserver/api/venue_api.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/api/venue_api.dart';
 import 'package:flutter/cupertino.dart';
 
 class VenueCardByTypeModel extends ChangeNotifier {

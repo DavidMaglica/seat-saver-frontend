@@ -1,12 +1,12 @@
-import 'package:TableReserver/components/common/full_image_view.dart';
-import 'package:TableReserver/components/mobile/custom_appbar.dart';
-import 'package:TableReserver/components/web/images_tab.dart';
-import 'package:TableReserver/components/web/modals/edit_venue_modal.dart';
-import 'package:TableReserver/components/web/reviews_tab.dart';
-import 'package:TableReserver/components/web/venue_details_tab.dart';
-import 'package:TableReserver/models/web/venue_page_model.dart';
-import 'package:TableReserver/themes/web_theme.dart';
-import 'package:TableReserver/utils/utils.dart';
+import 'package:table_reserver/components/common/full_image_view.dart';
+import 'package:table_reserver/components/mobile/custom_appbar.dart';
+import 'package:table_reserver/components/web/images_tab.dart';
+import 'package:table_reserver/components/web/modals/edit_venue_modal.dart';
+import 'package:table_reserver/components/web/reviews_tab.dart';
+import 'package:table_reserver/components/web/venue_details_tab.dart';
+import 'package:table_reserver/models/web/venue_page_model.dart';
+import 'package:table_reserver/themes/web_theme.dart';
+import 'package:table_reserver/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 

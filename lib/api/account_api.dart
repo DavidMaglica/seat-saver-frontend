@@ -1,10 +1,10 @@
-import 'package:TableReserver/api/api_routes.dart';
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/api/data/notification_settings.dart';
-import 'package:TableReserver/api/data/user.dart';
-import 'package:TableReserver/api/data/user_location.dart';
-import 'package:TableReserver/api/data/user_response.dart';
-import 'package:TableReserver/api/dio_setup.dart';
+import 'package:table_reserver/api/api_routes.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/api/data/notification_settings.dart';
+import 'package:table_reserver/api/data/user.dart';
+import 'package:table_reserver/api/data/user_location.dart';
+import 'package:table_reserver/api/data/user_response.dart';
+import 'package:table_reserver/api/dio_setup.dart';
 import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
@@ -17,9 +17,7 @@ class AccountApi {
     try {
       Response response = await dio.get(
         ApiRoutes.getUser,
-        queryParameters: <String, int>{
-          'userId': userId,
-        },
+        queryParameters: <String, int>{'userId': userId},
       );
 
       return UserResponse(
@@ -40,6 +38,7 @@ class AccountApi {
     String email,
     String username,
     String password,
+    bool isOwner,
   ) async {
     if (username.isEmpty || email.isEmpty || password.isEmpty) {
       return BasicResponse(
@@ -51,14 +50,19 @@ class AccountApi {
     try {
       final response = await dio.post(
         ApiRoutes.signUp,
-        queryParameters: <String, String>{
+        queryParameters: <String, dynamic>{
           'email': email,
           'username': username,
           'password': password,
+          'isOwner': isOwner,
         },
       );
 
-      final int userId = response.data['data'] as int;
+      final int? userId = response.data['data'] as int?;
+
+      if (userId == null) {
+        return BasicResponse(success: false, message: 'Sign up failed. Please try again.');
+      }
 
       return BasicResponse<int>(
         success: true,
@@ -81,10 +85,7 @@ class AccountApi {
     try {
       final response = await dio.get(
         ApiRoutes.logIn,
-        queryParameters: <String, String>{
-          'email': email,
-          'password': password,
-        },
+        queryParameters: <String, String>{'email': email, 'password': password},
       );
 
       final int userId = response.data['data'] as int;
@@ -103,9 +104,7 @@ class AccountApi {
     try {
       final response = await dio.get(
         ApiRoutes.getNotificationOptions,
-        queryParameters: <String, int>{
-          'userId': userId,
-        },
+        queryParameters: <String, int>{'userId': userId},
       );
 
       return NotificationOptions.fromJson(response.data);
@@ -119,9 +118,7 @@ class AccountApi {
     try {
       final response = await dio.get(
         ApiRoutes.getLocation,
-        queryParameters: <String, int>{
-          'userId': userId,
-        },
+        queryParameters: <String, int>{'userId': userId},
       );
 
       return UserLocation.fromJson(response.data);
@@ -185,8 +182,10 @@ class AccountApi {
           'newPassword': newPassword,
         },
       );
-      BasicResponse basicResponse =
-          BasicResponse.fromJson(response.data, (json) => json);
+      BasicResponse basicResponse = BasicResponse.fromJson(
+        response.data,
+        (json) => json,
+      );
       return basicResponse;
     } catch (e) {
       logger.e('Error changing password: $e');
@@ -203,8 +202,10 @@ class AccountApi {
           'newUsername': newUsername,
         },
       );
-      BasicResponse basicResponse =
-          BasicResponse.fromJson(response.data, (json) => json);
+      BasicResponse basicResponse = BasicResponse.fromJson(
+        response.data,
+        (json) => json,
+      );
       return basicResponse;
     } catch (e) {
       logger.e('Error changing username: $e');
@@ -221,8 +222,10 @@ class AccountApi {
           'newEmail': newEmail,
         },
       );
-      BasicResponse basicResponse =
-          BasicResponse.fromJson(response.data, (json) => json);
+      BasicResponse basicResponse = BasicResponse.fromJson(
+        response.data,
+        (json) => json,
+      );
       return basicResponse;
     } catch (e) {
       logger.e('Error changing email: $e');

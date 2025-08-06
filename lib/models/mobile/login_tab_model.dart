@@ -1,61 +1,38 @@
-import 'package:TableReserver/api/account_api.dart';
-import 'package:TableReserver/api/data/basic_response.dart';
-import 'package:TableReserver/pages/mobile/auth/login_tab.dart';
-import 'package:TableReserver/utils/sign_up_methods.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/main.dart';
+import 'package:table_reserver/pages/mobile/auth/log_in_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class LogInTabModel extends FlutterFlowModel<LogInTab> {
   final AccountApi accountApi = AccountApi();
 
-  final RegExp emailRegex =
-      RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+  final RegExp emailRegex = RegExp(
+    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+  );
 
   @override
   void dispose() {}
 
   @override
-  void initState(BuildContext context) {}
-
-  Future<BasicResponse<int>> logIn(SignUpMethod? signUpMethod) async {
-    switch (signUpMethod) {
-      case SignUpMethod.apple:
-        return _appleLogIn();
-
-      case SignUpMethod.google:
-        return _googleLogIn();
-
-      case SignUpMethod.custom:
-        return _customLogIn(
-          widget.model.emailAddressLogInTextController.text,
-          widget.model.passwordLogInTextController.text,
-        );
-
-      default:
-        return BasicResponse(success: false, message: 'Unknown sign up method');
-    }
+  void initState(BuildContext context) {
+    googleSignIn.attemptLightweightAuthentication();
   }
 
-  BasicResponse<int> _appleLogIn() {
-    return BasicResponse(success: false, message: 'Currently unavailable');
-  }
-
-  BasicResponse<int> _googleLogIn() {
-    return BasicResponse(success: false, message: 'Currently unavailable');
-  }
-
-  Future<BasicResponse<int>> _customLogIn(
-    String userEmail,
-    String password,
-  ) async {
+  Future<BasicResponse<int>> logIn(String userEmail, String password) async {
     if (userEmail.isEmpty || password.isEmpty) {
       return BasicResponse(
-          success: false, message: 'Please fill in all fields');
+        success: false,
+        message: 'Please fill in all fields',
+      );
     }
 
     if (!emailRegex.hasMatch(userEmail)) {
       return BasicResponse(
-          success: false, message: 'Please enter a valid email address');
+        success: false,
+        message: 'Please enter a valid email address',
+      );
     }
 
     return await accountApi.logIn(userEmail, password);

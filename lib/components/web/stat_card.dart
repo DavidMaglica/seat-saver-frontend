@@ -1,4 +1,4 @@
-import 'package:TableReserver/themes/web_theme.dart';
+import 'package:table_reserver/themes/web_theme.dart';
 import 'package:flutter/material.dart';
 
 class StatCard extends StatelessWidget {

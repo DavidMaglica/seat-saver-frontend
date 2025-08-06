@@ -1,4 +1,4 @@
-import 'package:TableReserver/utils/routes.dart';
+import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 
