@@ -61,7 +61,7 @@ class AccountApi {
       final int? userId = response.data['data'] as int?;
 
       if (userId == null) {
-        return BasicResponse(success: false, message: 'User already exists.');
+        return BasicResponse(success: false, message: 'Sign up failed. Please try again.');
       }
 
       return BasicResponse<int>(
