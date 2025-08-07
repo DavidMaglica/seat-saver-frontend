@@ -4,7 +4,7 @@ import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/reservation_api.dart';
 import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/components/common/toaster.dart';
+import 'package:table_reserver/utils/toaster.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';

@@ -5,7 +5,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/components/common/toaster.dart';
+import 'package:table_reserver/utils/toaster.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/pages/web/auth/sign_up_tab.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
@@ -54,10 +54,15 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
       user.id,
       user.id,
     );
+
     if (response.success && response.data != null) {
       if (!context.mounted) return;
       Navigator.of(context).push(
-        FadeInRoute(routeName: Routes.webHomepage, page: const WebHomepage()),
+        FadeInRoute(
+          routeName: Routes.webHomepage,
+          page: WebHomepage(),
+          // page: WebHomepage(userId: response.data!),
+        ),
       );
     } else {
       if (!context.mounted) return;

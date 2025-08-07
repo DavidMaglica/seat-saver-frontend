@@ -38,6 +38,7 @@ dependencies:
   rating_summary: 1.0.4
   shared_preferences: 2.5.3
   smooth_page_indicator: 1.2.1
+  toastification: 2.3.0
   url_launcher: 6.2.5
 
 dependency_overrides:

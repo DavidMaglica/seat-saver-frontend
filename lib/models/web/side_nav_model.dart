@@ -1,28 +1,37 @@
-import 'package:table_reserver/components/web/side_nav.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
+import 'package:table_reserver/components/web/side_nav.dart';
+import 'package:table_reserver/main.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/theme_provider.dart';
 
-class SideNavModel extends FlutterFlowModel<SideNav> {
+class SideNavModel extends FlutterFlowModel<SideNav> with ChangeNotifier {
+  final int userId = prefsWithCache.getInt('userId')!;
+
+  String userEmail = '';
+  String userName = '';
+
   @override
   void initState(BuildContext context) {}
 
-  @override
-  void dispose() {}
+  void init() {
+    _getUserFromCache();
+  }
+
+  Future<void> _getUserFromCache() async {
+    userEmail = prefsWithCache.getString('userEmail')!;
+    userName = prefsWithCache.getString('userName')!;
+    notifyListeners();
+  }
 
   Future<void> goTo(BuildContext ctx, Widget page, String routeName) async {
-    Navigator.of(ctx).push(
-      FadeInRoute(
-        routeName: routeName,
-        page: page,
-      ),
-    );
+    Navigator.of(ctx).push(FadeInRoute(routeName: routeName, page: page));
   }
 
   void setDarkModeSetting(BuildContext context, bool isDarkMode) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     themeProvider.toggleDarkTheme(isDarkMode);
+    notifyListeners();
   }
 }

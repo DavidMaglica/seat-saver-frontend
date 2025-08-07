@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_reserver/pages/mobile/auth/authentication.dart';
 import 'package:table_reserver/pages/mobile/settings/edit_profile.dart';
 import 'package:table_reserver/pages/mobile/settings/notification_settings.dart';
@@ -35,10 +36,13 @@ late final String webGoogleClientId;
 
 late final GoogleSignIn googleSignIn;
 
+late SharedPreferencesWithCache prefsWithCache;
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  initializeGoogleSignIn();
+  initialiseGoogleSignIn();
+  initialiseSharedPreferences();
 
   runApp(
     ChangeNotifierProvider(
@@ -48,17 +52,27 @@ void main() {
   );
 }
 
-void initializeGoogleSignIn() {
+void initialiseGoogleSignIn() {
   iosGoogleClientId = const String.fromEnvironment('IOS_GOOGLE_CLIENT_ID');
   webGoogleClientId = const String.fromEnvironment('WEB_GOOGLE_CLIENT_ID');
 
   if (iosGoogleClientId.isEmpty || webGoogleClientId.isEmpty) {
-    throw Exception('Missing required environment variable. Google client Ids must be provided for both iOS and Web.');
+    throw Exception(
+      'Missing required environment variable. Google client Ids must be provided for both iOS and Web.',
+    );
   }
 
   googleSignIn = GoogleSignIn.instance;
   googleSignIn.initialize(
     clientId: kIsWeb ? webGoogleClientId : iosGoogleClientId,
+  );
+}
+
+void initialiseSharedPreferences() async {
+  prefsWithCache = await SharedPreferencesWithCache.create(
+    cacheOptions: const SharedPreferencesWithCacheOptions(
+      allowList: <String>{'userId', 'userName', 'userEmail'},
+    ),
   );
 }
 

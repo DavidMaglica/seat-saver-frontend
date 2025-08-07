@@ -1,6 +1,6 @@
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/user.dart';
-import 'package:table_reserver/components/common/toaster.dart';
+import 'package:table_reserver/utils/toaster.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -90,8 +90,10 @@ class EditProfileModel extends ChangeNotifier {
     }
 
     _hideKeyboard();
-    _showToast(response.message,
-        response.success ? MobileTheme.successColor : MobileTheme.errorColor);
+    _showToast(
+      response.message,
+      response.success ? MobileTheme.successColor : MobileTheme.errorColor,
+    );
 
     if (response.success) {
       updatedUsername = newName;
@@ -120,8 +122,10 @@ class EditProfileModel extends ChangeNotifier {
     }
 
     _hideKeyboard();
-    _showToast(response.message,
-        response.success ? MobileTheme.successColor : MobileTheme.errorColor);
+    _showToast(
+      response.message,
+      response.success ? MobileTheme.successColor : MobileTheme.errorColor,
+    );
 
     if (response.success) {
       updatedEmail = newEmail;
@@ -151,7 +155,9 @@ class EditProfileModel extends ChangeNotifier {
     if (newPassword.length < 8) {
       _hideKeyboard();
       _showToast(
-          'Password must be at least 8 characters long', MobileTheme.errorColor);
+        'Password must be at least 8 characters long',
+        MobileTheme.errorColor,
+      );
       return;
     }
 
@@ -170,8 +176,10 @@ class EditProfileModel extends ChangeNotifier {
     }
 
     _hideKeyboard();
-    _showToast(response.message,
-        response.success ? MobileTheme.successColor : MobileTheme.errorColor);
+    _showToast(
+      response.message,
+      response.success ? MobileTheme.successColor : MobileTheme.errorColor,
+    );
 
     if (response.success) {
       updatedPassword = newPassword;

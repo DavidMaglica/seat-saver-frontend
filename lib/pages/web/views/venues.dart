@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/models/web/venues_model.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
-import 'package:flutter/material.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class WebVenuesPage extends StatefulWidget {
   const WebVenuesPage({super.key});
@@ -46,29 +46,25 @@ class _WebVenuesPageState extends State<WebVenuesPage>
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              wrapWithModel(
-                model: _model.sideNavModel,
-                updateCallback: () => safeSetState(() {}),
-                child: const SideNav(),
-              ),
+              const SideNav(),
               Expanded(
-                child: GridView(
-                  padding: const EdgeInsets.all(32),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 1.2,
-                  ),
-                  scrollDirection: Axis.vertical,
-                  children: List.generate(
-                    10,
-                    (index) {
-                      return _buildVenueCard(context, index);
-                    },
-                  ),
-                ).animateOnPageLoad(
-                    _model.animationsMap['gridViewOnPageLoadAnimation']!),
+                child:
+                    GridView(
+                      padding: const EdgeInsets.all(32),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 1.2,
+                          ),
+                      scrollDirection: Axis.vertical,
+                      children: List.generate(10, (index) {
+                        return _buildVenueCard(context, index);
+                      }),
+                    ).animateOnPageLoad(
+                      _model.animationsMap['gridViewOnPageLoadAnimation']!,
+                    ),
               ),
             ],
           ),
@@ -88,23 +84,17 @@ class _WebVenuesPageState extends State<WebVenuesPage>
           FadeInRoute(
             page: WebVenuePage(venueId: index),
             routeName: Routes.webVenue,
-            arguments: {
-              'venueId': index,
-            },
+            arguments: {'venueId': index},
           ),
         );
       },
       child: Material(
         color: Colors.transparent,
         elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Container(
           width: 300,
-          constraints: const BoxConstraints(
-            maxWidth: 800,
-          ),
+          constraints: const BoxConstraints(maxWidth: 800),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onSurface,
             borderRadius: BorderRadius.circular(8),

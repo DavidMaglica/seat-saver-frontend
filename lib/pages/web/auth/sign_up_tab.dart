@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:google_sign_in_web/web_only.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/components/common/toaster.dart';
 import 'package:table_reserver/models/web/authentication_model.dart';
 import 'package:table_reserver/models/web/sign_up_tab_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/web_toaster.dart';
 
 class SignUpTab extends StatefulWidget {
   final AuthenticationModel model;
@@ -51,13 +51,17 @@ class _SignUpTabState extends State<SignUpTab> {
       _goToHomepage(response.data!);
     } else {
       if (!mounted) return;
-      Toaster.displayError(context, response.message);
+      WebToaster.displayError(context, response.message);
     }
   }
 
   void _goToHomepage(int userId) {
     Navigator.of(context).push(
-      FadeInRoute(routeName: Routes.webHomepage, page: const WebHomepage()),
+      FadeInRoute(
+        routeName: Routes.webHomepage,
+        page: WebHomepage(),
+        // page: WebHomepage(userId: userId),
+      ),
     );
   }
 
@@ -109,8 +113,8 @@ class _SignUpTabState extends State<SignUpTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
-        controller: widget.model.emailAddressCreateTextController,
-        focusNode: widget.model.emailAddressCreateFocusNode,
+        controller: widget.model.signUpEmailTextController,
+        focusNode: widget.model.signUpEmailFocusNode,
         autofocus: false,
         obscureText: false,
         decoration: InputDecoration(
@@ -140,8 +144,8 @@ class _SignUpTabState extends State<SignUpTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
-        controller: widget.model.usernameCreateTextController,
-        focusNode: widget.model.usernameCreateFocusNode,
+        controller: widget.model.signUpUsernameTextController,
+        focusNode: widget.model.signUpUsernameFocusNode,
         autofocus: false,
         obscureText: false,
         decoration: InputDecoration(
@@ -171,10 +175,10 @@ class _SignUpTabState extends State<SignUpTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
-        controller: widget.model.passwordCreateTextController,
-        focusNode: widget.model.passwordCreateFocusNode,
+        controller: widget.model.signUpPasswordTextController,
+        focusNode: widget.model.signUpPasswordFocusNode,
         autofocus: false,
-        obscureText: !widget.model.passwordCreateVisibility,
+        obscureText: !widget.model.signUpPasswordVisibility,
         decoration: InputDecoration(
           labelText: 'Password',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
@@ -192,12 +196,12 @@ class _SignUpTabState extends State<SignUpTab> {
           contentPadding: const EdgeInsets.all(24),
           suffixIcon: InkWell(
             onTap: () => safeSetState(
-              () => widget.model.passwordCreateVisibility =
-                  !widget.model.passwordCreateVisibility,
+              () => widget.model.signUpPasswordVisibility =
+                  !widget.model.signUpPasswordVisibility,
             ),
             focusNode: FocusNode(skipTraversal: true),
             child: Icon(
-              widget.model.passwordCreateVisibility
+              widget.model.signUpPasswordVisibility
                   ? CupertinoIcons.eye_fill
                   : CupertinoIcons.eye_slash_fill,
               color: Theme.of(context).colorScheme.onPrimary,
@@ -215,10 +219,10 @@ class _SignUpTabState extends State<SignUpTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
-        controller: widget.model.passwordCreateConfirmTextController,
-        focusNode: widget.model.passwordCreateConfirmFocusNode,
+        controller: widget.model.signUpPasswordConfirmTextController,
+        focusNode: widget.model.signUpPasswordConfirmFocusNode,
         autofocus: false,
-        obscureText: !widget.model.passwordCreateConfirmVisibility,
+        obscureText: !widget.model.signUpPasswordConfirmVisibility,
         decoration: InputDecoration(
           labelText: 'Confirm password',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
@@ -236,12 +240,12 @@ class _SignUpTabState extends State<SignUpTab> {
           contentPadding: const EdgeInsets.all(24),
           suffixIcon: InkWell(
             onTap: () => safeSetState(
-              () => widget.model.passwordCreateConfirmVisibility =
-                  !widget.model.passwordCreateConfirmVisibility,
+              () => widget.model.signUpPasswordConfirmVisibility =
+                  !widget.model.signUpPasswordConfirmVisibility,
             ),
             focusNode: FocusNode(skipTraversal: true),
             child: Icon(
-              widget.model.passwordCreateConfirmVisibility
+              widget.model.signUpPasswordConfirmVisibility
                   ? CupertinoIcons.eye_fill
                   : CupertinoIcons.eye_slash_fill,
               color: Theme.of(context).colorScheme.onPrimary,
@@ -261,10 +265,10 @@ class _SignUpTabState extends State<SignUpTab> {
       alignment: const AlignmentDirectional(0, 0),
       child: FFButtonWidget(
         onPressed: () => _performSignUp(
-          widget.model.emailAddressCreateTextController.text,
-          widget.model.usernameCreateTextController.text,
-          widget.model.passwordCreateTextController.text,
-          widget.model.passwordCreateConfirmTextController.text,
+          widget.model.signUpEmailTextController.text,
+          widget.model.signUpUsernameTextController.text,
+          widget.model.signUpPasswordTextController.text,
+          widget.model.signUpPasswordConfirmTextController.text,
         ),
         text: 'Sign Up',
         options: FFButtonOptions(

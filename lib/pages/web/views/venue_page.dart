@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:table_reserver/components/common/full_image_view.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/web/images_tab.dart';
@@ -7,16 +9,11 @@ import 'package:table_reserver/components/web/venue_details_tab.dart';
 import 'package:table_reserver/models/web/venue_page_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/utils.dart';
-import 'package:flutter/material.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class WebVenuePage extends StatefulWidget {
   final int venueId;
 
-  const WebVenuePage({
-    super.key,
-    required this.venueId,
-  });
+  const WebVenuePage({super.key, required this.venueId});
 
   @override
   State<WebVenuePage> createState() => _WebVenuePageState();
@@ -87,7 +84,7 @@ class _WebVenuePageState extends State<WebVenuePage>
                             children: [
                               VenueDetailsTab(),
                               ReviewsTab(),
-                              ImagesTab()
+                              ImagesTab(),
                             ],
                           ),
                         ),
@@ -150,7 +147,8 @@ class _WebVenuePageState extends State<WebVenuePage>
                 width: double.infinity,
                 height: 320,
                 fit: BoxFit.cover,
-              ))
+              ),
+            )
           : Container(
               width: double.infinity,
               height: 320,
@@ -161,10 +159,9 @@ class _WebVenuePageState extends State<WebVenuePage>
               alignment: Alignment.center,
               child: Text(
                 _model.loadedVenue.name,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(color: Colors.white),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(color: Colors.white),
               ),
             ).animateOnPageLoad(
               _model.animationsMap['imageOnPageLoadAnimation']!,
@@ -193,7 +190,9 @@ class _WebVenuePageState extends State<WebVenuePage>
                 builder: (context) {
                   return Dialog(
                     insetPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 24),
+                      horizontal: 16,
+                      vertical: 24,
+                    ),
                     backgroundColor: Colors.transparent,
                     child: Center(
                       child: ConstrainedBox(
@@ -206,10 +205,7 @@ class _WebVenuePageState extends State<WebVenuePage>
               );
             },
             text: 'Edit Venue Details',
-            icon: const Icon(
-              Icons.edit_outlined,
-              size: 24,
-            ),
+            icon: const Icon(Icons.edit_outlined, size: 24),
             options: FFButtonOptions(
               height: 40,
               color: WebTheme.infoColor,

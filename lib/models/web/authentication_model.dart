@@ -12,28 +12,28 @@ class AuthenticationModel extends FlutterFlowModel<WebAuthentication> {
   int get tabBarPreviousIndex =>
       tabBarController != null ? tabBarController!.previousIndex : 0;
 
-  FocusNode emailAddressCreateFocusNode = FocusNode();
-  TextEditingController emailAddressCreateTextController =
+  FocusNode signUpEmailFocusNode = FocusNode();
+  TextEditingController signUpEmailTextController =
       TextEditingController();
 
-  FocusNode usernameCreateFocusNode = FocusNode();
-  TextEditingController usernameCreateTextController = TextEditingController();
+  FocusNode signUpUsernameFocusNode = FocusNode();
+  TextEditingController signUpUsernameTextController = TextEditingController();
 
-  FocusNode passwordCreateFocusNode = FocusNode();
-  TextEditingController passwordCreateTextController = TextEditingController();
-  bool passwordCreateVisibility = false;
+  FocusNode signUpPasswordFocusNode = FocusNode();
+  TextEditingController signUpPasswordTextController = TextEditingController();
+  bool signUpPasswordVisibility = false;
 
-  FocusNode passwordCreateConfirmFocusNode = FocusNode();
-  TextEditingController passwordCreateConfirmTextController =
+  FocusNode signUpPasswordConfirmFocusNode = FocusNode();
+  TextEditingController signUpPasswordConfirmTextController =
       TextEditingController();
-  bool passwordCreateConfirmVisibility = false;
+  bool signUpPasswordConfirmVisibility = false;
 
-  FocusNode emailAddressFocusNode = FocusNode();
-  TextEditingController emailAddressTextController = TextEditingController();
+  FocusNode loginEmailFocusNode = FocusNode();
+  TextEditingController loginEmailTextController = TextEditingController();
 
-  FocusNode passwordFocusNode = FocusNode();
-  TextEditingController passwordTextController = TextEditingController();
-  bool passwordVisibility = false;
+  FocusNode loginPasswordFocusNode = FocusNode();
+  TextEditingController loginPasswordTextController = TextEditingController();
+  bool loginPasswordVisibility = false;
 
   final Map<String, AnimationInfo> animationsMap =
       Animations.authenticationAnimations;
@@ -45,22 +45,22 @@ class AuthenticationModel extends FlutterFlowModel<WebAuthentication> {
   void dispose() {
     tabBarController?.dispose();
 
-    emailAddressCreateFocusNode.dispose();
-    emailAddressCreateTextController.dispose();
+    signUpEmailFocusNode.dispose();
+    signUpEmailTextController.dispose();
 
-    usernameCreateFocusNode.dispose();
-    usernameCreateTextController.dispose();
+    signUpUsernameFocusNode.dispose();
+    signUpUsernameTextController.dispose();
 
-    passwordCreateFocusNode.dispose();
-    passwordCreateTextController.dispose();
+    signUpPasswordFocusNode.dispose();
+    signUpPasswordTextController.dispose();
 
-    passwordCreateConfirmFocusNode.dispose();
-    passwordCreateConfirmTextController.dispose();
+    signUpPasswordConfirmFocusNode.dispose();
+    signUpPasswordConfirmTextController.dispose();
 
-    emailAddressFocusNode.dispose();
-    emailAddressTextController.dispose();
+    loginEmailFocusNode.dispose();
+    loginEmailTextController.dispose();
 
-    passwordFocusNode.dispose();
-    passwordTextController.dispose();
+    loginPasswordFocusNode.dispose();
+    loginPasswordTextController.dispose();
   }
 }

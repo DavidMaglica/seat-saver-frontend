@@ -1,12 +1,23 @@
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/models/web/side_nav_model.dart';
-import 'package:table_reserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/data/user.dart';
+import 'package:table_reserver/api/data/user_response.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/main.dart';
+import 'package:table_reserver/pages/web/auth/authentication.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
+import 'package:table_reserver/utils/animations.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/toaster.dart';
 
 class HomepageModel extends FlutterFlowModel<WebHomepage> {
-  late SideNavModel sideNavModel;
+  final int userId;
+
+  HomepageModel({required this.userId});
+
+  final AccountApi accountApi = AccountApi();
 
   final Map<String, AnimationInfo> animationsMap =
       Animations.homepageAnimations;
@@ -124,11 +135,34 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> {
 
   @override
   void initState(BuildContext context) {
-    sideNavModel = createModel(context, () => SideNavModel());
+    _setUserToSharedPreferences(context, userId);
   }
 
   @override
-  void dispose() {
-    sideNavModel.dispose();
+  void dispose() {}
+
+  Future<void> _setUserToSharedPreferences(
+    BuildContext context,
+    int userId,
+  ) async {
+    UserResponse? response = await accountApi.getUser(userId);
+    if (response != null && response.success && response.user != null) {
+      User user = response.user!;
+      await prefsWithCache.setInt('userId', user.id);
+      await prefsWithCache.setString('userEmail', user.email);
+      await prefsWithCache.setString('userName', user.username);
+    } else {
+      if (!context.mounted) return;
+      Toaster.displayError(
+        context,
+        'Failed to load user data. Returning you to the authentication page.',
+      );
+      Navigator.of(context).push(
+        FadeInRoute(
+          page: const WebAuthentication(),
+          routeName: Routes.webAuthentication,
+        ),
+      );
+    }
   }
 }

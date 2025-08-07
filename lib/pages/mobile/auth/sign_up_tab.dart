@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/components/common/toaster.dart';
+import 'package:table_reserver/utils/toaster.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/mobile/authentication_model.dart';
 import 'package:table_reserver/models/mobile/signup_tab_model.dart';

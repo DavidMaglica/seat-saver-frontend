@@ -1,3 +1,4 @@
+import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/components/web/modals/change_email_modal.dart';
 import 'package:table_reserver/utils/animations.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,8 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 class ChangeEmailModel extends FlutterFlowModel<ChangeEmailModal> {
   FocusNode emailFocusNode = FocusNode();
   TextEditingController emailTextController = TextEditingController();
+
+  final AccountApi accountApi = AccountApi();
 
   final Map<String, AnimationInfo> animationsMap = Animations.modalAnimations;
 

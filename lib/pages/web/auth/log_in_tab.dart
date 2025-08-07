@@ -6,13 +6,13 @@ import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/user.dart';
 import 'package:table_reserver/api/data/user_response.dart';
-import 'package:table_reserver/components/common/toaster.dart';
 import 'package:table_reserver/models/web/authentication_model.dart';
 import 'package:table_reserver/models/web/log_in_tab_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/web_toaster.dart';
 
 class LogInTab extends StatefulWidget {
   final AuthenticationModel model;
@@ -53,7 +53,7 @@ class _LogInTabState extends State<LogInTab> {
       }
     } else {
       if (!mounted) return;
-      Toaster.displayError(context, response.message);
+      WebToaster.displayError(context, response.message);
     }
   }
 
@@ -64,7 +64,10 @@ class _LogInTabState extends State<LogInTab> {
   }
 
   void _forgotPassword() {
-    Toaster.displayInfo(context, 'Not implemented yet');
+    WebToaster.displayInfo(
+      context,
+      'Forgot password functionality is not implemented yet.',
+    );
   }
 
   @override
@@ -113,8 +116,8 @@ class _LogInTabState extends State<LogInTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
-        controller: widget.model.emailAddressTextController,
-        focusNode: widget.model.emailAddressFocusNode,
+        controller: widget.model.loginEmailTextController,
+        focusNode: widget.model.loginEmailFocusNode,
         autofocus: false,
         obscureText: false,
         decoration: InputDecoration(
@@ -144,10 +147,10 @@ class _LogInTabState extends State<LogInTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
-        controller: widget.model.passwordTextController,
-        focusNode: widget.model.passwordFocusNode,
+        controller: widget.model.loginPasswordTextController,
+        focusNode: widget.model.loginPasswordFocusNode,
         autofocus: false,
-        obscureText: !widget.model.passwordVisibility,
+        obscureText: !widget.model.loginPasswordVisibility,
         decoration: InputDecoration(
           labelText: 'Password',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
@@ -165,12 +168,12 @@ class _LogInTabState extends State<LogInTab> {
           contentPadding: const EdgeInsetsDirectional.fromSTEB(24, 24, 0, 24),
           suffixIcon: InkWell(
             onTap: () => safeSetState(
-              () => widget.model.passwordVisibility =
-                  !widget.model.passwordVisibility,
+              () => widget.model.loginPasswordVisibility =
+                  !widget.model.loginPasswordVisibility,
             ),
             focusNode: FocusNode(skipTraversal: true),
             child: Icon(
-              widget.model.passwordVisibility
+              widget.model.loginPasswordVisibility
                   ? CupertinoIcons.eye_fill
                   : CupertinoIcons.eye_slash_fill,
               color: Theme.of(context).colorScheme.onPrimary,
@@ -190,8 +193,8 @@ class _LogInTabState extends State<LogInTab> {
       alignment: const AlignmentDirectional(0, 0),
       child: FFButtonWidget(
         onPressed: () => _performLogIn(
-          widget.model.emailAddressCreateTextController.text,
-          widget.model.passwordTextController.text,
+          widget.model.loginEmailTextController.text,
+          widget.model.loginPasswordTextController.text,
         ),
         text: 'Log In',
         options: FFButtonOptions(

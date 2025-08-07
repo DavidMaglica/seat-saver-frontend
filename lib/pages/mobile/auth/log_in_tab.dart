@@ -8,7 +8,7 @@ import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/user.dart';
 import 'package:table_reserver/api/data/user_response.dart';
-import 'package:table_reserver/components/common/toaster.dart';
+import 'package:table_reserver/utils/toaster.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/mobile/authentication_model.dart';
 import 'package:table_reserver/models/mobile/login_tab_model.dart';

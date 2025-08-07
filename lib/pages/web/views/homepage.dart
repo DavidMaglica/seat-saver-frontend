@@ -1,3 +1,9 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_advanced_table/flutter_advanced_table.dart';
+import 'package:flutter_advanced_table/params.dart' hide ActionParamBuilder;
+import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:provider/provider.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/components/web/circular_stat_card.dart';
 import 'package:table_reserver/components/web/modals/create_venue_modal.dart';
@@ -10,18 +16,11 @@ import 'package:table_reserver/components/web/stat_card.dart';
 import 'package:table_reserver/models/web/create_venue_model.dart';
 import 'package:table_reserver/models/web/homepage_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_advanced_table/flutter_advanced_table.dart';
-import 'package:flutter_advanced_table/params.dart' hide ActionParamBuilder;
-import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:provider/provider.dart';
 
 class WebHomepage extends StatefulWidget {
-  const WebHomepage({super.key});
+  final int userId = 1;
 
-  static String routeName = 'Homepage';
-  static String routePath = '/homepage';
+  const WebHomepage({super.key});
 
   @override
   State<WebHomepage> createState() => _WebHomepageState();
@@ -36,7 +35,7 @@ class _WebHomepageState extends State<WebHomepage>
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => HomepageModel());
+    _model = createModel(context, () => HomepageModel(userId: widget.userId));
   }
 
   @override
@@ -59,11 +58,7 @@ class _WebHomepageState extends State<WebHomepage>
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            wrapWithModel(
-              model: _model.sideNavModel,
-              updateCallback: () => safeSetState(() {}),
-              child: const SideNav(),
-            ),
+            const SideNav(),
             Expanded(
               child: Align(
                 alignment: const AlignmentDirectional(0, -1),
@@ -79,12 +74,13 @@ class _WebHomepageState extends State<WebHomepage>
                         _buildTitle(context),
                         _buildTopStats(context),
                         Row(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildCircularStats(),
-                              _buildVenues(context),
-                            ].divide(const SizedBox(width: 16))),
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildCircularStats(),
+                            _buildVenues(context),
+                          ].divide(const SizedBox(width: 16)),
+                        ),
                         const SizedBox(height: 16),
                         _buildPerformance(context),
                       ].addToStart(const SizedBox(height: 24)),
@@ -115,12 +111,13 @@ class _WebHomepageState extends State<WebHomepage>
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const StatCard(title: 'Reservations this Month', value: 208),
-              const StatCard(title: 'Total Reservations Received', value: 2208),
-              const StatCard(title: 'Total Reviews Received', value: 2193),
-            ].divide(const SizedBox(width: 16))),
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            const StatCard(title: 'Reservations this Month', value: 208),
+            const StatCard(title: 'Total Reservations Received', value: 2208),
+            const StatCard(title: 'Total Reviews Received', value: 2193),
+          ].divide(const SizedBox(width: 16)),
+        ),
       ).animateOnPageLoad(_model.animationsMap['topStatsOnPageLoadAnimation']!),
     );
   }
@@ -128,21 +125,24 @@ class _WebHomepageState extends State<WebHomepage>
   Widget _buildCircularStats() {
     return Flexible(
       flex: 5,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          const CircularStatCard(
-              title: 'Rating',
-              description: 'Your average rating across all venues.'),
-          const CircularStatCard(
-            title: 'Overall Utilization Rate',
-            description: 'The overall utilization rate of your venues.',
-            hint:
-                'Sum of available capacity divided by sum of maximum capacity times 100',
+      child:
+          Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const CircularStatCard(
+                title: 'Rating',
+                description: 'Your average rating across all venues.',
+              ),
+              const CircularStatCard(
+                title: 'Overall Utilization Rate',
+                description: 'The overall utilization rate of your venues.',
+                hint:
+                    'Sum of available capacity divided by sum of maximum capacity times 100',
+              ),
+            ].divide(const SizedBox(height: 16)),
+          ).animateOnPageLoad(
+            _model.animationsMap['circularStatsOnPageLoadAnimation']!,
           ),
-        ].divide(const SizedBox(height: 16)),
-      ).animateOnPageLoad(
-          _model.animationsMap['circularStatsOnPageLoadAnimation']!),
     );
   }
 
@@ -154,14 +154,10 @@ class _WebHomepageState extends State<WebHomepage>
         child: Material(
           color: Colors.transparent,
           elevation: 3,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Container(
             width: double.infinity,
-            constraints: const BoxConstraints(
-              maxWidth: 1270,
-            ),
+            constraints: const BoxConstraints(maxWidth: 1270),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.onSurface,
               borderRadius: BorderRadius.circular(8),
@@ -201,12 +197,15 @@ class _WebHomepageState extends State<WebHomepage>
                             builder: (context) {
                               return Dialog(
                                 insetPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 24),
+                                  horizontal: 16,
+                                  vertical: 24,
+                                ),
                                 backgroundColor: Colors.transparent,
                                 child: Center(
                                   child: ConstrainedBox(
-                                    constraints:
-                                        const BoxConstraints(maxWidth: 1000),
+                                    constraints: const BoxConstraints(
+                                      maxWidth: 1000,
+                                    ),
                                     child: ChangeNotifierProvider(
                                       create: (_) => CreateVenueModel(),
                                       child: Consumer<CreateVenueModel>(
@@ -222,10 +221,7 @@ class _WebHomepageState extends State<WebHomepage>
                           );
                         },
                         text: 'Create a Venue',
-                        icon: const Icon(
-                          CupertinoIcons.add_circled,
-                          size: 24,
-                        ),
+                        icon: const Icon(CupertinoIcons.add_circled, size: 24),
                         options: FFButtonOptions(
                           height: 40,
                           iconColor: Theme.of(context).colorScheme.primary,
@@ -240,16 +236,12 @@ class _WebHomepageState extends State<WebHomepage>
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 360,
-                    child: _buildTable(context),
-                  ),
+                  SizedBox(height: 360, child: _buildTable(context)),
                 ],
               ),
             ),
           ),
-        ).animateOnPageLoad(
-            _model.animationsMap['containerOnPageLoadAnimation1']!),
+        ).animateOnPageLoad(_model.animationsMap['containerOnPageLoadAnimation1']!),
       ),
     );
   }
@@ -266,26 +258,18 @@ class _WebHomepageState extends State<WebHomepage>
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       rowElementsBuilder: (context, rowParams) {
-        return _buildRows(
-          context,
-          rowParams,
-          _model.venues,
-        );
+        return _buildRows(context, rowParams, _model.venues);
       },
       items: _model.venues,
       isLoadingAll: ValueNotifier(false),
-      fullLoadingPlaceHolder: const Center(
-        child: CircularProgressIndicator(),
-      ),
+      fullLoadingPlaceHolder: const Center(child: CircularProgressIndicator()),
       headerItems: _model.headers,
       actionBuilder: (context, actionParams) {
         final venueId = venueIds[actionParams.rowIndex];
         return _buildActions(context, venueId);
       },
       actions: const [
-        {
-          "label": "edit and delete",
-        },
+        {"label": "edit and delete"},
       ],
       rowDecorationBuilder: (index, isHovered) {
         return _buildRowDecoration(context, index, isHovered);
@@ -307,8 +291,10 @@ class _WebHomepageState extends State<WebHomepage>
               barrierDismissible: true,
               builder: (context) {
                 return Dialog(
-                  insetPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                  insetPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 24,
+                  ),
                   backgroundColor: Colors.transparent,
                   child: Center(
                     child: ConstrainedBox(
@@ -340,7 +326,7 @@ class _WebHomepageState extends State<WebHomepage>
               },
             );
           },
-        )
+        ),
       ],
     );
   }
@@ -354,9 +340,9 @@ class _WebHomepageState extends State<WebHomepage>
         child: Text(
           header.value,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: WebTheme.offWhite,
-              ),
+            fontWeight: FontWeight.bold,
+            color: WebTheme.offWhite,
+          ),
         ),
       ),
     );
@@ -397,17 +383,15 @@ class _WebHomepageState extends State<WebHomepage>
             color: venue.rating >= 4.0
                 ? WebTheme.successColor
                 : venue.rating >= 2.5
-                    ? WebTheme.warningColor
-                    : WebTheme.errorColor,
+                ? WebTheme.warningColor
+                : WebTheme.errorColor,
           ),
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Center(
               child: Text(
                 venue.rating.toString(),
-                style: const TextStyle(
-                  color: WebTheme.offWhite,
-                ),
+                style: const TextStyle(color: WebTheme.offWhite),
               ),
             ),
           ),
@@ -427,31 +411,23 @@ class _WebHomepageState extends State<WebHomepage>
       color: isHover
           ? WebTheme.infoColor
           : !isOdd
-              ? Colors.transparent
-              : Theme.of(context).colorScheme.surface,
+          ? Colors.transparent
+          : Theme.of(context).colorScheme.surface,
     );
   }
 
   Widget _buildPerformance(BuildContext context) {
     return Row(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Expanded(
-                child: PerformanceCard(
-                  title: 'Best Performing Venue',
-                  venueId: 1,
-                ),
-              ),
-              const Expanded(
-                child: PerformanceCard(
-                  title: 'Worst Performing Venue',
-                  venueId: 1,
-                ),
-              ),
-            ].divide(const SizedBox(width: 16)))
-        .animateOnPageLoad(
-      _model.animationsMap['rowOnPageLoadAnimation3']!,
-    );
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Expanded(
+          child: PerformanceCard(title: 'Best Performing Venue', venueId: 1),
+        ),
+        const Expanded(
+          child: PerformanceCard(title: 'Worst Performing Venue', venueId: 1),
+        ),
+      ].divide(const SizedBox(width: 16)),
+    ).animateOnPageLoad(_model.animationsMap['rowOnPageLoadAnimation3']!);
   }
 }

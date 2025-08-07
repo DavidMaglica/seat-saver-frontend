@@ -1,3 +1,9 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_advanced_table/flutter_advanced_table.dart';
+import 'package:flutter_advanced_table/params.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:provider/provider.dart';
 import 'package:table_reserver/api/data/reservation_details.dart';
 import 'package:table_reserver/components/web/modals/create_reservation_modal.dart';
 import 'package:table_reserver/components/web/modals/delete_modal.dart';
@@ -7,18 +13,9 @@ import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/models/web/create_reservation_model.dart';
 import 'package:table_reserver/models/web/reservation_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_advanced_table/flutter_advanced_table.dart';
-import 'package:flutter_advanced_table/params.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:provider/provider.dart';
 
 class WebReservations extends StatefulWidget {
   const WebReservations({super.key});
-
-  static String routeName = 'Reservations';
-  static String routePath = '/reservations';
 
   @override
   State<WebReservations> createState() => _WebReservationsState();
@@ -57,37 +54,35 @@ class _WebReservationsState extends State<WebReservations>
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              wrapWithModel(
-                model: _model.sideNavModel,
-                updateCallback: () => safeSetState(() {}),
-                child: const SideNav(),
-              ),
+              const SideNav(),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Material(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildHeading(context),
-                          SizedBox(
-                            height: 360,
-                            child: _buildTable(context),
+                  child:
+                      Material(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildHeading(context),
+                              SizedBox(
+                                height: 360,
+                                child: _buildTable(context),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
+                        // _buildReservations(context),
+                      ).animateOnPageLoad(
+                        _model.animationsMap['containerOnPageLoadAnimation']!,
                       ),
-                    ),
-                    // _buildReservations(context),
-                  ).animateOnPageLoad(
-                      _model.animationsMap['containerOnPageLoadAnimation']!),
                 ),
               ),
             ],
@@ -126,8 +121,10 @@ class _WebReservationsState extends State<WebReservations>
               barrierDismissible: true,
               builder: (context) {
                 return Dialog(
-                  insetPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                  insetPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 24,
+                  ),
                   backgroundColor: Colors.transparent,
                   child: Center(
                     child: ConstrainedBox(
@@ -147,18 +144,12 @@ class _WebReservationsState extends State<WebReservations>
             );
           },
           text: 'Create a Reservation',
-          icon: const Icon(
-            CupertinoIcons.add_circled,
-            size: 24,
-          ),
+          icon: const Icon(CupertinoIcons.add_circled, size: 24),
           options: FFButtonOptions(
             height: 40,
             iconColor: Theme.of(context).colorScheme.primary,
             color: WebTheme.successColor,
-            textStyle: const TextStyle(
-              fontSize: 16,
-              color: WebTheme.offWhite,
-            ),
+            textStyle: const TextStyle(fontSize: 16, color: WebTheme.offWhite),
             elevation: 3,
             borderRadius: BorderRadius.circular(8),
           ),
@@ -168,8 +159,9 @@ class _WebReservationsState extends State<WebReservations>
   }
 
   dynamic _buildTable(BuildContext context) {
-    List<int> reservationIds =
-        _model.reservations.map((reservation) => reservation.id).toList();
+    List<int> reservationIds = _model.reservations
+        .map((reservation) => reservation.id)
+        .toList();
 
     return AdvancedTableWidget(
       headerBuilder: (context, header) {
@@ -180,26 +172,18 @@ class _WebReservationsState extends State<WebReservations>
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       rowElementsBuilder: (context, rowParams) {
-        return _buildRows(
-          context,
-          rowParams,
-          _model.reservations,
-        );
+        return _buildRows(context, rowParams, _model.reservations);
       },
       items: _model.reservations,
       isLoadingAll: ValueNotifier(false),
-      fullLoadingPlaceHolder: const Center(
-        child: CircularProgressIndicator(),
-      ),
+      fullLoadingPlaceHolder: const Center(child: CircularProgressIndicator()),
       headerItems: _model.tableHeaders,
       actionBuilder: (context, actionParams) {
         final reservationId = reservationIds[actionParams.rowIndex];
         return _buildActions(context, reservationId);
       },
       actions: const [
-        {
-          "label": "edit and delete",
-        },
+        {"label": "edit and delete"},
       ],
       rowDecorationBuilder: (index, isHovered) {
         return _buildRowDecoration(context, index, isHovered);
@@ -246,7 +230,7 @@ class _WebReservationsState extends State<WebReservations>
               },
             );
           },
-        )
+        ),
       ],
     );
   }
@@ -259,9 +243,9 @@ class _WebReservationsState extends State<WebReservations>
       child: Center(
         child: Text(
           header.value,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -278,30 +262,37 @@ class _WebReservationsState extends State<WebReservations>
       SizedBox(
         width: rowParams.defualtWidth,
         child: Center(
-          child: Text('${reservation.venueId}',
-              style: Theme.of(context).textTheme.bodyLarge),
+          child: Text(
+            '${reservation.venueId}',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         ),
       ),
       SizedBox(
         width: rowParams.defualtWidth,
         child: Center(
-            child: Text(
-          '${reservation.userId}',
-          style: Theme.of(context).textTheme.bodyLarge,
-        )),
-      ),
-      SizedBox(
-        width: rowParams.defualtWidth,
-        child: Center(
-          child: Text('${reservation.numberOfGuests}',
-              style: Theme.of(context).textTheme.bodyLarge),
+          child: Text(
+            '${reservation.userId}',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         ),
       ),
       SizedBox(
         width: rowParams.defualtWidth,
         child: Center(
-          child: Text(dateFormat.format(reservation.datetime),
-              style: Theme.of(context).textTheme.bodyLarge),
+          child: Text(
+            '${reservation.numberOfGuests}',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+      ),
+      SizedBox(
+        width: rowParams.defualtWidth,
+        child: Center(
+          child: Text(
+            dateFormat.format(reservation.datetime),
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         ),
       ),
     ];
@@ -318,8 +309,8 @@ class _WebReservationsState extends State<WebReservations>
       color: isHover
           ? WebTheme.infoColor
           : !isOdd
-              ? Colors.transparent
-              : Theme.of(context).colorScheme.surface,
+          ? Colors.transparent
+          : Theme.of(context).colorScheme.surface,
     );
   }
 }
