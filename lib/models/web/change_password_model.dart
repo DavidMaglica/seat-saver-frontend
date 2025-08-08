@@ -66,9 +66,6 @@ class ChangePasswordModel extends FlutterFlowModel<ChangePasswordModal>
       WebToaster.displayError(context, response.message);
     }
 
-    newPasswordErrorText = null;
-    confirmPasswordErrorText = null;
-
     notifyListeners();
     return;
   }
@@ -89,6 +86,9 @@ class ChangePasswordModel extends FlutterFlowModel<ChangePasswordModal>
       confirmPasswordErrorText = 'Passwords do not match';
       return false;
     }
+
+    newPasswordErrorText = null;
+    confirmPasswordErrorText = null;
 
     return true;
   }
