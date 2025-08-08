@@ -54,7 +54,7 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  SideNav(),
+                  const SideNav(),
                   Expanded(
                     child:
                         Column(
