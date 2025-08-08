@@ -1,5 +1,6 @@
-enum SignUpMethod {
+enum AuthenticationMethod {
   google,
-  apple,
   custom,
+  none,
+  // apple,
 }

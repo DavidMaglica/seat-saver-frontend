@@ -6,12 +6,14 @@ import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/user.dart';
 import 'package:table_reserver/api/data/user_response.dart';
+import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/web/authentication_model.dart';
 import 'package:table_reserver/models/web/log_in_tab_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/sign_up_methods.dart';
 import 'package:table_reserver/utils/web_toaster.dart';
 
 class LogInTab extends StatefulWidget {
@@ -30,7 +32,10 @@ class _LogInTabState extends State<LogInTab> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => LogInTabModel());
+    _model = createModel(
+      context,
+      () => LogInTabModel(isActive: widget.model.tabBarController!.index == 1),
+    );
   }
 
   @override
@@ -40,7 +45,11 @@ class _LogInTabState extends State<LogInTab> {
   }
 
   void _performLogIn(String email, String password) async {
-    BasicResponse<int> response = await _model.logIn(email, password);
+    BasicResponse<int?> response = await _model.logIn(
+      email,
+      password,
+      AuthenticationMethod.custom,
+    );
     if (response.success && response.data != null) {
       int userId = response.data!;
 
@@ -48,6 +57,8 @@ class _LogInTabState extends State<LogInTab> {
 
       if (userResponse != null && userResponse.success) {
         User user = userResponse.user!;
+
+        prefsWithCache.setInt('userId', userId);
 
         _goToHomepage(user.id);
       }
@@ -59,7 +70,10 @@ class _LogInTabState extends State<LogInTab> {
 
   void _goToHomepage(int userId) {
     Navigator.of(context).push(
-      FadeInRoute(routeName: Routes.webHomepage, page: const WebHomepage()),
+      FadeInRoute(
+        routeName: Routes.webHomepage,
+        page: WebHomepage(userId: userId),
+      ),
     );
   }
 

@@ -1,3 +1,6 @@
+import 'package:dio/dio.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:logger/logger.dart';
 import 'package:table_reserver/api/api_routes.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/notification_settings.dart';
@@ -5,9 +8,6 @@ import 'package:table_reserver/api/data/user.dart';
 import 'package:table_reserver/api/data/user_location.dart';
 import 'package:table_reserver/api/data/user_response.dart';
 import 'package:table_reserver/api/dio_setup.dart';
-import 'package:dio/dio.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:logger/logger.dart';
 
 final dio = setupDio(ApiRoutes.user);
 final logger = Logger();
@@ -61,7 +61,10 @@ class AccountApi {
       final int? userId = response.data['data'] as int?;
 
       if (userId == null) {
-        return BasicResponse(success: false, message: 'Sign up failed. Please try again.');
+        return BasicResponse(
+          success: false,
+          message: 'Sign up failed. Please try again.',
+        );
       }
 
       return BasicResponse<int>(
@@ -74,7 +77,7 @@ class AccountApi {
     }
   }
 
-  Future<BasicResponse<int>> logIn(String email, String password) async {
+  Future<BasicResponse<int?>> logIn(String email, String password) async {
     if (email.isEmpty || password.isEmpty) {
       return BasicResponse(
         success: false,
@@ -88,13 +91,10 @@ class AccountApi {
         queryParameters: <String, String>{'email': email, 'password': password},
       );
 
-      final int userId = response.data['data'] as int;
+      final int? userId = response.data['data'] as int?;
+      final String message = response.data['message'] as String;
 
-      return BasicResponse<int>(
-        success: true,
-        message: 'User logged in',
-        data: userId,
-      );
+      return BasicResponse<int?>(success: true, message: message, data: userId);
     } catch (e) {
       return BasicResponse(success: false, message: e.toString());
     }

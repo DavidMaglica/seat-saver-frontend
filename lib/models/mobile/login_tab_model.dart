@@ -20,7 +20,7 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
     googleSignIn.attemptLightweightAuthentication();
   }
 
-  Future<BasicResponse<int>> logIn(String userEmail, String password) async {
+  Future<BasicResponse<int?>> logIn(String userEmail, String password) async {
     if (userEmail.isEmpty || password.isEmpty) {
       return BasicResponse(
         success: false,

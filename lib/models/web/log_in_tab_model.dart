@@ -5,14 +5,19 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/utils/toaster.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/pages/web/auth/log_in_tab.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/sign_up_methods.dart';
+import 'package:table_reserver/utils/web_toaster.dart';
 
 class LogInTabModel extends FlutterFlowModel<LogInTab> {
+  bool isActive;
+
+  LogInTabModel({required this.isActive});
+
   final AccountApi accountApi = AccountApi();
 
   final RegExp emailRegex = RegExp(
@@ -24,7 +29,13 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
   @override
   void initState(BuildContext context) {
     authListener(context);
-    googleSignIn.attemptLightweightAuthentication();
+    if (isActive) {
+      googleSignIn.attemptLightweightAuthentication()?.then((value) {
+        if (value != null) {
+          currentAuthMethod = AuthenticationMethod.google;
+        }
+      });
+    }
   }
 
   @override
@@ -34,6 +45,7 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
 
   void authListener(BuildContext context) {
     authSubscription = googleSignIn.authenticationEvents.listen((event) async {
+      if (!isActive) return;
       if (event is GoogleSignInAuthenticationEventSignIn) {
         final GoogleSignInAccount user = event.user;
         if (!context.mounted) return;
@@ -48,22 +60,35 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
     BuildContext context,
     GoogleSignInAccount user,
   ) async {
-    final BasicResponse<int> response = await logIn(user.email, user.id);
+    final BasicResponse<int?> response = await logIn(
+      user.email,
+      user.id,
+      AuthenticationMethod.google,
+    );
+
     if (response.success && response.data != null) {
       if (!context.mounted) return;
+      int userId = response.data!;
+      prefsWithCache.setInt('userId', userId);
+
       Navigator.of(context).push(
         FadeInRoute(
           routeName: Routes.webHomepage,
-          page: const WebHomepage(),
+          page: WebHomepage(userId: userId),
         ),
       );
     } else {
       if (!context.mounted) return;
-      Toaster.displayError(context, response.message);
+      WebToaster.displayError(context, response.message);
     }
   }
 
-  Future<BasicResponse<int>> logIn(String userEmail, String password) async {
+  Future<BasicResponse<int?>> logIn(
+    String userEmail,
+    String password,
+    AuthenticationMethod authMethod,
+  ) async {
+    currentAuthMethod = authMethod;
     if (userEmail.isEmpty || password.isEmpty) {
       return BasicResponse(
         success: false,

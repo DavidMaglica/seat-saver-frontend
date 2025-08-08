@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:provider/provider.dart';
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/user.dart';
 import 'package:table_reserver/api/data/user_response.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/main.dart';
+import 'package:table_reserver/models/web/side_nav_model.dart';
 import 'package:table_reserver/pages/web/auth/authentication.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/utils/animations.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/toaster.dart';
+import 'package:table_reserver/utils/web_toaster.dart';
 
 class HomepageModel extends FlutterFlowModel<WebHomepage> {
   final int userId;
@@ -148,12 +150,12 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> {
     UserResponse? response = await accountApi.getUser(userId);
     if (response != null && response.success && response.user != null) {
       User user = response.user!;
-      await prefsWithCache.setInt('userId', user.id);
       await prefsWithCache.setString('userEmail', user.email);
       await prefsWithCache.setString('userName', user.username);
+      Provider.of<SideNavModel>(context, listen: false).getUserFromCache();
     } else {
       if (!context.mounted) return;
-      Toaster.displayError(
+      WebToaster.displayError(
         context,
         'Failed to load user data. Returning you to the authentication page.',
       );

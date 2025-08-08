@@ -30,6 +30,7 @@ import 'package:table_reserver/pages/web/views/venues.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/sign_up_methods.dart';
 import 'package:table_reserver/utils/theme_provider.dart';
 
 late final String iosGoogleClientId;
@@ -38,6 +39,11 @@ late final String webGoogleClientId;
 late final GoogleSignIn googleSignIn;
 
 late SharedPreferencesWithCache prefsWithCache;
+
+int get userIdFromCache =>
+    prefsWithCache.getInt('userId') ?? (throw Exception('User not logged in'));
+
+AuthenticationMethod currentAuthMethod = AuthenticationMethod.none;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -197,7 +203,9 @@ class MyApp extends StatelessWidget {
           routes: {
             Routes.webLanding: (context) => const WebLanding(),
             Routes.webAuthentication: (context) => const WebAuthentication(),
-            Routes.webHomepage: (context) => const WebHomepage(),
+            Routes.webHomepage: (context) => WebHomepage(
+              userId: getOptionalArg(context, 'userId') ?? userIdFromCache,
+            ),
             Routes.webVenues: (context) => const WebVenuesPage(),
             Routes.webVenue: (context) => WebVenuePage(
               venueId: getOptionalArg<int>(context, 'venueId') ?? 1,

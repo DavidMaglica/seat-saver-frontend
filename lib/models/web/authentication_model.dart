@@ -1,7 +1,12 @@
-import 'package:table_reserver/pages/web/auth/authentication.dart';
-import 'package:table_reserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:table_reserver/main.dart';
+import 'package:table_reserver/pages/web/auth/authentication.dart';
+import 'package:table_reserver/pages/web/views/homepage.dart';
+import 'package:table_reserver/utils/animations.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/sign_up_methods.dart';
 
 class AuthenticationModel extends FlutterFlowModel<WebAuthentication> {
   TabController? tabBarController;
@@ -13,8 +18,7 @@ class AuthenticationModel extends FlutterFlowModel<WebAuthentication> {
       tabBarController != null ? tabBarController!.previousIndex : 0;
 
   FocusNode signUpEmailFocusNode = FocusNode();
-  TextEditingController signUpEmailTextController =
-      TextEditingController();
+  TextEditingController signUpEmailTextController = TextEditingController();
 
   FocusNode signUpUsernameFocusNode = FocusNode();
   TextEditingController signUpUsernameTextController = TextEditingController();
@@ -39,7 +43,22 @@ class AuthenticationModel extends FlutterFlowModel<WebAuthentication> {
       Animations.authenticationAnimations;
 
   @override
-  void initState(BuildContext context) {}
+  void initState(BuildContext context) {
+    final int? userId = prefsWithCache.getInt('userId');
+
+    if (userId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+      currentAuthMethod = AuthenticationMethod.custom;
+      Navigator.push(
+        context,
+        FadeInRoute(
+          page: WebHomepage(userId: userId),
+          routeName: Routes.webHomepage,
+        ),
+      );
+    });
+    }
+  }
 
   @override
   void dispose() {

@@ -26,11 +26,6 @@ class _ChangePasswordModalState extends State<ChangePasswordModal>
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => ChangePasswordModel(),

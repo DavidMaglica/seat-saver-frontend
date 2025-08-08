@@ -26,7 +26,10 @@ class _SignUpTabState extends State<SignUpTab> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SignUpTabModel());
+    _model = createModel(
+      context,
+      () => SignUpTabModel(isActive: widget.model.tabBarController!.index == 1),
+    );
   }
 
   @override
@@ -42,10 +45,10 @@ class _SignUpTabState extends State<SignUpTab> {
     String confirmPassword,
   ) async {
     BasicResponse<int?> response = await _model.signUp(
-      username,
-      email,
-      password,
-      confirmPassword,
+      username: username,
+      email: email,
+      password: password,
+      confirmedPassword: confirmPassword,
     );
     if (response.success && response.data != null) {
       _goToHomepage(response.data!);
@@ -59,7 +62,7 @@ class _SignUpTabState extends State<SignUpTab> {
     Navigator.of(context).push(
       FadeInRoute(
         routeName: Routes.webHomepage,
-        page: const WebHomepage(),
+        page: WebHomepage(userId: userId),
       ),
     );
   }

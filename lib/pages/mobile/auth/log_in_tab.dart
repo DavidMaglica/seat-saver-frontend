@@ -42,7 +42,7 @@ class _LogInTabState extends State<LogInTab> {
   }
 
   void _performLogIn(String email, String password) async {
-    BasicResponse<int> response = await _model.logIn(email, password);
+    BasicResponse<int?> response = await _model.logIn(email, password);
     if (response.success && response.data != null) {
       int userId = response.data!;
 

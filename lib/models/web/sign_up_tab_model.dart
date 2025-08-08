@@ -5,14 +5,19 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/utils/toaster.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/pages/web/auth/sign_up_tab.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/sign_up_methods.dart';
+import 'package:table_reserver/utils/web_toaster.dart';
 
 class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
+  bool isActive;
+
+  SignUpTabModel({required this.isActive});
+
   final AccountApi accountApi = AccountApi();
 
   final RegExp emailRegex = RegExp(
@@ -24,7 +29,13 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
   @override
   void initState(BuildContext context) {
     authListener(context);
-    googleSignIn.attemptLightweightAuthentication();
+    if (isActive) {
+      googleSignIn.attemptLightweightAuthentication()?.then((value) {
+        if (value != null) {
+          currentAuthMethod = AuthenticationMethod.google;
+        }
+      });
+    }
   }
 
   @override
@@ -34,6 +45,7 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
 
   void authListener(BuildContext context) {
     authSubscription = googleSignIn.authenticationEvents.listen((event) async {
+      if (!isActive) return;
       if (event is GoogleSignInAuthenticationEventSignIn) {
         final GoogleSignInAccount user = event.user;
         if (!context.mounted) return;
@@ -49,32 +61,35 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
     GoogleSignInAccount user,
   ) async {
     final BasicResponse<int> response = await signUp(
-      user.email,
-      user.displayName ?? user.email,
-      user.id,
-      user.id,
+      username: user.displayName ?? user.email,
+      email: user.email,
+      password: user.id,
+      confirmedPassword: user.id,
     );
 
     if (response.success && response.data != null) {
       if (!context.mounted) return;
+      int userId = response.data!;
+      prefsWithCache.setInt('userId', userId);
+
       Navigator.of(context).push(
         FadeInRoute(
           routeName: Routes.webHomepage,
-          page: const WebHomepage(),
+          page: WebHomepage(userId: userId),
         ),
       );
     } else {
       if (!context.mounted) return;
-      Toaster.displayError(context, response.message);
+      WebToaster.displayError(context, response.message);
     }
   }
 
-  Future<BasicResponse<int>> signUp(
-    String username,
-    String email,
-    String password,
-    String confirmedPassword,
-  ) async {
+  Future<BasicResponse<int>> signUp({
+    required String username,
+    required String email,
+    required String password,
+    required String confirmedPassword,
+  }) async {
     if (username.isEmpty || email.isEmpty || password.isEmpty) {
       return BasicResponse(
         success: false,

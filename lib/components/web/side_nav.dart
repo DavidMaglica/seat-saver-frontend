@@ -167,8 +167,11 @@ class _SideNavState extends State<SideNav> {
         focusColor: Colors.transparent,
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        onTap: () =>
-            model.goTo(context, const WebHomepage(), Routes.webHomepage),
+        onTap: () => model.goTo(
+          context,
+          WebHomepage(userId: model.userId),
+          Routes.webHomepage,
+        ),
         child: Material(
           color: Colors.transparent,
           elevation: 3,

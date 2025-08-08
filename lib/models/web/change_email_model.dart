@@ -42,7 +42,7 @@ class ChangeEmailModel extends FlutterFlowModel<ChangeEmailModal>
 
     emailErrorText = null;
 
-    final int userId = prefsWithCache.getInt('userId')!;
+    final int userId = userIdFromCache;
 
     final BasicResponse response = await accountApi.changeEmail(
       userId,
