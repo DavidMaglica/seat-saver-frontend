@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:table_reserver/models/web/side_nav_model.dart';
 import 'package:table_reserver/pages/mobile/auth/authentication.dart';
 import 'package:table_reserver/pages/mobile/settings/edit_profile.dart';
 import 'package:table_reserver/pages/mobile/settings/notification_settings.dart';
@@ -97,7 +98,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
-      return _buildWebMaterialApp();
+      return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => SideNavModel()..init()),
+        ],
+        child: _buildWebMaterialApp(),
+      );
     }
     return _buildMobileMaterialApp();
   }

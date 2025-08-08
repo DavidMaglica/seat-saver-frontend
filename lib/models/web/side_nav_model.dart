@@ -16,10 +16,10 @@ class SideNavModel extends FlutterFlowModel<SideNav> with ChangeNotifier {
   void initState(BuildContext context) {}
 
   void init() {
-    _getUserFromCache();
+    getUserFromCache();
   }
 
-  Future<void> _getUserFromCache() async {
+  Future<void> getUserFromCache() async {
     userEmail = prefsWithCache.getString('userEmail')!;
     userName = prefsWithCache.getString('userName')!;
     notifyListeners();

@@ -40,7 +40,7 @@ class ChangePasswordModel extends FlutterFlowModel<ChangePasswordModal>
     final newPassword = newPasswordTextController.text;
     final confirmPassword = confirmPasswordTextController.text;
 
-    if (!validateNewPassword(newPassword, confirmPassword)) {
+    if (!isValidPassword(newPassword, confirmPassword)) {
       notifyListeners();
       return;
     }
@@ -73,7 +73,7 @@ class ChangePasswordModel extends FlutterFlowModel<ChangePasswordModal>
     return;
   }
 
-  bool validateNewPassword(String newPassword, String confirmPassword) {
+  bool isValidPassword(String newPassword, String confirmPassword) {
     if (newPassword.isEmpty) {
       newPasswordErrorText = 'New password is required';
       return false;

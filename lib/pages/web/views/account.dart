@@ -10,6 +10,7 @@ import 'package:table_reserver/components/web/modals/support_modal.dart';
 import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/web/account_model.dart';
+import 'package:table_reserver/models/web/side_nav_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
 class WebAccount extends StatefulWidget {
@@ -21,14 +22,22 @@ class WebAccount extends StatefulWidget {
 
 class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
   final int userId = prefsWithCache.getInt('userId')!;
-  final String userName = prefsWithCache.getString('userName')!;
-  final String userEmail = prefsWithCache.getString('userEmail')!;
+  String userName = prefsWithCache.getString('userName')!;
+  String userEmail = prefsWithCache.getString('userEmail')!;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
+  }
+
+  void _refreshUserData() {
+    setState(() {
+      userName = prefsWithCache.getString('userName')!;
+      userEmail = prefsWithCache.getString('userEmail')!;
+    });
+    Provider.of<SideNavModel>(context, listen: false).getUserFromCache();
   }
 
   @override
@@ -45,7 +54,7 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  const SideNav(),
+                  SideNav(),
                   Expanded(
                     child:
                         Column(
@@ -222,12 +231,14 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
                   context,
                   'Change Email',
                   const ChangeEmailModal(),
+                  onClosed: _refreshUserData,
                 ),
                 _buildDivider(context),
                 _buildModalButton(
                   context,
                   'Change Username',
                   const ChangeUsernameModal(),
+                  onClosed: _refreshUserData,
                 ),
                 _buildDivider(context),
                 _buildModalButton(
@@ -284,7 +295,12 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildModalButton(BuildContext context, String label, Widget modal) {
+  Widget _buildModalButton(
+    BuildContext context,
+    String label,
+    Widget modal, {
+    VoidCallback? onClosed,
+  }) {
     return InkWell(
       splashColor: Colors.transparent,
       focusColor: Colors.transparent,
@@ -299,7 +315,11 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
           builder: (_) {
             return modal;
           },
-        );
+        ).then((result) {
+          if (result == true && onClosed != null) {
+            onClosed();
+          }
+        });
       },
       child: SizedBox(
         width: double.infinity,

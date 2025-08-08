@@ -54,8 +54,7 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
       Navigator.of(context).push(
         FadeInRoute(
           routeName: Routes.webHomepage,
-          page: WebHomepage(),
-          // page: WebHomepage(userId: response.data!),
+          page: const WebHomepage(),
         ),
       );
     } else {

@@ -25,13 +25,11 @@ class AccountModel extends FlutterFlowModel<WebAccount> with ChangeNotifier {
 
   Future<void> _fetchReservationsCount() async {
     numberOfReservations = 5;
-    debugPrint('Number of reservations fetched: $numberOfReservations');
     notifyListeners();
   }
 
   Future<void> _fetchVenuesOwnedCount() async {
     venuesOwned = 2;
-    debugPrint('Number of venues owned fetched: $venuesOwned');
     notifyListeners();
   }
 

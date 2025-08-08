@@ -35,43 +35,40 @@ class _SideNavState extends State<SideNav> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => SideNavModel()..init(),
-      child: Consumer<SideNavModel>(
-        builder: (context, model, _) {
-          return Container(
-            width: 270,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onSurface,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: Theme.of(context).colorScheme.outline,
-                width: 1,
-              ),
+    return Consumer<SideNavModel>(
+      builder: (context, model, _) {
+        return Container(
+          width: 270,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.onSurface,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outline,
+              width: 1,
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildTitle(context),
-                  _buildUserDetails(context, model),
-                  const Divider(
-                    height: 12,
-                    thickness: 1,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  _buildNavigation(context, model),
-                  _buildModeToggles(context, model),
-                ],
-              ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTitle(context),
+                _buildUserDetails(context, model),
+                const Divider(
+                  height: 12,
+                  thickness: 1,
+                  indent: 16,
+                  endIndent: 16,
+                ),
+                _buildNavigation(context, model),
+                _buildModeToggles(context, model),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 

@@ -60,8 +60,7 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
       Navigator.of(context).push(
         FadeInRoute(
           routeName: Routes.webHomepage,
-          page: WebHomepage(),
-          // page: WebHomepage(userId: response.data!),
+          page: const WebHomepage(),
         ),
       );
     } else {

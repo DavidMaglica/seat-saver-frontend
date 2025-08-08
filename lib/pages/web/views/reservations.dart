@@ -79,7 +79,6 @@ class _WebReservationsState extends State<WebReservations>
                             ],
                           ),
                         ),
-                        // _buildReservations(context),
                       ).animateOnPageLoad(
                         _model.animationsMap['containerOnPageLoadAnimation']!,
                       ),

@@ -181,7 +181,7 @@ class _LogInTabState extends State<LogInTab> {
             ),
           ),
         ),
-        style: Theme.of(context).textTheme.bodyMedium,
+        style: Theme.of(context).textTheme.bodyLarge,
         keyboardType: TextInputType.visiblePassword,
         cursorColor: Theme.of(context).colorScheme.onPrimary,
       ),
