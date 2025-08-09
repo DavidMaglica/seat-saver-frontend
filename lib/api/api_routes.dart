@@ -34,6 +34,7 @@ class ApiRoutes {
   static const reservation = '/reservation';
   static const createReservation = '/create';
   static const getReservations = '/get-all';
+  static const getReservationsByOwner = '/get-by-owner';
   static const updateReservation = '/update';
   static const deleteReservation = '/delete';
 

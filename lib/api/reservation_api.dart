@@ -1,9 +1,9 @@
+import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
 import 'package:table_reserver/api/api_routes.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/reservation_details.dart';
 import 'package:table_reserver/api/dio_setup.dart';
-import 'package:dio/dio.dart';
-import 'package:logger/logger.dart';
 
 final dio = setupDio(ApiRoutes.reservation);
 final logger = Logger();
@@ -14,6 +14,24 @@ class ReservationApi {
       Response response = await dio.get(
         ApiRoutes.getReservations,
         queryParameters: {'userId': userId},
+      );
+
+      List<ReservationDetails> reservations = (response.data as List)
+          .map((reservation) => ReservationDetails.fromJson(reservation))
+          .toList();
+
+      return reservations;
+    } catch (e) {
+      logger.e('Error fetching reservations: $e');
+      return [];
+    }
+  }
+
+  Future<List<ReservationDetails>> getReservationsByOwner(int ownerId) async {
+    try {
+      Response response = await dio.get(
+        ApiRoutes.getReservations,
+        queryParameters: {'ownerId': ownerId},
       );
 
       List<ReservationDetails> reservations = (response.data as List)
@@ -54,17 +72,11 @@ class ReservationApi {
     }
   }
 
-  Future<BasicResponse> deleteReservation(
-    int userId,
-    int reservationId,
-  ) async {
+  Future<BasicResponse> deleteReservation(int userId, int reservationId) async {
     try {
       Response response = await dio.delete(
         ApiRoutes.deleteReservation,
-        queryParameters: {
-          'userId': userId,
-          'reservationId': reservationId,
-        },
+        queryParameters: {'userId': userId, 'reservationId': reservationId},
       );
       return BasicResponse.fromJson(response.data, (json) => json);
     } catch (e) {

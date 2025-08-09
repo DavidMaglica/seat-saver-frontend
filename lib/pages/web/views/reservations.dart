@@ -23,70 +23,68 @@ class WebReservations extends StatefulWidget {
 
 class _WebReservationsState extends State<WebReservations>
     with TickerProviderStateMixin {
-  late ReservationsModel _model;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ReservationsModel());
-  }
-
-  @override
-  void dispose() {
-    _model.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        body: SafeArea(
-          top: true,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const SideNav(),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child:
-                      Material(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        elevation: 3,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildHeading(context),
-                              SizedBox(
-                                height: 360,
-                                child: _buildTable(context),
+    return ChangeNotifierProvider(
+      create: (_) => ReservationsModel()..fetchReservations(),
+      child: Consumer<ReservationsModel>(
+        builder: (context, model, _) {
+          return GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: Scaffold(
+              key: scaffoldKey,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              body: SafeArea(
+                top: true,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    const SideNav(),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child:
+                            Material(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                            ],
-                          ),
-                        ),
-                      ).animateOnPageLoad(
-                        _model.animationsMap['containerOnPageLoadAnimation']!,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildHeading(context),
+                                    Expanded(
+                                      child: _buildTable(context, model),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ).animateOnPageLoad(
+                              model
+                                  .animationsMap['containerOnPageLoadAnimation']!,
+                            ),
                       ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -157,10 +155,19 @@ class _WebReservationsState extends State<WebReservations>
     );
   }
 
-  dynamic _buildTable(BuildContext context) {
-    List<int> reservationIds = _model.reservations
+  dynamic _buildTable(BuildContext context, ReservationsModel model) {
+    List<int> reservationIds = model.reservations
         .map((reservation) => reservation.id)
         .toList();
+
+    if (model.reservations.isEmpty) {
+      return Center(
+        child: Text(
+          'No reservations found.',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      );
+    }
 
     return AdvancedTableWidget(
       headerBuilder: (context, header) {
@@ -171,12 +178,12 @@ class _WebReservationsState extends State<WebReservations>
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       rowElementsBuilder: (context, rowParams) {
-        return _buildRows(context, rowParams, _model.reservations);
+        return _buildRows(context, rowParams, model.reservations);
       },
-      items: _model.reservations,
+      items: model.reservations,
       isLoadingAll: ValueNotifier(false),
       fullLoadingPlaceHolder: const Center(child: CircularProgressIndicator()),
-      headerItems: _model.tableHeaders,
+      headerItems: model.tableHeaders,
       actionBuilder: (context, actionParams) {
         final reservationId = reservationIds[actionParams.rowIndex];
         return _buildActions(context, reservationId);
