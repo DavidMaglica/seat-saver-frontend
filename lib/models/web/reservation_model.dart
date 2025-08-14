@@ -41,10 +41,12 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
 
     fetchedReservations.sort((a, b) => a.datetime.compareTo(b.datetime));
 
-    List<int> userIds = fetchedReservations.map((reservation) {
-      return reservation.userId;
-    }).toList();
-    fetchUserNames(userIds);
+    if (fetchedReservations.isNotEmpty) {
+      List<int> userIds = fetchedReservations.map((reservation) {
+        return reservation.userId;
+      }).toList();
+      fetchUserNames(userIds);
+    }
 
     reservations
       ..clear()
