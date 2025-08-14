@@ -68,7 +68,7 @@ class _WebReservationsState extends State<WebReservations>
                                   mainAxisSize: MainAxisSize.max,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _buildHeading(context),
+                                    _buildHeading(context, model),
                                     Expanded(
                                       child: _buildTable(context, model),
                                     ),
@@ -91,7 +91,7 @@ class _WebReservationsState extends State<WebReservations>
     );
   }
 
-  Row _buildHeading(BuildContext context) {
+  Row _buildHeading(BuildContext context, ReservationsModel model) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,7 +115,7 @@ class _WebReservationsState extends State<WebReservations>
         ),
         FFButtonWidget(
           onPressed: () async {
-            await showDialog(
+            final shouldRefresh = await showDialog(
               context: context,
               barrierDismissible: true,
               builder: (context) {
@@ -129,7 +129,8 @@ class _WebReservationsState extends State<WebReservations>
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 1000),
                       child: ChangeNotifierProvider(
-                        create: (_) => CreateReservationModel(),
+                        create: (_) =>
+                            CreateReservationModel()..fetchOwnedVenues(),
                         child: Consumer<CreateReservationModel>(
                           builder: (context, model, _) {
                             return CreateReservationModal(model: model);
@@ -141,6 +142,9 @@ class _WebReservationsState extends State<WebReservations>
                 );
               },
             );
+            if (shouldRefresh == true) {
+              model.fetchReservations();
+            }
           },
           text: 'Create a Reservation',
           icon: const Icon(CupertinoIcons.add_circled, size: 24),
@@ -188,7 +192,13 @@ class _WebReservationsState extends State<WebReservations>
       headerItems: model.tableHeaders,
       actionBuilder: (context, actionParams) {
         final reservationId = reservationIds[actionParams.rowIndex];
-        return _buildActions(context, reservationId);
+        final reservation = model.reservations[actionParams.rowIndex];
+        final venueName =
+            model.venueNamesById[reservation.venueId] ?? 'Unknown Venue';
+        final userName =
+            model.userNamesById[reservation.userId] ?? 'Unknown User';
+
+        return _buildActions(context, reservationId, venueName, userName);
       },
       actions: const [
         {"label": "edit and delete"},
@@ -199,7 +209,12 @@ class _WebReservationsState extends State<WebReservations>
     );
   }
 
-  Row _buildActions(BuildContext context, int reservationId) {
+  Row _buildActions(
+    BuildContext context,
+    int reservationId,
+    String venueName,
+    String userName,
+  ) {
     return Row(
       children: [
         IconButton(
@@ -214,7 +229,11 @@ class _WebReservationsState extends State<WebReservations>
               enableDrag: false,
               context: context,
               builder: (_) {
-                return EditReservationModal(reservationId: reservationId);
+                return EditReservationModal(
+                  reservationId: reservationId,
+                  venueName: venueName,
+                  userName: userName,
+                );
               },
             );
           },
@@ -280,10 +299,7 @@ class _WebReservationsState extends State<WebReservations>
       SizedBox(
         width: rowParams.defualtWidth,
         child: Center(
-          child: Text(
-            userName,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
+          child: Text(userName, style: Theme.of(context).textTheme.bodyLarge),
         ),
       ),
       SizedBox(

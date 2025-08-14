@@ -2,7 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:google_sign_in_web/web_only.dart';
+import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/api/data/user.dart';
+import 'package:table_reserver/api/data/user_response.dart';
+import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/web/authentication_model.dart';
 import 'package:table_reserver/models/web/sign_up_tab_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
@@ -22,6 +26,7 @@ class SignUpTab extends StatefulWidget {
 
 class _SignUpTabState extends State<SignUpTab> {
   late SignUpTabModel _model;
+  final AccountApi accountApi = AccountApi();
 
   @override
   void initState() {
@@ -51,7 +56,17 @@ class _SignUpTabState extends State<SignUpTab> {
       confirmedPassword: confirmPassword,
     );
     if (response.success && response.data != null) {
-      _goToHomepage(response.data!);
+      int userId = response.data!;
+
+      UserResponse? userResponse = await accountApi.getUser(userId);
+
+      if (userResponse != null && userResponse.success) {
+        User user = userResponse.user!;
+
+        prefsWithCache.setInt('userId', userId);
+
+        _goToHomepage(user.id);
+      }
     } else {
       if (!mounted) return;
       WebToaster.displayError(context, response.message);

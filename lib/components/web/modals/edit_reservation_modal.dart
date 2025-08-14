@@ -1,17 +1,22 @@
-import 'package:table_reserver/components/web/modals/modal_widgets.dart';
-import 'package:table_reserver/models/web/edit_reservation_model.dart';
-import 'package:table_reserver/themes/web_theme.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:provider/provider.dart';
+import 'package:table_reserver/components/web/modals/modal_widgets.dart';
+import 'package:table_reserver/models/web/edit_reservation_model.dart';
+import 'package:table_reserver/themes/web_theme.dart';
 
 class EditReservationModal extends StatefulWidget {
   final int reservationId;
+  final String venueName;
+  final String userName;
 
   const EditReservationModal({
     super.key,
     required this.reservationId,
+    required this.venueName,
+    required this.userName,
   });
 
   @override
@@ -20,62 +25,67 @@ class EditReservationModal extends StatefulWidget {
 
 class _EditReservationModalState extends State<EditReservationModal>
     with TickerProviderStateMixin {
-  late EditReservationModel _model;
-
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
-    _model.onUpdate();
   }
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => EditReservationModel());
-  }
-
-  @override
-  void dispose() {
-    _model.maybeDispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
+    return ChangeNotifierProvider(
+      create: (_) => EditReservationModel()
+        ..fetchReservationDetails(
+          context,
+          widget.reservationId,
+          widget.venueName,
+          widget.userName,
+        ),
+      child: Consumer<EditReservationModel>(
+        builder: (context, model, _) {
+          return SizedBox(
             width: double.infinity,
-            constraints: const BoxConstraints(
-              maxWidth: 1000,
-            ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(8),
-            ),
+            height: double.infinity,
             child: Column(
               mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                buildTitle(context, 'Edit Reservation'),
-                _buildBody(context),
-                buildButtons(
-                    context, () => _model.editReservation(), 'Save Changes'),
-              ].divide(const SizedBox(height: 16)),
+                Container(
+                  width: double.infinity,
+                  constraints: const BoxConstraints(maxWidth: 1000),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildTitle(context, 'Edit Reservation'),
+                      _buildBody(context, model),
+                      buildButtons(
+                        context,
+                        () => model.editReservation(),
+                        'Save Changes',
+                      ),
+                    ].divide(const SizedBox(height: 16)),
+                  ),
+                ).animateOnPageLoad(
+                  model.animationsMap['containerOnPageLoadAnimation']!,
+                ),
+              ],
             ),
-          ).animateOnPageLoad(
-              _model.animationsMap['containerOnPageLoadAnimation']!),
-        ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _buildBody(BuildContext context, EditReservationModel model) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -85,30 +95,41 @@ class _EditReservationModalState extends State<EditReservationModal>
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              _buildVenueNameInputField(context),
-              _buildUserInputField(context),
+              _buildVenueNameInputField(context, model),
+              _buildUserInputField(context, model),
             ].divide(const SizedBox(width: 32)),
           ),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              _buildNumberOfGuestsInputField(context),
-              _buildReservationDateInputField(context),
+              _buildNumberOfGuestsInputField(context, model),
+              _buildReservationDateInputField(context, model),
             ].divide(const SizedBox(width: 32)),
           ),
-        ].divide(
-          const SizedBox(height: 24),
-        ),
+        ].divide(const SizedBox(height: 24)),
       ),
     );
   }
 
-  Widget _buildVenueNameInputField(BuildContext context) {
+  Widget _buildVenueNameInputField(
+    BuildContext context,
+    EditReservationModel model,
+  ) {
     return Expanded(
       child: TextFormField(
-        controller: _model.venueNameTextController,
-        focusNode: _model.venueNameFocusNode,
+        controller: model.venueNameTextController,
+        focusNode: model.venueNameFocusNode,
         decoration: InputDecoration(
+          enabled: false,
+          disabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(
+                context,
+              ).colorScheme.onPrimary.withValues(alpha: 0.5),
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
           labelText: 'Venue Name',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
           enabledBorder: OutlineInputBorder(
@@ -119,10 +140,7 @@ class _EditReservationModalState extends State<EditReservationModal>
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: WebTheme.infoColor,
-              width: 1,
-            ),
+            borderSide: const BorderSide(color: WebTheme.infoColor, width: 1),
             borderRadius: BorderRadius.circular(8),
           ),
           contentPadding: const EdgeInsets.symmetric(
@@ -136,19 +154,21 @@ class _EditReservationModalState extends State<EditReservationModal>
     );
   }
 
-  Widget _buildUserInputField(BuildContext context) {
+  Widget _buildUserInputField(
+    BuildContext context,
+    EditReservationModel model,
+  ) {
     return Expanded(
       child: TextFormField(
-        controller: _model.userTextController,
-        focusNode: _model.userFocusNode,
+        controller: model.userTextController,
+        focusNode: model.userFocusNode,
         decoration: InputDecoration(
           enabled: false,
           disabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: Theme.of(context)
-                  .colorScheme
-                  .onPrimary
-                  .withValues(alpha: 0.5),
+              color: Theme.of(
+                context,
+              ).colorScheme.onPrimary.withValues(alpha: 0.5),
               width: 1,
             ),
             borderRadius: BorderRadius.circular(8),
@@ -166,13 +186,16 @@ class _EditReservationModalState extends State<EditReservationModal>
     );
   }
 
-  Widget _buildNumberOfGuestsInputField(BuildContext context) {
+  Widget _buildNumberOfGuestsInputField(
+    BuildContext context,
+    EditReservationModel model,
+  ) {
     return Expanded(
       child: TextFormField(
-        controller: _model.numberOfGuestsTextController,
-        focusNode: _model.numberOfGuestsFocusNode,
+        controller: model.numberOfGuestsTextController,
+        focusNode: model.numberOfGuestsFocusNode,
         decoration: InputDecoration(
-          labelText: 'Maximum Capacity',
+          labelText: 'Number of Guests',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
@@ -182,10 +205,7 @@ class _EditReservationModalState extends State<EditReservationModal>
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: WebTheme.infoColor,
-              width: 1,
-            ),
+            borderSide: const BorderSide(color: WebTheme.infoColor, width: 1),
             borderRadius: BorderRadius.circular(8),
           ),
           contentPadding: const EdgeInsets.symmetric(
@@ -201,11 +221,14 @@ class _EditReservationModalState extends State<EditReservationModal>
     );
   }
 
-  Widget _buildReservationDateInputField(BuildContext context) {
+  Widget _buildReservationDateInputField(
+    BuildContext context,
+    EditReservationModel model,
+  ) {
     return Expanded(
       child: TextFormField(
-        controller: _model.reservationDateTextController,
-        focusNode: _model.reservationDateFocusNode,
+        controller: model.reservationDateTextController,
+        focusNode: model.reservationDateFocusNode,
         readOnly: true,
         onTap: () async {
           DateTime? pickedDate = await _buildDatePicker(context);
@@ -227,7 +250,7 @@ class _EditReservationModalState extends State<EditReservationModal>
 
               final formattedDateTime = dateFormat.format(combinedDateTime);
 
-              _model.reservationDateTextController.text = formattedDateTime;
+              model.reservationDateTextController.text = formattedDateTime;
             }
           }
         },
@@ -242,10 +265,7 @@ class _EditReservationModalState extends State<EditReservationModal>
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: WebTheme.infoColor,
-              width: 1,
-            ),
+            borderSide: const BorderSide(color: WebTheme.infoColor, width: 1),
             borderRadius: BorderRadius.circular(8),
           ),
           contentPadding: const EdgeInsets.symmetric(
@@ -273,30 +293,25 @@ class _EditReservationModalState extends State<EditReservationModal>
       currentDateDecoration: BoxDecoration(
         color: WebTheme.transparentColour,
         shape: BoxShape.circle,
-        border: Border.all(
-          color: WebTheme.infoColor,
-          width: 1,
-        ),
+        border: Border.all(color: WebTheme.infoColor, width: 1),
       ),
-      selectedCellTextStyle:
-          Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
+      selectedCellTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyLarge?.copyWith(color: Colors.white),
       selectedCellDecoration: const BoxDecoration(
         color: WebTheme.infoColor,
         shape: BoxShape.circle,
       ),
       enabledCellsTextStyle: Theme.of(context).textTheme.bodyLarge,
       disabledCellsTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color:
-                Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.4),
-          ),
-      leadingDateTextStyle: Theme.of(context)
-          .textTheme
-          .bodyLarge
-          ?.copyWith(fontWeight: FontWeight.bold),
-      daysOfTheWeekTextStyle: Theme.of(context)
-          .textTheme
-          .bodyMedium
-          ?.copyWith(fontWeight: FontWeight.bold),
+        color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.4),
+      ),
+      leadingDateTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+      daysOfTheWeekTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
     );
   }
 

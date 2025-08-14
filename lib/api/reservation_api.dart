@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/api/common/api_routes.dart';
+import 'package:table_reserver/api/common/dio_setup.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/reservation_details.dart';
-import 'package:table_reserver/api/common/dio_setup.dart';
+import 'package:table_reserver/utils/logger.dart';
 
 final dio = setupDio();
 
@@ -38,20 +38,35 @@ class ReservationApi {
     }
   }
 
+  Future<ReservationDetails?> getReservationById(int reservationId) async {
+    try {
+      Response response = await dio.get(
+        ApiRoutes.reservationById(reservationId),
+      );
+
+      return ReservationDetails.fromJson(response.data);
+    } catch (e) {
+      logger.e('Error fetching reservation by ID: $e');
+      return null;
+    }
+  }
+
   Future<BasicResponse> createReservation({
-    required int userId,
     required int venueId,
-    required int numberOfPeople,
+    required int numberOfGuests,
     required DateTime reservationDate,
+    int? userId,
+    String? userEmail,
   }) async {
     try {
       Response response = await dio.post(
         ApiRoutes.reservations,
         data: {
           'userId': userId,
+          'userEmail': userEmail,
           'venueId': venueId,
           'reservationDate': reservationDate.toIso8601String(),
-          'numberOfPeople': numberOfPeople,
+          'numberOfGuests': numberOfGuests,
         },
       );
 
@@ -65,11 +80,34 @@ class ReservationApi {
     }
   }
 
-  Future<BasicResponse> deleteReservation(int userId, int reservationId) async {
+  Future<BasicResponse> updateReservation({
+    required int reservationId,
+    required int numberOfGuests,
+    required DateTime reservationDate,
+  }) async {
+    try {
+      Response response = await dio.patch(
+        ApiRoutes.reservationById(reservationId),
+        data: {
+          'reservationDate': reservationDate.toIso8601String(),
+          'numberOfGuests': numberOfGuests,
+        },
+      );
+
+      return BasicResponse.fromJson(response.data, (json) => json);
+    } catch (e) {
+      logger.e('Error updating reservation: $e');
+      return BasicResponse(
+        success: false,
+        message: 'Failed to update reservation',
+      );
+    }
+  }
+
+  Future<BasicResponse> deleteReservation(int reservationId) async {
     try {
       Response response = await dio.delete(
-        ApiRoutes.reservations,
-        queryParameters: {'userId': userId, 'reservationId': reservationId},
+        ApiRoutes.reservationById(reservationId),
       );
       return BasicResponse.fromJson(response.data, (json) => json);
     } catch (e) {

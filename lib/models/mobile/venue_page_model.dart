@@ -163,7 +163,7 @@ class VenuePageModel extends ChangeNotifier {
     BasicResponse response = await reservationApi.createReservation(
       userId: userId!,
       venueId: venueId,
-      numberOfPeople: selectedNumberOfPeople!,
+      numberOfGuests: selectedNumberOfPeople!,
       reservationDate: reservationDateTime,
     );
     if (!ctx.mounted) return;

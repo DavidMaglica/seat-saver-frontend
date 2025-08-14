@@ -49,11 +49,15 @@ class ApiRoutes {
 
   static const String reservations = '$apiBase/reservations';
 
+  static const String reservationWithEmail = '$reservations/create-with-email';
+
+  static String reservationById(int reservationId) =>
+      '$reservations/$reservationId';
+
   static String userReservations(int userId) => '$reservations/user/$userId';
 
   static String ownerReservations(int ownerId) =>
       '$reservations/owner/$ownerId';
-
   static const String geolocation = '$apiBase/geolocation';
   static const String getNearbyCities = '$geolocation/nearby-cities';
 

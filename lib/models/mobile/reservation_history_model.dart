@@ -45,10 +45,7 @@ class ReservationHistoryModel extends ChangeNotifier {
   }
 
   Future<void> deleteReservation(int reservationId) async {
-    final response = await reservationApi.deleteReservation(
-      userId,
-      reservationId,
-    );
+    final response = await reservationApi.deleteReservation(reservationId);
 
     if (response.success) {
       reservations?.removeWhere(
