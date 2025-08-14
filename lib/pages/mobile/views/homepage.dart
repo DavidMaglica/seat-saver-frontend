@@ -259,7 +259,7 @@ class Homepage extends StatelessWidget {
                 venue: venue,
                 userId: userId,
                 userLocation: userLocation,
-                venueIndex: venue.id,
+                venueId: venue.id,
               ),
             );
           }).toList(),

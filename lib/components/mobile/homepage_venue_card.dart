@@ -11,14 +11,14 @@ import 'package:geolocator/geolocator.dart';
 
 class VenueCard extends StatefulWidget {
   final Venue venue;
-  final int venueIndex;
+  final int venueId;
   final int? userId;
   final Position? userLocation;
 
   const VenueCard({
     Key? key,
     required this.venue,
-    required this.venueIndex,
+    required this.venueId,
     this.userId,
     this.userLocation,
   }) : super(key: key);
