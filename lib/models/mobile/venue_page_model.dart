@@ -1,15 +1,15 @@
 import 'dart:typed_data';
 
+import 'package:date_picker_plus/date_picker_plus.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/reservation_api.dart';
 import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/utils/toaster.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/routes.dart';
-import 'package:date_picker_plus/date_picker_plus.dart';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:table_reserver/utils/toaster.dart';
 
 class VenuePageModel extends ChangeNotifier {
   final BuildContext ctx;
@@ -33,17 +33,14 @@ class VenuePageModel extends ChangeNotifier {
     typeId: 1,
     description: '',
   );
-  final List<TimeOfDay> timeOptions = List.generate(
-    48,
-    (index) {
-      final hour = index ~/ 2;
-      final minute = (index % 2) * 30;
-      if (hour >= 24) {
-        return const TimeOfDay(hour: 23, minute: 30);
-      }
-      return TimeOfDay(hour: hour, minute: minute);
-    },
-  );
+  final List<TimeOfDay> timeOptions = List.generate(48, (index) {
+    final hour = index ~/ 2;
+    final minute = (index % 2) * 30;
+    if (hour >= 24) {
+      return const TimeOfDay(hour: 23, minute: 30);
+    }
+    return TimeOfDay(hour: hour, minute: minute);
+  });
 
   List<Uint8List>? venueImageBytes;
   Uint8List? venueHeadingImage;
@@ -90,8 +87,9 @@ class VenuePageModel extends ChangeNotifier {
 
   Future<void> _loadImages() async {
     venueImageBytes = await venueApi.getVenueImages(venueId);
-    venueHeadingImage =
-        venueImageBytes?.isNotEmpty == true ? venueImageBytes!.first : null;
+    venueHeadingImage = venueImageBytes?.isNotEmpty == true
+        ? venueImageBytes!.first
+        : null;
     menuImageBytes = await venueApi.getMenuImages(venueId);
   }
 
@@ -163,10 +161,10 @@ class VenuePageModel extends ChangeNotifier {
     );
 
     BasicResponse response = await reservationApi.createReservation(
-      userId!,
-      venueId,
-      selectedNumberOfPeople!,
-      reservationDateTime,
+      userId: userId!,
+      venueId: venueId,
+      numberOfPeople: selectedNumberOfPeople!,
+      reservationDate: reservationDateTime,
     );
     if (!ctx.mounted) return;
     ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
@@ -176,13 +174,17 @@ class VenuePageModel extends ChangeNotifier {
       return;
     }
 
-    Navigator.pushNamed(ctx, Routes.successfulReservation, arguments: {
-      'venueName': venue.name,
-      'numberOfGuests': selectedNumberOfPeople,
-      'reservationDateTime': reservationDateTime,
-      'userId': userId,
-      'userLocation': userLocation,
-    });
+    Navigator.pushNamed(
+      ctx,
+      Routes.successfulReservation,
+      arguments: {
+        'venueName': venue.name,
+        'numberOfGuests': selectedNumberOfPeople,
+        'reservationDateTime': reservationDateTime,
+        'userId': userId,
+        'userLocation': userLocation,
+      },
+    );
 
     return;
   }
@@ -237,42 +239,29 @@ class VenuePageModel extends ChangeNotifier {
         color: MobileTheme.transparentColour,
         shape: BoxShape.circle,
         border: Border(
-          top: BorderSide(
-            color: MobileTheme.infoColor,
-            width: 1,
-          ),
-          bottom: BorderSide(
-            color: MobileTheme.infoColor,
-            width: 1,
-          ),
-          left: BorderSide(
-            color: MobileTheme.infoColor,
-            width: 1,
-          ),
-          right: BorderSide(
-            color: MobileTheme.infoColor,
-            width: 1,
-          ),
+          top: BorderSide(color: MobileTheme.infoColor, width: 1),
+          bottom: BorderSide(color: MobileTheme.infoColor, width: 1),
+          left: BorderSide(color: MobileTheme.infoColor, width: 1),
+          right: BorderSide(color: MobileTheme.infoColor, width: 1),
         ),
       ),
-      selectedCellTextStyle:
-          Theme.of(ctx).textTheme.titleMedium?.copyWith(color: Colors.white),
+      selectedCellTextStyle: Theme.of(
+        ctx,
+      ).textTheme.titleMedium?.copyWith(color: Colors.white),
       selectedCellDecoration: const BoxDecoration(
         color: MobileTheme.infoColor,
         shape: BoxShape.circle,
       ),
       enabledCellsTextStyle: Theme.of(ctx).textTheme.bodyMedium,
       disabledCellsTextStyle: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.4),
-          ),
-      leadingDateTextStyle: Theme.of(ctx)
-          .textTheme
-          .bodyLarge
-          ?.copyWith(fontWeight: FontWeight.bold),
-      daysOfTheWeekTextStyle: Theme.of(ctx)
-          .textTheme
-          .bodyMedium
-          ?.copyWith(fontWeight: FontWeight.bold),
+        color: Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.4),
+      ),
+      leadingDateTextStyle: Theme.of(
+        ctx,
+      ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+      daysOfTheWeekTextStyle: Theme.of(
+        ctx,
+      ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
     );
   }
 

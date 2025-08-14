@@ -1,4 +1,11 @@
+import 'package:carousel_slider/carousel_controller.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart'
+    show ScaffoldState, ScaffoldMessenger, Colors, Theme, showModalBottomSheet;
+import 'package:flutter/scheduler.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/common/google_api.dart';
 import 'package:table_reserver/api/data/notification_settings.dart';
 import 'package:table_reserver/api/data/paged_response.dart';
 import 'package:table_reserver/api/data/user.dart';
@@ -6,16 +13,10 @@ import 'package:table_reserver/api/data/user_location.dart';
 import 'package:table_reserver/api/data/user_response.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/geolocation_api.dart';
-import 'package:table_reserver/api/google_api.dart';
 import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/components/mobile/location_permission.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/utils.dart';
-import 'package:carousel_slider/carousel_controller.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show ScaffoldState, ScaffoldMessenger, Colors, Theme, showModalBottomSheet;
-import 'package:flutter/scheduler.dart';
-import 'package:geolocator/geolocator.dart';
 
 class HomepageModel extends ChangeNotifier {
   final BuildContext context;
@@ -40,16 +41,12 @@ class HomepageModel extends ChangeNotifier {
   Position? currentUserLocation;
   User? loggedInUser;
 
-  AccountApi accountApi = AccountApi();
-  GeolocationApi geolocationApi = GeolocationApi();
-  VenueApi venueApi = VenueApi();
-  GoogleApi googleApi = GoogleApi();
+  final AccountApi accountApi = AccountApi();
+  final GeolocationApi geolocationApi = GeolocationApi();
+  final VenueApi venueApi = VenueApi();
+  final GoogleApi googleApi = GoogleApi();
 
-  HomepageModel({
-    required this.context,
-    this.userId,
-    this.userLocation,
-  });
+  HomepageModel({required this.context, this.userId, this.userLocation});
 
   Future<void> init() async {
     await checkLogIn();
@@ -59,9 +56,10 @@ class HomepageModel extends ChangeNotifier {
     }
 
     if (userId != null) {
-      NotificationOptions? options =
-          await accountApi.getNotificationOptions(userId!);
-      if (options != null && options.locationServicesTurnedOn) {
+      NotificationOptions? options = await accountApi.getNotificationOptions(
+        userId!,
+      );
+      if (options != null && options.isLocationServicesEnabled) {
         userLocation = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.best,
         );
@@ -118,19 +116,19 @@ class HomepageModel extends ChangeNotifier {
     return loggedInUser != null &&
         loggedInUser!.lastKnownLatitude != null &&
         loggedInUser!.lastKnownLongitude != null &&
-        loggedInUser!.notificationOptions.locationServicesTurnedOn == true;
+        loggedInUser!.notificationOptions!.isLocationServicesEnabled == true;
   }
 
   Future<void> displayLocationPermissionPopUp() async {
     if (userId != null) {
       locationPopUpCounter++;
       bool isLocationServicesTurnedOn = false;
-      NotificationOptions? notificationOptions =
-          await accountApi.getNotificationOptions(userId!);
+      NotificationOptions? notificationOptions = await accountApi
+          .getNotificationOptions(userId!);
 
       if (notificationOptions != null) {
         isLocationServicesTurnedOn =
-            notificationOptions.locationServicesTurnedOn;
+            notificationOptions.isLocationServicesEnabled;
       }
 
       if (!isLocationServicesTurnedOn) {
@@ -155,95 +153,105 @@ class HomepageModel extends ChangeNotifier {
   }
 
   Future<void> getNearbyVenues() async {
-    PagedResponse<Venue> venues = await venueApi.getNearbyVenuesNew();
+    PagedResponse<Venue> venues = await venueApi.getNearbyVenues();
     nearbyVenues = venues.content;
     notifyListeners();
   }
 
   Future<void> getNewVenues() async {
-    PagedResponse<Venue> venues = await venueApi.getNewVenuesNew();
+    PagedResponse<Venue> venues = await venueApi.getNewVenues();
     newVenues = venues.content;
     notifyListeners();
   }
 
   Future<void> getTrendingVenues() async {
-    PagedResponse<Venue> venues = await venueApi.getTrendingVenuesNew();
+    PagedResponse<Venue> venues = await venueApi.getTrendingVenues();
     trendingVenues = venues.content;
     notifyListeners();
   }
 
   Future<void> getSuggestedVenues() async {
-    PagedResponse<Venue> venues = await venueApi.getSuggestedVenuesNew();
+    PagedResponse<Venue> venues = await venueApi.getSuggestedVenues();
     suggestedVenues = venues.content;
     notifyListeners();
   }
 
   void openNearbyVenues() {
-    Navigator.of(context).pushNamed(Routes.venuesByType, arguments: {
-      'userId': userId,
-      'type': 'nearby',
-      'userLocation': userLocation ?? currentUserLocation,
-    });
+    Navigator.of(context).pushNamed(
+      Routes.venuesByType,
+      arguments: {
+        'userId': userId,
+        'type': 'nearby',
+        'userLocation': userLocation ?? currentUserLocation,
+      },
+    );
     notifyListeners();
     return;
   }
 
   void openNewVenues() {
-    Navigator.of(context).pushNamed(Routes.venuesByType, arguments: {
-      'userId': userId,
-      'type': 'new',
-      'userLocation': userLocation ?? currentUserLocation,
-    });
+    Navigator.of(context).pushNamed(
+      Routes.venuesByType,
+      arguments: {
+        'userId': userId,
+        'type': 'new',
+        'userLocation': userLocation ?? currentUserLocation,
+      },
+    );
     notifyListeners();
     return;
   }
 
   void openTrendingVenues() {
-    Navigator.of(context).pushNamed(Routes.venuesByType, arguments: {
-      'userId': userId,
-      'type': 'trending',
-      'userLocation': userLocation ?? currentUserLocation,
-    });
+    Navigator.of(context).pushNamed(
+      Routes.venuesByType,
+      arguments: {
+        'userId': userId,
+        'type': 'trending',
+        'userLocation': userLocation ?? currentUserLocation,
+      },
+    );
     notifyListeners();
     return;
   }
 
   void openSuggestedVenues() {
-    Navigator.of(context).pushNamed(Routes.venuesByType, arguments: {
-      'userId': userId,
-      'type': 'suggested',
-      'userLocation': userLocation ?? currentUserLocation,
-    });
+    Navigator.of(context).pushNamed(
+      Routes.venuesByType,
+      arguments: {
+        'userId': userId,
+        'type': 'suggested',
+        'userLocation': userLocation ?? currentUserLocation,
+      },
+    );
     notifyListeners();
     return;
   }
 
   void _openPopUp(int userId) {
-    SchedulerBinding.instance.addPostFrameCallback(
-      (_) async {
-        await showModalBottomSheet(
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          barrierColor: Theme.of(context).colorScheme.onSecondary,
-          enableDrag: false,
-          context: context,
-          builder: (context) {
-            return GestureDetector(
-              onTap: () => unfocusNode.canRequestFocus
-                  ? FocusScope.of(context).requestFocus(unfocusNode)
-                  : FocusScope.of(context).unfocus(),
-              child: Padding(
-                padding: MediaQuery.viewInsetsOf(context),
-                child: SizedBox(
-                  height: 568,
-                  child: LocationPermissionPopUp(userId: userId),
-                ),
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      await showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        barrierColor: Theme.of(context).colorScheme.onSecondary,
+        enableDrag: false,
+        context: context,
+        builder: (context) {
+          return GestureDetector(
+            onTap: () => unfocusNode.canRequestFocus
+                ? FocusScope.of(context).requestFocus(unfocusNode)
+                : FocusScope.of(context).unfocus(),
+            child: Padding(
+              padding: MediaQuery.viewInsetsOf(context),
+              child: SizedBox(
+                height: 568,
+                child: LocationPermissionPopUp(userId: userId),
               ),
-            );
-          },
-        );
-      },
-    );
+            ),
+          );
+        },
+      );
+    });
     notifyListeners();
   }
 

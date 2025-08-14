@@ -28,8 +28,10 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
 
   @override
   void initState(BuildContext context) {
+    final int? userId = prefsWithCache.getInt('userId');
     authListener(context);
     if (isActive) {
+      if (userId != null) return;
       googleSignIn.attemptLightweightAuthentication()?.then((value) {
         if (value != null) {
           currentAuthMethod = AuthenticationMethod.google;

@@ -27,7 +27,7 @@ class LogInTab extends StatefulWidget {
 
 class _LogInTabState extends State<LogInTab> {
   late LogInTabModel _model;
-  late final AccountApi accountApi = AccountApi();
+  final AccountApi accountApi = AccountApi();
 
   @override
   void initState() {

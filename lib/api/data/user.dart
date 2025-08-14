@@ -4,7 +4,7 @@ class User {
   final int id;
   final String username;
   final String email;
-  final NotificationOptions notificationOptions;
+  final NotificationOptions? notificationOptions;
   final double? lastKnownLatitude;
   final double? lastKnownLongitude;
 
@@ -12,7 +12,7 @@ class User {
     required this.id,
     required this.username,
     required this.email,
-    required this.notificationOptions,
+    this.notificationOptions,
     this.lastKnownLatitude,
     this.lastKnownLongitude,
   });
@@ -22,8 +22,9 @@ class User {
       id: json['id'],
       username: json['username'],
       email: json['email'],
-      notificationOptions:
-          NotificationOptions.fromJson(json['notificationOptions']),
+      notificationOptions: json['notificationOptions'] != null
+          ? NotificationOptions.fromJson(json['notificationOptions'])
+          : null,
       lastKnownLatitude: json['lastKnownLatitude'],
       lastKnownLongitude: json['lastKnownLongitude'],
     );
@@ -67,9 +68,9 @@ class APIUser {
       username: username,
       email: email,
       notificationOptions: NotificationOptions(
-        pushNotificationsTurnedOn: false,
-        emailNotificationsTurnedOn: false,
-        locationServicesTurnedOn: false,
+        isPushNotificationsEnabled: false,
+        isEmailNotificationsEnabled: false,
+        isLocationServicesEnabled: false,
       ),
       lastKnownLatitude: lastKnownLatitude,
       lastKnownLongitude: lastKnownLongitude,

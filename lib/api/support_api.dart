@@ -1,10 +1,9 @@
-import 'package:table_reserver/api/api_routes.dart';
+import 'package:table_reserver/api/common/api_routes.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/dio_setup.dart';
-import 'package:logger/logger.dart';
+import 'package:table_reserver/api/common/dio_setup.dart';
+import 'package:table_reserver/utils/logger.dart';
 
-final dio = setupDio(ApiRoutes.support);
-final logger = Logger();
+final dio = setupDio();
 
 class SupportApi {
   Future<BasicResponse> sendEmail(

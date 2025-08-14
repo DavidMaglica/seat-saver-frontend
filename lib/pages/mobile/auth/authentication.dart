@@ -1,13 +1,13 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/models/mobile/authentication_model.dart';
 import 'package:table_reserver/pages/mobile/auth/log_in_tab.dart';
 import 'package:table_reserver/pages/mobile/auth/sign_up_tab.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/routes.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class Authentication extends StatefulWidget {
   const Authentication({super.key});
@@ -22,7 +22,7 @@ class _AuthenticationState extends State<Authentication>
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  AccountApi accountApi = AccountApi();
+  final AccountApi accountApi = AccountApi();
 
   @override
   void initState() {
@@ -66,12 +66,14 @@ class _AuthenticationState extends State<Authentication>
                     child: Container(
                       width: double.infinity,
                       height: MediaQuery.sizeOf(context).height,
-                      constraints: const BoxConstraints(
-                        maxWidth: 530,
-                      ),
+                      constraints: const BoxConstraints(maxWidth: 530),
                       child: Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                          0,
+                          16,
+                          0,
+                          0,
+                        ),
                         child: Column(
                           children: [
                             Expanded(
@@ -87,7 +89,9 @@ class _AuthenticationState extends State<Authentication>
                                 ? Padding(
                                     padding:
                                         const EdgeInsetsDirectional.symmetric(
-                                            horizontal: 0, vertical: 36),
+                                          horizontal: 0,
+                                          vertical: 36,
+                                        ),
                                     child: CupertinoButton(
                                       child: const Text(
                                         'Continue without account.',
@@ -101,7 +105,7 @@ class _AuthenticationState extends State<Authentication>
                                         Routes.homepage,
                                         arguments: {
                                           'userId': null,
-                                          'userLocation': null
+                                          'userLocation': null,
                                         },
                                       ),
                                     ),
@@ -111,26 +115,34 @@ class _AuthenticationState extends State<Authentication>
                               alignment: const Alignment(0, 0),
                               child: TabBar(
                                 labelColor: MobileTheme.accent1,
-                                unselectedLabelColor:
-                                    Theme.of(context).colorScheme.onPrimary,
-                                labelStyle:
-                                    Theme.of(context).textTheme.titleMedium,
-                                unselectedLabelStyle:
-                                    Theme.of(context).textTheme.titleSmall,
+                                unselectedLabelColor: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimary,
+                                labelStyle: Theme.of(
+                                  context,
+                                ).textTheme.titleMedium,
+                                unselectedLabelStyle: Theme.of(
+                                  context,
+                                ).textTheme.titleSmall,
                                 indicatorColor: MobileTheme.accent1,
                                 indicatorWeight: 3,
                                 indicatorSize: TabBarIndicatorSize.tab,
                                 dividerColor: Colors.transparent,
                                 padding: const EdgeInsetsDirectional.fromSTEB(
-                                    16, 0, 16, 0),
+                                  16,
+                                  0,
+                                  16,
+                                  0,
+                                ),
                                 tabs: const [
                                   Tab(text: 'Create Account'),
                                   Tab(text: 'Log In'),
                                 ],
                                 controller: _model.tabBarController,
                                 onTap: (i) async {
-                                  SystemChannels.textInput
-                                      .invokeMethod('TextInput.hide');
+                                  SystemChannels.textInput.invokeMethod(
+                                    'TextInput.hide',
+                                  );
                                   [() async {}, () async {}][i]();
                                 },
                               ),

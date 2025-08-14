@@ -33,7 +33,9 @@ class _WebReservationsState extends State<WebReservations>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ReservationsModel()..fetchReservations(),
+      create: (_) => ReservationsModel()
+        ..fetchReservations()
+        ..fetchOwnedVenues(),
       child: Consumer<ReservationsModel>(
         builder: (context, model, _) {
           return GestureDetector(
@@ -178,7 +180,7 @@ class _WebReservationsState extends State<WebReservations>
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       rowElementsBuilder: (context, rowParams) {
-        return _buildRows(context, rowParams, model.reservations);
+        return _buildRows(context, model, rowParams, model.reservations);
       },
       items: model.reservations,
       isLoadingAll: ValueNotifier(false),
@@ -259,26 +261,27 @@ class _WebReservationsState extends State<WebReservations>
 
   List<SizedBox> _buildRows(
     BuildContext context,
+    ReservationsModel model,
     RowBuilderParams rowParams,
     List<ReservationDetails> reservations,
   ) {
     DateFormat dateFormat = DateFormat('dd MMMM, yyyy - HH:mm');
     final reservation = reservations[rowParams.index];
+    final venueName =
+        model.venueNamesById[reservation.venueId] ?? 'Unknown Venue';
+    final userName = model.userNamesById[reservation.userId] ?? 'Unknown User';
     return [
       SizedBox(
         width: rowParams.defualtWidth,
         child: Center(
-          child: Text(
-            '${reservation.venueId}',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
+          child: Text(venueName, style: Theme.of(context).textTheme.bodyLarge),
         ),
       ),
       SizedBox(
         width: rowParams.defualtWidth,
         child: Center(
           child: Text(
-            '${reservation.userId}',
+            userName,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
         ),

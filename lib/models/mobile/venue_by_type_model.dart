@@ -63,7 +63,7 @@ class VenuesByTypeModel extends ChangeNotifier {
     PagedResponse<Venue> paged;
     switch (type) {
       case 'nearby':
-        paged = await venueApi.getNearbyVenuesNew(
+        paged = await venueApi.getNearbyVenues(
           page: _currentPage,
           size: _pageSize,
         );
@@ -71,7 +71,7 @@ class VenuesByTypeModel extends ChangeNotifier {
         _currentPage++;
         break;
       case 'new':
-        paged = await venueApi.getNewVenuesNew(
+        paged = await venueApi.getNewVenues(
           page: _currentPage,
           size: _pageSize,
         );
@@ -79,7 +79,7 @@ class VenuesByTypeModel extends ChangeNotifier {
         hasMorePages = _currentPage < paged.totalPages;
         break;
       case 'trending':
-        paged = await venueApi.getTrendingVenuesNew(
+        paged = await venueApi.getTrendingVenues(
           page: _currentPage,
           size: _pageSize,
         );
@@ -87,7 +87,7 @@ class VenuesByTypeModel extends ChangeNotifier {
         _currentPage++;
         break;
       case 'suggested':
-        paged = await venueApi.getSuggestedVenuesNew(
+        paged = await venueApi.getSuggestedVenues(
           page: _currentPage,
           size: _pageSize,
         );

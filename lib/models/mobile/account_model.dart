@@ -1,9 +1,9 @@
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/user.dart';
-import 'package:table_reserver/utils/toaster.dart';
-import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/data/user.dart';
+import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/toaster.dart';
 
 class AccountModel extends ChangeNotifier {
   final BuildContext context;
@@ -17,11 +17,7 @@ class AccountModel extends ChangeNotifier {
   User? currentUser;
   final AccountApi accountApi = AccountApi();
 
-  AccountModel({
-    required this.context,
-    this.userId,
-    this.userLocation,
-  });
+  AccountModel({required this.context, this.userId, this.userLocation});
 
   Future<void> init() async {
     if (userId != null) {
@@ -46,17 +42,21 @@ class AccountModel extends ChangeNotifier {
 
   void openSettingsItem(String route, String? action) {
     if (route == Routes.termsOfService) {
-      Navigator.pushNamed(context, route,
-          arguments: {'userId': currentUser?.id, 'userLocation': userLocation});
+      Navigator.pushNamed(
+        context,
+        route,
+        arguments: {'userId': currentUser?.id, 'userLocation': userLocation},
+      );
       return;
     }
     if (currentUser == null) {
       Toaster.displayInfo(context, 'Please log in to $action.');
       return;
     }
-    Navigator.pushNamed(context, route, arguments: {
-      'userId': userId,
-      'userLocation': userLocation,
-    });
+    Navigator.pushNamed(
+      context,
+      route,
+      arguments: {'userId': userId, 'userLocation': userLocation},
+    );
   }
 }

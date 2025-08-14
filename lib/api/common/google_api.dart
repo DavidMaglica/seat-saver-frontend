@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:logger/logger.dart';
+import 'package:table_reserver/utils/logger.dart';
 
-final logger = Logger();
 final dio = Dio();
 const String apiKey = String.fromEnvironment('GOOGLE_API_KEY');
 

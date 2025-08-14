@@ -1,10 +1,10 @@
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/user.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/support_api.dart';
-import 'package:table_reserver/utils/toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/api/data/user.dart';
+import 'package:table_reserver/api/support_api.dart';
+import 'package:table_reserver/utils/toaster.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SupportModel extends ChangeNotifier {
@@ -26,11 +26,7 @@ class SupportModel extends ChangeNotifier {
 
   late User loggedInUser;
 
-  SupportModel({
-    required this.context,
-    required this.userId,
-    this.position,
-  });
+  SupportModel({required this.context, required this.userId, this.position});
 
   void init() {
     _getUser();
@@ -63,14 +59,18 @@ class SupportModel extends ChangeNotifier {
     try {
       if (!await canLaunchUrl(url)) {
         if (!context.mounted) return;
-        Toaster.displayError(context,
-            'Could not launch default browser app. Please try again later.');
+        Toaster.displayError(
+          context,
+          'Could not launch default browser app. Please try again later.',
+        );
       }
       await launchUrl(url);
     } catch (e) {
       if (!context.mounted) return;
-      Toaster.displayError(context,
-          'Could not open default browser app. Please try again later.');
+      Toaster.displayError(
+        context,
+        'Could not open default browser app. Please try again later.',
+      );
     }
   }
 

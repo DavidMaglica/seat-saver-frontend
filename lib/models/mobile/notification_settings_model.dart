@@ -30,9 +30,9 @@ class NotificationSettingsModel extends ChangeNotifier {
     );
 
     if (response != null) {
-      isActivePushNotifications = response.pushNotificationsTurnedOn;
-      isActiveEmailNotifications = response.emailNotificationsTurnedOn;
-      isActiveLocationServices = response.locationServicesTurnedOn;
+      isActivePushNotifications = response.isPushNotificationsEnabled;
+      isActiveEmailNotifications = response.isEmailNotificationsEnabled;
+      isActiveLocationServices = response.isLocationServicesEnabled;
     }
     notifyListeners();
   }

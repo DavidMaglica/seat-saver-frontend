@@ -1,7 +1,12 @@
-import 'package:table_reserver/components/web/modals/create_reservation_modal.dart';
-import 'package:table_reserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:provider/provider.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/api/reservation_api.dart';
+import 'package:table_reserver/components/web/modals/create_reservation_modal.dart';
+import 'package:table_reserver/models/web/reservation_model.dart';
+import 'package:table_reserver/utils/animations.dart';
+import 'package:table_reserver/utils/web_toaster.dart';
 
 class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
     with ChangeNotifier {
@@ -17,10 +22,12 @@ class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
   TextEditingController guestsTextController = TextEditingController();
   String? guestsErrorText;
 
-
   FocusNode reservationDateFocusNode = FocusNode();
   TextEditingController reservationDateTextController = TextEditingController();
   String? reservationDateErrorText;
+  DateTime reservationDate = DateTime.now();
+
+  final ReservationApi reservationApi = ReservationApi();
 
   final Map<String, AnimationInfo> animationsMap = Animations.modalAnimations;
 
@@ -44,16 +51,45 @@ class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
   }
 
   Future<void> createReservation(BuildContext context) async {
-    debugPrint('Adding new reservation...');
-    debugPrint('New Venue Name: ${nameTextController.text}');
-    debugPrint('New User: ${emailTextController.text}');
-    debugPrint('New guests: ${guestsTextController.text}');
-    debugPrint('New Date: ${reservationDateTextController.text}');
+    if (!isFormValid()) {
+      notifyListeners();
+      return;
+    }
+
+    String name = nameTextController.text;
+    String email = emailTextController.text;
+    int numberOfPeople = int.parse(guestsTextController.text);
+    DateTime date = reservationDate;
+
+    BasicResponse response = await reservationApi.createReservation(
+      venueId: 2,
+      userId: 1,
+      numberOfPeople: numberOfPeople,
+      reservationDate: date,
+    );
+
+    if (response.success) {
+      if (!context.mounted) return;
+
+      nameTextController.clear();
+      emailTextController.clear();
+      guestsTextController.clear();
+      reservationDateTextController.clear();
+
+      WebToaster.displaySuccess(context, response.message);
+      Provider.of<ReservationsModel>(
+        context,
+        listen: false,
+      ).fetchReservations();
+      Navigator.of(context).pop();
+    } else {
+      if (!context.mounted) return;
+      WebToaster.displayError(context, response.message);
+    }
   }
 
   bool isFormValid() {
     bool isValid = true;
-
     if (nameTextController.text.isEmpty) {
       nameErrorText = 'Please enter the name of your venue.';
       isValid = false;

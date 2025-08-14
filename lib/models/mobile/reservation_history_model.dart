@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/api/data/reservation_details.dart';
 import 'package:table_reserver/api/reservation_api.dart';
 import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/utils/toaster.dart';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 
 class ReservationHistoryModel extends ChangeNotifier {
   final BuildContext context;
@@ -28,7 +28,8 @@ class ReservationHistoryModel extends ChangeNotifier {
   }
 
   Future<void> _loadReservationsFromApi() async {
-   List<ReservationDetails> response = await reservationApi.getReservations(userId);
+    List<ReservationDetails> response = await reservationApi
+        .getUserReservations(userId);
 
     if (response.isNotEmpty) {
       reservations = response;
@@ -44,12 +45,15 @@ class ReservationHistoryModel extends ChangeNotifier {
   }
 
   Future<void> deleteReservation(int reservationId) async {
-    final response =
-        await reservationApi.deleteReservation(userId, reservationId);
+    final response = await reservationApi.deleteReservation(
+      userId,
+      reservationId,
+    );
 
     if (response.success) {
-      reservations
-          ?.removeWhere((reservation) => reservation.id == reservationId);
+      reservations?.removeWhere(
+        (reservation) => reservation.id == reservationId,
+      );
       if (!context.mounted) return;
       Navigator.of(context).pop();
       Toaster.displaySuccess(context, 'Reservation deleted successfully');

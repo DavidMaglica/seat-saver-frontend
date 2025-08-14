@@ -7,11 +7,12 @@ import 'package:table_reserver/api/data/user_response.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/web/side_nav_model.dart';
-import 'package:table_reserver/pages/web/auth/authentication.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
+import 'package:table_reserver/pages/web/views/landing.dart';
 import 'package:table_reserver/utils/animations.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/sign_up_methods.dart';
 import 'package:table_reserver/utils/web_toaster.dart';
 
 class HomepageModel extends FlutterFlowModel<WebHomepage> {
@@ -157,13 +158,12 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> {
       if (!context.mounted) return;
       WebToaster.displayError(
         context,
-        'Failed to load user data. Returning you to the authentication page.',
+        'Error happened while logging you in. Please try again later.¬',
       );
-      Navigator.of(context).push(
-        FadeInRoute(
-          page: const WebAuthentication(),
-          routeName: Routes.webAuthentication,
-        ),
+      prefsWithCache.clear();
+      currentAuthMethod = AuthenticationMethod.none;
+      Navigator.of(context).pushReplacement(
+        FadeInRoute(page: const WebLanding(), routeName: Routes.webLanding),
       );
     }
   }

@@ -1,11 +1,11 @@
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/data/notification_settings.dart';
-import 'package:table_reserver/utils/toaster.dart';
-import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/api/data/notification_settings.dart';
+import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/toaster.dart';
 
 class LocationPermissionPopUpModel extends ChangeNotifier {
   final BuildContext context;
@@ -38,12 +38,13 @@ class LocationPermissionPopUpModel extends ChangeNotifier {
 
     if (locationPermission == LocationPermission.deniedForever) return false;
 
-    BasicResponse basicResponse =
-        await _accountApi.updateUserNotificationOptions(
-            userId,
-            notificationOptions!.pushNotificationsTurnedOn,
-            notificationOptions!.emailNotificationsTurnedOn,
-            true);
+    BasicResponse basicResponse = await _accountApi
+        .updateUserNotificationOptions(
+          userId,
+          notificationOptions!.isPushNotificationsEnabled,
+          notificationOptions!.isEmailNotificationsEnabled,
+          true,
+        );
 
     if (!basicResponse.success) {
       if (!context.mounted) return false;
@@ -57,10 +58,11 @@ class LocationPermissionPopUpModel extends ChangeNotifier {
     String? currentCity;
     await placemarkFromCoordinates(position!.latitude, position.longitude)
         .then((List<Placemark> placemarks) {
-      currentCity = placemarks[0].locality;
-    }).catchError((e) {
-      debugPrint(e.toString());
-    });
+          currentCity = placemarks[0].locality;
+        })
+        .catchError((e) {
+          debugPrint(e.toString());
+        });
 
     return currentCity;
   }
@@ -69,21 +71,25 @@ class LocationPermissionPopUpModel extends ChangeNotifier {
     if (!await _handleLocationPermission()) return;
 
     Position? userLocation = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best);
+      desiredAccuracy: LocationAccuracy.best,
+    );
 
     String? currentCity = await _getCity(userLocation);
     if (currentCity == null || currentCity.isEmpty) {
       if (!context.mounted) return;
       Toaster.displayError(
-          context, 'Failed to get current city. Please try again later.');
+        context,
+        'Failed to get current city. Please try again later.',
+      );
     }
 
     _accountApi.updateUserLocation(userId, userLocation);
 
     if (!context.mounted) return;
-    Navigator.popAndPushNamed(context, Routes.homepage, arguments: {
-      'userId': userId,
-      'userLocation': userLocation,
-    });
+    Navigator.popAndPushNamed(
+      context,
+      Routes.homepage,
+      arguments: {'userId': userId, 'userLocation': userLocation},
+    );
   }
 }

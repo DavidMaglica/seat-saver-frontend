@@ -1,7 +1,7 @@
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/pages/mobile/auth/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/pages/mobile/auth/authentication.dart';
 
 class AuthenticationModel extends FlutterFlowModel<Authentication> {
   final unfocusNode = FocusNode();

@@ -27,12 +27,6 @@ class _CreateReservationModalState extends State<CreateReservationModal>
     super.initState();
   }
 
-  void createReservation(BuildContext context) {
-    if (widget.model.isFormValid()) {
-      widget.model.createReservation(context);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -59,7 +53,7 @@ class _CreateReservationModalState extends State<CreateReservationModal>
                 _buildBody(context),
                 buildButtons(
                   context,
-                  () => createReservation(context),
+                  () => widget.model.createReservation(context),
                   'Create Reservation',
                 ),
               ].divide(const SizedBox(height: 16)),
@@ -226,6 +220,7 @@ class _CreateReservationModalState extends State<CreateReservationModal>
 
               widget.model.reservationDateTextController.text =
                   formattedDateTime;
+              widget.model.reservationDate = combinedDateTime;
             }
           }
         },

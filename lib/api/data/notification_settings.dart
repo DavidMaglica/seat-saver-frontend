@@ -1,19 +1,19 @@
 class NotificationOptions {
-  bool pushNotificationsTurnedOn;
-  bool emailNotificationsTurnedOn;
-  bool locationServicesTurnedOn;
+  bool isPushNotificationsEnabled;
+  bool isEmailNotificationsEnabled;
+  bool isLocationServicesEnabled;
 
   NotificationOptions({
-    required this.pushNotificationsTurnedOn,
-    required this.emailNotificationsTurnedOn,
-    required this.locationServicesTurnedOn,
+    required this.isPushNotificationsEnabled,
+    required this.isEmailNotificationsEnabled,
+    required this.isLocationServicesEnabled,
   });
 
   factory NotificationOptions.fromJson(Map<String, dynamic> json) {
     return NotificationOptions(
-      pushNotificationsTurnedOn: json['pushNotificationsTurnedOn'],
-      emailNotificationsTurnedOn: json['emailNotificationsTurnedOn'],
-      locationServicesTurnedOn: json['locationServicesTurnedOn'],
+      isPushNotificationsEnabled: json['isPushNotificationsEnabled'],
+      isEmailNotificationsEnabled: json['isEmailNotificationsEnabled'],
+      isLocationServicesEnabled: json['isLocationServicesEnabled'],
     );
   }
 }
