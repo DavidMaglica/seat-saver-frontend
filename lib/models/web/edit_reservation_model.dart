@@ -5,6 +5,7 @@ import 'package:table_reserver/api/data/reservation_details.dart';
 import 'package:table_reserver/api/reservation_api.dart';
 import 'package:table_reserver/components/web/modals/edit_reservation_modal.dart';
 import 'package:table_reserver/utils/animations.dart';
+import 'package:table_reserver/utils/web_toaster.dart';
 
 class EditReservationModel extends FlutterFlowModel<EditReservationModal>
     with ChangeNotifier {
@@ -16,9 +17,12 @@ class EditReservationModel extends FlutterFlowModel<EditReservationModal>
 
   FocusNode numberOfGuestsFocusNode = FocusNode();
   TextEditingController numberOfGuestsTextController = TextEditingController();
+  String? numberOfGuestsErrorText;
 
   FocusNode reservationDateFocusNode = FocusNode();
   TextEditingController reservationDateTextController = TextEditingController();
+  String? reservationDateErrorText;
+  DateTime reservationDate = DateTime.now();
 
   final ReservationApi reservationApi = ReservationApi();
 
@@ -86,11 +90,48 @@ class EditReservationModel extends FlutterFlowModel<EditReservationModal>
     notifyListeners();
   }
 
-  Future<void> editReservation() async {
+  Future<void> editReservation(BuildContext context) async {
+    if (!_isFormValid()) {
+      notifyListeners();
+      return;
+    }
+
+    int reservationId = reservationDetails!.id;
+    int numberOfGuests = int.parse(numberOfGuestsTextController.text);
+
     BasicResponse response = await reservationApi.updateReservation(
-      reservationId: reservationDetails!.id,
-      numberOfGuests: int.parse(numberOfGuestsTextController.text),
-      reservationDate: DateTime.parse(reservationDateTextController.text),
+      reservationId: reservationId,
+      numberOfGuests: numberOfGuests,
+      reservationDate: reservationDate,
     );
+    if (response.success) {
+      if (!context.mounted) return;
+
+      WebToaster.displaySuccess(context, response.message);
+      Navigator.of(context).pop(true);
+    } else {
+      if (!context.mounted) return;
+      WebToaster.displayError(context, response.message);
+    }
+  }
+
+  bool _isFormValid() {
+    bool isValid = true;
+    if (numberOfGuestsTextController.text.isEmpty) {
+      numberOfGuestsErrorText = 'Please enter the number of guests';
+      isValid = false;
+    } else {
+      numberOfGuestsErrorText = null;
+    }
+
+    if (reservationDateTextController.text.isEmpty) {
+      reservationDateErrorText = 'Please enter the reservation date';
+      isValid = false;
+    } else {
+      reservationDateErrorText = null;
+    }
+
+    notifyListeners();
+    return isValid;
   }
 }

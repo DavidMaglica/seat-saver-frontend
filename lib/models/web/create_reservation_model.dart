@@ -71,7 +71,7 @@ class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
   }
 
   Future<void> createReservation(BuildContext context) async {
-    if (!isFormValid()) {
+    if (!_isFormValid()) {
       notifyListeners();
       return;
     }
@@ -103,7 +103,7 @@ class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
     }
   }
 
-  bool isFormValid() {
+  bool _isFormValid() {
     bool isValid = true;
     if (dropDownValueController.value == null ||
         dropDownValueController.value!.isEmpty) {

@@ -69,7 +69,7 @@ class _EditReservationModalState extends State<EditReservationModal>
                       _buildBody(context, model),
                       buildButtons(
                         context,
-                        () => model.editReservation(),
+                        () => model.editReservation(context),
                         'Save Changes',
                       ),
                     ].divide(const SizedBox(height: 16)),
@@ -251,6 +251,7 @@ class _EditReservationModalState extends State<EditReservationModal>
               final formattedDateTime = dateFormat.format(combinedDateTime);
 
               model.reservationDateTextController.text = formattedDateTime;
+              model.reservationDate = combinedDateTime;
             }
           }
         },

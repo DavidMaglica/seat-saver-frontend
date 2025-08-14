@@ -198,7 +198,13 @@ class _WebReservationsState extends State<WebReservations>
         final userName =
             model.userNamesById[reservation.userId] ?? 'Unknown User';
 
-        return _buildActions(context, reservationId, venueName, userName);
+        return _buildActions(
+          context,
+          reservationId,
+          reservation.venueId,
+          venueName,
+          userName,
+        );
       },
       actions: const [
         {"label": "edit and delete"},
@@ -212,6 +218,7 @@ class _WebReservationsState extends State<WebReservations>
   Row _buildActions(
     BuildContext context,
     int reservationId,
+    int venueId,
     String venueName,
     String userName,
   ) {
@@ -223,7 +230,7 @@ class _WebReservationsState extends State<WebReservations>
             color: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () async {
-            await showModalBottomSheet(
+            bool shouldRefresh = await showModalBottomSheet(
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
               enableDrag: false,
@@ -236,6 +243,12 @@ class _WebReservationsState extends State<WebReservations>
                 );
               },
             );
+            if (shouldRefresh == true) {
+              Provider.of<ReservationsModel>(
+                context,
+                listen: false,
+              ).fetchReservations();
+            }
           },
         ),
         IconButton(
