@@ -230,7 +230,7 @@ class _WebReservationsState extends State<WebReservations>
             color: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () async {
-            bool shouldRefresh = await showModalBottomSheet(
+            bool? shouldRefresh = await showModalBottomSheet(
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
               enableDrag: false,
@@ -257,7 +257,7 @@ class _WebReservationsState extends State<WebReservations>
             color: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () async {
-            await showModalBottomSheet(
+            bool? shouldRefresh = await showModalBottomSheet(
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
               enableDrag: false,
@@ -266,9 +266,17 @@ class _WebReservationsState extends State<WebReservations>
                 return DeleteModal(
                   modalType: DeleteModalType.reservation,
                   reservationId: reservationId,
+                  venueName: venueName,
+                  userName: userName,
                 );
               },
             );
+            if (shouldRefresh == true) {
+              Provider.of<ReservationsModel>(
+                context,
+                listen: false,
+              ).fetchReservations();
+            }
           },
         ),
       ],

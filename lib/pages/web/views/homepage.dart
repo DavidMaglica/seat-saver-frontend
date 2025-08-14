@@ -321,7 +321,9 @@ class _WebHomepageState extends State<WebHomepage>
               builder: (_) {
                 return DeleteModal(
                   modalType: DeleteModalType.venue,
-                  venueId: venueId,
+                  venueName: _model.venues
+                      .firstWhere((v) => v.id == venueId)
+                      .name,
                 );
               },
             );
