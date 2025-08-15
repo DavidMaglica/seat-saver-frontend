@@ -25,7 +25,7 @@ class _WebVenuesPageState extends State<WebVenuesPage>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => VenuesModel()..init(),
+      create: (_) => VenuesModel()..loadData(),
       child: Consumer<VenuesModel>(
         builder: (context, model, _) {
           return GestureDetector(

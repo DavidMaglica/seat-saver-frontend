@@ -1,12 +1,20 @@
-import 'package:table_reserver/api/data/rating.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/pages/web/views/venue_page.dart';
-import 'package:table_reserver/utils/animations.dart';
-import 'package:table_reserver/utils/file_picker/file_picker_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:table_reserver/api/data/rating.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/api/venue_api.dart';
+import 'package:table_reserver/pages/web/views/venue_page.dart';
+import 'package:table_reserver/utils/animations.dart';
+import 'package:table_reserver/utils/extensions.dart';
+import 'package:table_reserver/utils/file_picker/file_picker_interface.dart';
+import 'package:table_reserver/utils/web_toaster.dart';
 
-class VenuePageModel extends FlutterFlowModel<WebVenuePage> {
+class VenuePageModel extends FlutterFlowModel<WebVenuePage>
+    with ChangeNotifier {
+  final int venueId;
+
+  VenuePageModel({required this.venueId});
+
   TabController? tabBarController;
 
   int get tabBarCurrentIndex =>
@@ -23,53 +31,100 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage> {
 
   int get pageViewCurrentIndex =>
       pageViewController.hasClients && pageViewController.page != null
-          ? pageViewController.page!.round()
-          : 0;
+      ? pageViewController.page!.round()
+      : 0;
+
+  final VenueApi venueApi = VenueApi();
 
   final Map<String, AnimationInfo> animationsMap =
       Animations.venuePageAnimations;
 
-  final Venue loadedVenue = Venue(
-    id: 1,
-    name: "La Mai",
-    location: "Poreč, Croatia",
-    workingHours: "09:00 AM - 11:00 PM",
-    maximumCapacity: 100,
-    availableCapacity: 100,
-    rating: 4.5,
-    typeId: 1,
-    description:
-        "A beach is a narrow, gently sloping strip of land that lies along the edge of an ocean, lake, or river. Materials such as sand, pebbles, rocks, and seashell fragments cover beaches.",
-  );
-
   Uint8List? headerImage;
 
-  List<String> venueImages = [
-    'https://images.unsplash.com/photo-1470162656305-6f429ba817bf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyMnx8dGVhfGVufDB8fHx8MTcwNjU2MTE2OHww&ixlib=rb-4.0.3&q=80&w=400',
-    'https://images.unsplash.com/photo-1470162656305-6f429ba817bf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyMnx8dGVhfGVufDB8fHx8MTcwNjU2MTE2OHww&ixlib=rb-4.0.3&q=80&w=400',
-    'https://images.unsplash.com/photo-1470162656305-6f429ba817bf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyMnx8dGVhfGVufDB8fHx8MTcwNjU2MTE2OHww&ixlib=rb-4.0.3&q=80&w=400',
-    'https://images.unsplash.com/photo-1470162656305-6f429ba817bf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyMnx8dGVhfGVufDB8fHx8MTcwNjU2MTE2OHww&ixlib=rb-4.0.3&q=80&w=400',
-    'https://images.unsplash.com/photo-1470162656305-6f429ba817bf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyMnx8dGVhfGVufDB8fHx8MTcwNjU2MTE2OHww&ixlib=rb-4.0.3&q=80&w=400',
-    'https://images.unsplash.com/photo-1470162656305-6f429ba817bf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyMnx8dGVhfGVufDB8fHx8MTcwNjU2MTE2OHww&ixlib=rb-4.0.3&q=80&w=400',
-  ];
+  Venue loadedVenue = Venue(
+    id: 0,
+    name: "",
+    location: "",
+    workingHours: "",
+    maximumCapacity: 0,
+    availableCapacity: 0,
+    rating: 0,
+    typeId: 0,
+    description: "",
+  );
+  String venueType = '';
+  int lifetimeReservations = 0;
 
-  List<String>? menuImages;
+  final int averageRating = 0;
+  final List<Rating> reviews = [];
 
-  final List<Rating> reviews = [
-    Rating(
-      id: 1,
-      rating: 4.5,
-      username: 'John Doe',
-      comment: 'Great place, had a wonderful time!',
-    ),
-  ];
+  List<Uint8List> venueImages = [];
+  List<Uint8List> menuImages = [];
 
   @override
   void initState(BuildContext context) {}
 
+  void fetchData(BuildContext context) {
+    _fetchVenue(context);
+    _fetchReviews(context);
+    _fetchVenueImages(context);
+    _fetchMenuImages(context);
+  }
+
+  void initTabBarController(TickerProvider vsync) {
+    tabBarController = TabController(vsync: vsync, length: 3, initialIndex: 0)
+      ..addListener(notifyListeners);
+  }
+
   @override
   void dispose() {
+    super.dispose();
     tabBarController?.dispose();
+  }
+
+  Future<void> _fetchVenue(BuildContext context) async {
+    Venue? venue = await venueApi.getVenue(venueId);
+
+    if (venue != null) {
+      if (venue.description.isNullOrEmpty) {
+        venue.description = 'No description available';
+      }
+      loadedVenue = venue;
+
+      venueType =
+          await venueApi.getVenueType(venue.typeId) ?? 'No type available';
+
+      // TODO: Fetch lifetime reservations count once decided how to implement it after dashboard
+      notifyListeners();
+    } else {
+      if (!context.mounted) return;
+      WebToaster.displayError(
+        context,
+        'Failed to load venue data. Please try again later.',
+      );
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> _fetchReviews(BuildContext context) async {
+    List<Rating> ratings = await venueApi.getAllVenueRatings(venueId);
+
+    reviews.addAll(ratings);
+    notifyListeners();
+  }
+
+  Future<void> _fetchVenueImages(BuildContext context) async {
+    List<Uint8List>? images = await venueApi.getVenueImages(venueId);
+
+    venueImages = images;
+    notifyListeners();
+  }
+
+  Future<void> _fetchMenuImages(BuildContext context) async {
+    List<Uint8List> images = await venueApi.getMenuImages(venueId);
+
+    menuImages = images;
+    notifyListeners();
   }
 
   Future<void> addVenueImages() async {

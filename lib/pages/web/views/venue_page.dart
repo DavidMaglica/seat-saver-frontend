@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:provider/provider.dart';
 import 'package:table_reserver/components/common/full_image_view.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/web/images_tab.dart';
@@ -21,88 +22,81 @@ class WebVenuePage extends StatefulWidget {
 
 class _WebVenuePageState extends State<WebVenuePage>
     with TickerProviderStateMixin {
-  late VenuePageModel _model;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => VenuePageModel());
-
-    _model.tabBarController = TabController(
-      vsync: this,
-      length: 3,
-      initialIndex: 0,
-    )..addListener(() => safeSetState(() {}));
-  }
-
-  @override
-  void dispose() {
-    _model.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: CustomAppbar(
-          title: '${widget.venueId}',
-          onBack: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        body: SafeArea(
-          top: true,
-          child: Container(
-            width: 1920,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildHeader(context),
-                Expanded(
-                  child: SizedBox(
-                    height: MediaQuery.sizeOf(context).height,
-                    child: Column(
-                      children: [
-                        _buildTabBar(context),
-                        const SizedBox(height: 16),
-                        Expanded(
-                          child: TabBarView(
-                            controller: _model.tabBarController,
+    return ChangeNotifierProvider(
+      create: (_) => VenuePageModel(venueId: widget.venueId)
+        ..initTabBarController(this)
+        ..fetchData(context),
+      child: Consumer<VenuePageModel>(
+        builder: (context, model, _) {
+          return GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: Scaffold(
+              key: scaffoldKey,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              appBar: CustomAppbar(
+                title: model.loadedVenue.name,
+                onBack: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              body: SafeArea(
+                top: true,
+                child: Container(
+                  width: 1920,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildHeader(context, model),
+                      Expanded(
+                        child: SizedBox(
+                          height: MediaQuery.sizeOf(context).height,
+                          child: Column(
                             children: [
-                              VenueDetailsTab(),
-                              ReviewsTab(),
-                              ImagesTab(),
+                              _buildTabBar(context, model),
+                              const SizedBox(height: 16),
+                              Expanded(
+                                child: TabBarView(
+                                  controller: model.tabBarController,
+                                  children: [
+                                    VenueDetailsTab(model: model),
+                                    ReviewsTab(model: model),
+                                    ImagesTab(model: model),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    bool hasImage =
-        _model.headerImage != null && _model.headerImage!.isNotEmpty;
+  Widget _buildHeader(BuildContext context, VenuePageModel model) {
+    bool hasImage = model.headerImage != null && model.headerImage!.isNotEmpty;
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -110,15 +104,19 @@ class _WebVenuePageState extends State<WebVenuePage>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeaderImage(hasImage, context),
+          _buildHeaderImage(context, model, hasImage),
           const SizedBox(height: 16),
-          _buildHeaderRow(context),
+          _buildHeaderRow(context, model),
         ],
       ),
     );
   }
 
-  Widget _buildHeaderImage(bool hasImage, BuildContext context) {
+  Widget _buildHeaderImage(
+    BuildContext context,
+    VenuePageModel model,
+    bool hasImage,
+  ) {
     return InkWell(
       mouseCursor: hasImage ? MouseCursor.uncontrolled : MouseCursor.defer,
       onTap: () {
@@ -128,7 +126,7 @@ class _WebVenuePageState extends State<WebVenuePage>
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => FullScreenImageView(
-              imageBytes: _model.headerImage!,
+              imageBytes: model.headerImage!,
               heroTag: 'headerImageTag',
             ),
           ),
@@ -143,7 +141,7 @@ class _WebVenuePageState extends State<WebVenuePage>
               ),
               alignment: Alignment.center,
               child: Image.memory(
-                _model.headerImage!,
+                model.headerImage!,
                 width: double.infinity,
                 height: 320,
                 fit: BoxFit.cover,
@@ -158,18 +156,18 @@ class _WebVenuePageState extends State<WebVenuePage>
               ),
               alignment: Alignment.center,
               child: Text(
-                _model.loadedVenue.name,
+                model.loadedVenue.name,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(color: Colors.white),
               ),
             ).animateOnPageLoad(
-              _model.animationsMap['imageOnPageLoadAnimation']!,
+              model.animationsMap['imageOnPageLoadAnimation']!,
             ),
     );
   }
 
-  Widget _buildHeaderRow(BuildContext context) {
+  Widget _buildHeaderRow(BuildContext context, VenuePageModel model) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -177,11 +175,9 @@ class _WebVenuePageState extends State<WebVenuePage>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            _model.loadedVenue.name,
+            model.loadedVenue.name,
             style: Theme.of(context).textTheme.titleLarge,
-          ).animateOnPageLoad(
-            _model.animationsMap['textOnPageLoadAnimation1']!,
-          ),
+          ).animateOnPageLoad(model.animationsMap['textOnPageLoadAnimation1']!),
           FFButtonWidget(
             onPressed: () async {
               await showDialog(
@@ -222,7 +218,7 @@ class _WebVenuePageState extends State<WebVenuePage>
     );
   }
 
-  Widget _buildTabBar(BuildContext context) {
+  Widget _buildTabBar(BuildContext context, VenuePageModel model) {
     return Align(
       alignment: const Alignment(0, 0),
       child: TabBar(
@@ -239,7 +235,7 @@ class _WebVenuePageState extends State<WebVenuePage>
           Tab(text: 'Reviews'),
           Tab(text: 'Images'),
         ],
-        controller: _model.tabBarController,
+        controller: model.tabBarController,
         onTap: (i) async {
           [() async {}, () async {}, () async {}][i]();
         },

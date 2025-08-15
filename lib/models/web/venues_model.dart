@@ -29,7 +29,7 @@ class VenuesModel extends FlutterFlowModel<WebVenuesPage> with ChangeNotifier {
     scrollController.dispose();
   }
 
-  Future<void> init() async {
+  Future<void> loadData() async {
     await _fetchNextPage();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {

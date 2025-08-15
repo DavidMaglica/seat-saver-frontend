@@ -26,8 +26,18 @@ class WebToaster {
   }) {
     return toastification.show(
       context: context,
-      title: Text(title, style: Theme.of(context).textTheme.titleSmall),
-      description: Text(message, style: Theme.of(context).textTheme.bodyMedium),
+      title: Text(
+        title,
+        style: Theme.of(
+          context,
+        ).textTheme.titleSmall?.copyWith(color: progressBarColor),
+      ),
+      description: Text(
+        message,
+        style: Theme.of(
+          context,
+        ).textTheme.bodyMedium?.copyWith(color: progressBarColor),
+      ),
       type: type,
       style: ToastificationStyle.flatColored,
       borderRadius: BorderRadius.circular(8),
@@ -38,7 +48,7 @@ class WebToaster {
       showProgressBar: true,
       progressBarTheme: ProgressIndicatorThemeData(
         color: progressBarColor,
-        linearTrackColor: Theme.of(context).colorScheme.outline,
+        linearTrackColor: WebTheme.offWhite,
       ),
       autoCloseDuration: const Duration(seconds: 5),
       applyBlurEffect: false,
