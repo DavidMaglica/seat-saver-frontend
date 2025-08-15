@@ -197,6 +197,11 @@ class _EditReservationModalState extends State<EditReservationModal>
         decoration: InputDecoration(
           labelText: 'Number of Guests',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
+          errorText: model.numberOfGuestsErrorText,
+          errorStyle: TextStyle(
+            color: Theme.of(context).colorScheme.error,
+            fontSize: 14,
+          ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.onPrimary,
@@ -204,9 +209,17 @@ class _EditReservationModalState extends State<EditReservationModal>
             ),
             borderRadius: BorderRadius.circular(8),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: WebTheme.infoColor, width: 1),
-            borderRadius: BorderRadius.circular(8),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          errorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: WebTheme.errorColor, width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          focusedErrorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -258,6 +271,11 @@ class _EditReservationModalState extends State<EditReservationModal>
         decoration: InputDecoration(
           labelText: 'Reservation Date',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
+          errorText: model.reservationDateErrorText,
+          errorStyle: TextStyle(
+            color: Theme.of(context).colorScheme.error,
+            fontSize: 14,
+          ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.onPrimary,
@@ -265,9 +283,17 @@ class _EditReservationModalState extends State<EditReservationModal>
             ),
             borderRadius: BorderRadius.circular(8),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: WebTheme.infoColor, width: 1),
-            borderRadius: BorderRadius.circular(8),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          errorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: WebTheme.errorColor, width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          focusedErrorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,

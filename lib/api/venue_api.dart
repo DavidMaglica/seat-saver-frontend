@@ -296,4 +296,35 @@ class VenueApi {
       return [];
     }
   }
+
+  Future<BasicResponse> editVenue({
+    required int venueId,
+    String? name,
+    String? location,
+    int? maximumCapacity,
+    int? typeId,
+    String? workingHours,
+    String? description,
+  }) async {
+    try {
+      final Map<String, dynamic> data = {
+        'name': name,
+        'location': location,
+        'maximumCapacity': maximumCapacity,
+        'typeId': typeId,
+        'workingHours': workingHours,
+        'description': description,
+      };
+
+      Response response = await dio.patch(
+        ApiRoutes.venueById(venueId),
+        data: data,
+      );
+
+      return BasicResponse.fromJson(response.data, (json) => json);
+    } catch (e) {
+      logger.e('Error editing venue: $e');
+      return BasicResponse(success: false, message: 'Error editing venue');
+    }
+  }
 }

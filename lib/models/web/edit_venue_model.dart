@@ -1,64 +1,82 @@
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/components/web/modals/edit_venue_modal.dart';
-import 'package:table_reserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/api/data/venue_type.dart';
+import 'package:table_reserver/api/venue_api.dart';
+import 'package:table_reserver/components/web/modals/edit_venue_modal.dart';
+import 'package:table_reserver/utils/animations.dart';
+import 'package:table_reserver/utils/extensions.dart';
+import 'package:table_reserver/utils/web_toaster.dart';
 
-class EditVenueModel extends FlutterFlowModel<EditVenueModal> {
+class EditVenueModel extends FlutterFlowModel<EditVenueModal>
+    with ChangeNotifier {
   FocusNode nameFocusNode = FocusNode();
   TextEditingController nameTextController = TextEditingController();
+  String? nameErrorText;
 
   FocusNode locationFocusNode = FocusNode();
   TextEditingController locationTextController = TextEditingController();
+  String? locationErrorText;
 
   FocusNode maxCapacityFocusNode = FocusNode();
   TextEditingController maxCapacityTextController = TextEditingController();
+  String? maxCapacityErrorText;
 
   String? dropDownValue;
-  FormFieldController<String> dropDownValueController = FormFieldController<String>(null);
+  FormFieldController<String> dropDownValueController =
+      FormFieldController<String>(null);
+  String? dropDownErrorText;
 
   FocusNode workingHoursFocusNode = FocusNode();
   TextEditingController workingHoursTextController = TextEditingController();
+  String? workingHoursErrorText;
 
   FocusNode descriptionFocusNode = FocusNode();
   TextEditingController descriptionTextController = TextEditingController();
+  String? descriptionErrorText;
+
+  String? updateErrorText;
+
+  VenueApi venueApi = VenueApi();
 
   final Map<String, AnimationInfo> animationsMap = Animations.modalAnimations;
 
   Venue? loadedVenue;
-  List<String> venueTypes = [
-    'Restaurant',
-    'Cafe',
-    'Bar',
-    'Club',
-    'Event Hall',
-  ];
+  Map<int, String> venueTypeMap = {};
 
   @override
-  void initState(BuildContext context) {
-    loadedVenue = Venue(
-      id: 1,
-      name: 'Lamai',
-      location: 'Llota',
-      workingHours: '09:00 - 21:00',
-      maximumCapacity: 100,
-      availableCapacity: 100,
-      rating: 4.0,
-      typeId: 1,
-      description: 'A brief description of the venue.',
-    );
-    if (loadedVenue != null) {
-      nameTextController.text = loadedVenue!.name;
-      locationTextController.text = loadedVenue!.location;
-      maxCapacityTextController.text = loadedVenue!.maximumCapacity.toString();
-      dropDownValue = loadedVenue!.typeId.toString();
-      workingHoursTextController.text = loadedVenue!.workingHours;
-      descriptionTextController.text = loadedVenue!.description ?? '';
+  void initState(BuildContext context) {}
+
+  void fetchData(BuildContext context, int venueId) async {
+    _fetchVenue(context, venueId);
+  }
+
+  void _fetchVenue(BuildContext context, int venueId) async {
+    List<VenueType> types = await venueApi.getAllVenueTypes();
+    venueTypeMap = {for (var type in types) type.id: type.type.toTitleCase()};
+
+    Venue? venue = await venueApi.getVenue(venueId);
+    if (venue != null) {
+      loadedVenue = venue;
+      nameTextController.text = venue.name;
+      locationTextController.text = venue.location;
+      maxCapacityTextController.text = venue.maximumCapacity.toString();
+      dropDownValueController.value = venue.typeId.toString();
+      workingHoursTextController.text = venue.workingHours;
+      descriptionTextController.text = venue.description ?? '';
+    } else {
+      if (!context.mounted) return;
+      WebToaster.displayError(context, 'Could not load venue data.');
+      Navigator.of(context).pop();
     }
+
+    notifyListeners();
   }
 
   @override
   void dispose() {
+    super.dispose();
     nameFocusNode.dispose();
     nameTextController.dispose();
 
@@ -75,13 +93,90 @@ class EditVenueModel extends FlutterFlowModel<EditVenueModal> {
     descriptionTextController.dispose();
   }
 
-  Future<void> editVenue() async {
-    debugPrint('Editing venue with ID: ${loadedVenue?.id}');
-    debugPrint('New Name: ${nameTextController.text}');
-    debugPrint('New Location: ${locationTextController.text}');
-    debugPrint('New Max Capacity: ${maxCapacityTextController.text}');
-    debugPrint('New Type ID: $dropDownValue');
-    debugPrint('New Working Hours: ${workingHoursTextController.text}');
-    debugPrint('New Description: ${descriptionTextController.text}');
+  Future<void> editVenue(BuildContext context) async {
+    if (!_validateFields()) {
+      notifyListeners();
+      return;
+    }
+
+    BasicResponse response = await venueApi.editVenue(
+      venueId: loadedVenue!.id,
+      name: nameTextController.text.trim(),
+      location: locationTextController.text.trim(),
+      maximumCapacity: int.parse(maxCapacityTextController.text.trim()),
+      typeId: int.parse(dropDownValueController.value!),
+      workingHours: workingHoursTextController.text.trim(),
+      description: descriptionTextController.text.trim().isEmpty
+          ? null
+          : descriptionTextController.text.trim(),
+    );
+
+    if (response.success) {
+      if (!context.mounted) return;
+      WebToaster.displaySuccess(context, 'Venue updated successfully.');
+      Navigator.of(context).pop(true);
+    } else {
+      if (!context.mounted) return;
+      WebToaster.displayError(context, response.message);
+    }
+  }
+
+  bool _validateFields() {
+    bool isValid = true;
+
+    final String nameValue = nameTextController.text.trim();
+    if (nameValue.isEmpty) {
+      nameErrorText = 'Please enter the venue name.';
+      isValid = false;
+    } else {
+      nameErrorText = null;
+    }
+
+    final String locationValue = locationTextController.text.trim();
+    if (locationValue.isEmpty) {
+      locationErrorText = 'Please enter the venue location.';
+      isValid = false;
+    } else {
+      locationErrorText = null;
+    }
+
+    final String maxCapacityValue = maxCapacityTextController.text.trim();
+    if (maxCapacityValue.isEmpty) {
+      maxCapacityErrorText = 'Please enter the maximum capacity.';
+      isValid = false;
+    } else {
+      final int? maxCapacity = int.tryParse(maxCapacityValue);
+      if (maxCapacity == null || maxCapacity <= 0) {
+        maxCapacityErrorText = 'Please enter a valid maximum capacity.';
+        isValid = false;
+      } else {
+        maxCapacityErrorText = null;
+      }
+    }
+
+    final String? selectedTypeId = dropDownValueController.value;
+    if (selectedTypeId == null) {
+      dropDownErrorText = 'Please select a venue type.';
+      isValid = false;
+    } else {
+      dropDownErrorText = null;
+    }
+
+    final String workingHoursValue = workingHoursTextController.text.trim();
+    final RegExp workingHoursRegex = RegExp(
+      r'^(0?[1-9]|1[0-2]):[0-5][0-9]\s?(AM|PM)\s*-\s*(0?[1-9]|1[0-2]):[0-5][0-9]\s?(AM|PM)$',
+    );
+    if (workingHoursValue.isEmpty) {
+      workingHoursErrorText = 'Please enter the working hours.';
+      isValid = false;
+    } else if (!workingHoursRegex.hasMatch(workingHoursValue)) {
+      workingHoursErrorText =
+          'Please use the format: HH:MM AM/PM - HH:MM AM/PM';
+      isValid = false;
+    } else {
+      workingHoursErrorText = null;
+    }
+
+    return isValid;
   }
 }

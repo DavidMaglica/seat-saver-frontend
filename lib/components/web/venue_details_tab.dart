@@ -51,7 +51,7 @@ class VenueDetailsTab extends StatelessWidget {
           _buildDetail(context, model.venueType),
           const SizedBox(height: 8),
           _buildTitle(context, 'Description'),
-          _buildDetail(context, model.loadedVenue.description!),
+          _buildDetail(context, model.loadedVenue.description ?? ''),
           const SizedBox(height: 8),
           _buildTitle(context, 'Location'),
           _buildDetail(context, model.loadedVenue.location),
@@ -70,10 +70,18 @@ class VenueDetailsTab extends StatelessWidget {
     ).animateOnPageLoad(model.animationsMap['textOnPageLoadAnimation5']!);
   }
 
-  Widget _buildDetail(BuildContext context, String detail) {
+  Widget _buildDetail(
+    BuildContext context,
+    String detail, {
+    bool isDescription = false,
+  }) {
     return Text(
       detail,
-      style: Theme.of(context).textTheme.bodyLarge,
+      style: isDescription
+          ? Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(fontStyle: FontStyle.italic)
+          : Theme.of(context).textTheme.bodyLarge,
     ).animateOnPageLoad(model.animationsMap['textOnPageLoadAnimation5']!);
   }
 

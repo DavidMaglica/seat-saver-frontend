@@ -180,7 +180,7 @@ class _WebVenuePageState extends State<WebVenuePage>
           ).animateOnPageLoad(model.animationsMap['textOnPageLoadAnimation1']!),
           FFButtonWidget(
             onPressed: () async {
-              await showDialog(
+              bool? shouldRefresh = await showDialog(
                 context: context,
                 barrierDismissible: true,
                 builder: (context) {
@@ -199,6 +199,10 @@ class _WebVenuePageState extends State<WebVenuePage>
                   );
                 },
               );
+              if (shouldRefresh == true) {
+                if (!context.mounted) return;
+                model.fetchVenue(context);
+              }
             },
             text: 'Edit Venue Details',
             icon: const Icon(Icons.edit_outlined, size: 24),

@@ -65,7 +65,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
   void initState(BuildContext context) {}
 
   void fetchData(BuildContext context) {
-    _fetchVenue(context);
+    fetchVenue(context);
     _fetchReviews(context);
     _fetchVenueImages(context);
     _fetchMenuImages(context);
@@ -82,17 +82,21 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
     tabBarController?.dispose();
   }
 
-  Future<void> _fetchVenue(BuildContext context) async {
+  Future<void> fetchVenue(BuildContext context) async {
     Venue? venue = await venueApi.getVenue(venueId);
 
     if (venue != null) {
       if (venue.description.isNullOrEmpty) {
-        venue.description = 'No description available';
+        venue.description = 'Description has not been provided.';
       }
       loadedVenue = venue;
 
-      venueType =
-          await venueApi.getVenueType(venue.typeId) ?? 'No type available';
+      String? venueType = await venueApi.getVenueType(venue.typeId);
+      if (venueType != null) {
+        this.venueType = venueType.toTitleCase();
+      } else {
+        this.venueType = 'Unknown';
+      }
 
       // TODO: Fetch lifetime reservations count once decided how to implement it after dashboard
       notifyListeners();
