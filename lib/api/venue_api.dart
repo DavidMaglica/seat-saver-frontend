@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:table_reserver/api/common/api_routes.dart';
 import 'package:table_reserver/api/common/dio_setup.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
@@ -264,6 +265,93 @@ class VenueApi {
     } catch (e) {
       logger.e('Error rating venue: $e');
       return BasicResponse(success: false, message: 'Error rating venue');
+    }
+  }
+
+  Future<BasicResponse> uploadVenueImage(
+    int venueId,
+    Uint8List imageBytes,
+    String filename,
+  ) async {
+    try {
+      String mimeType = filename.endsWith('.png')
+          ? 'image/png'
+          : filename.endsWith('.jpg') || filename.endsWith('.jpeg')
+          ? 'image/jpeg'
+          : 'application/octet-stream';
+
+      final formData = FormData.fromMap({
+        'image': MultipartFile.fromBytes(
+          imageBytes,
+          filename: filename,
+          contentType: MediaType.parse(mimeType),
+        ),
+      });
+
+      final response = await dio.post(
+        ApiRoutes.venueImages(venueId),
+        data: formData,
+      );
+
+      return BasicResponse.fromJson(response.data, (json) => json);
+    } catch (e) {
+      logger.e('Error uploading venue image: $e');
+      return BasicResponse(
+        success: false,
+        message: 'Error uploading venue image',
+      );
+    }
+  }
+
+  Future<BasicResponse> uploadMenuImage(
+    int venueId,
+    Uint8List imageBytes,
+    String filename,
+  ) async {
+    try {
+      String mimeType = filename.endsWith('.png')
+          ? 'image/png'
+          : filename.endsWith('.jpg') || filename.endsWith('.jpeg')
+          ? 'image/jpeg'
+          : 'application/octet-stream';
+
+      final formData = FormData.fromMap({
+        'image': MultipartFile.fromBytes(
+          imageBytes,
+          filename: filename,
+          contentType: MediaType.parse(mimeType),
+        ),
+      });
+
+      final response = await dio.post(
+        ApiRoutes.menuImages(venueId),
+        data: formData,
+      );
+
+      return BasicResponse.fromJson(response.data, (json) => json);
+    } catch (e) {
+      logger.e('Error uploading menu image: $e');
+      return BasicResponse(
+        success: false,
+        message: 'Error uploading menu image',
+      );
+    }
+  }
+
+  Future<Uint8List?> getVenueHeaderImage(int venueId) async {
+    try {
+      Response response = await dio.get(ApiRoutes.venueHeaderImage(venueId));
+
+      if (response.data['data'] is String) {
+        return base64Decode(response.data['data'] as String);
+      } else if (response.data is Uint8List) {
+        return response.data as Uint8List;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      logger.e('Error fetching venue header image: $e');
+      return null;
     }
   }
 

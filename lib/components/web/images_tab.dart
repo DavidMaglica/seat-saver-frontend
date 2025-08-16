@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:table_reserver/components/common/full_image_view.dart';
 import 'package:table_reserver/models/web/venue_page_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
@@ -39,8 +40,16 @@ class ImagesTab extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _buildButton(context, 'Add Venue Images', model.addVenueImages),
-          _buildButton(context, 'Add Menu Images', model.addMenuImages),
+          _buildButton(
+            context,
+            'Add Venue Images',
+            () => model.addVenueImage(context),
+          ),
+          _buildButton(
+            context,
+            'Add Menu Images',
+            () => model.addMenuImages(context),
+          ),
         ],
       ),
     );
@@ -97,20 +106,32 @@ class ImagesTab extends StatelessWidget {
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
                         children: images.map((imageBytes) {
-                          return Material(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: ClipRRect(
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => FullScreenImageView(
+                                    imageBytes: imageBytes,
+                                    heroTag: 'imageTag_${images.indexOf(imageBytes)}',
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Material(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                child: Image.memory(
-                                  imageBytes,
-                                  width: double.infinity,
-                                  height: 200,
-                                  fit: BoxFit.cover,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.memory(
+                                    imageBytes,
+                                    width: double.infinity,
+                                    height: 200,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),

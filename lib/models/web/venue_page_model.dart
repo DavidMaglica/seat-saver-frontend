@@ -6,6 +6,7 @@ import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/utils/animations.dart';
 import 'package:table_reserver/utils/extensions.dart';
+import 'package:table_reserver/utils/file_data.dart';
 import 'package:table_reserver/utils/file_picker/file_picker_interface.dart';
 import 'package:table_reserver/utils/web_toaster.dart';
 
@@ -121,6 +122,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
     List<Uint8List>? images = await venueApi.getVenueImages(venueId);
 
     venueImages = images;
+    headerImage = venueImages.isNotEmpty ? venueImages.first : null;
     notifyListeners();
   }
 
@@ -131,11 +133,61 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
     notifyListeners();
   }
 
-  Future<void> addVenueImages() async {
-    await imagePicker(false);
+  Future<void> addVenueImage(BuildContext context) async {
+    try {
+      final FileData? file = await imagePicker();
+
+      if (file == null) {
+        if (!context.mounted) return;
+        WebToaster.displayError(context, 'No image selected.');
+        return;
+      }
+
+      final response = await venueApi.uploadVenueImage(
+        venueId,
+        file.imageBytes,
+        file.filename,
+      );
+
+      if (!context.mounted) return;
+      if (response.success) {
+        WebToaster.displaySuccess(context, response.message);
+        _fetchVenueImages(context);
+      } else {
+        WebToaster.displayError(context, response.message);
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      WebToaster.displayError(context, '$e');
+    }
   }
 
-  Future<void> addMenuImages() async {
-    await imagePicker(false);
+  Future<void> addMenuImages(BuildContext context) async {
+    try {
+      final FileData? file = await imagePicker();
+
+      if (file == null) {
+        if (!context.mounted) return;
+        WebToaster.displayError(context, 'No image selected.');
+        return;
+      }
+
+      final response = await venueApi.uploadMenuImage(
+        venueId,
+        file.imageBytes,
+        file.filename,
+      );
+
+      if (!context.mounted) return;
+      if (response.success) {
+        WebToaster.displaySuccess(context, response.message);
+        _fetchMenuImages(context);
+      } else {
+        WebToaster.displayError(context, response.message);
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      WebToaster.displayError(context, '$e');
+    }
   }
 }

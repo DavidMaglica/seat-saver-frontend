@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:google_sign_in_web/web_only.dart';
+// import 'package:google_sign_in_web/web_only.dart';
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/user.dart';
@@ -56,14 +56,14 @@ class _SignUpTabState extends State<SignUpTab> {
       confirmedPassword: confirmPassword,
     );
     if (response.success && response.data != null) {
-      int userId = response.data!;
+      int ownerId = response.data!;
 
-      UserResponse? userResponse = await accountApi.getUser(userId);
+      UserResponse? userResponse = await accountApi.getUser(ownerId);
 
       if (userResponse != null && userResponse.success) {
         User user = userResponse.user!;
 
-        prefsWithCache.setInt('userId', userId);
+        prefsWithCache.setInt('ownerId', ownerId);
 
         _goToHomepage(user.id);
       }
@@ -73,11 +73,11 @@ class _SignUpTabState extends State<SignUpTab> {
     }
   }
 
-  void _goToHomepage(int userId) {
+  void _goToHomepage(int ownerId) {
     Navigator.of(context).push(
       FadeInRoute(
         routeName: Routes.webHomepage,
-        page: WebHomepage(userId: userId),
+        page: WebHomepage(ownerId: ownerId),
       ),
     );
   }
@@ -108,7 +108,7 @@ class _SignUpTabState extends State<SignUpTab> {
                   const SizedBox(height: 16),
                   _buildText(context),
                   const SizedBox(height: 16),
-                  _buildGoogleButton(context),
+                  // _buildGoogleButton(context),
                 ],
               ),
             ).animateOnPageLoad(
@@ -315,16 +315,16 @@ class _SignUpTabState extends State<SignUpTab> {
     );
   }
 
-  Widget _buildGoogleButton(BuildContext context) {
-    return Align(
-      alignment: const AlignmentDirectional(0, 0),
-      child: renderButton(
-        configuration: GSIButtonConfiguration(
-          type: GSIButtonType.icon,
-          theme: GSIButtonTheme.outline,
-          shape: GSIButtonShape.pill,
-        ),
-      ),
-    );
-  }
+  // Widget _buildGoogleButton(BuildContext context) {
+  //   return Align(
+  //     alignment: const AlignmentDirectional(0, 0),
+  //     child: renderButton(
+  //       configuration: GSIButtonConfiguration(
+  //         type: GSIButtonType.icon,
+  //         theme: GSIButtonTheme.outline,
+  //         shape: GSIButtonShape.pill,
+  //       ),
+  //     ),
+  //   );
+  // }
 }

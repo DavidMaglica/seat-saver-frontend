@@ -1,10 +1,8 @@
-import 'package:table_reserver/components/web/modals/create_venue_modal.dart';
-import 'package:table_reserver/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:table_reserver/components/web/modals/create_venue_modal.dart';
+import 'package:table_reserver/utils/animations.dart';
 import 'package:table_reserver/utils/file_picker/file_picker_interface.dart';
-
-enum ImageType { heading, venue, menu }
 
 class CreateVenueModel extends FlutterFlowModel<CreateVenueModal>
     with ChangeNotifier {
@@ -119,14 +117,7 @@ class CreateVenueModel extends FlutterFlowModel<CreateVenueModal>
     return isValid;
   }
 
-  Future<void> addImages(ImageType imageType) async {
-    bool isHeaderImage = imageType == ImageType.heading;
-    final images = await imagePicker(isHeaderImage);
-    debugPrint('Images selected: ${images.length}');
-    if (images.isNotEmpty) {
-      debugPrint('Added Venue Images: ${images.first.length}');
-    } else {
-      debugPrint('No images selected');
-    }
+  Future<void> addImages() async {
+    await imagePicker();
   }
 }

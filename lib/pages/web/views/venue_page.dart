@@ -7,14 +7,25 @@ import 'package:table_reserver/components/web/images_tab.dart';
 import 'package:table_reserver/components/web/modals/edit_venue_modal.dart';
 import 'package:table_reserver/components/web/reviews_tab.dart';
 import 'package:table_reserver/components/web/venue_details_tab.dart';
+import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/web/venue_page_model.dart';
+import 'package:table_reserver/pages/web/views/homepage.dart';
+import 'package:table_reserver/pages/web/views/venues.dart';
 import 'package:table_reserver/themes/web_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/utils.dart';
+import 'package:table_reserver/utils/venue_image_cache.dart';
 
 class WebVenuePage extends StatefulWidget {
   final int venueId;
+  final bool shouldReturnToHomepage;
 
-  const WebVenuePage({super.key, required this.venueId});
+  const WebVenuePage({
+    super.key,
+    required this.venueId,
+    required this.shouldReturnToHomepage,
+  });
 
   @override
   State<WebVenuePage> createState() => _WebVenuePageState();
@@ -28,6 +39,8 @@ class _WebVenuePageState extends State<WebVenuePage>
   void initState() {
     super.initState();
   }
+
+  final int ownerId = prefsWithCache.getInt('ownerId')!;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +61,16 @@ class _WebVenuePageState extends State<WebVenuePage>
               appBar: CustomAppbar(
                 title: model.loadedVenue.name,
                 onBack: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    FadeInRoute(
+                      page: widget.shouldReturnToHomepage
+                          ? WebHomepage(ownerId: ownerId)
+                          : const WebVenuesPage(),
+                      routeName: widget.shouldReturnToHomepage
+                          ? Routes.webHomepage
+                          : Routes.webVenues,
+                    ),
+                  );
                 },
               ),
               body: SafeArea(
@@ -96,7 +118,6 @@ class _WebVenuePageState extends State<WebVenuePage>
   }
 
   Widget _buildHeader(BuildContext context, VenuePageModel model) {
-    bool hasImage = model.headerImage != null && model.headerImage!.isNotEmpty;
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -104,7 +125,7 @@ class _WebVenuePageState extends State<WebVenuePage>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeaderImage(context, model, hasImage),
+          _buildHeaderImage(context, model),
           const SizedBox(height: 16),
           _buildHeaderRow(context, model),
         ],
@@ -112,27 +133,22 @@ class _WebVenuePageState extends State<WebVenuePage>
     );
   }
 
-  Widget _buildHeaderImage(
-    BuildContext context,
-    VenuePageModel model,
-    bool hasImage,
-  ) {
+  Widget _buildHeaderImage(BuildContext context, VenuePageModel model) {
+    final Uint8List? cachedImage = VenueImageCache.getImage(widget.venueId);
     return InkWell(
-      mouseCursor: hasImage ? MouseCursor.uncontrolled : MouseCursor.defer,
       onTap: () {
-        if (!hasImage) return;
+        if (cachedImage == null) return;
 
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => FullScreenImageView(
-              imageBytes: model.headerImage!,
+              imageBytes: cachedImage,
               heroTag: 'headerImageTag',
             ),
           ),
         );
       },
-      child: hasImage
+      child: cachedImage != null
           ? Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -141,7 +157,7 @@ class _WebVenuePageState extends State<WebVenuePage>
               ),
               alignment: Alignment.center,
               child: Image.memory(
-                model.headerImage!,
+                cachedImage,
                 width: double.infinity,
                 height: 320,
                 fit: BoxFit.cover,

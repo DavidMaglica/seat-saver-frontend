@@ -15,26 +15,26 @@ class FullScreenImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.onSurface,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(
-              CupertinoIcons.xmark_circle_fill,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+    backgroundColor: Theme.of(context).colorScheme.onSurface,
+    appBar: AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      leading: IconButton(
+        icon: Icon(
+          CupertinoIcons.xmark_circle_fill,
+          color: Theme.of(context).colorScheme.onPrimary,
         ),
-        body: Center(
-          child: Hero(
-            tag: heroTag,
-            child: Image.memory(
-              imageBytes,
-              fit: BoxFit.contain,
-            ),
-          ),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+    ),
+    body: Padding(
+      padding: const EdgeInsets.only(bottom: 64),
+      child: Center(
+        child: Hero(
+          tag: heroTag,
+          child: Image.memory(imageBytes, fit: BoxFit.contain),
         ),
-      );
+      ),
+    ),
+  );
 }

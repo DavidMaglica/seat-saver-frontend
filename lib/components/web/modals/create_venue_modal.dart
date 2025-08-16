@@ -43,9 +43,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
         children: [
           Container(
             width: double.infinity,
-            constraints: const BoxConstraints(
-              maxWidth: 1000,
-            ),
+            constraints: const BoxConstraints(maxWidth: 1000),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(8),
@@ -64,7 +62,8 @@ class _CreateVenueModalState extends State<CreateVenueModal>
               ].divide(const SizedBox(height: 16)),
             ),
           ).animateOnPageLoad(
-              widget.model.animationsMap['containerOnPageLoadAnimation']!),
+            widget.model.animationsMap['containerOnPageLoadAnimation']!,
+          ),
         ],
       ),
     );
@@ -93,7 +92,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
                 controller: widget.model.locationTextController,
                 focusNode: widget.model.locationFocusNode,
                 errorText: widget.model.locationErrorText,
-              )
+              ),
             ].divide(const SizedBox(width: 32)),
           ),
           Row(
@@ -106,9 +105,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
                 focusNode: widget.model.maxCapacityFocusNode,
                 errorText: widget.model.maxCapacityErrorText,
                 keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               _buildTypeDropdown(context),
             ].divide(const SizedBox(width: 32)),
@@ -129,10 +126,8 @@ class _CreateVenueModalState extends State<CreateVenueModal>
                 focusNode: widget.model.descriptionFocusNode,
                 keyboardType: TextInputType.text,
                 isMultiline: true,
-              )
-            ].divide(
-              const SizedBox(width: 16),
-            ),
+              ),
+            ].divide(const SizedBox(width: 16)),
           ),
           _buildImageButtons(context),
           Row(
@@ -143,7 +138,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
-          )
+          ),
         ].divide(const SizedBox(height: 16)),
       ),
     );
@@ -183,24 +178,15 @@ class _CreateVenueModalState extends State<CreateVenueModal>
           borderRadius: BorderRadius.circular(8),
         ),
         focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: WebTheme.infoColor,
-            width: 1,
-          ),
+          borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         errorBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: WebTheme.errorColor,
-            width: 1,
-          ),
+          borderSide: BorderSide(color: WebTheme.errorColor, width: 1),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         focusedErrorBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: WebTheme.infoColor,
-            width: 1,
-          ),
+          borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         contentPadding: const EdgeInsets.symmetric(
@@ -227,8 +213,9 @@ class _CreateVenueModalState extends State<CreateVenueModal>
         FlutterFlowDropDown<String>(
           controller: widget.model.dropDownValueController,
           options: widget.model.venueTypes,
-          optionLabels:
-              widget.model.venueTypes.map((type) => '   $type').toList(),
+          optionLabels: widget.model.venueTypes
+              .map((type) => '   $type')
+              .toList(),
           onChanged: (val) =>
               safeSetState(() => widget.model.dropDownValue = val),
           width: 470,
@@ -318,24 +305,15 @@ class _CreateVenueModalState extends State<CreateVenueModal>
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: WebTheme.infoColor,
-              width: 1,
-            ),
+            borderSide: const BorderSide(color: WebTheme.infoColor, width: 1),
             borderRadius: BorderRadius.circular(8),
           ),
           errorBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
-              color: WebTheme.errorColor,
-              width: 1,
-            ),
+            borderSide: BorderSide(color: WebTheme.errorColor, width: 1),
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           focusedErrorBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
-              color: WebTheme.infoColor,
-              width: 1,
-            ),
+            borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           contentPadding: const EdgeInsets.symmetric(
@@ -357,17 +335,17 @@ class _CreateVenueModalState extends State<CreateVenueModal>
         _buildImageButton(
           context,
           'Add heading image',
-          () => widget.model.addImages(ImageType.heading),
+          () => widget.model.addImages(),
         ),
         _buildImageButton(
           context,
           'Add venue images',
-          () => widget.model.addImages(ImageType.venue),
+          () => widget.model.addImages(),
         ),
         _buildImageButton(
           context,
           'Add menu images',
-          () => widget.model.addImages(ImageType.menu),
+          () => widget.model.addImages(),
         ),
       ],
     );
@@ -382,9 +360,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
       width: 200,
       height: 40,
       alignment: Alignment.center,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
       child: FFButtonWidget(
         text: label,
         onPressed: onPressed,
@@ -405,8 +381,10 @@ class _CreateVenueModalState extends State<CreateVenueModal>
     );
   }
 
-  Future<TimeOfDay?> _buildTimePicker(BuildContext context,
-      {TimeOfDay? initialTime}) {
+  Future<TimeOfDay?> _buildTimePicker(
+    BuildContext context, {
+    TimeOfDay? initialTime,
+  }) {
     return showTimePicker(
       context: context,
       initialTime: initialTime ?? TimeOfDay.now(),

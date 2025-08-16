@@ -18,9 +18,9 @@ import 'package:table_reserver/models/web/homepage_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
 class WebHomepage extends StatefulWidget {
-  final int userId;
+  final int ownerId;
 
-  const WebHomepage({super.key, required this.userId});
+  const WebHomepage({super.key, required this.ownerId});
 
   @override
   State<WebHomepage> createState() => _WebHomepageState();
@@ -35,7 +35,7 @@ class _WebHomepageState extends State<WebHomepage>
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => HomepageModel(userId: widget.userId));
+    _model = createModel(context, () => HomepageModel(ownerId: widget.ownerId));
   }
 
   @override

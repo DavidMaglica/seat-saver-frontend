@@ -7,6 +7,7 @@ import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/utils.dart';
+import 'package:table_reserver/utils/venue_image_cache.dart';
 
 class WebVenueCard extends StatefulWidget {
   final Venue venue;
@@ -20,27 +21,9 @@ class WebVenueCard extends StatefulWidget {
 class _WebVenueCardState extends State<WebVenueCard> {
   final VenueApi venueApi = VenueApi();
 
-  Uint8List? _venueImage;
-
   @override
   void initState() {
     super.initState();
-    _fetchImages();
-  }
-
-  void _fetchImages() async {
-    List<Uint8List> venueImages = await venueApi.getVenueImages(
-      widget.venue.id,
-    );
-    if (venueImages.isNotEmpty) {
-      setState(() {
-        _venueImage = venueImages.first;
-      });
-    } else {
-      setState(() {
-        _venueImage = null;
-      });
-    }
   }
 
   @override
@@ -53,7 +36,10 @@ class _WebVenueCardState extends State<WebVenueCard> {
       onTap: () async {
         Navigator.of(context).push(
           FadeInRoute(
-            page: WebVenuePage(venueId: widget.venue.id),
+            page: WebVenuePage(
+              venueId: widget.venue.id,
+              shouldReturnToHomepage: false,
+            ),
             routeName: Routes.webVenue,
             arguments: {'venueId': widget.venue.id},
           ),
@@ -86,35 +72,65 @@ class _WebVenueCardState extends State<WebVenueCard> {
   }
 
   Widget _buildImage() {
+    final cachedImage = VenueImageCache.getImage(widget.venue.id);
+
+    if (cachedImage != null) {
+      return _buildImageMemory(cachedImage);
+    }
+
+    return FutureBuilder<Uint8List?>(
+      future: venueApi.getVenueHeaderImage(widget.venue.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(color: WebTheme.successColor),
+          );
+        }
+
+        if (snapshot.hasError || snapshot.data == null) {
+          return _buildFallbackImage(context);
+        }
+
+        VenueImageCache.setImage(widget.venue.id, snapshot.data!);
+
+        return _buildImageMemory(snapshot.data!);
+      },
+    );
+  }
+
+  Widget _buildImageMemory(Uint8List bytes) {
     return Expanded(
       child: ClipRRect(
         borderRadius: BorderRadius.circular(4),
-        child: _venueImage != null
-            ? Image.memory(
-                _venueImage!,
-                width: double.infinity,
-                height: 200,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return _buildFallbackImage(context);
-                },
-              )
-            : _buildFallbackImage(context),
+        child: Image.memory(
+          bytes,
+          width: double.infinity,
+          height: 200,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return _buildFallbackImage(context);
+          },
+        ),
       ),
     );
   }
 
   Widget _buildFallbackImage(BuildContext ctx) {
-    return Container(
-      width: double.infinity,
-      height: 80,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(gradient: fallbackImageGradient()),
-      child: Text(
-        widget.venue.name,
-        style: Theme.of(
-          ctx,
-        ).textTheme.titleLarge?.copyWith(color: WebTheme.offWhite),
+    return Expanded(
+      child: Container(
+        width: double.infinity,
+        height: 200,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          gradient: fallbackImageGradient(),
+        ),
+        child: Text(
+          widget.venue.name,
+          style: Theme.of(
+            ctx,
+          ).textTheme.titleLarge?.copyWith(color: WebTheme.offWhite),
+        ),
       ),
     );
   }

@@ -40,8 +40,8 @@ late final GoogleSignIn googleSignIn;
 
 late SharedPreferencesWithCache prefsWithCache;
 
-int get userIdFromCache =>
-    prefsWithCache.getInt('userId') ?? (throw Exception('User not logged in'));
+int get ownerIdFromCache =>
+    prefsWithCache.getInt('ownerId') ?? (throw Exception('User not logged in'));
 
 AuthenticationMethod currentAuthMethod = AuthenticationMethod.none;
 
@@ -78,7 +78,7 @@ void initialiseGoogleSignIn() {
 void initialiseSharedPreferences() async {
   prefsWithCache = await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(
-      allowList: <String>{'userId', 'userName', 'userEmail'},
+      allowList: <String>{'ownerId', 'userName', 'userEmail'},
     ),
   );
 }
@@ -204,11 +204,15 @@ class MyApp extends StatelessWidget {
             Routes.webLanding: (context) => const WebLanding(),
             Routes.webAuthentication: (context) => const WebAuthentication(),
             Routes.webHomepage: (context) => WebHomepage(
-              userId: getOptionalArg(context, 'userId') ?? userIdFromCache,
+              ownerId: getOptionalArg(context, 'ownerId') ?? ownerIdFromCache,
             ),
             Routes.webVenues: (context) => const WebVenuesPage(),
             Routes.webVenue: (context) => WebVenuePage(
-              venueId: getOptionalArg<int>(context, 'venueId') ?? 1,
+              venueId: getRequiredArg<int>(context, 'venueId'),
+              shouldReturnToHomepage: getRequiredArg(
+                context,
+                'shouldReturnToHomepage',
+              ),
             ),
             Routes.webReservations: (context) => const WebReservations(),
             Routes.webAccount: (context) => const WebAccount(),

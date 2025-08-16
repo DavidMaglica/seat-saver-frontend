@@ -16,9 +16,9 @@ import 'package:table_reserver/utils/sign_up_methods.dart';
 import 'package:table_reserver/utils/web_toaster.dart';
 
 class HomepageModel extends FlutterFlowModel<WebHomepage> {
-  final int userId;
+  final int ownerId;
 
-  HomepageModel({required this.userId});
+  HomepageModel({required this.ownerId});
 
   final AccountApi accountApi = AccountApi();
 
@@ -138,7 +138,7 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> {
 
   @override
   void initState(BuildContext context) {
-    _setUserToSharedPreferences(context, userId);
+    _setUserToSharedPreferences(context, ownerId);
   }
 
   @override
@@ -146,9 +146,9 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> {
 
   Future<void> _setUserToSharedPreferences(
     BuildContext context,
-    int userId,
+    int ownerId,
   ) async {
-    UserResponse? response = await accountApi.getUser(userId);
+    UserResponse? response = await accountApi.getUser(ownerId);
     if (response != null && response.success && response.user != null) {
       User user = response.user!;
       await prefsWithCache.setString('userEmail', user.email);

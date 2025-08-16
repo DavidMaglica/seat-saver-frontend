@@ -53,7 +53,7 @@ class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
   }
 
   Future<void> fetchOwnedVenues() async {
-    final int ownerId = prefsWithCache.getInt('userId')!;
+    final int ownerId = prefsWithCache.getInt('ownerId')!;
     PagedResponse<Venue> fetchedVenues = await venueApi.getVenuesByOwner(
       ownerId,
       size: 50,

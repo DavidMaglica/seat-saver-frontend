@@ -42,10 +42,10 @@ class ChangeUsernameModel extends FlutterFlowModel<ChangeUsernameModal>
 
     usernameErrorText = null;
 
-    final int userId = prefsWithCache.getInt('userId')!;
+    final int ownerId = prefsWithCache.getInt('ownerId')!;
 
     final BasicResponse response = await accountApi.changeUsername(
-      userId,
+      ownerId,
       newUsername,
     );
 

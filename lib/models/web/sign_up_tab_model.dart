@@ -28,10 +28,10 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
 
   @override
   void initState(BuildContext context) {
-    final int? userId = prefsWithCache.getInt('userId');
+    final int? ownerId = prefsWithCache.getInt('ownerId');
     authListener(context);
     if (isActive) {
-      if (userId != null) return;
+      if (ownerId != null) return;
       googleSignIn.attemptLightweightAuthentication()?.then((value) {
         if (value != null) {
           currentAuthMethod = AuthenticationMethod.google;
@@ -71,14 +71,15 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
 
     if (response.success && response.data != null) {
       if (!context.mounted) return;
-      int userId = response.data!;
-      prefsWithCache.setInt('userId', userId);
+      int ownerId = response.data!;
+      prefsWithCache.setInt('ownerId', ownerId);
 
       await Future.delayed(const Duration(milliseconds: 500));
+      if (!context.mounted) return;
       Navigator.of(context).push(
         FadeInRoute(
           routeName: Routes.webHomepage,
-          page: WebHomepage(userId: userId),
+          page: WebHomepage(ownerId: ownerId),
         ),
       );
     } else {

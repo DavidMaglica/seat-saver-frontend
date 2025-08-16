@@ -35,7 +35,7 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
   void initState(BuildContext context) {}
 
   Future<void> fetchReservations() async {
-    final int ownerId = prefsWithCache.getInt('userId')!;
+    final int ownerId = prefsWithCache.getInt('ownerId')!;
     List<ReservationDetails> fetchedReservations = await reservationApi
         .getOwnerReservations(ownerId);
 
@@ -56,7 +56,7 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
   }
 
   Future<void> fetchOwnedVenues() async {
-    final int ownerId = prefsWithCache.getInt('userId')!;
+    final int ownerId = prefsWithCache.getInt('ownerId')!;
     PagedResponse<Venue> fetchedVenues = await venueApi.getVenuesByOwner(
       ownerId,
       size: 50,

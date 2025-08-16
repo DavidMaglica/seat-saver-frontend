@@ -32,6 +32,9 @@ class ApiRoutes {
 
   static String venuesByOwnerId(int ownerId) => '$venues/owner/$ownerId';
 
+  static String venueHeaderImage(int venueId) =>
+      '${venueById(venueId)}/header-image';
+
   static String venueImages(int venueId) =>
       '${venueById(venueId)}/venue-images';
 
