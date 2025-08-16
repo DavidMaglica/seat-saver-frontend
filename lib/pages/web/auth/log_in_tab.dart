@@ -11,6 +11,7 @@ import 'package:table_reserver/models/web/log_in_tab_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/google_web/google_button_interface.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/sign_up_methods.dart';
 import 'package:table_reserver/utils/web_toaster.dart';
@@ -105,7 +106,7 @@ class _LogInTabState extends State<LogInTab> {
                   const SizedBox(height: 16),
                   _buildText(context),
                   const SizedBox(height: 16),
-                  // _buildGoogleButton(context),
+                  buildGoogleButton(),
                   const SizedBox(height: 16),
                   _buildForgotPassword(),
                 ],
@@ -236,19 +237,6 @@ class _LogInTabState extends State<LogInTab> {
       ),
     );
   }
-
-  // Widget _buildGoogleButton(BuildContext context) {
-  //   return Align(
-  //     alignment: const AlignmentDirectional(0, 0),
-  //     child: renderButton(
-  //       configuration: GSIButtonConfiguration(
-  //         type: GSIButtonType.icon,
-  //         theme: GSIButtonTheme.outline,
-  //         shape: GSIButtonShape.pill,
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget _buildForgotPassword() {
     return Align(

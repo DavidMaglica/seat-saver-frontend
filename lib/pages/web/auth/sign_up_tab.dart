@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-// import 'package:google_sign_in_web/web_only.dart';
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/user.dart';
@@ -12,6 +11,7 @@ import 'package:table_reserver/models/web/sign_up_tab_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/google_web/google_button_interface.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/web_toaster.dart';
 
@@ -108,7 +108,7 @@ class _SignUpTabState extends State<SignUpTab> {
                   const SizedBox(height: 16),
                   _buildText(context),
                   const SizedBox(height: 16),
-                  // _buildGoogleButton(context),
+                  buildGoogleButton(),
                 ],
               ),
             ).animateOnPageLoad(
@@ -314,17 +314,4 @@ class _SignUpTabState extends State<SignUpTab> {
       ),
     );
   }
-
-  // Widget _buildGoogleButton(BuildContext context) {
-  //   return Align(
-  //     alignment: const AlignmentDirectional(0, 0),
-  //     child: renderButton(
-  //       configuration: GSIButtonConfiguration(
-  //         type: GSIButtonType.icon,
-  //         theme: GSIButtonTheme.outline,
-  //         shape: GSIButtonShape.pill,
-  //       ),
-  //     ),
-  //   );
-  // }
 }
