@@ -8,6 +8,7 @@ import 'package:table_reserver/utils/animations.dart';
 import 'package:table_reserver/utils/extensions.dart';
 import 'package:table_reserver/utils/file_data.dart';
 import 'package:table_reserver/utils/file_picker/file_picker_interface.dart';
+import 'package:table_reserver/utils/venue_image_cache/venue_image_cache_interface.dart';
 import 'package:table_reserver/utils/web_toaster.dart';
 
 class VenuePageModel extends FlutterFlowModel<WebVenuePage>
@@ -59,6 +60,8 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
   final int averageRating = 0;
   final List<Rating> reviews = [];
 
+  bool isVenueImagesLoading = true;
+  bool isMenuImagesLoading = true;
   List<Uint8List> venueImages = [];
   List<Uint8List> menuImages = [];
 
@@ -67,14 +70,30 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
 
   void fetchData(BuildContext context) {
     fetchVenue(context);
-    _fetchReviews(context);
-    _fetchVenueImages(context);
-    _fetchMenuImages(context);
+    _fetchHeaderImage(context);
   }
 
-  void initTabBarController(TickerProvider vsync) {
+  void initTabBarController(BuildContext context, TickerProvider vsync) {
     tabBarController = TabController(vsync: vsync, length: 3, initialIndex: 0)
       ..addListener(notifyListeners);
+
+    tabBarController?.addListener(() {
+      final index = tabBarController!.index;
+
+      switch (index) {
+        case 0:
+          break;
+        case 1:
+          _fetchReviews(context);
+          break;
+        case 2:
+          isVenueImagesLoading = true;
+          isMenuImagesLoading = true;
+          _fetchVenueImages(context);
+          _fetchMenuImages(context);
+          break;
+      }
+    });
   }
 
   @override
@@ -111,9 +130,31 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
     }
   }
 
+  Future<void> _fetchHeaderImage(BuildContext context) async {
+    final Uint8List? cachedImage = VenueImageCache.getImage(venueId);
+    if (cachedImage != null) {
+      headerImage = cachedImage;
+      notifyListeners();
+      return;
+    }
+
+    Uint8List? image = await venueApi.getVenueHeaderImage(venueId);
+
+    if (image != null) {
+      headerImage = image;
+      notifyListeners();
+    } else {
+      if (!context.mounted) return;
+      WebToaster.displayError(context, 'Failed to load header image.');
+    }
+  }
+
   Future<void> _fetchReviews(BuildContext context) async {
     List<Rating> ratings = await venueApi.getAllVenueRatings(venueId);
 
+    if (reviews.isNotEmpty) {
+      reviews.clear();
+    }
     reviews.addAll(ratings);
     notifyListeners();
   }
@@ -122,7 +163,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
     List<Uint8List>? images = await venueApi.getVenueImages(venueId);
 
     venueImages = images;
-    headerImage = venueImages.isNotEmpty ? venueImages.first : null;
+    isVenueImagesLoading = false;
     notifyListeners();
   }
 
@@ -130,6 +171,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
     List<Uint8List> images = await venueApi.getMenuImages(venueId);
 
     menuImages = images;
+    isMenuImagesLoading = false;
     notifyListeners();
   }
 

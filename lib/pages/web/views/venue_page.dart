@@ -15,7 +15,6 @@ import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/utils.dart';
-import 'package:table_reserver/utils/venue_image_cache.dart';
 
 class WebVenuePage extends StatefulWidget {
   final int venueId;
@@ -46,7 +45,7 @@ class _WebVenuePageState extends State<WebVenuePage>
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => VenuePageModel(venueId: widget.venueId)
-        ..initTabBarController(this)
+        ..initTabBarController(context, this)
         ..fetchData(context),
       child: Consumer<VenuePageModel>(
         builder: (context, model, _) {
@@ -134,21 +133,20 @@ class _WebVenuePageState extends State<WebVenuePage>
   }
 
   Widget _buildHeaderImage(BuildContext context, VenuePageModel model) {
-    final Uint8List? cachedImage = VenueImageCache.getImage(widget.venueId);
     return InkWell(
       onTap: () {
-        if (cachedImage == null) return;
+        if (model.headerImage == null) return;
 
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => FullScreenImageView(
-              imageBytes: cachedImage,
+              imageBytes: model.headerImage!,
               heroTag: 'headerImageTag',
             ),
           ),
         );
       },
-      child: cachedImage != null
+      child: model.headerImage != null
           ? Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -157,7 +155,7 @@ class _WebVenuePageState extends State<WebVenuePage>
               ),
               alignment: Alignment.center,
               child: Image.memory(
-                cachedImage,
+                model.headerImage!,
                 width: double.infinity,
                 height: 320,
                 fit: BoxFit.cover,
@@ -175,7 +173,7 @@ class _WebVenuePageState extends State<WebVenuePage>
                 model.loadedVenue.name,
                 style: Theme.of(
                   context,
-                ).textTheme.titleLarge?.copyWith(color: Colors.white),
+                ).textTheme.titleLarge?.copyWith(color: WebTheme.offWhite),
               ),
             ).animateOnPageLoad(
               model.animationsMap['imageOnPageLoadAnimation']!,

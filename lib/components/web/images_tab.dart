@@ -24,7 +24,10 @@ class ImagesTab extends StatelessWidget {
             width: MediaQuery.sizeOf(context).width,
             child: Column(
               mainAxisSize: MainAxisSize.max,
-              children: [_buildButtons(context), _buildPageView(context)],
+              children: [
+                _buildButtons(context),
+                _buildPageView(context, model),
+              ],
             ),
           ),
         ),
@@ -55,7 +58,7 @@ class ImagesTab extends StatelessWidget {
     );
   }
 
-  Widget _buildPageView(BuildContext context) {
+  Widget _buildPageView(BuildContext context, VenuePageModel model) {
     return Expanded(
       child: SizedBox(
         width: double.infinity,
@@ -66,8 +69,8 @@ class ImagesTab extends StatelessWidget {
               controller: model.pageViewController,
               scrollDirection: Axis.horizontal,
               children: [
-                _buildImages(context, 'Venue Images', model.venueImages),
-                _buildImages(context, 'Menu Images', model.menuImages),
+                _buildImages(context, 'Venue Images', model.venueImages, model.isVenueImagesLoading),
+                _buildImages(context, 'Menu Images', model.menuImages, model.isMenuImagesLoading),
               ],
             ),
             _buildPageIndicator(context),
@@ -81,6 +84,7 @@ class ImagesTab extends StatelessWidget {
     BuildContext context,
     String label,
     List<Uint8List> images,
+    bool isLoading,
   ) {
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -112,7 +116,8 @@ class ImagesTab extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) => FullScreenImageView(
                                     imageBytes: imageBytes,
-                                    heroTag: 'imageTag_${images.indexOf(imageBytes)}',
+                                    heroTag:
+                                        'imageTag_${images.indexOf(imageBytes)}',
                                   ),
                                 ),
                               );
@@ -140,6 +145,17 @@ class ImagesTab extends StatelessWidget {
                       ).animateOnPageLoad(
                         model.animationsMap['textOnPageLoadAnimation5']!,
                       ),
+                )
+              : isLoading
+              ? const Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 64),
+                    child: CircularProgressIndicator(
+                      color: WebTheme.successColor,
+                      strokeWidth: 2.5,
+                    ),
+                  ),
                 )
               : Align(
                   alignment: Alignment.topCenter,

@@ -7,7 +7,7 @@ import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/utils.dart';
-import 'package:table_reserver/utils/venue_image_cache.dart';
+import 'package:table_reserver/utils/venue_image_cache/venue_image_cache_interface.dart';
 
 class WebVenueCard extends StatefulWidget {
   final Venue venue;
@@ -40,7 +40,7 @@ class _WebVenueCardState extends State<WebVenueCard> {
               venueId: widget.venue.id,
               shouldReturnToHomepage: false,
             ),
-            routeName: Routes.webVenue,
+            routeName: '${Routes.webVenue}?venueId=${widget.venue.id}',
             arguments: {'venueId': widget.venue.id},
           ),
         );

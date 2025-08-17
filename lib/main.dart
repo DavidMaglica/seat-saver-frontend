@@ -207,17 +207,34 @@ class MyApp extends StatelessWidget {
               ownerId: getOptionalArg(context, 'ownerId') ?? ownerIdFromCache,
             ),
             Routes.webVenues: (context) => const WebVenuesPage(),
-            Routes.webVenue: (context) => WebVenuePage(
-              venueId: getRequiredArg<int>(context, 'venueId'),
-              shouldReturnToHomepage: getRequiredArg(
-                context,
-                'shouldReturnToHomepage',
-              ),
-            ),
             Routes.webReservations: (context) => const WebReservations(),
             Routes.webAccount: (context) => const WebAccount(),
           },
+          onGenerateRoute: (settings) {
+            final uri = Uri.parse(settings.name ?? '');
+
+            if (uri.path == Routes.webVenue) {
+              final venueId = int.tryParse(uri.queryParameters['venueId'] ?? '');
+              final shouldReturnToHomepage =
+                  uri.queryParameters['shouldReturnToHomepage'] == 'true';
+
+              if (venueId == null) {
+                throw Exception("Missing or invalid venueId in URL");
+              }
+
+              return MaterialPageRoute(
+                settings: settings,
+                builder: (_) => WebVenuePage(
+                  venueId: venueId,
+                  shouldReturnToHomepage: shouldReturnToHomepage,
+                ),
+              );
+            }
+
+            return null;
+          },
         );
+
       },
     );
   }
