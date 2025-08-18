@@ -74,7 +74,6 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
       int ownerId = response.data!;
       prefsWithCache.setInt('ownerId', ownerId);
 
-      await Future.delayed(const Duration(milliseconds: 500));
       if (!context.mounted) return;
       Navigator.of(context).push(
         FadeInRoute(

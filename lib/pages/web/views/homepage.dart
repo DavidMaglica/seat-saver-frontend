@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_table/flutter_advanced_table.dart';
 import 'package:flutter_advanced_table/params.dart' hide ActionParamBuilder;
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/components/web/circular_stat_card.dart';
@@ -170,7 +171,8 @@ class _WebHomepageState extends State<WebHomepage>
               Navigator.of(context).push(
                 FadeInRoute(
                   page: WebRatingsPage(ownerId: model.ownerId),
-                  routeName: '${Routes.webRatingsPage}?ownerId=${model.ownerId}',
+                  routeName:
+                      '${Routes.webRatingsPage}?ownerId=${model.ownerId}',
                 ),
               );
             },
@@ -301,6 +303,15 @@ class _WebHomepageState extends State<WebHomepage>
   dynamic _buildTable(BuildContext context, HomepageModel model) {
     List<int> venueIds = model.venues.map((venue) => venue.id).toList();
 
+    if (model.venues.isEmpty && !model.isLoadingTable.value) {
+      return Center(
+        child: Text(
+          'You haven\'t registered any venues yet.',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      );
+    }
+
     return AdvancedTableWidget(
       headerBuilder: (context, header) {
         return _buildHeader(context, header);
@@ -313,8 +324,13 @@ class _WebHomepageState extends State<WebHomepage>
         return _buildRows(context, rowParams, model.venues);
       },
       items: model.venues,
-      isLoadingAll: ValueNotifier(false),
-      fullLoadingPlaceHolder: const Center(child: CircularProgressIndicator()),
+      isLoadingAll: model.isLoadingTable,
+      fullLoadingPlaceHolder: Center(
+        child: LoadingAnimationWidget.staggeredDotsWave(
+          color: WebTheme.accent1,
+          size: 75,
+        ),
+      ),
       headerItems: model.headers,
       actionBuilder: (context, actionParams) {
         final venueId = venueIds[actionParams.rowIndex];

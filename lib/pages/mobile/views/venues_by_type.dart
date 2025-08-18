@@ -1,3 +1,4 @@
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/mobile/venue_card_by_type.dart';
 import 'package:table_reserver/models/mobile/views/venue_by_type_model.dart';
@@ -71,11 +72,12 @@ class VenuesByType extends StatelessWidget {
       itemCount: model.venues.length,
       itemBuilder: (context, index) {
         if (index == model.venues.length && model.hasMorePages) {
-          return const Padding(
-            padding: EdgeInsets.all(16),
+          return Padding(
+            padding: const EdgeInsets.all(16),
             child: Center(
-              child: CircularProgressIndicator(
-                color: MobileTheme.successColor,
+              child: LoadingAnimationWidget.threeArchedCircle(
+                color: MobileTheme.accent1,
+                size: 75,
               ),
             ),
           );

@@ -16,13 +16,15 @@ class WebRatingsPageModel extends ChangeNotifier {
       Animations.homepageAnimations;
 
   Timer? _refreshTimer;
+  
+  bool isLoading = true;
 
   void init() {
     fetchData(ownerId);
 
-    _refreshTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
-      fetchData(ownerId);
-    });
+    // _refreshTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
+    //   fetchData(ownerId);
+    // });
   }
 
   @override
@@ -32,6 +34,12 @@ class WebRatingsPageModel extends ChangeNotifier {
   }
 
   Future<void> fetchData(int ownerId) async {
+    isLoading = true;
+    notifyListeners();
+
+    await Future.delayed(const Duration(seconds: 10));
     // Fetch ratings data for the owner
+    isLoading = false;
+    notifyListeners();
   }
 }

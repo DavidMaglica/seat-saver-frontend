@@ -1,3 +1,4 @@
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:table_reserver/utils/toaster.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/utils.dart';
@@ -59,11 +60,9 @@ class CarouselItem extends StatelessWidget {
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
                 return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            (loadingProgress.expectedTotalBytes ?? 1)
-                        : null,
+                  child: LoadingAnimationWidget.staggeredDotsWave(
+                    color: MobileTheme.accent1,
+                    size: 75,
                   ),
                 );
               },

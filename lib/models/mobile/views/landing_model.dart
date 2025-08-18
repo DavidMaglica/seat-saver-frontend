@@ -15,8 +15,6 @@ class LandingModel extends ChangeNotifier {
   }
 
   Future<void> sendToMainPage() async {
-    await Future.delayed(const Duration(seconds: 1));
-
     if (!context.mounted) return;
     Navigator.pushNamed(
       context,

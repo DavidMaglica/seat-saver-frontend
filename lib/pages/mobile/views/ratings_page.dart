@@ -1,3 +1,4 @@
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/mobile/modal_widgets.dart';
 import 'package:table_reserver/utils/toaster.dart';
@@ -32,7 +33,10 @@ class RatingsPage extends StatelessWidget {
           bool isAtBottom = false;
 
           while (model.ratings == null) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: LoadingAnimationWidget.staggeredDotsWave(
+              color: MobileTheme.accent1,
+              size: 75,
+            ));
           }
 
           return GestureDetector(

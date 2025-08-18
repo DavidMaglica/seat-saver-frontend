@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/models/web/views/ratings_page_model.dart';
@@ -57,7 +58,22 @@ class WebRatingsPage extends StatelessWidget {
                           children: [
                             _buildTitle(context, model),
                             const SizedBox(height: 32),
-                            _buildMasonryGrid(context),
+                            !model.isLoading
+                                ? _buildMasonryGrid(context)
+                                : Padding(
+                                    padding: const EdgeInsets.only(top: 96),
+                                    child: Column(
+                                      children: [
+                                        Center(
+                                          child:
+                                              LoadingAnimationWidget.threeArchedCircle(
+                                                color: WebTheme.accent1,
+                                                size: 75,
+                                              ),
+                                        ),
+                                      ].divide(const SizedBox(height: 16,)),
+                                    ),
+                                  ),
                           ],
                         ),
                       ),
@@ -106,7 +122,7 @@ class WebRatingsPage extends StatelessWidget {
 
   Widget _buildMasonryGrid(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 12, 24, 96),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: MasonryGridView.builder(
         gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,

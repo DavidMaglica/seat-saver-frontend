@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_table/flutter_advanced_table.dart';
 import 'package:flutter_advanced_table/params.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:table_reserver/api/data/reservation_details.dart';
 import 'package:table_reserver/components/web/modals/create_reservation_modal.dart';
@@ -24,6 +25,8 @@ class WebReservations extends StatefulWidget {
 class _WebReservationsState extends State<WebReservations>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  ValueNotifier<bool> isLoadingTable = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -166,7 +169,7 @@ class _WebReservationsState extends State<WebReservations>
         .map((reservation) => reservation.id)
         .toList();
 
-    if (model.reservations.isEmpty) {
+    if (model.reservations.isEmpty && !model.isLoadingTable.value) {
       return Center(
         child: Text(
           'No reservations found.',
@@ -187,8 +190,13 @@ class _WebReservationsState extends State<WebReservations>
         return _buildRows(context, model, rowParams, model.reservations);
       },
       items: model.reservations,
-      isLoadingAll: ValueNotifier(false),
-      fullLoadingPlaceHolder: const Center(child: CircularProgressIndicator()),
+      isLoadingAll: model.isLoadingTable,
+      fullLoadingPlaceHolder: Center(
+        child: LoadingAnimationWidget.staggeredDotsWave(
+          color: WebTheme.accent1,
+          size: 75,
+        ),
+      ),
       headerItems: model.tableHeaders,
       actionBuilder: (context, actionParams) {
         final reservationId = reservationIds[actionParams.rowIndex];

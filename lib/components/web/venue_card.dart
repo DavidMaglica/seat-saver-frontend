@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
@@ -81,8 +82,11 @@ class _WebVenueCardState extends State<WebVenueCard> {
       future: venueApi.getVenueHeaderImage(widget.venue.id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(color: WebTheme.successColor),
+          return Center(
+            child: LoadingAnimationWidget.threeArchedCircle(
+              color: WebTheme.accent1,
+              size: 75,
+            ),
           );
         }
 

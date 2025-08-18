@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:table_reserver/components/common/full_image_view.dart';
 import 'package:table_reserver/models/web/views/venue_page_model.dart';
@@ -69,8 +70,18 @@ class ImagesTab extends StatelessWidget {
               controller: model.pageViewController,
               scrollDirection: Axis.horizontal,
               children: [
-                _buildImages(context, 'Venue Images', model.venueImages, model.isVenueImagesLoading),
-                _buildImages(context, 'Menu Images', model.menuImages, model.isMenuImagesLoading),
+                _buildImages(
+                  context,
+                  'Venue Images',
+                  model.venueImages,
+                  model.isVenueImagesLoading,
+                ),
+                _buildImages(
+                  context,
+                  'Menu Images',
+                  model.menuImages,
+                  model.isMenuImagesLoading,
+                ),
               ],
             ),
             _buildPageIndicator(context),
@@ -147,13 +158,13 @@ class ImagesTab extends StatelessWidget {
                       ),
                 )
               : isLoading
-              ? const Align(
+              ? Align(
                   alignment: Alignment.topCenter,
                   child: Padding(
-                    padding: EdgeInsets.only(top: 64),
-                    child: CircularProgressIndicator(
-                      color: WebTheme.successColor,
-                      strokeWidth: 2.5,
+                    padding: const EdgeInsets.only(top: 64),
+                    child: LoadingAnimationWidget.threeArchedCircle(
+                      color: WebTheme.accent1,
+                      size: 75,
                     ),
                   ),
                 )

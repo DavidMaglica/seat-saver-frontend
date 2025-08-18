@@ -1,3 +1,9 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/components/mobile/modal_widgets.dart';
 import 'package:table_reserver/components/mobile/navbar.dart';
@@ -5,21 +11,12 @@ import 'package:table_reserver/models/mobile/views/search_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/extensions.dart';
 import 'package:table_reserver/utils/routing_utils.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
 
 class Search extends StatelessWidget {
   final int? userId;
   final Position? userLocation;
 
-  const Search({
-    Key? key,
-    this.userId,
-    this.userLocation,
-  }) : super(key: key);
+  const Search({Key? key, this.userId, this.userLocation}) : super(key: key);
 
   void _clear(BuildContext ctx, SearchModel model) {
     Navigator.pop(ctx);
@@ -42,9 +39,7 @@ class Search extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => SearchModel(
-        context: context,
-      )..init(),
+      create: (_) => SearchModel(context: context)..init(),
       child: Consumer<SearchModel>(
         builder: (context, model, _) {
           var brightness = Theme.of(context).brightness;
@@ -76,7 +71,7 @@ class Search extends StatelessWidget {
                                   blurRadius: 4,
                                   spreadRadius: 4,
                                   color: Theme.of(context).colorScheme.outline,
-                                )
+                                ),
                               ],
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -117,11 +112,12 @@ class Search extends StatelessWidget {
               itemBuilder: (context, index) {
                 if (index == model.paginatedVenues.length &&
                     model.hasMorePages) {
-                  return const Padding(
-                    padding: EdgeInsets.all(16),
+                  return Padding(
+                    padding: const EdgeInsets.all(16),
                     child: Center(
-                      child: CircularProgressIndicator(
-                        color: MobileTheme.successColor,
+                      child: LoadingAnimationWidget.threeArchedCircle(
+                        color: MobileTheme.accent1,
+                        size: 75,
                       ),
                     ),
                   );
@@ -162,8 +158,10 @@ class Search extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: 'Type to search for venues',
                   hintStyle: Theme.of(ctx).textTheme.bodyLarge?.copyWith(
-                      color:
-                          Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.5)),
+                    color: Theme.of(
+                      ctx,
+                    ).colorScheme.onPrimary.withValues(alpha: 0.5),
+                  ),
                   prefixIcon: Icon(
                     CupertinoIcons.search,
                     color: Theme.of(ctx).colorScheme.onPrimary,
@@ -174,9 +172,7 @@ class Search extends StatelessWidget {
                     ),
                   ),
                   focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: MobileTheme.accent1,
-                    ),
+                    borderSide: BorderSide(color: MobileTheme.accent1),
                   ),
                 ),
                 cursorColor: Theme.of(ctx).colorScheme.onPrimary,
@@ -197,19 +193,18 @@ class Search extends StatelessWidget {
     String? venueType,
   ) {
     return Padding(
-      padding:
-          const EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsetsDirectional.symmetric(
+        horizontal: 12,
+        vertical: 6,
+      ),
       child: ListTile(
         onTap: model.goToVenuePage(venue, userId, userLocation),
-        title: Text(
-          venue.name,
-          style: Theme.of(ctx).textTheme.titleMedium,
-        ),
+        title: Text(venue.name, style: Theme.of(ctx).textTheme.titleMedium),
         subtitle: Text(
           venueType != null ? venueType.toTitleCase() : 'Loading...',
           style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.6),
-              ),
+            color: Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.6),
+          ),
         ),
         trailing: Icon(
           Icons.arrow_forward_ios,
@@ -217,9 +212,7 @@ class Search extends StatelessWidget {
           size: 14,
         ),
         dense: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
   }
@@ -238,22 +231,22 @@ class Search extends StatelessWidget {
 
   Widget _buildFilterDropdown(BuildContext ctx, SearchModel model) {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: GestureDetector(
-            onTap: () => _showTypeFilter(ctx, model),
-            child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Theme.of(ctx).colorScheme.surfaceDim,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildDropdownText(ctx, model),
-                      _buildDropdownIcon(),
-                    ]))));
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: GestureDetector(
+        onTap: () => _showTypeFilter(ctx, model),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          decoration: BoxDecoration(
+            color: Theme.of(ctx).colorScheme.surfaceDim,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [_buildDropdownText(ctx, model), _buildDropdownIcon()],
+          ),
+        ),
+      ),
+    );
   }
 
   Icon _buildDropdownIcon() =>
@@ -269,8 +262,9 @@ class Search extends StatelessWidget {
           color: model.selectedTypes.isEmpty
               ? Theme.of(ctx).colorScheme.onSecondary
               : Theme.of(ctx).colorScheme.onPrimary,
-          fontWeight:
-              model.selectedTypes.isEmpty ? FontWeight.w200 : FontWeight.w400,
+          fontWeight: model.selectedTypes.isEmpty
+              ? FontWeight.w200
+              : FontWeight.w400,
         ),
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
@@ -354,7 +348,7 @@ class Search extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 32)
+                  const SizedBox(height: 32),
                 ],
               ),
             );
@@ -395,7 +389,7 @@ class Search extends StatelessWidget {
                 });
               },
             ),
-          )
+          ),
         ],
       ),
     );

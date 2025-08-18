@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:table_reserver/models/web/components/performance_card_model.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
@@ -123,6 +124,7 @@ class _PerformanceCardState extends State<PerformanceCard> {
     if (cachedImage != null) {
       return _buildImage(model, cachedImage);
     }
+
     return FutureBuilder<Uint8List?>(
       future: model.venueApi.getVenueHeaderImage(widget.venueId),
       builder: (context, snapshot) {
@@ -135,8 +137,9 @@ class _PerformanceCardState extends State<PerformanceCard> {
               borderRadius: BorderRadius.circular(8),
               color: WebTheme.transparentColour,
             ),
-            child: const CircularProgressIndicator(
-              color: WebTheme.successColor,
+            child: LoadingAnimationWidget.threeArchedCircle(
+              color: WebTheme.accent1,
+              size: 75,
             ),
           );
         }

@@ -26,6 +26,7 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
     'Number of Guests',
     'Reservation Date',
   ];
+  ValueNotifier<bool> isLoadingTable = ValueNotifier<bool>(false);
   final List<ReservationDetails> reservations = [];
 
   final Map<int, String> venueNamesById = {};
@@ -35,6 +36,8 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
   void initState(BuildContext context) {}
 
   Future<void> fetchReservations() async {
+    isLoadingTable.value = true;
+    notifyListeners();
     final int ownerId = prefsWithCache.getInt('ownerId')!;
     List<ReservationDetails> fetchedReservations = await reservationApi
         .getOwnerReservations(ownerId);
@@ -52,6 +55,7 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
       ..clear()
       ..addAll(fetchedReservations);
 
+    isLoadingTable.value = false;
     notifyListeners();
   }
 
@@ -78,8 +82,4 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
 
     notifyListeners();
   }
-
-  // Future<BasicResponse> updateReservation() async {}
-
-  // Future<BasicResponse> deleteReservation(int reservationId) async {}
 }

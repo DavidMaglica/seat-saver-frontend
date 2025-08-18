@@ -40,6 +40,7 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
     'Avail. capacity',
     'Rating',
   ];
+  ValueNotifier<bool> isLoadingTable = ValueNotifier<bool>(false);
   List<Venue> venues = [];
 
   int lastMonthReservationsCount = 0;
@@ -73,6 +74,8 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
 
   @override
   void dispose() {
+    isLoadingTable.dispose();
+    venues.clear();
     _refreshTimer?.cancel();
     super.dispose();
   }
@@ -103,6 +106,8 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
 
   Future<void> fetchVenues(BuildContext context) async {
     try {
+      isLoadingTable = ValueNotifier<bool>(true);
+      notifyListeners();
       PagedResponse<Venue> fetchedVenues = await venueApi.getVenuesByOwner(
         ownerId,
         size: 50,
@@ -110,6 +115,7 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
       if (fetchedVenues.items.isNotEmpty) {
         venues.clear();
         venues.addAll(fetchedVenues.items);
+        isLoadingTable.value = false;
         notifyListeners();
       } else {
         if (!context.mounted) return;

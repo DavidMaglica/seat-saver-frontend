@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/components/web/venue_card.dart';
@@ -78,8 +79,11 @@ class _WebVenuesPageState extends State<WebVenuesPage>
         itemCount: model.paginatedVenues.length + (model.hasMorePages ? 1 : 0),
         itemBuilder: (context, index) {
           if (index == model.paginatedVenues.length && model.hasMorePages) {
-            return const Center(
-              child: CircularProgressIndicator(color: WebTheme.successColor),
+            return Center(
+              child: LoadingAnimationWidget.threeArchedCircle(
+                color: WebTheme.accent1,
+                size: 75,
+              ),
             );
           }
 
