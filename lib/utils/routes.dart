@@ -22,4 +22,5 @@ class Routes {
   static const String webVenue = '/venue';
   static const String webReservations = '/reservations';
   static const String webAccount = '/account';
+  static const String webRatingsPage = '/ratings';
 }

@@ -58,14 +58,14 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
 
   void init(BuildContext context) {
     _setUserToSharedPreferences(context, ownerId);
-    _fetchAll(context);
+    fetchAll(context);
 
-    // _refreshTimer = Timer.periodic(const Duration(seconds: 30), (_) {
-    //   _fetchAll(context);
-    // });
+    _refreshTimer = Timer.periodic(const Duration(minutes: 5), (_) {
+      fetchAll(context);
+    });
   }
 
-  void _fetchAll(BuildContext context) {
+  void fetchAll(BuildContext context) {
     fetchVenues(context);
     _fetchReservationData();
     _fetchReviewsData();

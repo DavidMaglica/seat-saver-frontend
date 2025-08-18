@@ -15,9 +15,11 @@ import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/components/web/stat_card.dart';
 import 'package:table_reserver/models/web/create_venue_model.dart';
 import 'package:table_reserver/models/web/homepage_model.dart';
+import 'package:table_reserver/pages/web/views/ratings_page.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/utils/routes.dart';
 
 class WebHomepage extends StatefulWidget {
@@ -60,16 +62,15 @@ class _WebHomepageState extends State<WebHomepage>
                   Expanded(
                     child: Align(
                       alignment: const AlignmentDirectional(0, -1),
-                      child: Container(
+                      child: SizedBox(
                         width: double.infinity,
-                        decoration: const BoxDecoration(),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 64),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              _buildTitle(context, model),
+                              _buildTitleRow(context, model),
                               _buildTopStats(context, model),
                               Row(
                                 mainAxisSize: MainAxisSize.max,
@@ -96,12 +97,34 @@ class _WebHomepageState extends State<WebHomepage>
     );
   }
 
-  Widget _buildTitle(BuildContext context, HomepageModel model) {
+  Widget _buildTitleRow(BuildContext context, HomepageModel model) {
     return Padding(
-      padding: const EdgeInsets.only(left: 14),
-      child: Text(
-        'Overview',
-        style: Theme.of(context).textTheme.titleLarge,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text('Overview', style: Theme.of(context).textTheme.titleLarge),
+          FFButtonWidget(
+            onPressed: () {
+              model.fetchAll(context);
+            },
+            text: 'Refresh data',
+            icon: const Icon(CupertinoIcons.refresh, size: 18),
+            options: FFButtonOptions(
+              height: 40,
+              iconColor: Theme.of(context).colorScheme.primary,
+              color: WebTheme.infoColor,
+              textStyle: const TextStyle(
+                fontSize: 16,
+                color: WebTheme.offWhite,
+              ),
+              elevation: 3,
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ],
       ).animateOnPageLoad(model.animationsMap['titleOnPageLoadAnimation']!),
     );
   }
@@ -143,6 +166,14 @@ class _WebHomepageState extends State<WebHomepage>
         mainAxisSize: MainAxisSize.max,
         children: [
           InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                FadeInRoute(
+                  page: WebRatingsPage(ownerId: model.ownerId),
+                  routeName: '${Routes.webRatingsPage}?ownerId=${model.ownerId}',
+                ),
+              );
+            },
             child: CircularStatCard(
               title: 'Rating',
               description: 'Your average rating across all venues.',
@@ -151,6 +182,9 @@ class _WebHomepageState extends State<WebHomepage>
             ),
           ),
           InkWell(
+            onTap: () {
+              logger.i('Overall Utilization Rate tapped');
+            },
             child: CircularStatCard(
               title: 'Overall Utilization Rate',
               description: 'The overall utilization rate of your venues.',
@@ -381,7 +415,9 @@ class _WebHomepageState extends State<WebHomepage>
 
   Widget _buildHeader(BuildContext context, HeaderBuilder header) {
     bool isWideHeader =
-        header.value == 'Name' || header.value == 'Location' || header.value == 'Working Hours';
+        header.value == 'Name' ||
+        header.value == 'Location' ||
+        header.value == 'Working Hours';
     return Container(
       width: isWideHeader ? 130 : 100,
       padding: const EdgeInsets.all(8),

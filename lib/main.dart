@@ -24,6 +24,7 @@ import 'package:table_reserver/pages/web/auth/authentication.dart';
 import 'package:table_reserver/pages/web/views/account.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/pages/web/views/landing.dart';
+import 'package:table_reserver/pages/web/views/ratings_page.dart';
 import 'package:table_reserver/pages/web/views/reservations.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/pages/web/views/venues.dart';
@@ -213,8 +214,25 @@ class MyApp extends StatelessWidget {
           onGenerateRoute: (settings) {
             final uri = Uri.parse(settings.name ?? '');
 
+            if (uri.path == Routes.webRatingsPage) {
+              final ownerId = int.tryParse(
+                uri.queryParameters['ownerId'] ?? '',
+              );
+
+              if (ownerId == null) {
+                throw Exception("Missing or invalid ownerId in URL");
+              }
+
+              return MaterialPageRoute(
+                settings: settings,
+                builder: (_) => WebRatingsPage(ownerId: ownerId),
+              );
+            }
+
             if (uri.path == Routes.webVenue) {
-              final venueId = int.tryParse(uri.queryParameters['venueId'] ?? '');
+              final venueId = int.tryParse(
+                uri.queryParameters['venueId'] ?? '',
+              );
               final shouldReturnToHomepage =
                   uri.queryParameters['shouldReturnToHomepage'] == 'true';
 
@@ -234,7 +252,6 @@ class MyApp extends StatelessWidget {
             return null;
           },
         );
-
       },
     );
   }
