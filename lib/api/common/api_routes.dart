@@ -45,6 +45,14 @@ class ApiRoutes {
 
   static String allVenueRatings(int venueId) => '${venueById(venueId)}/ratings';
 
+  static String venueRatingsCount(int ownerId) => '$venues/ratings/count/$ownerId';
+
+  static String overallRating(int ownerId) =>
+      '$venues/overall-rating/$ownerId';
+
+  static String venueUtilisationRate(int ownerId) =>
+      '$venues/utilisation-rate/$ownerId';
+
   static String rateVenue(int venueId) => '${venueById(venueId)}/rate';
 
   static String venueType(int typeId) => '$venues/type/$typeId';
@@ -61,6 +69,9 @@ class ApiRoutes {
 
   static String ownerReservations(int ownerId) =>
       '$reservations/owner/$ownerId';
+
+  static String reservationCount(int ownerId) => '$reservations/count/$ownerId';
+
   static const String geolocation = '$apiBase/geolocation';
   static const String getNearbyCities = '$geolocation/nearby-cities';
 

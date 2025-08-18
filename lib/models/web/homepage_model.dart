@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:table_reserver/api/account_api.dart';
+import 'package:table_reserver/api/data/paged_response.dart';
 import 'package:table_reserver/api/data/user.dart';
 import 'package:table_reserver/api/data/user_response.dart';
 import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/api/reservation_api.dart';
+import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/web/side_nav_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
@@ -15,12 +20,14 @@ import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/sign_up_methods.dart';
 import 'package:table_reserver/utils/web_toaster.dart';
 
-class HomepageModel extends FlutterFlowModel<WebHomepage> {
+class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
   final int ownerId;
 
   HomepageModel({required this.ownerId});
 
   final AccountApi accountApi = AccountApi();
+  final ReservationApi reservationApi = ReservationApi();
+  final VenueApi venueApi = VenueApi();
 
   final Map<String, AnimationInfo> animationsMap =
       Animations.homepageAnimations;
@@ -33,116 +40,42 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> {
     'Avail. capacity',
     'Rating',
   ];
-  final List<Venue> venues = [
-    Venue(
-      id: 1,
-      name: 'Venue 1',
-      location: 'Location 1',
-      workingHours: '9 AM - 9 PM',
-      maximumCapacity: 100,
-      availableCapacity: 50,
-      rating: 4.5,
-      typeId: 1,
-    ),
-    Venue(
-      id: 2,
-      name: 'Venue 2',
-      location: 'Location 2',
-      workingHours: '10 AM - 10 PM',
-      maximumCapacity: 200,
-      availableCapacity: 150,
-      rating: 4.0,
-      typeId: 2,
-    ),
-    Venue(
-      id: 3,
-      name: 'Venue 3',
-      location: 'Location 3',
-      workingHours: '8 AM - 8 PM',
-      maximumCapacity: 150,
-      availableCapacity: 100,
-      rating: 3.5,
-      typeId: 1,
-    ),
-    Venue(
-      id: 4,
-      name: 'Venue 4',
-      location: 'Location 4',
-      workingHours: '11 AM - 11 PM',
-      maximumCapacity: 300,
-      availableCapacity: 200,
-      rating: 2.5,
-      typeId: 3,
-    ),
-    Venue(
-      id: 5,
-      name: 'Venue 5',
-      location: 'Location 5',
-      workingHours: '7 AM - 7 PM',
-      maximumCapacity: 80,
-      availableCapacity: 30,
-      rating: 1.5,
-      typeId: 2,
-    ),
-    Venue(
-      id: 6,
-      name: 'Venue 6',
-      location: 'Location 6',
-      workingHours: '9 AM - 5 PM',
-      maximumCapacity: 120,
-      availableCapacity: 60,
-      rating: 3.0,
-      typeId: 1,
-    ),
-    Venue(
-      id: 7,
-      name: 'Venue 7',
-      location: 'Location 7',
-      workingHours: '10 AM - 6 PM',
-      maximumCapacity: 90,
-      availableCapacity: 40,
-      rating: 4.2,
-      typeId: 3,
-    ),
-    Venue(
-      id: 8,
-      name: 'Venue 8',
-      location: 'Location 8',
-      workingHours: '12 PM - 12 AM',
-      maximumCapacity: 250,
-      availableCapacity: 180,
-      rating: 4.8,
-      typeId: 2,
-    ),
-    Venue(
-      id: 9,
-      name: 'Venue 9',
-      location: 'Location 9',
-      workingHours: '6 AM - 6 PM',
-      maximumCapacity: 110,
-      availableCapacity: 70,
-      rating: 3.8,
-      typeId: 1,
-    ),
-    Venue(
-      id: 10,
-      name: 'Venue 10',
-      location: 'Location 10',
-      workingHours: '8 AM - 8 PM',
-      maximumCapacity: 130,
-      availableCapacity: 90,
-      rating: 4.1,
-      typeId: 3,
-    ),
-  ];
+  List<Venue> venues = [];
+
+  int lastMonthReservationsCount = 0;
+  int nextMonthReservationsCount = 0;
+  int totalReservationsCount = 0;
+
+  int totalReviewsCount = 0;
+  double overallRating = 0;
+
+  double overallUtilisationRate = 0;
+
+  Timer? _refreshTimer;
 
   @override
-  void initState(BuildContext context) {
+  void initState(BuildContext context) {}
+
+  void init(BuildContext context) {
     _setUserToSharedPreferences(context, ownerId);
+    _fetchAll(context);
+
+    // _refreshTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+    //   _fetchAll(context);
+    // });
+  }
+
+  void _fetchAll(BuildContext context) {
+    fetchVenues(context);
+    _fetchReservationData();
+    _fetchReviewsData();
   }
 
   @override
-  void dispose() {}
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
+  }
 
   Future<void> _setUserToSharedPreferences(
     BuildContext context,
@@ -166,5 +99,49 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> {
         FadeInRoute(page: const WebLanding(), routeName: Routes.webLanding),
       );
     }
+  }
+
+  Future<void> fetchVenues(BuildContext context) async {
+    try {
+      PagedResponse<Venue> fetchedVenues = await venueApi.getVenuesByOwner(
+        ownerId,
+        size: 50,
+      );
+      if (fetchedVenues.items.isNotEmpty) {
+        venues.clear();
+        venues.addAll(fetchedVenues.items);
+        notifyListeners();
+      } else {
+        if (!context.mounted) return;
+        WebToaster.displayInfo(context, 'No venues found for this owner.');
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      WebToaster.displayError(context, 'Error fetching venues: $e');
+    }
+  }
+
+  Future<void> _fetchReservationData() async {
+    totalReservationsCount = await reservationApi.getReservationCount(ownerId);
+
+    lastMonthReservationsCount = await reservationApi.getReservationCount(
+      ownerId,
+      startDate: DateTime.now().subtract(const Duration(days: 30)),
+      endDate: DateTime.now(),
+    );
+
+    nextMonthReservationsCount = await reservationApi.getReservationCount(
+      ownerId,
+      startDate: DateTime.now(),
+      endDate: DateTime.now().add(const Duration(days: 30)),
+    );
+    notifyListeners();
+  }
+
+  Future<void> _fetchReviewsData() async {
+    totalReviewsCount = await venueApi.getVenueRatingsCount(ownerId);
+    overallRating = await venueApi.getOverallRating(ownerId);
+    overallUtilisationRate = await venueApi.getVenueUtilisationRate(ownerId);
+    notifyListeners();
   }
 }

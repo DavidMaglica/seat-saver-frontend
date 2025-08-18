@@ -245,6 +245,39 @@ class VenueApi {
     }
   }
 
+  Future<int> getVenueRatingsCount(int ownerId) async {
+    try {
+      Response response = await dio.get(ApiRoutes.venueRatingsCount(ownerId));
+
+      return response.data as int;
+    } catch (e) {
+      logger.e('Error fetching venue ratings count: $e');
+      return 0;
+    }
+  }
+
+  Future<double> getOverallRating(int ownerId) async {
+    try {
+      Response response = await dio.get(ApiRoutes.overallRating(ownerId));
+
+      return response.data as double;
+    } catch (e) {
+      logger.e('Error fetching overall rating: $e');
+      return 0.0;
+    }
+  }
+
+  Future<double> getVenueUtilisationRate(int ownerId) async {
+    try {
+      Response response = await dio.get(ApiRoutes.venueUtilisationRate(ownerId));
+
+      return response.data as double;
+    } catch (e) {
+      logger.e('Error fetching venue utilisation rate: $e');
+      return 0.0;
+    }
+  }
+
   Future<BasicResponse> rateVenue(
     int venueId,
     double rating,
@@ -413,6 +446,17 @@ class VenueApi {
     } catch (e) {
       logger.e('Error editing venue: $e');
       return BasicResponse(success: false, message: 'Error editing venue');
+    }
+  }
+
+  Future<BasicResponse> deleteVenue(int venueId) async {
+    try {
+      Response response = await dio.delete(ApiRoutes.venueById(venueId));
+
+      return BasicResponse.fromJson(response.data, (json) => json);
+    } catch (e) {
+      logger.e('Error deleting venue: $e');
+      return BasicResponse(success: false, message: 'Error deleting venue. Please try again later.');
     }
   }
 }

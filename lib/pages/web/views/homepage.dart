@@ -15,7 +15,10 @@ import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/components/web/stat_card.dart';
 import 'package:table_reserver/models/web/create_venue_model.dart';
 import 'package:table_reserver/models/web/homepage_model.dart';
+import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/themes/web_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 
 class WebHomepage extends StatefulWidget {
   final int ownerId;
@@ -28,84 +31,82 @@ class WebHomepage extends StatefulWidget {
 
 class _WebHomepageState extends State<WebHomepage>
     with TickerProviderStateMixin {
-  late HomepageModel _model;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => HomepageModel(ownerId: widget.ownerId));
-  }
-
-  @override
-  void dispose() {
-    _model.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        body: Row(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SideNav(),
-            Expanded(
-              child: Align(
-                alignment: const AlignmentDirectional(0, -1),
-                child: Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 64),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _buildTitle(context),
-                        _buildTopStats(context),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildCircularStats(),
-                            _buildVenues(context),
-                          ].divide(const SizedBox(width: 16)),
+    return ChangeNotifierProvider(
+      create: (_) => HomepageModel(ownerId: widget.ownerId)..init(context),
+      child: Consumer<HomepageModel>(
+        builder: (context, model, _) {
+          return GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: Scaffold(
+              key: scaffoldKey,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              body: Row(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SideNav(),
+                  Expanded(
+                    child: Align(
+                      alignment: const AlignmentDirectional(0, -1),
+                      child: Container(
+                        width: double.infinity,
+                        decoration: const BoxDecoration(),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 64),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _buildTitle(context, model),
+                              _buildTopStats(context, model),
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildCircularStats(model),
+                                  _buildVenues(context, model),
+                                ].divide(const SizedBox(width: 16)),
+                              ),
+                              const SizedBox(height: 16),
+                              _buildPerformance(context, model),
+                            ].addToStart(const SizedBox(height: 24)),
+                          ),
                         ),
-                        const SizedBox(height: 16),
-                        _buildPerformance(context),
-                      ].addToStart(const SizedBox(height: 24)),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildTitle(BuildContext context) {
+  Widget _buildTitle(BuildContext context, HomepageModel model) {
     return Padding(
       padding: const EdgeInsets.only(left: 14),
       child: Text(
         'Overview',
         style: Theme.of(context).textTheme.titleLarge,
-      ).animateOnPageLoad(_model.animationsMap['titleOnPageLoadAnimation']!),
+      ).animateOnPageLoad(model.animationsMap['titleOnPageLoadAnimation']!),
     );
   }
 
-  Widget _buildTopStats(BuildContext context) {
+  Widget _buildTopStats(BuildContext context, HomepageModel model) {
     return Align(
       alignment: const AlignmentDirectional(-1, 0),
       child: SingleChildScrollView(
@@ -113,40 +114,57 @@ class _WebHomepageState extends State<WebHomepage>
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            const StatCard(title: 'Reservations this Month', value: 208),
-            const StatCard(title: 'Total Reservations Received', value: 2208),
-            const StatCard(title: 'Total Reviews Received', value: 2193),
+            StatCard(
+              title: 'Reservations last 30 days',
+              value: model.lastMonthReservationsCount,
+            ),
+            StatCard(
+              title: 'Reservations next 30 days',
+              value: model.nextMonthReservationsCount,
+            ),
+            StatCard(
+              title: 'Total Reservations Received',
+              value: model.totalReservationsCount,
+            ),
+            StatCard(
+              title: 'Total Reviews Received',
+              value: model.totalReviewsCount,
+            ),
           ].divide(const SizedBox(width: 16)),
         ),
-      ).animateOnPageLoad(_model.animationsMap['topStatsOnPageLoadAnimation']!),
+      ).animateOnPageLoad(model.animationsMap['topStatsOnPageLoadAnimation']!),
     );
   }
 
-  Widget _buildCircularStats() {
+  Widget _buildCircularStats(HomepageModel model) {
     return Flexible(
       flex: 5,
-      child:
-          Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const CircularStatCard(
-                title: 'Rating',
-                description: 'Your average rating across all venues.',
-              ),
-              const CircularStatCard(
-                title: 'Overall Utilization Rate',
-                description: 'The overall utilization rate of your venues.',
-                hint:
-                    'Sum of available capacity divided by sum of maximum capacity times 100',
-              ),
-            ].divide(const SizedBox(height: 16)),
-          ).animateOnPageLoad(
-            _model.animationsMap['circularStatsOnPageLoadAnimation']!,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          InkWell(
+            child: CircularStatCard(
+              title: 'Rating',
+              description: 'Your average rating across all venues.',
+              rating: model.overallRating,
+              ratingCount: model.totalReviewsCount,
+            ),
           ),
+          InkWell(
+            child: CircularStatCard(
+              title: 'Overall Utilization Rate',
+              description: 'The overall utilization rate of your venues.',
+              utilisationRatio: model.overallUtilisationRate,
+              hint:
+                  'Sum of available capacity divided by sum of maximum capacity times 100',
+            ),
+          ),
+        ].divide(const SizedBox(height: 16)),
+      ).animateOnPageLoad(model.animationsMap['circularStatsOnPageLoadAnimation']!),
     );
   }
 
-  Widget _buildVenues(BuildContext context) {
+  Widget _buildVenues(BuildContext context, HomepageModel model) {
     return Expanded(
       flex: 12,
       child: Padding(
@@ -236,18 +254,18 @@ class _WebHomepageState extends State<WebHomepage>
                       ),
                     ],
                   ),
-                  SizedBox(height: 360, child: _buildTable(context)),
+                  SizedBox(height: 375, child: _buildTable(context, model)),
                 ],
               ),
             ),
           ),
-        ).animateOnPageLoad(_model.animationsMap['containerOnPageLoadAnimation1']!),
+        ).animateOnPageLoad(model.animationsMap['containerOnPageLoadAnimation1']!),
       ),
     );
   }
 
-  dynamic _buildTable(BuildContext context) {
-    List<int> venueIds = _model.venues.map((venue) => venue.id).toList();
+  dynamic _buildTable(BuildContext context, HomepageModel model) {
+    List<int> venueIds = model.venues.map((venue) => venue.id).toList();
 
     return AdvancedTableWidget(
       headerBuilder: (context, header) {
@@ -258,15 +276,15 @@ class _WebHomepageState extends State<WebHomepage>
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       rowElementsBuilder: (context, rowParams) {
-        return _buildRows(context, rowParams, _model.venues);
+        return _buildRows(context, rowParams, model.venues);
       },
-      items: _model.venues,
+      items: model.venues,
       isLoadingAll: ValueNotifier(false),
       fullLoadingPlaceHolder: const Center(child: CircularProgressIndicator()),
-      headerItems: _model.headers,
+      headerItems: model.headers,
       actionBuilder: (context, actionParams) {
         final venueId = venueIds[actionParams.rowIndex];
-        return _buildActions(context, venueId);
+        return _buildActions(context, model, venueId);
       },
       actions: const [
         {"label": "edit and delete"},
@@ -274,10 +292,19 @@ class _WebHomepageState extends State<WebHomepage>
       rowDecorationBuilder: (index, isHovered) {
         return _buildRowDecoration(context, index, isHovered);
       },
+      onRowTap: (rowIndex) {
+        final venueId = venueIds[rowIndex];
+        Navigator.of(context).push(
+          FadeInRoute(
+            page: WebVenuePage(venueId: venueId, shouldReturnToHomepage: true),
+            routeName: '${Routes.webVenue}?venueId=$venueId',
+          ),
+        );
+      },
     );
   }
 
-  Row _buildActions(BuildContext context, int venueId) {
+  Row _buildActions(BuildContext context, HomepageModel model, int venueId) {
     return Row(
       children: [
         IconButton(
@@ -286,7 +313,7 @@ class _WebHomepageState extends State<WebHomepage>
             color: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () async {
-            await showDialog(
+            bool? shouldRefresh = await showDialog(
               context: context,
               barrierDismissible: true,
               builder: (context) {
@@ -305,6 +332,10 @@ class _WebHomepageState extends State<WebHomepage>
                 );
               },
             );
+            if (shouldRefresh == true) {
+              if (!context.mounted) return;
+              model.fetchVenues(context);
+            }
           },
         ),
         IconButton(
@@ -313,20 +344,35 @@ class _WebHomepageState extends State<WebHomepage>
             color: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () async {
-            await showModalBottomSheet(
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              enableDrag: false,
+            bool? shouldRefresh = await showDialog(
               context: context,
-              builder: (_) {
-                return DeleteModal(
-                  modalType: DeleteModalType.venue,
-                  venueName: _model.venues
-                      .firstWhere((v) => v.id == venueId)
-                      .name,
+              barrierDismissible: true,
+              builder: (context) {
+                return Dialog(
+                  insetPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 24,
+                  ),
+                  backgroundColor: Colors.transparent,
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1000),
+                      child: DeleteModal(
+                        modalType: DeleteModalType.venue,
+                        venueName: model.venues
+                            .firstWhere((v) => v.id == venueId)
+                            .name,
+                        venueId: venueId,
+                      ),
+                    ),
+                  ),
                 );
               },
             );
+            if (shouldRefresh == true) {
+              if (!context.mounted) return;
+              model.fetchVenues(context);
+            }
           },
         ),
       ],
@@ -334,8 +380,10 @@ class _WebHomepageState extends State<WebHomepage>
   }
 
   Widget _buildHeader(BuildContext context, HeaderBuilder header) {
+    bool isWideHeader =
+        header.value == 'Name' || header.value == 'Location' || header.value == 'Working Hours';
     return Container(
-      width: header.defualtWidth,
+      width: isWideHeader ? 130 : 100,
       padding: const EdgeInsets.all(8),
       alignment: Alignment.centerLeft,
       child: Center(
@@ -358,27 +406,31 @@ class _WebHomepageState extends State<WebHomepage>
     final venue = venues[rowParams.index];
     return [
       SizedBox(
-        width: rowParams.defualtWidth,
-        child: Center(child: Text(venue.name)),
+        width: 130,
+        child: Text(venue.name, overflow: TextOverflow.ellipsis),
       ),
       SizedBox(
-        width: rowParams.defualtWidth,
-        child: Center(child: Text(venue.location)),
+        width: 130,
+        child: Center(
+          child: Text(venue.location, overflow: TextOverflow.ellipsis),
+        ),
       ),
       SizedBox(
-        width: rowParams.defualtWidth,
-        child: Center(child: Text(venue.workingHours)),
+        width: 130,
+        child: Center(
+          child: Text(venue.workingHours, overflow: TextOverflow.ellipsis),
+        ),
       ),
       SizedBox(
-        width: rowParams.defualtWidth,
+        width: 100,
         child: Center(child: Text(venue.maximumCapacity.toString())),
       ),
       SizedBox(
-        width: rowParams.defualtWidth,
+        width: 100,
         child: Center(child: Text(venue.availableCapacity.toString())),
       ),
       SizedBox(
-        width: rowParams.defualtWidth,
+        width: 100,
         child: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -392,7 +444,7 @@ class _WebHomepageState extends State<WebHomepage>
             padding: const EdgeInsets.all(8),
             child: Center(
               child: Text(
-                venue.rating.toString(),
+                venue.rating.toStringAsFixed(2),
                 style: const TextStyle(color: WebTheme.offWhite),
               ),
             ),
@@ -418,7 +470,7 @@ class _WebHomepageState extends State<WebHomepage>
     );
   }
 
-  Widget _buildPerformance(BuildContext context) {
+  Widget _buildPerformance(BuildContext context, HomepageModel model) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -430,6 +482,6 @@ class _WebHomepageState extends State<WebHomepage>
           child: PerformanceCard(title: 'Worst Performing Venue', venueId: 1),
         ),
       ].divide(const SizedBox(width: 16)),
-    ).animateOnPageLoad(_model.animationsMap['rowOnPageLoadAnimation3']!);
+    ).animateOnPageLoad(model.animationsMap['rowOnPageLoadAnimation3']!);
   }
 }

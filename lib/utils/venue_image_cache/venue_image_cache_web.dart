@@ -11,12 +11,21 @@ class VenueImageCache {
     if (_cache.containsKey(venueId)) return _cache[venueId];
 
     final encoded = html.window.localStorage['venue_$venueId'];
-    if (encoded != null) {
-      final bytes = base64Decode(encoded);
-      _cache[venueId] = bytes;
-      return bytes;
+    try {
+      if (encoded != null) {
+        final bytes = base64Decode(encoded);
+        _cache[venueId] = bytes;
+        return bytes;
+      }
+    } catch (_) {
+      html.window.localStorage.remove('venue_$venueId');
     }
     return null;
+  }
+
+  static void invalidate(int venueId) {
+    _cache.remove(venueId);
+    html.window.localStorage.remove('venue_$venueId');
   }
 
   static void setImage(int venueId, Uint8List imageBytes) {

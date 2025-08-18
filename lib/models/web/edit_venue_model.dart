@@ -164,14 +164,14 @@ class EditVenueModel extends FlutterFlowModel<EditVenueModal>
 
     final String workingHoursValue = workingHoursTextController.text.trim();
     final RegExp workingHoursRegex = RegExp(
-      r'^(0?[1-9]|1[0-2]):[0-5][0-9]\s?(AM|PM)\s*-\s*(0?[1-9]|1[0-2]):[0-5][0-9]\s?(AM|PM)$',
+      r'^(?:[01]\d|2[0-3]):[0-5]\d\s*-\s*(?:[01]\d|2[0-3]):[0-5]\d$',
     );
     if (workingHoursValue.isEmpty) {
       workingHoursErrorText = 'Please enter the working hours.';
       isValid = false;
     } else if (!workingHoursRegex.hasMatch(workingHoursValue)) {
       workingHoursErrorText =
-          'Please use the format: HH:MM AM/PM - HH:MM AM/PM';
+          'Please use the format: HH:MM - HH:MM';
       isValid = false;
     } else {
       workingHoursErrorText = null;

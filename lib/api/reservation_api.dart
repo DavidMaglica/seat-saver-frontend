@@ -51,6 +51,29 @@ class ReservationApi {
     }
   }
 
+  Future<int> getReservationCount(
+    int ownerId, {
+    int? venueId,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      Response response = await dio.get(
+        ApiRoutes.reservationCount(ownerId),
+        queryParameters: {
+          'venueId': venueId,
+          'startDate': startDate?.toIso8601String(),
+          'endDate': endDate?.toIso8601String(),
+        },
+      );
+
+      return response.data as int;
+    } catch (e) {
+      logger.e('Error fetching reservation count: $e');
+      return 0;
+    }
+  }
+
   Future<BasicResponse> createReservation({
     required int venueId,
     required int numberOfGuests,

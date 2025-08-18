@@ -23,4 +23,6 @@ class PagedResponse<T> {
       totalPages: json['totalPages'],
     );
   }
+
+  List<T> get items => content;
 }

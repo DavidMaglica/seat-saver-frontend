@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:table_reserver/api/data/rating.dart';
 import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/api/reservation_api.dart';
 import 'package:table_reserver/api/venue_api.dart';
+import 'package:table_reserver/main.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/utils/animations.dart';
 import 'package:table_reserver/utils/extensions.dart';
@@ -37,6 +39,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
       : 0;
 
   final VenueApi venueApi = VenueApi();
+  final ReservationApi reservationApi = ReservationApi();
 
   final Map<String, AnimationInfo> animationsMap =
       Animations.venuePageAnimations;
@@ -103,6 +106,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
   }
 
   Future<void> fetchVenue(BuildContext context) async {
+    int ownerId = prefsWithCache.getInt('ownerId')!;
     Venue? venue = await venueApi.getVenue(venueId);
 
     if (venue != null) {
@@ -118,7 +122,10 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
         this.venueType = 'Unknown';
       }
 
-      // TODO: Fetch lifetime reservations count once decided how to implement it after dashboard
+      lifetimeReservations = await reservationApi.getReservationCount(
+        ownerId,
+        venueId: venue.id,
+      );
       notifyListeners();
     } else {
       if (!context.mounted) return;
