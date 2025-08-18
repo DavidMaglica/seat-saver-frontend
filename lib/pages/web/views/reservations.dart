@@ -10,8 +10,8 @@ import 'package:table_reserver/components/web/modals/delete_modal.dart';
 import 'package:table_reserver/components/web/modals/edit_reservation_modal.dart';
 import 'package:table_reserver/components/web/modals/modal_widgets.dart';
 import 'package:table_reserver/components/web/side_nav.dart';
-import 'package:table_reserver/models/web/create_reservation_model.dart';
-import 'package:table_reserver/models/web/reservation_model.dart';
+import 'package:table_reserver/models/web/modals/create_reservation_model.dart';
+import 'package:table_reserver/models/web/views/reservations_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
 class WebReservations extends StatefulWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/models/web/side_nav_model.dart';
+import 'package:table_reserver/models/web/components/side_nav_model.dart';
 import 'package:table_reserver/pages/web/views/account.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/pages/web/views/reservations.dart';

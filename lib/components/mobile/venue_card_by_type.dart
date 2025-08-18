@@ -1,5 +1,5 @@
 import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/models/mobile/venue_card_by_type_model.dart';
+import 'package:table_reserver/models/mobile/components/venue_card_by_type_model.dart';
 import 'package:table_reserver/utils/utils.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';

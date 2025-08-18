@@ -4,7 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
-import 'package:table_reserver/models/web/ratings_page_model.dart';
+import 'package:table_reserver/models/web/views/ratings_page_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';

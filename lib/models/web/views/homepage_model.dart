@@ -11,7 +11,7 @@ import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/reservation_api.dart';
 import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/main.dart';
-import 'package:table_reserver/models/web/side_nav_model.dart';
+import 'package:table_reserver/models/web/components/side_nav_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/pages/web/views/landing.dart';
 import 'package:table_reserver/utils/animations.dart';

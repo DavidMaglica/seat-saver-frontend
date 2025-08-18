@@ -1,5 +1,5 @@
 import 'package:table_reserver/components/web/modals/modal_widgets.dart';
-import 'package:table_reserver/models/web/create_venue_model.dart';
+import 'package:table_reserver/models/web/modals/create_venue_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

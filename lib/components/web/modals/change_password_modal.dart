@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:table_reserver/components/web/modals/modal_widgets.dart';
-import 'package:table_reserver/models/web/change_password_model.dart';
+import 'package:table_reserver/models/web/modals/change_password_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
 class ChangePasswordModal extends StatefulWidget {

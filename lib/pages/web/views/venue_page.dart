@@ -8,7 +8,7 @@ import 'package:table_reserver/components/web/modals/edit_venue_modal.dart';
 import 'package:table_reserver/components/web/reviews_tab.dart';
 import 'package:table_reserver/components/web/venue_details_tab.dart';
 import 'package:table_reserver/main.dart';
-import 'package:table_reserver/models/web/venue_page_model.dart';
+import 'package:table_reserver/models/web/views/venue_page_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/pages/web/views/venues.dart';
 import 'package:table_reserver/themes/web_theme.dart';

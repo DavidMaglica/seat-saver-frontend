@@ -9,8 +9,8 @@ import 'package:table_reserver/components/web/modals/modal_widgets.dart';
 import 'package:table_reserver/components/web/modals/support_modal.dart';
 import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/main.dart';
-import 'package:table_reserver/models/web/account_model.dart';
-import 'package:table_reserver/models/web/side_nav_model.dart';
+import 'package:table_reserver/models/web/views/account_model.dart';
+import 'package:table_reserver/models/web/components/side_nav_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
 class WebAccount extends StatefulWidget {

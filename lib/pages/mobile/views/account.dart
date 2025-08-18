@@ -1,6 +1,6 @@
 import 'package:table_reserver/api/data/user.dart';
 import 'package:table_reserver/components/mobile/navbar.dart';
-import 'package:table_reserver/models/mobile/account_model.dart';
+import 'package:table_reserver/models/mobile/views/account_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/routing_utils.dart';

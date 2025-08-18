@@ -1,4 +1,4 @@
-import 'package:table_reserver/models/mobile/location_permission_model.dart';
+import 'package:table_reserver/models/mobile/components/location_permission_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';

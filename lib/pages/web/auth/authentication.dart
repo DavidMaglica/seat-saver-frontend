@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/models/web/authentication_model.dart';
+import 'package:table_reserver/models/web/auth/authentication_model.dart';
 import 'package:table_reserver/pages/web/auth/log_in_tab.dart';
 import 'package:table_reserver/pages/web/auth/sign_up_tab.dart';
 import 'package:table_reserver/themes/web_theme.dart';

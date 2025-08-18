@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/models/web/performance_card_model.dart';
+import 'package:table_reserver/models/web/components/performance_card_model.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';

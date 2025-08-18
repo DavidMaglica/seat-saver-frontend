@@ -1,4 +1,4 @@
-import 'package:table_reserver/models/web/landing_model.dart';
+import 'package:table_reserver/models/web/views/landing_model.dart';
 import 'package:table_reserver/pages/web/auth/authentication.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';

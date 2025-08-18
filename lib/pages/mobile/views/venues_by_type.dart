@@ -1,6 +1,6 @@
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/mobile/venue_card_by_type.dart';
-import 'package:table_reserver/models/mobile/venue_by_type_model.dart';
+import 'package:table_reserver/models/mobile/views/venue_by_type_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/extensions.dart';
 import 'package:flutter/material.dart';

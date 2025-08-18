@@ -1,6 +1,6 @@
 import 'package:table_reserver/components/mobile/action_button.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
-import 'package:table_reserver/models/mobile/notification_settings_model.dart';
+import 'package:table_reserver/models/mobile/views/notification_settings_model.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';

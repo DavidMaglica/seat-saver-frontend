@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:table_reserver/components/common/full_image_view.dart';
-import 'package:table_reserver/models/web/venue_page_model.dart';
+import 'package:table_reserver/models/web/views/venue_page_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
 class ImagesTab extends StatelessWidget {

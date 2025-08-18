@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:table_reserver/components/web/modals/modal_widgets.dart';
-import 'package:table_reserver/models/web/create_reservation_model.dart';
+import 'package:table_reserver/models/web/modals/create_reservation_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
 class CreateReservationModal extends StatefulWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:table_reserver/components/web/modals/modal_widgets.dart';
-import 'package:table_reserver/models/web/delete_modal_model.dart';
+import 'package:table_reserver/models/web/modals/delete_modal_model.dart';
 
 class DeleteModal extends StatefulWidget {
   final DeleteModalType modalType;

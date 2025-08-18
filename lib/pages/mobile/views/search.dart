@@ -1,7 +1,7 @@
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/components/mobile/modal_widgets.dart';
 import 'package:table_reserver/components/mobile/navbar.dart';
-import 'package:table_reserver/models/mobile/search_model.dart';
+import 'package:table_reserver/models/mobile/views/search_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/extensions.dart';
 import 'package:table_reserver/utils/routing_utils.dart';

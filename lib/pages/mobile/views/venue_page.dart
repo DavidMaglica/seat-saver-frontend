@@ -1,7 +1,7 @@
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/common/full_image_view.dart';
 import 'package:table_reserver/components/mobile/venue_images_tab.dart';
-import 'package:table_reserver/models/mobile/venue_page_model.dart';
+import 'package:table_reserver/models/mobile/views/venue_page_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/extensions.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:table_reserver/api/data/rating.dart';
-import 'package:table_reserver/models/web/venue_page_model.dart';
+import 'package:table_reserver/models/web/views/venue_page_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
 class ReviewsTab extends StatelessWidget {

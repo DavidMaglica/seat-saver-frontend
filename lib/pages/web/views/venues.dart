@@ -3,7 +3,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/components/web/venue_card.dart';
-import 'package:table_reserver/models/web/venues_model.dart';
+import 'package:table_reserver/models/web/views/venues_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
 class WebVenuesPage extends StatefulWidget {
