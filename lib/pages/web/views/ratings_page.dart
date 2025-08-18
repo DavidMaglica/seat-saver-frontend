@@ -4,6 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:rating_summary/rating_summary.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/models/web/views/ratings_page_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
@@ -59,7 +60,7 @@ class WebRatingsPage extends StatelessWidget {
                             _buildTitle(context, model),
                             const SizedBox(height: 32),
                             !model.isLoading
-                                ? _buildMasonryGrid(context)
+                                ? _buildMasonryGrid(context, model)
                                 : Padding(
                                     padding: const EdgeInsets.only(top: 96),
                                     child: Column(
@@ -71,7 +72,7 @@ class WebRatingsPage extends StatelessWidget {
                                                 size: 75,
                                               ),
                                         ),
-                                      ].divide(const SizedBox(height: 16,)),
+                                      ].divide(const SizedBox(height: 16)),
                                     ),
                                   ),
                           ],
@@ -120,7 +121,9 @@ class WebRatingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMasonryGrid(BuildContext context) {
+  Widget _buildMasonryGrid(BuildContext context, WebRatingsPageModel model) {
+    final venueIds = model.ratingsByVenueId.keys.toList();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: MasonryGridView.builder(
@@ -129,29 +132,75 @@ class WebRatingsPage extends StatelessWidget {
         ),
         crossAxisSpacing: 24,
         mainAxisSpacing: 12,
-        itemCount: 50,
+        itemCount: venueIds.length,
         shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {},
-            child: Material(
-              color: Colors.transparent,
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Center(child: Text('MMMDA')),
-              ),
-            ),
-          );
+          final venueId = venueIds[index];
+          final counts = model.ratingsByVenueId[venueId]!;
+
+          return _buildRatingSummary(context, model, venueId, counts);
         },
+      ),
+    );
+  }
+
+  Material _buildRatingSummary(
+      BuildContext context,
+      WebRatingsPageModel model,
+      int venueId,
+      Map<int, int> counts,
+      ) {
+    final String venueName = model.venueNamesById[venueId]!;
+    final oneStar = counts[1] ?? 0;
+    final twoStars = counts[2] ?? 0;
+    final threeStars = counts[3] ?? 0;
+    final fourStars = counts[4] ?? 0;
+    final fiveStars = counts[5] ?? 0;
+    final total = oneStar + twoStars + threeStars + fourStars + fiveStars;
+
+    return Material(
+      color: Colors.transparent,
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.onSurface,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                venueName,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 12),
+              RatingSummary(
+                counter: total,
+                showAverage: false,
+                counterFiveStars: fiveStars,
+                counterFourStars: fourStars,
+                counterThreeStars: threeStars,
+                counterTwoStars: twoStars,
+                counterOneStars: oneStar,
+                color: Theme.of(context).colorScheme.primary,
+                labelCounterOneStars: Text('1',
+                    style: Theme.of(context).textTheme.bodyMedium),
+                labelCounterTwoStars: Text('2',
+                    style: Theme.of(context).textTheme.bodyMedium),
+                labelCounterThreeStars: Text('3',
+                    style: Theme.of(context).textTheme.bodyMedium),
+                labelCounterFourStars: Text('4',
+                    style: Theme.of(context).textTheme.bodyMedium),
+                labelCounterFiveStars: Text('5',
+                    style: Theme.of(context).textTheme.bodyMedium),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

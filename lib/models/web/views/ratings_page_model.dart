@@ -16,7 +16,10 @@ class WebRatingsPageModel extends ChangeNotifier {
       Animations.homepageAnimations;
 
   Timer? _refreshTimer;
-  
+
+  Map<int, Map<int, int>> ratingsByVenueId = {};
+  Map<int, String> venueNamesById = {};
+
   bool isLoading = true;
 
   void init() {
@@ -37,8 +40,22 @@ class WebRatingsPageModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    await Future.delayed(const Duration(seconds: 10));
-    // Fetch ratings data for the owner
+    final venues = await venueApi.getVenuesByOwner(ownerId);
+
+    for (final venue in venues.content) {
+      final ratings = await venueApi.getAllVenueRatings(venue.id);
+      venueNamesById[venue.id] = venue.name;
+
+      final counts = <int, int>{1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+
+      for (final r in ratings) {
+        final ratingInt = r.rating.toInt().clamp(1, 5);
+        counts[ratingInt] = (counts[ratingInt] ?? 0) + 1;
+      }
+
+      ratingsByVenueId[venue.id] = counts;
+    }
+
     isLoading = false;
     notifyListeners();
   }

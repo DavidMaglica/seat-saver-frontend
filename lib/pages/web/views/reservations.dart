@@ -36,9 +36,7 @@ class _WebReservationsState extends State<WebReservations>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ReservationsModel()
-        ..fetchReservations()
-        ..fetchOwnedVenues(),
+      create: (_) => ReservationsModel()..init(),
       child: Consumer<ReservationsModel>(
         builder: (context, model, _) {
           return GestureDetector(
@@ -116,6 +114,25 @@ class _WebReservationsState extends State<WebReservations>
             ],
           ),
         ),
+        FFButtonWidget(
+          onPressed: () {
+            model.fetchReservations();
+          },
+          text: 'Refresh data',
+          icon: const Icon(CupertinoIcons.refresh, size: 18),
+          options: FFButtonOptions(
+            height: 40,
+            iconColor: Theme.of(context).colorScheme.primary,
+            color: WebTheme.infoColor,
+            textStyle: const TextStyle(
+              fontSize: 16,
+              color: WebTheme.offWhite,
+            ),
+            elevation: 3,
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        const SizedBox(width: 8),
         FFButtonWidget(
           onPressed: () async {
             final shouldRefresh = await showDialog(

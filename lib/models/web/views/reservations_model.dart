@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:table_reserver/api/account_api.dart';
@@ -20,6 +22,8 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
   final Map<String, AnimationInfo> animationsMap =
       Animations.reservationsAnimations;
 
+  Timer? _refreshTimer;
+
   final List<String> tableHeaders = [
     'Venue Name',
     'Username - User email',
@@ -34,6 +38,22 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
 
   @override
   void initState(BuildContext context) {}
+
+  void init() {
+    fetchOwnedVenues();
+    fetchReservations();
+
+    _refreshTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      fetchReservations();
+    });
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    isLoadingTable.dispose();
+    super.dispose();
+  }
 
   Future<void> fetchReservations() async {
     isLoadingTable.value = true;
