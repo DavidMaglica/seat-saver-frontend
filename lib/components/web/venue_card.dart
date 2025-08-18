@@ -41,7 +41,6 @@ class _WebVenueCardState extends State<WebVenueCard> {
               shouldReturnToHomepage: false,
             ),
             routeName: '${Routes.webVenue}?venueId=${widget.venue.id}',
-            arguments: {'venueId': widget.venue.id},
           ),
         );
       },
