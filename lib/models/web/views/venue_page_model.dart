@@ -150,9 +150,6 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
     if (image != null) {
       headerImage = image;
       notifyListeners();
-    } else {
-      if (!context.mounted) return;
-      WebToaster.displayError(context, 'Failed to load header image.');
     }
   }
 

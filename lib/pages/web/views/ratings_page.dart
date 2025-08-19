@@ -8,6 +8,7 @@ import 'package:rating_summary/rating_summary.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/models/web/views/ratings_page_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
+import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
@@ -58,21 +59,17 @@ class WebRatingsPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildTitle(context, model),
-                            const SizedBox(height: 32),
+                            const SizedBox(height: 16),
                             !model.isLoading
                                 ? _buildMasonryGrid(context, model)
                                 : Padding(
                                     padding: const EdgeInsets.only(top: 96),
-                                    child: Column(
-                                      children: [
-                                        Center(
-                                          child:
-                                              LoadingAnimationWidget.threeArchedCircle(
-                                                color: WebTheme.accent1,
-                                                size: 75,
-                                              ),
-                                        ),
-                                      ].divide(const SizedBox(height: 16)),
+                                    child: Center(
+                                      child:
+                                          LoadingAnimationWidget.threeArchedCircle(
+                                            color: WebTheme.accent1,
+                                            size: 75,
+                                          ),
                                     ),
                                   ),
                           ],
@@ -94,10 +91,9 @@ class WebRatingsPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('Overview', style: Theme.of(context).textTheme.titleLarge),
           FFButtonWidget(
             onPressed: () {
               model.fetchData(ownerId);
@@ -127,12 +123,12 @@ class WebRatingsPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: MasonryGridView.builder(
-        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
+        gridDelegate: const SliverSimpleGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 400
         ),
         crossAxisSpacing: 24,
         mainAxisSpacing: 12,
-        itemCount: venueIds.length,
+        itemCount: model.ratingsByVenueId.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
@@ -145,60 +141,90 @@ class WebRatingsPage extends StatelessWidget {
     );
   }
 
-  Material _buildRatingSummary(
-      BuildContext context,
-      WebRatingsPageModel model,
-      int venueId,
-      Map<int, int> counts,
-      ) {
+  Widget _buildRatingSummary(
+    BuildContext context,
+    WebRatingsPageModel model,
+    int venueId,
+    Map<int, int> counts,
+  ) {
     final String venueName = model.venueNamesById[venueId]!;
-    final oneStar = counts[1] ?? 0;
-    final twoStars = counts[2] ?? 0;
-    final threeStars = counts[3] ?? 0;
-    final fourStars = counts[4] ?? 0;
-    final fiveStars = counts[5] ?? 0;
-    final total = oneStar + twoStars + threeStars + fourStars + fiveStars;
+    final int oneStar = counts[1] ?? 0;
+    final int twoStars = counts[2] ?? 0;
+    final int threeStars = counts[3] ?? 0;
+    final int fourStars = counts[4] ?? 0;
+    final int fiveStars = counts[5] ?? 0;
+    final total = counts.values.fold(0, (sum, c) => sum + c);
+    final weightedSum = counts.entries.fold(
+      0,
+      (sum, e) => sum + (e.key * e.value),
+    );
 
-    return Material(
-      color: Colors.transparent,
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onSurface,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                venueName,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 12),
-              RatingSummary(
-                counter: total,
-                showAverage: false,
-                counterFiveStars: fiveStars,
-                counterFourStars: fourStars,
-                counterThreeStars: threeStars,
-                counterTwoStars: twoStars,
-                counterOneStars: oneStar,
-                color: Theme.of(context).colorScheme.primary,
-                labelCounterOneStars: Text('1',
-                    style: Theme.of(context).textTheme.bodyMedium),
-                labelCounterTwoStars: Text('2',
-                    style: Theme.of(context).textTheme.bodyMedium),
-                labelCounterThreeStars: Text('3',
-                    style: Theme.of(context).textTheme.bodyMedium),
-                labelCounterFourStars: Text('4',
-                    style: Theme.of(context).textTheme.bodyMedium),
-                labelCounterFiveStars: Text('5',
-                    style: Theme.of(context).textTheme.bodyMedium),
-              ),
-            ],
+    final double average = total > 0 ? weightedSum / total : 0.0;
+
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          FadeInRoute(
+            page: WebVenuePage(venueId: venueId, shouldReturnToHomepage: false),
+            routeName: '${Routes.webVenue}?venueId=$venueId',
+          ),
+        );
+      },
+      child: Material(
+        color: Colors.transparent,
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.onSurface,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(venueName, style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 12),
+                RatingSummary(
+                  counter: total,
+                  average: average,
+                  showAverage: true,
+                  averageStyle: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  starColor: WebTheme.accent1,
+                  counterFiveStars: fiveStars,
+                  counterFourStars: fourStars,
+                  counterThreeStars: threeStars,
+                  counterTwoStars: twoStars,
+                  counterOneStars: oneStar,
+                  color: WebTheme.accent1,
+                  thickness: 8,
+                  labelCounterOneStars: Text(
+                    '1',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  labelCounterTwoStars: Text(
+                    '2',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  labelCounterThreeStars: Text(
+                    '3',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  labelCounterFourStars: Text(
+                    '4',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  labelCounterFiveStars: Text(
+                    '5',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

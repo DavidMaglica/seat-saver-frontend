@@ -269,6 +269,7 @@ class _WebReservationsState extends State<WebReservations>
               },
             );
             if (shouldRefresh == true) {
+              if (!context.mounted) return;
               Provider.of<ReservationsModel>(
                 context,
                 listen: false,

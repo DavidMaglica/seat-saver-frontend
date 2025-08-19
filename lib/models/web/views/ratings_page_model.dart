@@ -25,9 +25,11 @@ class WebRatingsPageModel extends ChangeNotifier {
   void init() {
     fetchData(ownerId);
 
-    // _refreshTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
-    //   fetchData(ownerId);
-    // });
+    _refreshTimer = Timer.periodic(const Duration(minutes: 1, seconds: 30), (
+      timer,
+    ) {
+      fetchData(ownerId);
+    });
   }
 
   @override
