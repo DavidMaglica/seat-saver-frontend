@@ -13,7 +13,7 @@ class WebRatingsPageModel extends ChangeNotifier {
   final VenueApi venueApi = VenueApi();
 
   final Map<String, AnimationInfo> animationsMap =
-      Animations.homepageAnimations;
+      Animations.utilityPagesAnimations;
 
   Timer? _refreshTimer;
 

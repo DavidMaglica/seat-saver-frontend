@@ -58,10 +58,16 @@ class WebRatingsPage extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildTitle(context, model),
+                            _buildRefreshButton(context, model),
                             const SizedBox(height: 16),
                             !model.isLoading
-                                ? _buildMasonryGrid(context, model)
+                                ? _buildMasonryGrid(
+                                    context,
+                                    model,
+                                  ).animateOnPageLoad(
+                                    model
+                                        .animationsMap['gridViewOnPageLoadAnimation']!,
+                                  )
                                 : Padding(
                                     padding: const EdgeInsets.only(top: 96),
                                     child: Center(
@@ -86,7 +92,7 @@ class WebRatingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(BuildContext context, WebRatingsPageModel model) {
+  Widget _buildRefreshButton(BuildContext context, WebRatingsPageModel model) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -124,7 +130,7 @@ class WebRatingsPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: MasonryGridView.builder(
         gridDelegate: const SliverSimpleGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 400
+          maxCrossAxisExtent: 400,
         ),
         crossAxisSpacing: 24,
         mainAxisSpacing: 12,

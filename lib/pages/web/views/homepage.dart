@@ -16,11 +16,11 @@ import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/components/web/stat_card.dart';
 import 'package:table_reserver/models/web/modals/create_venue_model.dart';
 import 'package:table_reserver/models/web/views/homepage_model.dart';
+import 'package:table_reserver/pages/mobile/views/graphs_page.dart';
 import 'package:table_reserver/pages/web/views/ratings_page.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/utils/routes.dart';
 
 class WebHomepage extends StatefulWidget {
@@ -185,7 +185,12 @@ class _WebHomepageState extends State<WebHomepage>
           ),
           InkWell(
             onTap: () {
-              logger.i('Overall Utilization Rate tapped');
+              Navigator.of(context).push(
+                FadeInRoute(
+                  page: GraphsPage(ownerId: model.ownerId),
+                  routeName: '${Routes.webGraphsPage}?ownerId=${model.ownerId}',
+                ),
+              );
             },
             child: CircularStatCard(
               title: 'Overall Utilization Rate',

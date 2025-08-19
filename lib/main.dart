@@ -12,6 +12,7 @@ import 'package:table_reserver/pages/mobile/settings/reservation_history.dart';
 import 'package:table_reserver/pages/mobile/settings/support.dart';
 import 'package:table_reserver/pages/mobile/settings/terms_of_service.dart';
 import 'package:table_reserver/pages/mobile/views/account.dart';
+import 'package:table_reserver/pages/mobile/views/graphs_page.dart';
 import 'package:table_reserver/pages/mobile/views/homepage.dart';
 import 'package:table_reserver/pages/mobile/views/landing.dart';
 import 'package:table_reserver/pages/mobile/views/nearby.dart';
@@ -213,6 +214,21 @@ class MyApp extends StatelessWidget {
           },
           onGenerateRoute: (settings) {
             final uri = Uri.parse(settings.name ?? '');
+
+            if (uri.path == Routes.webGraphsPage) {
+              final ownerId = int.tryParse(
+                uri.queryParameters['ownerId'] ?? '',
+              );
+
+              if (ownerId == null) {
+                throw Exception("Missing or invalid ownerId in URL");
+              }
+
+              return MaterialPageRoute(
+                settings: settings,
+                builder: (_) => GraphsPage(ownerId: ownerId),
+              );
+            }
 
             if (uri.path == Routes.webRatingsPage) {
               final ownerId = int.tryParse(
