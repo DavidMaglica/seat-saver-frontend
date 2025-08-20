@@ -60,7 +60,7 @@ class _EditVenueModalState extends State<EditVenueModal>
                     ].divide(const SizedBox(height: 16)),
                   ),
                 ).animateOnPageLoad(
-                  model.animationsMap['containerOnPageLoadAnimation']!,
+                  model.animationsMap['modalOnLoad']!,
                 ),
               ],
             ),

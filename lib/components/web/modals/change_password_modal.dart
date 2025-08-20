@@ -61,7 +61,7 @@ class _ChangePasswordModalState extends State<ChangePasswordModal>
                     ],
                   ),
                 ).animateOnPageLoad(
-                  model.animationsMap['containerOnPageLoadAnimation']!,
+                  model.animationsMap['modalOnLoad']!,
                 ),
               ],
             ),

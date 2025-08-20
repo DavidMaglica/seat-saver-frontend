@@ -900,7 +900,7 @@ class Animations {
   };
 
   static Map<String, AnimationInfo> modalAnimations = {
-    'containerOnPageLoadAnimation': AnimationInfo(
+    'modalOnLoad': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effectsBuilder: () => [
         visibilityFast,

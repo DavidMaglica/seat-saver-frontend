@@ -75,7 +75,7 @@ class _EditReservationModalState extends State<EditReservationModal>
                     ].divide(const SizedBox(height: 16)),
                   ),
                 ).animateOnPageLoad(
-                  model.animationsMap['containerOnPageLoadAnimation']!,
+                  model.animationsMap['modalOnLoad']!,
                 ),
               ],
             ),

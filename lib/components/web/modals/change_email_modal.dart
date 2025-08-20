@@ -60,7 +60,7 @@ class _ChangeEmailModalState extends State<ChangeEmailModal>
                     ],
                   ),
                 ).animateOnPageLoad(
-                  model.animationsMap['containerOnPageLoadAnimation']!,
+                  model.animationsMap['modalOnLoad']!,
                 ),
               ],
             ),

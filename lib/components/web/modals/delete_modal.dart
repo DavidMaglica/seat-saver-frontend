@@ -82,7 +82,7 @@ class _DeleteModalState extends State<DeleteModal>
                     ].divide(const SizedBox(height: 16)),
                   ),
                 ).animateOnPageLoad(
-                  model.animationsMap['containerOnPageLoadAnimation']!,
+                  model.animationsMap['modalOnLoad']!,
                 ),
               ],
             ),
