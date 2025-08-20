@@ -51,6 +51,21 @@ class ReservationApi {
     }
   }
 
+  Future<List<ReservationDetails>> getVenueReservations(int venueId) async {
+    try {
+      Response response = await dio.get(ApiRoutes.venueReservations(venueId));
+
+      List<ReservationDetails> reservations = (response.data as List)
+          .map((reservation) => ReservationDetails.fromJson(reservation))
+          .toList();
+
+      return reservations;
+    } catch (e) {
+      logger.e('Error fetching venue reservations: $e');
+      return [];
+    }
+  }
+
   Future<int> getReservationCount(
     int ownerId, {
     int? venueId,

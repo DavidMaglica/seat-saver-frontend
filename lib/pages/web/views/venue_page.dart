@@ -10,7 +10,6 @@ import 'package:table_reserver/components/web/venue_details_tab.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/web/views/venue_page_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
-import 'package:table_reserver/pages/web/views/venues.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
@@ -19,11 +18,13 @@ import 'package:table_reserver/utils/utils.dart';
 class WebVenuePage extends StatefulWidget {
   final int venueId;
   final bool shouldReturnToHomepage;
+  final bool shouldOpenReviewsTab;
 
   const WebVenuePage({
     super.key,
     required this.venueId,
     required this.shouldReturnToHomepage,
+    this.shouldOpenReviewsTab = false,
   });
 
   @override
@@ -44,9 +45,10 @@ class _WebVenuePageState extends State<WebVenuePage>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => VenuePageModel(venueId: widget.venueId)
-        ..initTabBarController(context, this)
-        ..fetchData(context),
+      create: (_) => VenuePageModel(
+        venueId: widget.venueId,
+        shouldOpenReviewsTab: widget.shouldOpenReviewsTab,
+      )..init(context, this),
       child: Consumer<VenuePageModel>(
         builder: (context, model, _) {
           return GestureDetector(
@@ -60,16 +62,14 @@ class _WebVenuePageState extends State<WebVenuePage>
               appBar: CustomAppbar(
                 title: model.loadedVenue.name,
                 onBack: () {
-                  Navigator.of(context).push(
-                    FadeInRoute(
-                      page: widget.shouldReturnToHomepage
-                          ? WebHomepage(ownerId: ownerId)
-                          : const WebVenuesPage(),
-                      routeName: widget.shouldReturnToHomepage
-                          ? Routes.webHomepage
-                          : Routes.webVenues,
-                    ),
-                  );
+                  widget.shouldReturnToHomepage
+                      ? Navigator.of(context).push(
+                          FadeInRoute(
+                            page: WebHomepage(ownerId: ownerId),
+                            routeName: Routes.webHomepage,
+                          ),
+                        )
+                      : Navigator.of(context).pop();
                 },
               ),
               body: SafeArea(

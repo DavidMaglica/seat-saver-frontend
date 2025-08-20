@@ -183,12 +183,12 @@ class _WebHomepageState extends State<WebHomepage>
           ),
           CircularStatCard(
             title: 'How Busy You Are',
-            description: 'A quick look at how full your venues are.',
+            description: 'A quick look at how busy your venues are right now.',
             onPressed: () {
               Navigator.of(context).push(
                 FadeInRoute(
                   page: ReservationsGraphsPage(ownerId: model.ownerId),
-                  routeName: '${Routes.webGraphsPage}?ownerId=${model.ownerId}',
+                  routeName: '${Routes.webReservationsGraphs}?ownerId=${model.ownerId}',
                 ),
               );
             },
@@ -291,7 +291,7 @@ class _WebHomepageState extends State<WebHomepage>
                       ),
                     ],
                   ),
-                  SizedBox(height: 375, child: _buildTable(context, model)),
+                  SizedBox(height: 379, child: _buildTable(context, model)),
                 ],
               ),
             ),

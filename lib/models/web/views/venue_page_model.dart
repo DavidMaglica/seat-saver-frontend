@@ -16,8 +16,9 @@ import 'package:table_reserver/utils/web_toaster.dart';
 class VenuePageModel extends FlutterFlowModel<WebVenuePage>
     with ChangeNotifier {
   final int venueId;
+  final bool? shouldOpenReviewsTab;
 
-  VenuePageModel({required this.venueId});
+  VenuePageModel({required this.venueId, this.shouldOpenReviewsTab});
 
   TabController? tabBarController;
 
@@ -71,14 +72,25 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
   @override
   void initState(BuildContext context) {}
 
+  void init(BuildContext context, TickerProvider vsync) {
+    initTabBarController(context, vsync);
+    if (shouldOpenReviewsTab == true) {
+      _fetchReviews(context);
+    }
+    fetchData(context);
+  }
+
   void fetchData(BuildContext context) {
     fetchVenue(context);
     _fetchHeaderImage(context);
   }
 
   void initTabBarController(BuildContext context, TickerProvider vsync) {
-    tabBarController = TabController(vsync: vsync, length: 3, initialIndex: 0)
-      ..addListener(notifyListeners);
+    tabBarController = TabController(
+      vsync: vsync,
+      length: 3,
+      initialIndex: shouldOpenReviewsTab == true ? 1 : 0,
+    )..addListener(notifyListeners);
 
     tabBarController?.addListener(() {
       final index = tabBarController!.index;

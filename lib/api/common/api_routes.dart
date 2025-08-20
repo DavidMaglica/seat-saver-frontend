@@ -70,6 +70,9 @@ class ApiRoutes {
   static String ownerReservations(int ownerId) =>
       '$reservations/owner/$ownerId';
 
+  static String venueReservations(int venueId) =>
+      '$reservations/venue/$venueId';
+
   static String reservationCount(int ownerId) => '$reservations/count/$ownerId';
 
   static const String geolocation = '$apiBase/geolocation';

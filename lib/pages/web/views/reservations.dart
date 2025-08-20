@@ -14,9 +14,13 @@ import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/models/web/modals/create_reservation_model.dart';
 import 'package:table_reserver/models/web/views/reservations_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 
 class WebReservations extends StatefulWidget {
-  const WebReservations({super.key});
+  final int? venueId;
+
+  const WebReservations({super.key, this.venueId});
 
   @override
   State<WebReservations> createState() => _WebReservationsState();
@@ -36,7 +40,7 @@ class _WebReservationsState extends State<WebReservations>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ReservationsModel()..init(),
+      create: (_) => ReservationsModel()..init(widget.venueId),
       child: Consumer<ReservationsModel>(
         builder: (context, model, _) {
           return GestureDetector(
@@ -103,7 +107,7 @@ class _WebReservationsState extends State<WebReservations>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Your Reservations',
+                'Your Reservations${widget.venueId != null ? ' for ${model.venueNamesById[widget.venueId]}' : ''}',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 8),
@@ -114,6 +118,32 @@ class _WebReservationsState extends State<WebReservations>
             ],
           ),
         ),
+        widget.venueId != null
+            ? FFButtonWidget(
+                text: 'View Reservations for all your venues',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    FadeInRoute(
+                      page: const WebReservations(),
+                      routeName: Routes.webReservations,
+                    ),
+                  );
+                },
+                options: FFButtonOptions(
+                  height: 40,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                  elevation: 3,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              )
+            : const SizedBox.shrink(),
+        widget.venueId != null
+            ? const SizedBox(width: 16)
+            : const SizedBox.shrink(),
         FFButtonWidget(
           onPressed: () {
             model.fetchReservations();
@@ -124,10 +154,7 @@ class _WebReservationsState extends State<WebReservations>
             height: 40,
             iconColor: Theme.of(context).colorScheme.primary,
             color: WebTheme.infoColor,
-            textStyle: const TextStyle(
-              fontSize: 16,
-              color: WebTheme.offWhite,
-            ),
+            textStyle: const TextStyle(fontSize: 16, color: WebTheme.offWhite),
             elevation: 3,
             borderRadius: BorderRadius.circular(8),
           ),

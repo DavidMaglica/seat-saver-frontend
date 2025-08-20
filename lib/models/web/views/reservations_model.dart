@@ -39,12 +39,21 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
   @override
   void initState(BuildContext context) {}
 
-  void init() {
-    fetchOwnedVenues();
-    fetchReservations();
+  void init(int? venueId) {
+    if (venueId != null) {
+      fetchVenue(venueId);
+      fetchVenueReservations(venueId);
+    } else {
+      fetchOwnedVenues();
+      fetchReservations();
+    }
 
     _refreshTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
-      fetchReservations();
+      if (venueId != null) {
+        fetchVenueReservations(venueId);
+      } else {
+        fetchReservations();
+      }
     });
   }
 
@@ -52,7 +61,46 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
   void dispose() {
     _refreshTimer?.cancel();
     isLoadingTable.dispose();
+    reservations.clear();
+    venueNamesById.clear();
+    userNamesById.clear();
     super.dispose();
+  }
+
+  Future<void> fetchVenue(int venueId) async {
+    Venue? fetchedVenue = await venueApi.getVenue(venueId);
+    if (fetchedVenue != null) {
+      venueNamesById[venueId] = fetchedVenue.name;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchVenueReservations(int venueId) async {
+    isLoadingTable.value = true;
+    notifyListeners();
+    List<ReservationDetails> fetchedReservations = await reservationApi
+        .getVenueReservations(venueId);
+
+    fetchedReservations.sort((a, b) => a.datetime.compareTo(b.datetime));
+
+    if (fetchedReservations.isNotEmpty) {
+      fetchedReservations.removeWhere((reservation) {
+        return reservation.datetime.isBefore(
+          DateTime.now().subtract(const Duration(hours: 1)),
+        );
+      });
+      List<int> userIds = fetchedReservations.map((reservation) {
+        return reservation.userId;
+      }).toList();
+      fetchUserNames(userIds);
+    }
+
+    reservations
+      ..clear()
+      ..addAll(fetchedReservations);
+
+    isLoadingTable.value = false;
+    notifyListeners();
   }
 
   Future<void> fetchReservations() async {
@@ -65,6 +113,11 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
     fetchedReservations.sort((a, b) => a.datetime.compareTo(b.datetime));
 
     if (fetchedReservations.isNotEmpty) {
+      fetchedReservations.removeWhere((reservation) {
+        return reservation.datetime.isBefore(
+          DateTime.now().subtract(const Duration(hours: 1)),
+        );
+      });
       List<int> userIds = fetchedReservations.map((reservation) {
         return reservation.userId;
       }).toList();

@@ -12,7 +12,6 @@ import 'package:table_reserver/pages/mobile/settings/reservation_history.dart';
 import 'package:table_reserver/pages/mobile/settings/support.dart';
 import 'package:table_reserver/pages/mobile/settings/terms_of_service.dart';
 import 'package:table_reserver/pages/mobile/views/account.dart';
-import 'package:table_reserver/pages/web/views/reservations_graphs_page.dart';
 import 'package:table_reserver/pages/mobile/views/homepage.dart';
 import 'package:table_reserver/pages/mobile/views/landing.dart';
 import 'package:table_reserver/pages/mobile/views/nearby.dart';
@@ -27,6 +26,7 @@ import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/pages/web/views/landing.dart';
 import 'package:table_reserver/pages/web/views/ratings_page.dart';
 import 'package:table_reserver/pages/web/views/reservations.dart';
+import 'package:table_reserver/pages/web/views/reservations_graphs_page.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/pages/web/views/venues.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
@@ -215,7 +215,7 @@ class MyApp extends StatelessWidget {
           onGenerateRoute: (settings) {
             final uri = Uri.parse(settings.name ?? '');
 
-            if (uri.path == Routes.webGraphsPage) {
+            if (uri.path == Routes.webReservationsGraphs) {
               final ownerId = int.tryParse(
                 uri.queryParameters['ownerId'] ?? '',
               );
@@ -227,6 +227,16 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 settings: settings,
                 builder: (_) => ReservationsGraphsPage(ownerId: ownerId),
+              );
+            }
+
+            if (uri.path == Routes.webReservations) {
+              final venueId = int.tryParse(
+                uri.queryParameters['venueId'] ?? '',
+              );
+              return MaterialPageRoute(
+                settings: settings,
+                builder: (_) => WebReservations(venueId: venueId),
               );
             }
 

@@ -78,7 +78,7 @@ class ChartCard extends StatelessWidget {
             Navigator.of(context).push(
               FadeInRoute(
                 page: const WebReservations(),
-                routeName: Routes.webReservations,
+                routeName:'${Routes.webReservations}?venueId=${venue.id}',
               ),
             );
           },
@@ -101,104 +101,107 @@ class ChartCard extends StatelessWidget {
         : parseWorkingHours(venue.workingHours);
     return BarChart(
       BarChartData(
-        barTouchData: barTouchData,
-        titlesData: titlesData,
+        barTouchData: _barTouchData(),
+        titlesData: _flTitlesData(),
         borderData: FlBorderData(show: false),
-        barGroups: List.generate(values.length, (i) {
-          final bool isOpen;
-          if (isWeekly) {
-            isOpen = true;
-          } else {
-            final startHour = bins[i];
-            final endHour = startHour + 4;
-            isOpen = isBinInWorkingHours(startHour, endHour, workingRanges);
-          }
-
-          return BarChartGroupData(
-            x: i,
-            barRods: [
-              BarChartRodData(
-                toY: values[i].toDouble(),
-                color: isOpen
-                    ? WebTheme.accent1
-                    : WebTheme.accent1.withValues(alpha: 0.3),
-              ),
-            ],
-            showingTooltipIndicators: [0],
-          );
-        }),
+        barGroups: _barGroups(values, bins, workingRanges),
         gridData: const FlGridData(show: false),
         alignment: BarChartAlignment.spaceAround,
       ),
     );
   }
 
-  BarTouchData get barTouchData => BarTouchData(
-    enabled: false,
-    touchTooltipData: BarTouchTooltipData(
-      getTooltipColor: (_) => WebTheme.transparentColour,
-      tooltipPadding: EdgeInsets.zero,
-      tooltipMargin: 8,
-      getTooltipItem: (group, groupIndex, rod, rodIndex) {
-        final bins = isWeekly
-            ? List<int>.generate(7, (i) => i)
-            : List<int>.generate(6, (i) => i * 4);
+  BarTouchData _barTouchData() {
+    return BarTouchData(
+      enabled: false,
+      touchTooltipData: BarTouchTooltipData(
+        getTooltipColor: (_) => WebTheme.transparentColour,
+        tooltipPadding: EdgeInsets.zero,
+        tooltipMargin: 8,
+        getTooltipItem: (group, groupIndex, rod, rodIndex) {
+          final bins = isWeekly
+              ? List<int>.generate(7, (i) => i)
+              : List<int>.generate(6, (i) => i * 4);
 
-        if (!isWeekly) {
-          final workingRanges = parseWorkingHours(venue.workingHours);
-          final startHour = bins[group.x.toInt()];
-          final endHour = startHour + 4;
-          final isOpen = isBinInWorkingHours(startHour, endHour, workingRanges);
+          if (!isWeekly) {
+            final workingRanges = parseWorkingHours(venue.workingHours);
+            final startHour = bins[group.x.toInt()];
+            final endHour = startHour + 4;
+            final isOpen = isBinInWorkingHours(
+              startHour,
+              endHour,
+              workingRanges,
+            );
+
+            return BarTooltipItem(
+              rod.toY.round().toString(),
+              TextStyle(
+                color: Theme.of(
+                  context,
+                ).colorScheme.onPrimary.withValues(alpha: isOpen ? 1.0 : 0.4),
+                fontWeight: isOpen ? FontWeight.bold : FontWeight.normal,
+              ),
+            );
+          }
 
           return BarTooltipItem(
             rod.toY.round().toString(),
             TextStyle(
-              color: Theme.of(
-                context,
-              ).colorScheme.onPrimary.withValues(alpha: isOpen ? 1.0 : 0.4),
-              fontWeight: isOpen ? FontWeight.bold : FontWeight.normal,
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontWeight: FontWeight.bold,
             ),
           );
-        }
+        },
+      ),
+    );
+  }
 
-        return BarTooltipItem(
-          rod.toY.round().toString(),
-          TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary,
-            fontWeight: FontWeight.bold,
-          ),
-        );
-      },
-    ),
-  );
+  FlTitlesData _flTitlesData() {
+    return FlTitlesData(
+      show: true,
+      bottomTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 24,
+          getTitlesWidget: (value, meta) {
+            final workingRanges = parseWorkingHours(venue.workingHours);
 
-  FlTitlesData get titlesData => FlTitlesData(
-    show: true,
-    bottomTitles: AxisTitles(
-      sideTitles: SideTitles(
-        showTitles: true,
-        reservedSize: 24,
-        getTitlesWidget: (value, meta) {
-          final workingRanges = parseWorkingHours(venue.workingHours);
+            String text;
+            if (isWeekly) {
+              text = [
+                'Mon',
+                'Tue',
+                'Wed',
+                'Thu',
+                'Fri',
+                'Sat',
+                'Sun',
+              ][value.toInt()];
+            } else {
+              final start = (value.toInt() * 4);
+              final end = ((value.toInt() + 1) * 4).clamp(0, 24);
+              text =
+                  '${start.toString().padLeft(2, '0')}-${end.toString().padLeft(2, '0')}';
 
-          String text;
-          if (isWeekly) {
-            text = [
-              'Mon',
-              'Tue',
-              'Wed',
-              'Thu',
-              'Fri',
-              'Sat',
-              'Sun',
-            ][value.toInt()];
-          } else {
-            final start = (value.toInt() * 4);
-            final end = ((value.toInt() + 1) * 4).clamp(0, 24);
-            text =
-                '${start.toString().padLeft(2, '0')}-${end.toString().padLeft(2, '0')}';
+              final isOpen = isBinInWorkingHours(start, end, workingRanges);
 
-            final isOpen = isBinInWorkingHours(start, end, workingRanges);
+              return SideTitleWidget(
+                axisSide: meta.axisSide,
+                space: 4,
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    color: isOpen
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : Theme.of(
+                            context,
+                          ).colorScheme.onPrimary.withValues(alpha: 0.5),
+                    fontWeight: isOpen ? FontWeight.bold : FontWeight.normal,
+                    fontSize: 12,
+                  ),
+                ),
+              );
+            }
 
             return SideTitleWidget(
               axisSide: meta.axisSide,
@@ -206,37 +209,50 @@ class ChartCard extends StatelessWidget {
               child: Text(
                 text,
                 style: TextStyle(
-                  color: isOpen
-                      ? Theme.of(context).colorScheme.onPrimary
-                      : Theme.of(
-                          context,
-                        ).colorScheme.onPrimary.withValues(alpha: 0.5),
-                  fontWeight: isOpen ? FontWeight.bold : FontWeight.normal,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontWeight: FontWeight.bold,
                   fontSize: 12,
                 ),
               ),
             );
-          }
-
-          return SideTitleWidget(
-            axisSide: meta.axisSide,
-            space: 4,
-            child: Text(
-              text,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
-          );
-        },
+          },
+        ),
       ),
-    ),
-    leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-  );
+      leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+    );
+  }
+
+  List<BarChartGroupData> _barGroups(
+    List<int> values,
+    List<int> bins,
+    List<List<int>> workingRanges,
+  ) {
+    return List.generate(values.length, (i) {
+      final bool isOpen;
+      if (isWeekly) {
+        isOpen = true;
+      } else {
+        final startHour = bins[i];
+        final endHour = startHour + 4;
+        isOpen = isBinInWorkingHours(startHour, endHour, workingRanges);
+      }
+
+      return BarChartGroupData(
+        x: i,
+        barRods: [
+          BarChartRodData(
+            toY: values[i].toDouble(),
+            color: isOpen
+                ? WebTheme.accent1
+                : WebTheme.accent1.withValues(alpha: 0.3),
+          ),
+        ],
+        showingTooltipIndicators: [0],
+      );
+    });
+  }
 
   List<int> countReservationsPerDay(List<ReservationDetails> reservations) {
     List<int> counts = List.filled(7, 0);
