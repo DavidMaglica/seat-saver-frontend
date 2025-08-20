@@ -154,7 +154,7 @@ class ImagesTab extends StatelessWidget {
                           );
                         }).toList(),
                       ).animateOnPageLoad(
-                        model.animationsMap['textOnPageLoadAnimation5']!,
+                        model.animationsMap['fadeInOnLoad']!,
                       ),
                 )
               : isLoading

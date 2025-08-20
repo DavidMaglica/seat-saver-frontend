@@ -43,7 +43,7 @@ class _WebVenuesPageState extends State<WebVenuesPage>
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     const SideNav(),
-                    _buildPaginatedVenues(context, model),
+                    _buildPaginatedVenues(context, model).animateOnPageLoad(model.animationsMap['gridOnLoad']!),
                   ],
                 ),
               ),
@@ -90,7 +90,7 @@ class _WebVenuesPageState extends State<WebVenuesPage>
           final venue = model.paginatedVenues[index];
           return WebVenueCard(venue: venue);
         },
-      ).animateOnPageLoad(model.animationsMap['gridViewOnPageLoadAnimation']!),
+      ),
     );
   }
 }

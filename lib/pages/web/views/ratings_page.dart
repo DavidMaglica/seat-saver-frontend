@@ -58,15 +58,17 @@ class WebRatingsPage extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildRefreshButton(context, model),
+                            _buildRefreshButton(context, model)
+                              ..animateOnPageLoad(
+                                model.animationsMap['titleOnLoad']!,
+                              ),
                             const SizedBox(height: 16),
                             !model.isLoading
                                 ? _buildMasonryGrid(
                                     context,
                                     model,
                                   ).animateOnPageLoad(
-                                    model
-                                        .animationsMap['gridViewOnPageLoadAnimation']!,
+                                    model.animationsMap['gridOnLoad']!,
                                   )
                                 : Padding(
                                     padding: const EdgeInsets.only(top: 96),
@@ -119,7 +121,7 @@ class WebRatingsPage extends StatelessWidget {
             ),
           ),
         ],
-      ).animateOnPageLoad(model.animationsMap['titleOnPageLoadAnimation']!),
+      ),
     );
   }
 

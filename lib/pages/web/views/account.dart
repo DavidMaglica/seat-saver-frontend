@@ -56,48 +56,67 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
                 children: [
                   const SideNav(),
                   Expanded(
-                    child:
-                        Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            const SizedBox(height: 24),
-                            Flexible(
-                              child: Wrap(
-                                spacing: 16,
-                                runSpacing: 16,
-                                alignment: WrapAlignment.center,
-                                crossAxisAlignment: WrapCrossAlignment.start,
-                                direction: Axis.horizontal,
-                                runAlignment: WrapAlignment.center,
-                                verticalDirection: VerticalDirection.down,
-                                clipBehavior: Clip.none,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        const SizedBox(height: 24),
+                        Flexible(
+                          child: Wrap(
+                            spacing: 16,
+                            runSpacing: 16,
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.start,
+                            direction: Axis.horizontal,
+                            runAlignment: WrapAlignment.center,
+                            verticalDirection: VerticalDirection.down,
+                            clipBehavior: Clip.none,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      _buildAccountDetails(context, model),
-                                      Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          _buildAccountActions(context, model),
-                                          const SizedBox(height: 16),
-                                          _buildSupport(context, model),
-                                          const SizedBox(height: 32),
-                                          _buildLogOut(context, model),
-                                        ],
-                                      ),
-                                    ].divide(const SizedBox(width: 64)),
+                                  _buildAccountDetails(
+                                    context,
+                                    model,
+                                  ).animateOnPageLoad(
+                                    model
+                                        .animationsMap['accountDetailsOnLoad']!,
                                   ),
-                                ],
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      _buildAccountActions(
+                                        context,
+                                        model,
+                                      ).animateOnPageLoad(
+                                        model
+                                            .animationsMap['actionsOnLoad']!,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      _buildSupport(
+                                        context,
+                                        model,
+                                      ).animateOnPageLoad(
+                                        model
+                                            .animationsMap['actionsOnLoad']!,
+                                      ),
+                                      const SizedBox(height: 32),
+                                      _buildLogOut(
+                                        context,
+                                        model,
+                                      ).animateOnPageLoad(
+                                        model.animationsMap['buttonOnLoad']!,
+                                      ),
+                                    ],
+                                  ),
+                                ].divide(const SizedBox(width: 64)),
                               ),
-                            ),
-                          ].addToEnd(const SizedBox(height: 72)),
-                        ).animateOnPageLoad(
-                          model.animationsMap['columnOnPageLoadAnimation']!,
+                            ],
+                          ),
                         ),
+                      ].addToEnd(const SizedBox(height: 72)),
+                    ),
                   ),
                 ],
               ),
@@ -132,16 +151,12 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
                   Icons.rsvp_outlined,
                   'Reservations received',
                   model.numberOfReservations,
-                ).animateOnPageLoad(
-                  model.animationsMap['containerOnPageLoadAnimation2']!,
                 ),
                 _buildVenuesDetails(
                   context,
                   Icons.table_restaurant_outlined,
                   'Venues owned',
                   model.venuesOwned,
-                ).animateOnPageLoad(
-                  model.animationsMap['containerOnPageLoadAnimation3']!,
                 ),
               ],
             ),
@@ -149,7 +164,7 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
           ],
         ),
       ),
-    ).animateOnPageLoad(model.animationsMap['containerOnPageLoadAnimation1']!);
+    );
   }
 
   Widget _buildUserDetails(BuildContext context) {
@@ -214,44 +229,41 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
       color: Colors.transparent,
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child:
-          Container(
-            width: double.infinity,
-            constraints: const BoxConstraints(maxWidth: 512),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onSurface,
-              borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: double.infinity,
+        constraints: const BoxConstraints(maxWidth: 512),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.onSurface,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildTitle(context, 'My Account Information'),
+            _buildModalButton(
+              context,
+              'Change Email',
+              const ChangeEmailModal(),
+              onClosed: _refreshUserData,
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildTitle(context, 'My Account Information'),
-                _buildModalButton(
-                  context,
-                  'Change Email',
-                  const ChangeEmailModal(),
-                  onClosed: _refreshUserData,
-                ),
-                _buildDivider(context),
-                _buildModalButton(
-                  context,
-                  'Change Username',
-                  const ChangeUsernameModal(),
-                  onClosed: _refreshUserData,
-                ),
-                _buildDivider(context),
-                _buildModalButton(
-                  context,
-                  'Change Password',
-                  const ChangePasswordModal(),
-                ),
-                const SizedBox(height: 8),
-              ],
+            _buildDivider(context),
+            _buildModalButton(
+              context,
+              'Change Username',
+              const ChangeUsernameModal(),
+              onClosed: _refreshUserData,
             ),
-          ).animateOnPageLoad(
-            model.animationsMap['containerOnPageLoadAnimation4']!,
-          ),
+            _buildDivider(context),
+            _buildModalButton(
+              context,
+              'Change Password',
+              const ChangePasswordModal(),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
     );
   }
 
@@ -260,38 +272,33 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
       color: Colors.transparent,
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child:
-          Container(
-            width: double.infinity,
-            constraints: const BoxConstraints(maxWidth: 512),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onSurface,
-              borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: double.infinity,
+        constraints: const BoxConstraints(maxWidth: 512),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.onSurface,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildTitle(context, 'Support'),
+            _buildModalButton(
+              context,
+              'Submit a Bug',
+              const SupportModal(modalType: SupportModalType.bugReport),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildTitle(context, 'Support'),
-                _buildModalButton(
-                  context,
-                  'Submit a Bug',
-                  const SupportModal(modalType: SupportModalType.bugReport),
-                ),
-                _buildDivider(context),
-                _buildModalButton(
-                  context,
-                  'Request a feature',
-                  const SupportModal(
-                    modalType: SupportModalType.featureRequest,
-                  ),
-                ),
-                const SizedBox(height: 8),
-              ],
+            _buildDivider(context),
+            _buildModalButton(
+              context,
+              'Request a feature',
+              const SupportModal(modalType: SupportModalType.featureRequest),
             ),
-          ).animateOnPageLoad(
-            model.animationsMap['containerOnPageLoadAnimation1']!,
-          ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
     );
   }
 
@@ -390,6 +397,6 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
         elevation: 3,
         borderRadius: BorderRadius.circular(8),
       ),
-    ).animateOnPageLoad(model.animationsMap['buttonOnPageLoadAnimation']!);
+    );
   }
 }

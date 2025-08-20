@@ -33,10 +33,10 @@ class ReservationsGraphsPageModel extends ChangeNotifier {
     fetchVenues();
     _fetchReservations();
 
-    // _refreshTimer = Timer.periodic(const Duration(minutes: 1, seconds: 30), (timer) {
-    //   fetchVenues();
-    //   fetchReservations();
-    // });
+    _refreshTimer = Timer.periodic(const Duration(minutes: 1, seconds: 30), (timer) {
+      fetchVenues();
+      _fetchReservations();
+    });
   }
 
   @override

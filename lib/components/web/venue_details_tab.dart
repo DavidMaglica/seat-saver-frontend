@@ -30,9 +30,11 @@ class VenueDetailsTab extends StatelessWidget {
               endIndent: 16,
               color: Theme.of(context).colorScheme.onPrimary,
             ).animateOnPageLoad(
-              model.animationsMap['textOnPageLoadAnimation5']!,
+              model.animationsMap['fadeInOnLoad']!,
             ),
-            _buildIconDetails(context),
+            _buildIconDetails(
+              context,
+            ).animateOnPageLoad(model.animationsMap['fadeMoveUpOnLoad']!),
           ],
         ),
       ),
@@ -67,7 +69,7 @@ class VenueDetailsTab extends StatelessWidget {
     return Text(
       title,
       style: Theme.of(context).textTheme.titleMedium,
-    ).animateOnPageLoad(model.animationsMap['textOnPageLoadAnimation5']!);
+    ).animateOnPageLoad(model.animationsMap['fadeInOnLoad']!);
   }
 
   Widget _buildDetail(
@@ -82,7 +84,7 @@ class VenueDetailsTab extends StatelessWidget {
               context,
             ).textTheme.bodyLarge?.copyWith(fontStyle: FontStyle.italic)
           : Theme.of(context).textTheme.bodyLarge,
-    ).animateOnPageLoad(model.animationsMap['textOnPageLoadAnimation5']!);
+    ).animateOnPageLoad(model.animationsMap['fadeInOnLoad']!);
   }
 
   Widget _buildIconDetails(BuildContext context) {
@@ -109,7 +111,7 @@ class VenueDetailsTab extends StatelessWidget {
           model.lifetimeReservations.toString(),
         ),
       ],
-    ).animateOnPageLoad(model.animationsMap['rowOnPageLoadAnimation']!);
+    );
   }
 
   Column _buildIconDetail(

@@ -82,7 +82,7 @@ class _WebReservationsState extends State<WebReservations>
                               ),
                             ).animateOnPageLoad(
                               model
-                                  .animationsMap['containerOnPageLoadAnimation']!,
+                                  .animationsMap['reservationsOnLoad']!,
                             ),
                       ),
                     ),

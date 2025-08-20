@@ -24,7 +24,9 @@ class ReviewsTab extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                _buildOverall(context),
+                _buildOverall(context).animateOnPageLoad(
+                  model.animationsMap['fadeInOnLoad']!,
+                ),
                 const SizedBox(height: 8),
                 Divider(
                   thickness: 1,
@@ -32,11 +34,11 @@ class ReviewsTab extends StatelessWidget {
                   endIndent: 16,
                   color: Theme.of(context).colorScheme.onPrimary,
                 ).animateOnPageLoad(
-                  model.animationsMap['textOnPageLoadAnimation5']!,
+                  model.animationsMap['fadeInOnLoad']!,
                 ),
                 const SizedBox(height: 8),
                 _buildReviews(context).animateOnPageLoad(
-                  model.animationsMap['rowOnPageLoadAnimation']!,
+                  model.animationsMap['fadeMoveUpOnLoad']!,
                 ),
               ],
             ),
@@ -59,7 +61,7 @@ class ReviewsTab extends StatelessWidget {
           _buildRating(context, model.loadedVenue.rating, 'Average Rating'),
         ],
       ),
-    ).animateOnPageLoad(model.animationsMap['textOnPageLoadAnimation5']!);
+    );
   }
 
   Widget _buildTotalReviews(BuildContext context) {

@@ -112,7 +112,7 @@ class _SignUpTabState extends State<SignUpTab> {
                 ],
               ),
             ).animateOnPageLoad(
-              widget.model.animationsMap['columnOnPageLoadAnimation1']!,
+              widget.model.animationsMap['tabOnLoad']!,
             ),
       ),
     );

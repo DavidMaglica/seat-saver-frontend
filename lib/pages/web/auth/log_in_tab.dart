@@ -112,7 +112,7 @@ class _LogInTabState extends State<LogInTab> {
                 ],
               ),
             ).animateOnPageLoad(
-              widget.model.animationsMap['columnOnPageLoadAnimation2']!,
+              widget.model.animationsMap['tabOnLoad']!,
             ),
       ),
     );

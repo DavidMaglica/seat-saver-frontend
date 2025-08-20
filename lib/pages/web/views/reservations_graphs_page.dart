@@ -59,7 +59,9 @@ class ReservationsGraphsPage extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildHeaderRow(context, model),
+                            _buildHeaderRow(context, model).animateOnPageLoad(
+                              model.animationsMap['titleOnLoad']!,
+                            ),
                             const SizedBox(height: 16),
                             Container(
                               width: double.infinity,
@@ -69,7 +71,11 @@ class ReservationsGraphsPage extends StatelessWidget {
                                   vertical: 16,
                                   horizontal: 16,
                                 ),
-                                child: _buildMasonryGrid(context, model),
+                                child: _buildMasonryGrid(context, model)
+                                    .animateOnPageLoad(
+                                      model
+                                          .animationsMap['gridOnLoad']!,
+                                    ),
                               ),
                             ),
                           ],
@@ -86,7 +92,10 @@ class ReservationsGraphsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderRow(BuildContext context, ReservationsGraphsPageModel model) {
+  Widget _buildHeaderRow(
+    BuildContext context,
+    ReservationsGraphsPageModel model,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -115,11 +124,14 @@ class ReservationsGraphsPage extends StatelessWidget {
             ),
           ),
         ],
-      ).animateOnPageLoad(model.animationsMap['titleOnPageLoadAnimation']!),
+      ),
     );
   }
 
-  Material _buildToggleContainer(BuildContext context, ReservationsGraphsPageModel model) {
+  Material _buildToggleContainer(
+    BuildContext context,
+    ReservationsGraphsPageModel model,
+  ) {
     return Material(
       color: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -205,7 +217,10 @@ class ReservationsGraphsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMasonryGrid(BuildContext context, ReservationsGraphsPageModel model) {
+  Widget _buildMasonryGrid(
+    BuildContext context,
+    ReservationsGraphsPageModel model,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: MasonryGridView.builder(

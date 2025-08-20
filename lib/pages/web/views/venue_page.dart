@@ -124,9 +124,15 @@ class _WebVenuePageState extends State<WebVenuePage>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeaderImage(context, model),
+          _buildHeaderImage(
+            context,
+            model,
+          ).animateOnPageLoad(model.animationsMap['headerImageOnLoad']!),
           const SizedBox(height: 16),
-          _buildHeaderRow(context, model),
+          _buildHeaderRow(
+            context,
+            model,
+          ).animateOnPageLoad(model.animationsMap['fadeInOnLoad']!),
         ],
       ),
     );
@@ -175,8 +181,6 @@ class _WebVenuePageState extends State<WebVenuePage>
                   context,
                 ).textTheme.titleLarge?.copyWith(color: WebTheme.offWhite),
               ),
-            ).animateOnPageLoad(
-              model.animationsMap['imageOnPageLoadAnimation']!,
             ),
     );
   }
@@ -191,7 +195,7 @@ class _WebVenuePageState extends State<WebVenuePage>
           Text(
             model.loadedVenue.name,
             style: Theme.of(context).textTheme.titleLarge,
-          ).animateOnPageLoad(model.animationsMap['textOnPageLoadAnimation1']!),
+          ),
           FFButtonWidget(
             onPressed: () async {
               bool? shouldRefresh = await showDialog(
