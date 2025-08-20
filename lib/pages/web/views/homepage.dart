@@ -16,7 +16,7 @@ import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/components/web/stat_card.dart';
 import 'package:table_reserver/models/web/modals/create_venue_model.dart';
 import 'package:table_reserver/models/web/views/homepage_model.dart';
-import 'package:table_reserver/pages/mobile/views/graphs_page.dart';
+import 'package:table_reserver/pages/web/views/reservations_graphs_page.dart';
 import 'package:table_reserver/pages/web/views/ratings_page.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/themes/web_theme.dart';
@@ -166,8 +166,10 @@ class _WebHomepageState extends State<WebHomepage>
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          InkWell(
-            onTap: () {
+          CircularStatCard(
+            title: 'Rating',
+            description: 'Your average rating across all venues.',
+            onPressed: () {
               Navigator.of(context).push(
                 FadeInRoute(
                   page: WebRatingsPage(ownerId: model.ownerId),
@@ -176,29 +178,23 @@ class _WebHomepageState extends State<WebHomepage>
                 ),
               );
             },
-            child: CircularStatCard(
-              title: 'Rating',
-              description: 'Your average rating across all venues.',
-              rating: model.overallRating,
-              ratingCount: model.totalReviewsCount,
-            ),
+            rating: model.overallRating,
+            ratingCount: model.totalReviewsCount,
           ),
-          InkWell(
-            onTap: () {
+          CircularStatCard(
+            title: 'How Busy You Are',
+            description: 'A quick look at how full your venues are.',
+            onPressed: () {
               Navigator.of(context).push(
                 FadeInRoute(
-                  page: GraphsPage(ownerId: model.ownerId),
+                  page: ReservationsGraphsPage(ownerId: model.ownerId),
                   routeName: '${Routes.webGraphsPage}?ownerId=${model.ownerId}',
                 ),
               );
             },
-            child: CircularStatCard(
-              title: 'Overall Utilization Rate',
-              description: 'The overall utilization rate of your venues.',
-              utilisationRatio: model.overallUtilisationRate,
-              hint:
-                  'Sum of available capacity divided by sum of maximum capacity times 100',
-            ),
+            utilisationRatio: model.overallUtilisationRate,
+            hint:
+                'Sum of available capacity divided by sum of maximum capacity times 100',
           ),
         ].divide(const SizedBox(height: 16)),
       ).animateOnPageLoad(model.animationsMap['circularStatsOnPageLoadAnimation']!),

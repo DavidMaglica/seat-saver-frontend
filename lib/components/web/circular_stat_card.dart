@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:table_reserver/_patched_packages/flutterflow_ui/lib/flutterflow_ui.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
 class CircularStatCard extends StatelessWidget {
   final String title;
   final String description;
+  final Function() onPressed;
   final double? rating;
   final int? ratingCount;
   final double? utilisationRatio;
@@ -14,6 +16,7 @@ class CircularStatCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.description,
+    required this.onPressed,
     this.rating,
     this.ratingCount,
     this.utilisationRatio,
@@ -74,7 +77,29 @@ class CircularStatCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: Theme.of(context).textTheme.titleLarge),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(title, style: Theme.of(context).textTheme.titleLarge),
+                    FFButtonWidget(
+                      text: 'View details',
+                      onPressed: onPressed,
+                      options: FFButtonOptions(
+                        width: 100,
+                        height: 32,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        color: WebTheme.infoColor,
+                        textStyle: const TextStyle(
+                          color: WebTheme.offWhite,
+                          fontSize: 14,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 4),
                 Text(
                   description,

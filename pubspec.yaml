@@ -16,6 +16,7 @@ dependencies:
   cupertino_icons: 1.0.8
   date_picker_plus: 4.1.0
   dio: 5.7.0
+  fl_chart: 0.68.0
   flutterflow_ui: 0.3.1
   flutter_advanced_table: 1.1.5
   flutter_animate: 4.5.0

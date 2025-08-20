@@ -12,7 +12,7 @@ import 'package:table_reserver/pages/mobile/settings/reservation_history.dart';
 import 'package:table_reserver/pages/mobile/settings/support.dart';
 import 'package:table_reserver/pages/mobile/settings/terms_of_service.dart';
 import 'package:table_reserver/pages/mobile/views/account.dart';
-import 'package:table_reserver/pages/mobile/views/graphs_page.dart';
+import 'package:table_reserver/pages/web/views/reservations_graphs_page.dart';
 import 'package:table_reserver/pages/mobile/views/homepage.dart';
 import 'package:table_reserver/pages/mobile/views/landing.dart';
 import 'package:table_reserver/pages/mobile/views/nearby.dart';
@@ -226,7 +226,7 @@ class MyApp extends StatelessWidget {
 
               return MaterialPageRoute(
                 settings: settings,
-                builder: (_) => GraphsPage(ownerId: ownerId),
+                builder: (_) => ReservationsGraphsPage(ownerId: ownerId),
               );
             }
 

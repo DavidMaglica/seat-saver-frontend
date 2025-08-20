@@ -1,30 +1,34 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
+import 'package:table_reserver/api/data/reservation_details.dart';
+import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
-import 'package:table_reserver/models/web/views/graphs_page_model.dart';
+import 'package:table_reserver/components/web/chart_card.dart';
+import 'package:table_reserver/models/web/views/reservations_graphs_page_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/utils/routes.dart';
 
-class GraphsPage extends StatelessWidget {
+class ReservationsGraphsPage extends StatelessWidget {
   final int ownerId;
 
-  const GraphsPage({super.key, required this.ownerId});
+  const ReservationsGraphsPage({super.key, required this.ownerId});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => GraphsPageModel(),
-      child: Consumer<GraphsPageModel>(
+      create: (_) => ReservationsGraphsPageModel(ownerId: ownerId)..init(),
+      child: Consumer<ReservationsGraphsPageModel>(
         builder: (context, model, _) {
           return Scaffold(
             backgroundColor: Theme.of(context).colorScheme.surface,
             appBar: CustomAppbar(
-              title: 'Graphs',
+              title: 'Reservation Graphs',
               onBack: () {
                 Navigator.of(context).push(
                   FadeInRoute(
@@ -57,6 +61,17 @@ class GraphsPage extends StatelessWidget {
                           children: [
                             _buildHeaderRow(context, model),
                             const SizedBox(height: 16),
+                            Container(
+                              width: double.infinity,
+                              color: WebTheme.transparentColour,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                  horizontal: 16,
+                                ),
+                                child: _buildMasonryGrid(context, model),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -71,7 +86,7 @@ class GraphsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderRow(BuildContext context, GraphsPageModel model) {
+  Widget _buildHeaderRow(BuildContext context, ReservationsGraphsPageModel model) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -104,7 +119,7 @@ class GraphsPage extends StatelessWidget {
     );
   }
 
-  Material _buildToggleContainer(BuildContext context, GraphsPageModel model) {
+  Material _buildToggleContainer(BuildContext context, ReservationsGraphsPageModel model) {
     return Material(
       color: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -123,7 +138,7 @@ class GraphsPage extends StatelessWidget {
               model,
               label: "Daily",
               icon: Icons.calendar_today,
-              selected: !model.isMonthly,
+              selected: !model.isWeekly,
               onTap: () {
                 model.toggleGraphType(false);
               },
@@ -131,9 +146,9 @@ class GraphsPage extends StatelessWidget {
             _buildOption(
               context,
               model,
-              label: "Monthly",
+              label: "Weekly",
               icon: Icons.calendar_month,
-              selected: model.isMonthly,
+              selected: model.isWeekly,
               onTap: () {
                 model.toggleGraphType(true);
               },
@@ -146,7 +161,7 @@ class GraphsPage extends StatelessWidget {
 
   Widget _buildOption(
     BuildContext context,
-    GraphsPageModel model, {
+    ReservationsGraphsPageModel model, {
     required String label,
     required IconData icon,
     required bool selected,
@@ -173,7 +188,7 @@ class GraphsPage extends StatelessWidget {
                   ? WebTheme.offWhite
                   : Theme.of(context).colorScheme.onPrimary,
             ),
-            const SizedBox(width: 6),
+            const SizedBox(width: 8),
             Text(
               label,
               style: TextStyle(
@@ -186,6 +201,37 @@ class GraphsPage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildMasonryGrid(BuildContext context, ReservationsGraphsPageModel model) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      child: MasonryGridView.builder(
+        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+        crossAxisSpacing: 24,
+        mainAxisSpacing: 12,
+        itemCount: model.venues.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          if (model.venues.isEmpty) {
+            return const Center(child: Text("No venues available"));
+          }
+
+          Venue venue = model.venues[index];
+          List<ReservationDetails> reservations =
+              model.reservationsByVenueId[venue.id] ?? [];
+          return ChartCard(
+            context: context,
+            venue: venue,
+            reservations: reservations,
+            isWeekly: model.isWeekly,
+          );
+        },
       ),
     );
   }
