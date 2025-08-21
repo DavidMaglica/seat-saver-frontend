@@ -66,7 +66,7 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
       timer,
     ) {
       if (venueId != null) {
-        fetchVenueReservations(widget.venueId!);
+        fetchVenueReservations(venueId!);
       } else {
         fetchReservations();
       }

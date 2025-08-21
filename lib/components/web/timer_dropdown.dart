@@ -13,7 +13,7 @@ class TimerDropdown extends StatelessWidget {
     required this.onChanged,
   });
 
-  final List<String> intervals = const ['Off', '15', '30', '60', '90', '120'];
+  static const List<String> intervals = ['Off', '15', '30', '60', '90', '120'];
 
   @override
   Widget build(BuildContext context) {
