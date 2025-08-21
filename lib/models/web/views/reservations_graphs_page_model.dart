@@ -17,6 +17,7 @@ class ReservationsGraphsPageModel extends ChangeNotifier {
   final VenuesApi venuesApi = VenuesApi();
   final ReservationsApi reservationsApi = ReservationsApi();
 
+  int? selectedInterval = 30;
   Timer? _refreshTimer;
 
   final Map<String, AnimationInfo> animationsMap =
@@ -33,10 +34,22 @@ class ReservationsGraphsPageModel extends ChangeNotifier {
     fetchVenues();
     _fetchReservations();
 
-    _refreshTimer = Timer.periodic(const Duration(minutes: 1, seconds: 30), (timer) {
+    startTimer();
+  }
+
+  void startTimer() {
+    _refreshTimer?.cancel();
+    if (selectedInterval == null) {
+      return;
+    }
+
+    _refreshTimer = Timer.periodic(Duration(seconds: selectedInterval!), (
+      timer,
+    ) {
       fetchVenues();
       _fetchReservations();
     });
+    notifyListeners();
   }
 
   @override
@@ -46,7 +59,9 @@ class ReservationsGraphsPageModel extends ChangeNotifier {
   }
 
   Future<void> fetchVenues() async {
-    PagedResponse<Venue> pagedVenues = await venuesApi.getVenuesByOwner(ownerId);
+    PagedResponse<Venue> pagedVenues = await venuesApi.getVenuesByOwner(
+      ownerId,
+    );
 
     venues.clear();
 

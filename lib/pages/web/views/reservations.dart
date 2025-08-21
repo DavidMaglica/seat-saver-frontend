@@ -11,6 +11,7 @@ import 'package:table_reserver/components/web/modals/delete_modal.dart';
 import 'package:table_reserver/components/web/modals/edit_reservation_modal.dart';
 import 'package:table_reserver/components/web/modals/modal_widgets.dart';
 import 'package:table_reserver/components/web/side_nav.dart';
+import 'package:table_reserver/components/web/timer_dropdown.dart';
 import 'package:table_reserver/models/web/modals/create_reservation_model.dart';
 import 'package:table_reserver/models/web/views/reservations_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
@@ -40,7 +41,8 @@ class _WebReservationsState extends State<WebReservations>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ReservationsModel()..init(widget.venueId),
+      create: (_) =>
+          ReservationsModel(venueId: widget.venueId)..init(widget.venueId),
       child: Consumer<ReservationsModel>(
         builder: (context, model, _) {
           return GestureDetector(
@@ -81,8 +83,7 @@ class _WebReservationsState extends State<WebReservations>
                                 ),
                               ),
                             ).animateOnPageLoad(
-                              model
-                                  .animationsMap['reservationsOnLoad']!,
+                              model.animationsMap['reservationsOnLoad']!,
                             ),
                       ),
                     ),
@@ -120,7 +121,7 @@ class _WebReservationsState extends State<WebReservations>
         ),
         widget.venueId != null
             ? FFButtonWidget(
-                text: 'View Reservations for all your venues',
+                text: 'View all reservations',
                 onPressed: () {
                   Navigator.of(context).push(
                     FadeInRoute(
@@ -144,9 +145,21 @@ class _WebReservationsState extends State<WebReservations>
         widget.venueId != null
             ? const SizedBox(width: 16)
             : const SizedBox.shrink(),
+        TimerDropdown(
+          selectedInterval: model.selectedInterval,
+          onChanged: (value) {
+            model.selectedInterval = value;
+            model.startTimer();
+          },
+        ),
+        const SizedBox(width: 8),
         FFButtonWidget(
           onPressed: () {
-            model.fetchReservations();
+            if (widget.venueId != null) {
+              model.fetchVenueReservations(widget.venueId!);
+            } else {
+              model.fetchReservations();
+            }
           },
           text: 'Refresh data',
           icon: const Icon(CupertinoIcons.refresh, size: 18),

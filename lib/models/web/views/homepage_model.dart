@@ -57,6 +57,7 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
   Venue? bestPerformingVenue;
   Venue? worstPerformingVenue;
 
+  int? selectedInterval = 30;
   Timer? _refreshTimer;
 
   @override
@@ -66,15 +67,25 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
     _setUserToSharedPreferences(context, ownerId);
     fetchData(context);
 
-    _refreshTimer = Timer.periodic(const Duration(minutes: 5), (_) {
-      fetchData(context);
-    });
+    startTimer(context);
   }
 
   void fetchData(BuildContext context) {
     fetchVenues(context);
     _fetchReservationData();
     _fetchReviewsData();
+  }
+
+  void startTimer(context) {
+    _refreshTimer?.cancel();
+    if (selectedInterval == null) {
+      return;
+    }
+
+    _refreshTimer = Timer.periodic(Duration(seconds: selectedInterval!), (_) {
+      fetchData(context);
+    });
+    notifyListeners();
   }
 
   @override

@@ -13,6 +13,7 @@ import 'package:table_reserver/components/web/modals/edit_venue_modal.dart';
 import 'package:table_reserver/components/web/modals/modal_widgets.dart';
 import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/components/web/stat_card.dart';
+import 'package:table_reserver/components/web/timer_dropdown.dart';
 import 'package:table_reserver/models/web/modals/create_venue_model.dart';
 import 'package:table_reserver/models/web/views/homepage_model.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
@@ -120,7 +121,20 @@ class _WebHomepageState extends State<WebHomepage>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('Overview', style: Theme.of(context).textTheme.titleLarge),
+          Expanded(
+            child: Text(
+              'Overview',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ),
+          TimerDropdown(
+            selectedInterval: model.selectedInterval,
+            onChanged: (value) {
+              model.selectedInterval = value;
+              model.startTimer(context);
+            },
+          ),
+          const SizedBox(width: 8),
           FFButtonWidget(
             onPressed: () {
               model.fetchData(context);
@@ -607,10 +621,7 @@ class _WebHomepageState extends State<WebHomepage>
   Widget _buildPerformanceTitle(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
+      child: Text(title, style: Theme.of(context).textTheme.titleLarge),
     );
   }
 

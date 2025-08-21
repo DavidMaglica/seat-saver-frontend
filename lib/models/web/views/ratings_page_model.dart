@@ -15,6 +15,7 @@ class WebRatingsPageModel extends ChangeNotifier {
   final Map<String, AnimationInfo> animationsMap =
       Animations.utilityPagesAnimations;
 
+  int? selectedInterval = 30;
   Timer? _refreshTimer;
 
   Map<int, Map<int, int>> ratingsByVenueId = {};
@@ -25,11 +26,21 @@ class WebRatingsPageModel extends ChangeNotifier {
   void init() {
     fetchData(ownerId);
 
-    _refreshTimer = Timer.periodic(const Duration(minutes: 1, seconds: 30), (
+    startTimer();
+  }
+
+  void startTimer() {
+    _refreshTimer?.cancel();
+    if (selectedInterval == null) {
+      return;
+    }
+
+    _refreshTimer = Timer.periodic(Duration(seconds: selectedInterval!), (
       timer,
     ) {
       fetchData(ownerId);
     });
+    notifyListeners();
   }
 
   @override
