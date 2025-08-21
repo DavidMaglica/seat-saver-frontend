@@ -39,10 +39,7 @@ class SearchModel extends ChangeNotifier {
 
   Map<int, String> venueTypeMap = {};
 
-  SearchModel({
-    required this.context,
-    this.selectedVenueType,
-  });
+  SearchModel({required this.context, this.selectedVenueType});
 
   @override
   void dispose() {
@@ -132,14 +129,17 @@ class SearchModel extends ChangeNotifier {
     _fetchNextPage();
   }
 
-  Function() goToVenuePage(Venue venue,
-      int? userId,
-      Position? userLocation,) {
+  Function() goToVenuePage(Venue venue, int? userId, Position? userLocation) {
     return () {
       Navigator.of(context).push(
-          FadeInRoute(page: VenuePage(
-            venueId: venue.id, userId: userId, userLocation: userLocation,),
-              routeName: Routes.venue)
+        FadeInRoute(
+          page: VenuePage(
+            venueId: venue.id,
+            userId: userId,
+            userLocation: userLocation,
+          ),
+          routeName: Routes.venue,
+        ),
       );
     };
   }
