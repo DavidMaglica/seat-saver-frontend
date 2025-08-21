@@ -13,7 +13,7 @@ class VenuesByTypeModel extends ChangeNotifier {
   final Position? userLocation;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  VenueApi venueApi = VenueApi();
+  VenuesApi venuesApi = VenuesApi();
 
   final ScrollController scrollController = ScrollController();
 
@@ -51,7 +51,7 @@ class VenuesByTypeModel extends ChangeNotifier {
   }
 
   Future<void> _loadVenueTypes() async {
-    final venueTypes = await venueApi.getAllVenueTypes();
+    final venueTypes = await venuesApi.getAllVenueTypes();
     venueTypeMap = {
       for (var type in venueTypes) type.id: type.type.toTitleCase(),
     };
@@ -60,38 +60,38 @@ class VenuesByTypeModel extends ChangeNotifier {
   Future<void> _fetchNextPage(String type) async {
     isLoading = true;
 
-    PagedResponse<Venue> paged;
+    PagedResponse<Venue> pagedVenues;
     switch (type) {
       case 'nearby':
-        paged = await venueApi.getNearbyVenues(
+        pagedVenues = await venuesApi.getNearbyVenues(
           page: _currentPage,
           size: _pageSize,
         );
-        hasMorePages = _currentPage < paged.totalPages - 1;
+        hasMorePages = _currentPage < pagedVenues.totalPages - 1;
         _currentPage++;
         break;
       case 'new':
-        paged = await venueApi.getNewVenues(
+        pagedVenues = await venuesApi.getNewVenues(
           page: _currentPage,
           size: _pageSize,
         );
         _currentPage++;
-        hasMorePages = _currentPage < paged.totalPages;
+        hasMorePages = _currentPage < pagedVenues.totalPages;
         break;
       case 'trending':
-        paged = await venueApi.getTrendingVenues(
+        pagedVenues = await venuesApi.getTrendingVenues(
           page: _currentPage,
           size: _pageSize,
         );
-        hasMorePages = _currentPage < paged.totalPages - 1;
+        hasMorePages = _currentPage < pagedVenues.totalPages - 1;
         _currentPage++;
         break;
       case 'suggested':
-        paged = await venueApi.getSuggestedVenues(
+        pagedVenues = await venuesApi.getSuggestedVenues(
           page: _currentPage,
           size: _pageSize,
         );
-        hasMorePages = _currentPage < paged.totalPages - 1;
+        hasMorePages = _currentPage < pagedVenues.totalPages - 1;
         _currentPage++;
         break;
       default:
@@ -99,7 +99,7 @@ class VenuesByTypeModel extends ChangeNotifier {
         notifyListeners();
         return;
     }
-    venues = List.from(venues)..addAll(paged.content);
+    venues = List.from(venues)..addAll(pagedVenues.items);
     isLoading = false;
     notifyListeners();
   }

@@ -11,7 +11,7 @@ class VenueCardByTypeModel extends ChangeNotifier {
 
   Uint8List? venueImage;
 
-  VenueApi venueApi = VenueApi();
+  VenuesApi venuesApi = VenuesApi();
 
   VenueCardByTypeModel({
     required this.context,
@@ -25,7 +25,7 @@ class VenueCardByTypeModel extends ChangeNotifier {
   }
 
   Future<void> _loadVenueImage() async {
-    List<Uint8List> venueImages = await venueApi.getVenueImages(venue.id);
+    List<Uint8List> venueImages = await venuesApi.getVenueImages(venue.id);
     if (venueImages.isNotEmpty) {
       venueImage = venueImages.first;
     } else {

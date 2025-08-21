@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:table_reserver/api/reservation_api.dart';
+import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/pages/web/views/account.dart';
 import 'package:table_reserver/pages/web/views/landing.dart';
@@ -13,13 +15,15 @@ class AccountModel extends FlutterFlowModel<WebAccount> with ChangeNotifier {
   int? numberOfReservations;
   int? venuesOwned;
 
+  int get ownerId => prefsWithCache.getInt('ownerId')!;
+
+  ReservationsApi reservationsApi = ReservationsApi();
+  VenuesApi venuesApi = VenuesApi();
+
   final Map<String, AnimationInfo> animationsMap = Animations.accountAnimations;
 
   @override
-  void initState(BuildContext context) {
-    _fetchReservationsCount();
-    _fetchVenuesOwnedCount();
-  }
+  void initState(BuildContext context) {}
 
   void init() {
     _fetchReservationsCount();
@@ -27,12 +31,12 @@ class AccountModel extends FlutterFlowModel<WebAccount> with ChangeNotifier {
   }
 
   Future<void> _fetchReservationsCount() async {
-    numberOfReservations = 5;
+    numberOfReservations = await reservationsApi.getReservationCount(ownerId);
     notifyListeners();
   }
 
   Future<void> _fetchVenuesOwnedCount() async {
-    venuesOwned = 2;
+    venuesOwned = await venuesApi.getVenueCountByOwner(ownerId);
     notifyListeners();
   }
 

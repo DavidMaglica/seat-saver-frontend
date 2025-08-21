@@ -15,9 +15,9 @@ import 'package:table_reserver/utils/animations.dart';
 
 class ReservationsModel extends FlutterFlowModel<WebReservations>
     with ChangeNotifier {
-  final ReservationApi reservationApi = ReservationApi();
+  final ReservationsApi reservationsApi = ReservationsApi();
   final AccountApi accountApi = AccountApi();
-  final VenueApi venueApi = VenueApi();
+  final VenuesApi venuesApi = VenuesApi();
 
   final Map<String, AnimationInfo> animationsMap =
       Animations.reservationsAnimations;
@@ -68,7 +68,7 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
   }
 
   Future<void> fetchVenue(int venueId) async {
-    Venue? fetchedVenue = await venueApi.getVenue(venueId);
+    Venue? fetchedVenue = await venuesApi.getVenue(venueId);
     if (fetchedVenue != null) {
       venueNamesById[venueId] = fetchedVenue.name;
       notifyListeners();
@@ -78,7 +78,7 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
   Future<void> fetchVenueReservations(int venueId) async {
     isLoadingTable.value = true;
     notifyListeners();
-    List<ReservationDetails> fetchedReservations = await reservationApi
+    List<ReservationDetails> fetchedReservations = await reservationsApi
         .getVenueReservations(venueId);
 
     fetchedReservations.sort((a, b) => a.datetime.compareTo(b.datetime));
@@ -107,7 +107,7 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
     isLoadingTable.value = true;
     notifyListeners();
     final int ownerId = prefsWithCache.getInt('ownerId')!;
-    List<ReservationDetails> fetchedReservations = await reservationApi
+    List<ReservationDetails> fetchedReservations = await reservationsApi
         .getOwnerReservations(ownerId);
 
     fetchedReservations.sort((a, b) => a.datetime.compareTo(b.datetime));
@@ -134,14 +134,14 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
 
   Future<void> fetchOwnedVenues() async {
     final int ownerId = prefsWithCache.getInt('ownerId')!;
-    PagedResponse<Venue> fetchedVenues = await venueApi.getVenuesByOwner(
+    PagedResponse<Venue> pagedVenues = await venuesApi.getVenuesByOwner(
       ownerId,
       size: 50,
     );
 
     venueNamesById
       ..clear()
-      ..addEntries(fetchedVenues.content.map((v) => MapEntry(v.id, v.name)));
+      ..addEntries(pagedVenues.items.map((v) => MapEntry(v.id, v.name)));
 
     notifyListeners();
   }

@@ -12,7 +12,7 @@ class VenuesModel extends FlutterFlowModel<WebVenuesPage> with ChangeNotifier {
 
   final ScrollController scrollController = ScrollController();
 
-  final VenueApi venueApi = VenueApi();
+  final VenuesApi venuesApi = VenuesApi();
 
   int _currentPage = 0;
   final int _pageSize = 20;
@@ -52,14 +52,14 @@ class VenuesModel extends FlutterFlowModel<WebVenuesPage> with ChangeNotifier {
 
     isLoading = true;
 
-    PagedResponse<Venue> paged = await venueApi.getVenuesByOwner(
+    PagedResponse<Venue> pagedVenues = await venuesApi.getVenuesByOwner(
       ownerId,
       page: _currentPage,
       size: _pageSize,
     );
 
-    paginatedVenues.addAll(paged.content);
-    hasMorePages = _currentPage < paged.totalPages - 1;
+    paginatedVenues.addAll(pagedVenues.items);
+    hasMorePages = _currentPage < pagedVenues.totalPages - 1;
     _currentPage++;
 
     isLoading = false;

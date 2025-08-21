@@ -7,12 +7,11 @@ import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/utils.dart';
 import 'package:table_reserver/utils/venue_image_cache/venue_image_cache_interface.dart';
 
 class PerformanceCard extends StatefulWidget {
   final String title;
-  final int venueId;
+  final int? venueId;
 
   const PerformanceCard({
     super.key,
@@ -38,16 +37,21 @@ class _PerformanceCardState extends State<PerformanceCard> {
       child: Consumer<PerformanceCardModel>(
         builder: (context, model, _) {
           return InkWell(
+            mouseCursor: widget.venueId != null
+                ? SystemMouseCursors.click
+                : SystemMouseCursors.basic,
             onTap: () {
-              Navigator.of(context).push(
-                FadeInRoute(
-                  page: WebVenuePage(
-                    venueId: widget.venueId,
-                    shouldReturnToHomepage: true,
+              if (widget.venueId != null) {
+                Navigator.of(context).push(
+                  FadeInRoute(
+                    page: WebVenuePage(
+                      venueId: widget.venueId!,
+                      shouldReturnToHomepage: true,
+                    ),
+                    routeName: '${Routes.webVenue}?venueId=${widget.venueId}',
                   ),
-                  routeName: '${Routes.webVenue}?venueId=${widget.venueId}',
-                ),
-              );
+                );
+              }
             },
             child: Material(
               color: Colors.transparent,
@@ -119,14 +123,17 @@ class _PerformanceCardState extends State<PerformanceCard> {
   }
 
   Widget _buildHeaderImage(BuildContext context, PerformanceCardModel model) {
-    Uint8List? cachedImage = VenueImageCache.getImage(widget.venueId);
+    if (widget.venueId == null) {
+      return _buildFallbackImage(context, model);
+    }
+    Uint8List? cachedImage = VenueImageCache.getImage(widget.venueId!);
 
     if (cachedImage != null) {
       return _buildImage(model, cachedImage);
     }
 
     return FutureBuilder<Uint8List?>(
-      future: model.venueApi.getVenueHeaderImage(widget.venueId),
+      future: model.venuesApi.getVenueHeaderImage(widget.venueId!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(
@@ -148,7 +155,7 @@ class _PerformanceCardState extends State<PerformanceCard> {
           return _buildFallbackImage(context, model);
         }
 
-        VenueImageCache.setImage(widget.venueId, snapshot.data!);
+        VenueImageCache.setImage(widget.venueId!, snapshot.data!);
 
         return _buildImage(model, snapshot.data!);
       },
@@ -182,10 +189,10 @@ class _PerformanceCardState extends State<PerformanceCard> {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          gradient: fallbackImageGradient(),
+          color: WebTheme.successColor,
         ),
         child: Text(
-          model.loadedVenue?.name ?? '',
+          model.loadedVenue?.name ?? 'No venue available.',
           style: Theme.of(
             context,
           ).textTheme.titleLarge?.copyWith(color: WebTheme.offWhite),

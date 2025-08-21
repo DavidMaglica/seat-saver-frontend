@@ -9,8 +9,8 @@ import 'package:table_reserver/utils/web_toaster.dart';
 
 class DeleteModalModel extends FlutterFlowModel<DeleteModal>
     with ChangeNotifier {
-  final ReservationApi reservationApi = ReservationApi();
-  final VenueApi venueApi = VenueApi();
+  final ReservationsApi reservationsApi = ReservationsApi();
+  final VenuesApi venuesApi = VenuesApi();
 
   final Map<String, AnimationInfo> animationsMap = Animations.modalAnimations;
 
@@ -18,7 +18,7 @@ class DeleteModalModel extends FlutterFlowModel<DeleteModal>
   void initState(BuildContext context) {}
 
   void deleteVenue(BuildContext context, int venueId) async {
-    BasicResponse response = await venueApi.deleteVenue(venueId);
+    BasicResponse response = await venuesApi.deleteVenue(venueId);
     if (response.success) {
       if (!context.mounted) return;
       WebToaster.displaySuccess(context, 'Venue deleted successfully.');
@@ -36,7 +36,7 @@ class DeleteModalModel extends FlutterFlowModel<DeleteModal>
     BuildContext context,
     int reservationId,
   ) async {
-    BasicResponse response = await reservationApi.deleteReservation(
+    BasicResponse response = await reservationsApi.deleteReservation(
       reservationId,
     );
 

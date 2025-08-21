@@ -26,8 +26,8 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
   HomepageModel({required this.ownerId});
 
   final AccountApi accountApi = AccountApi();
-  final ReservationApi reservationApi = ReservationApi();
-  final VenueApi venueApi = VenueApi();
+  final ReservationsApi reservationsApi = ReservationsApi();
+  final VenuesApi venuesApi = VenuesApi();
 
   final Map<String, AnimationInfo> animationsMap =
       Animations.homepageAnimations;
@@ -52,6 +52,9 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
 
   double overallUtilisationRate = 0;
 
+  int? bestPerformingVenueId;
+  int? worstPerformingVenueId;
+
   Timer? _refreshTimer;
 
   @override
@@ -59,14 +62,14 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
 
   void init(BuildContext context) {
     _setUserToSharedPreferences(context, ownerId);
-    fetchAll(context);
+    fetchData(context);
 
     _refreshTimer = Timer.periodic(const Duration(minutes: 5), (_) {
-      fetchAll(context);
+      fetchData(context);
     });
   }
 
-  void fetchAll(BuildContext context) {
+  void fetchData(BuildContext context) {
     fetchVenues(context);
     _fetchReservationData();
     _fetchReviewsData();
@@ -105,38 +108,43 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
   }
 
   Future<void> fetchVenues(BuildContext context) async {
-    try {
-      isLoadingTable = ValueNotifier<bool>(true);
-      notifyListeners();
-      PagedResponse<Venue> fetchedVenues = await venueApi.getVenuesByOwner(
-        ownerId,
-        size: 50,
-      );
-      if (fetchedVenues.items.isNotEmpty) {
-        venues.clear();
-        venues.addAll(fetchedVenues.items);
-        isLoadingTable.value = false;
-        notifyListeners();
-      } else {
-        if (!context.mounted) return;
-        WebToaster.displayInfo(context, 'No venues found for this owner.');
+    isLoadingTable = ValueNotifier<bool>(true);
+    notifyListeners();
+    PagedResponse<Venue> pagedVenues = await venuesApi.getVenuesByOwner(
+      ownerId,
+      size: 50,
+    );
+
+    if (pagedVenues.items.isNotEmpty) {
+      venues.clear();
+      venues.addAll(pagedVenues.items);
+      isLoadingTable = ValueNotifier<bool>(false);
+      if (pagedVenues.items. length > 1) {
+        bestPerformingVenueId = pagedVenues.items
+            .reduce((a, b) => a.rating > b.rating ? a : b)
+            .id;
+        worstPerformingVenueId = pagedVenues.items
+            .reduce((a, b) => a.rating < b.rating ? a : b)
+            .id;
       }
-    } catch (e) {
-      if (!context.mounted) return;
-      WebToaster.displayError(context, 'Error fetching venues: $e');
+      notifyListeners();
+      return;
     }
+
+    isLoadingTable = ValueNotifier<bool>(false);
+    notifyListeners();
   }
 
   Future<void> _fetchReservationData() async {
-    totalReservationsCount = await reservationApi.getReservationCount(ownerId);
+    totalReservationsCount = await reservationsApi.getReservationCount(ownerId);
 
-    lastMonthReservationsCount = await reservationApi.getReservationCount(
+    lastMonthReservationsCount = await reservationsApi.getReservationCount(
       ownerId,
       startDate: DateTime.now().subtract(const Duration(days: 30)),
       endDate: DateTime.now(),
     );
 
-    nextMonthReservationsCount = await reservationApi.getReservationCount(
+    nextMonthReservationsCount = await reservationsApi.getReservationCount(
       ownerId,
       startDate: DateTime.now(),
       endDate: DateTime.now().add(const Duration(days: 30)),
@@ -145,9 +153,9 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
   }
 
   Future<void> _fetchReviewsData() async {
-    totalReviewsCount = await venueApi.getVenueRatingsCount(ownerId);
-    overallRating = await venueApi.getOverallRating(ownerId);
-    overallUtilisationRate = await venueApi.getVenueUtilisationRate(ownerId);
+    totalReviewsCount = await venuesApi.getVenueRatingsCount(ownerId);
+    overallRating = await venuesApi.getOverallRating(ownerId);
+    overallUtilisationRate = await venuesApi.getVenueUtilisationRate(ownerId);
     notifyListeners();
   }
 }

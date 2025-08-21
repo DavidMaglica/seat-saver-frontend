@@ -48,8 +48,8 @@ class VenuePageModel extends ChangeNotifier {
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final ReservationApi reservationApi = ReservationApi();
-  final VenueApi venueApi = VenueApi();
+  final ReservationsApi reservationsApi = ReservationsApi();
+  final VenuesApi venuesApi = VenuesApi();
 
   VenuePageModel({
     required this.ctx,
@@ -69,14 +69,14 @@ class VenuePageModel extends ChangeNotifier {
   }
 
   Future<void> _loadData() async {
-    final loadedVenue = await venueApi.getVenue(venueId);
+    final loadedVenue = await venuesApi.getVenue(venueId);
     if (loadedVenue == null) {
       if (!ctx.mounted) return;
       Toaster.displayError(ctx, 'Failed to load venue data');
       return;
     }
     venue = loadedVenue;
-    final loadedVenueType = await venueApi.getVenueType(venue.typeId);
+    final loadedVenueType = await venuesApi.getVenueType(venue.typeId);
     if (loadedVenueType == null) {
       if (!ctx.mounted) return;
       Toaster.displayError(ctx, 'Failed to load venue type');
@@ -86,11 +86,11 @@ class VenuePageModel extends ChangeNotifier {
   }
 
   Future<void> _loadImages() async {
-    venueImageBytes = await venueApi.getVenueImages(venueId);
+    venueImageBytes = await venuesApi.getVenueImages(venueId);
     venueHeadingImage = venueImageBytes?.isNotEmpty == true
         ? venueImageBytes!.first
         : null;
-    menuImageBytes = await venueApi.getMenuImages(venueId);
+    menuImageBytes = await venuesApi.getMenuImages(venueId);
   }
 
   TimeOfDay _roundToNearestHalfHour(TimeOfDay time) {
@@ -160,7 +160,7 @@ class VenuePageModel extends ChangeNotifier {
       selectedTime!.minute,
     );
 
-    BasicResponse response = await reservationApi.createReservation(
+    BasicResponse response = await reservationsApi.createReservation(
       userId: userId!,
       venueId: venueId,
       numberOfGuests: selectedNumberOfPeople!,

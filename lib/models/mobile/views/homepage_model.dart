@@ -43,7 +43,7 @@ class HomepageModel extends ChangeNotifier {
 
   final AccountApi accountApi = AccountApi();
   final GeolocationApi geolocationApi = GeolocationApi();
-  final VenueApi venueApi = VenueApi();
+  final VenuesApi venuesApi = VenuesApi();
   final GoogleApi googleApi = GoogleApi();
 
   HomepageModel({required this.context, this.userId, this.userLocation});
@@ -153,26 +153,26 @@ class HomepageModel extends ChangeNotifier {
   }
 
   Future<void> getNearbyVenues() async {
-    PagedResponse<Venue> venues = await venueApi.getNearbyVenues();
-    nearbyVenues = venues.content;
+    PagedResponse<Venue> pagedVenues = await venuesApi.getNearbyVenues();
+    nearbyVenues = pagedVenues.items;
     notifyListeners();
   }
 
   Future<void> getNewVenues() async {
-    PagedResponse<Venue> venues = await venueApi.getNewVenues();
-    newVenues = venues.content;
+    PagedResponse<Venue> pagedVenues = await venuesApi.getNewVenues();
+    newVenues = pagedVenues.items;
     notifyListeners();
   }
 
   Future<void> getTrendingVenues() async {
-    PagedResponse<Venue> venues = await venueApi.getTrendingVenues();
-    trendingVenues = venues.content;
+    PagedResponse<Venue> pagedVenues = await venuesApi.getTrendingVenues();
+    trendingVenues = pagedVenues.items;
     notifyListeners();
   }
 
   Future<void> getSuggestedVenues() async {
-    PagedResponse<Venue> venues = await venueApi.getSuggestedVenues();
-    suggestedVenues = venues.content;
+    PagedResponse<Venue> pagedVenues = await venuesApi.getSuggestedVenues();
+    suggestedVenues = pagedVenues.items;
     notifyListeners();
   }
 

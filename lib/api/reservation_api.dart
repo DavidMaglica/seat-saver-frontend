@@ -7,7 +7,7 @@ import 'package:table_reserver/utils/logger.dart';
 
 final dio = setupDio();
 
-class ReservationApi {
+class ReservationsApi {
   Future<List<ReservationDetails>> getUserReservations(int userId) async {
     try {
       Response response = await dio.get(ApiRoutes.userReservations(userId));

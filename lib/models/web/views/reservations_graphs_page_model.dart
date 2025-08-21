@@ -14,8 +14,8 @@ class ReservationsGraphsPageModel extends ChangeNotifier {
 
   ReservationsGraphsPageModel({required this.ownerId});
 
-  final VenueApi venueApi = VenueApi();
-  final ReservationApi reservationApi = ReservationApi();
+  final VenuesApi venuesApi = VenuesApi();
+  final ReservationsApi reservationsApi = ReservationsApi();
 
   Timer? _refreshTimer;
 
@@ -46,7 +46,7 @@ class ReservationsGraphsPageModel extends ChangeNotifier {
   }
 
   Future<void> fetchVenues() async {
-    PagedResponse<Venue> pagedVenues = await venueApi.getVenuesByOwner(ownerId);
+    PagedResponse<Venue> pagedVenues = await venuesApi.getVenuesByOwner(ownerId);
 
     venues.clear();
 
@@ -60,7 +60,7 @@ class ReservationsGraphsPageModel extends ChangeNotifier {
   }
 
   Future<void> _fetchReservations() async {
-    List<ReservationDetails> reservations = await reservationApi
+    List<ReservationDetails> reservations = await reservationsApi
         .getOwnerReservations(ownerId);
 
     reservationsByVenueId.clear();

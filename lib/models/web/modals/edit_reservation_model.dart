@@ -24,7 +24,7 @@ class EditReservationModel extends FlutterFlowModel<EditReservationModal>
   String? reservationDateErrorText;
   DateTime reservationDate = DateTime.now();
 
-  final ReservationApi reservationApi = ReservationApi();
+  final ReservationsApi reservationsApi = ReservationsApi();
 
   final Map<String, AnimationInfo> animationsMap = Animations.modalAnimations;
 
@@ -73,7 +73,7 @@ class EditReservationModel extends FlutterFlowModel<EditReservationModal>
     String venueName,
     String userName,
   ) async {
-    ReservationDetails? response = await reservationApi.getReservationById(
+    ReservationDetails? response = await reservationsApi.getReservationById(
       reservationId,
     );
     if (response != null) {
@@ -99,7 +99,7 @@ class EditReservationModel extends FlutterFlowModel<EditReservationModal>
     int reservationId = reservationDetails!.id;
     int numberOfGuests = int.parse(numberOfGuestsTextController.text);
 
-    BasicResponse response = await reservationApi.updateReservation(
+    BasicResponse response = await reservationsApi.updateReservation(
       reservationId: reservationId,
       numberOfGuests: numberOfGuests,
       reservationDate: reservationDate,

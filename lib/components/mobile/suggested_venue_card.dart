@@ -30,7 +30,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
   Uint8List? _venueImage;
   String _venueType = '';
 
-  VenueApi venueApi = VenueApi();
+  VenuesApi venuesApi = VenuesApi();
 
   @override
   void setState(VoidCallback callback) {
@@ -45,7 +45,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
   }
 
   Future<void> _getVenueType() async {
-    venueApi.getVenueType(widget.venue.typeId).then((value) {
+    venuesApi.getVenueType(widget.venue.typeId).then((value) {
       if (value != null) {
         setState(() {
           _venueType = value;
@@ -55,7 +55,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
   }
 
   Future<void> _loadVenueImage() async {
-    List<Uint8List> venues = await venueApi.getVenueImages(widget.venue.id);
+    List<Uint8List> venues = await venuesApi.getVenueImages(widget.venue.id);
     if (venues.isNotEmpty) {
       setState(() => _venueImage = venues.first);
     } else {

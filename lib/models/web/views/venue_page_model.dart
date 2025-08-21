@@ -39,8 +39,8 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
       ? pageViewController.page!.round()
       : 0;
 
-  final VenueApi venueApi = VenueApi();
-  final ReservationApi reservationApi = ReservationApi();
+  final VenuesApi venuesApi = VenuesApi();
+  final ReservationsApi reservationsApi = ReservationsApi();
 
   final Map<String, AnimationInfo> animationsMap =
       Animations.venuePageAnimations;
@@ -119,7 +119,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
 
   Future<void> fetchVenue(BuildContext context) async {
     int ownerId = prefsWithCache.getInt('ownerId')!;
-    Venue? venue = await venueApi.getVenue(venueId);
+    Venue? venue = await venuesApi.getVenue(venueId);
 
     if (venue != null) {
       if (venue.description.isNullOrEmpty) {
@@ -127,14 +127,14 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
       }
       loadedVenue = venue;
 
-      String? venueType = await venueApi.getVenueType(venue.typeId);
+      String? venueType = await venuesApi.getVenueType(venue.typeId);
       if (venueType != null) {
         this.venueType = venueType.toTitleCase();
       } else {
         this.venueType = 'Unknown';
       }
 
-      lifetimeReservations = await reservationApi.getReservationCount(
+      lifetimeReservations = await reservationsApi.getReservationCount(
         ownerId,
         venueId: venue.id,
       );
@@ -157,7 +157,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
       return;
     }
 
-    Uint8List? image = await venueApi.getVenueHeaderImage(venueId);
+    Uint8List? image = await venuesApi.getVenueHeaderImage(venueId);
 
     if (image != null) {
       headerImage = image;
@@ -166,7 +166,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
   }
 
   Future<void> _fetchReviews(BuildContext context) async {
-    List<Rating> ratings = await venueApi.getAllVenueRatings(venueId);
+    List<Rating> ratings = await venuesApi.getAllVenueRatings(venueId);
 
     if (reviews.isNotEmpty) {
       reviews.clear();
@@ -176,7 +176,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
   }
 
   Future<void> _fetchVenueImages(BuildContext context) async {
-    List<Uint8List>? images = await venueApi.getVenueImages(venueId);
+    List<Uint8List>? images = await venuesApi.getVenueImages(venueId);
 
     venueImages = images;
     isVenueImagesLoading = false;
@@ -184,7 +184,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
   }
 
   Future<void> _fetchMenuImages(BuildContext context) async {
-    List<Uint8List> images = await venueApi.getMenuImages(venueId);
+    List<Uint8List> images = await venuesApi.getMenuImages(venueId);
 
     menuImages = images;
     isMenuImagesLoading = false;
@@ -201,7 +201,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
         return;
       }
 
-      final response = await venueApi.uploadVenueImage(
+      final response = await venuesApi.uploadVenueImage(
         venueId,
         file.imageBytes,
         file.filename,
@@ -230,7 +230,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
         return;
       }
 
-      final response = await venueApi.uploadMenuImage(
+      final response = await venuesApi.uploadMenuImage(
         venueId,
         file.imageBytes,
         file.filename,

@@ -14,7 +14,7 @@ import 'package:table_reserver/utils/logger.dart';
 
 final dio = setupDio();
 
-class VenueApi {
+class VenuesApi {
   Future<Venue?> getVenue(int venueId) async {
     try {
       Response response = await dio.get(ApiRoutes.venueById(venueId));
@@ -88,6 +88,19 @@ class VenueApi {
         totalElements: 0,
         totalPages: 0,
       );
+    }
+  }
+
+  Future<int> getVenueCountByOwner(int ownerId) async {
+    try {
+      Response response = await dio.get(
+        ApiRoutes.venuesCountByOwnerId(ownerId),
+      );
+
+      return response.data as int;
+    } catch (e) {
+      logger.e('Error fetching venue count by owner: $e');
+      return 0;
     }
   }
 
@@ -269,7 +282,9 @@ class VenueApi {
 
   Future<double> getVenueUtilisationRate(int ownerId) async {
     try {
-      Response response = await dio.get(ApiRoutes.venueUtilisationRate(ownerId));
+      Response response = await dio.get(
+        ApiRoutes.venueUtilisationRate(ownerId),
+      );
 
       return response.data as double;
     } catch (e) {
@@ -456,7 +471,10 @@ class VenueApi {
       return BasicResponse.fromJson(response.data, (json) => json);
     } catch (e) {
       logger.e('Error deleting venue: $e');
-      return BasicResponse(success: false, message: 'Error deleting venue. Please try again later.');
+      return BasicResponse(
+        success: false,
+        message: 'Error deleting venue. Please try again later.',
+      );
     }
   }
 }

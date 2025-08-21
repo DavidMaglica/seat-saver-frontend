@@ -38,7 +38,7 @@ class EditVenueModel extends FlutterFlowModel<EditVenueModal>
 
   String? updateErrorText;
 
-  VenueApi venueApi = VenueApi();
+  VenuesApi venuesApi = VenuesApi();
 
   final Map<String, AnimationInfo> animationsMap = Animations.modalAnimations;
 
@@ -53,10 +53,10 @@ class EditVenueModel extends FlutterFlowModel<EditVenueModal>
   }
 
   void _fetchVenue(BuildContext context, int venueId) async {
-    List<VenueType> types = await venueApi.getAllVenueTypes();
+    List<VenueType> types = await venuesApi.getAllVenueTypes();
     venueTypeMap = {for (var type in types) type.id: type.type.toTitleCase()};
 
-    Venue? venue = await venueApi.getVenue(venueId);
+    Venue? venue = await venuesApi.getVenue(venueId);
     if (venue != null) {
       loadedVenue = venue;
       nameTextController.text = venue.name;
@@ -99,7 +99,7 @@ class EditVenueModel extends FlutterFlowModel<EditVenueModal>
       return;
     }
 
-    BasicResponse response = await venueApi.editVenue(
+    BasicResponse response = await venuesApi.editVenue(
       venueId: loadedVenue!.id,
       name: nameTextController.text.trim(),
       location: locationTextController.text.trim(),

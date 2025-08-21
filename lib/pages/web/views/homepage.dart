@@ -109,7 +109,7 @@ class _WebHomepageState extends State<WebHomepage>
           Text('Overview', style: Theme.of(context).textTheme.titleLarge),
           FFButtonWidget(
             onPressed: () {
-              model.fetchAll(context);
+              model.fetchData(context);
             },
             text: 'Refresh data',
             icon: const Icon(CupertinoIcons.refresh, size: 18),
@@ -526,11 +526,11 @@ class _WebHomepageState extends State<WebHomepage>
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Expanded(
-          child: PerformanceCard(title: 'Best Performing Venue', venueId: 1),
+        Expanded(
+          child: PerformanceCard(title: 'Best Performing Venue', venueId: model.bestPerformingVenueId),
         ),
-        const Expanded(
-          child: PerformanceCard(title: 'Worst Performing Venue', venueId: 1),
+        Expanded(
+          child: PerformanceCard(title: 'Worst Performing Venue', venueId: model.worstPerformingVenueId),
         ),
       ].divide(const SizedBox(width: 16)),
     );

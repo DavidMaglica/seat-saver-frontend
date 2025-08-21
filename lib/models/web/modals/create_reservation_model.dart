@@ -31,8 +31,8 @@ class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
   String? reservationDateErrorText;
   DateTime reservationDate = DateTime.now();
 
-  final ReservationApi reservationApi = ReservationApi();
-  final VenueApi venueApi = VenueApi();
+  final ReservationsApi reservationsApi = ReservationsApi();
+  final VenuesApi venuesApi = VenuesApi();
 
   final Map<String, AnimationInfo> animationsMap = Animations.modalAnimations;
 
@@ -54,18 +54,18 @@ class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
 
   Future<void> fetchOwnedVenues() async {
     final int ownerId = prefsWithCache.getInt('ownerId')!;
-    PagedResponse<Venue> fetchedVenues = await venueApi.getVenuesByOwner(
+    PagedResponse<Venue> pagedVenues = await venuesApi.getVenuesByOwner(
       ownerId,
       size: 50,
     );
 
-    if (fetchedVenues.content.isEmpty) {
+    if (pagedVenues.items.isEmpty) {
       return;
     }
 
     venueNamesById
       ..clear()
-      ..addEntries(fetchedVenues.content.map((v) => MapEntry(v.id, v.name)));
+      ..addEntries(pagedVenues.items.map((v) => MapEntry(v.id, v.name)));
 
     notifyListeners();
   }
@@ -81,7 +81,7 @@ class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
     int numberOfPeople = int.parse(guestsTextController.text);
     DateTime date = reservationDate;
 
-    BasicResponse response = await reservationApi.createReservation(
+    BasicResponse response = await reservationsApi.createReservation(
       venueId: venueId,
       userEmail: email,
       numberOfGuests: numberOfPeople,

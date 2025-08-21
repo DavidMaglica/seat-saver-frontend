@@ -10,7 +10,7 @@ class WebRatingsPageModel extends ChangeNotifier {
 
   WebRatingsPageModel({required this.ownerId});
 
-  final VenueApi venueApi = VenueApi();
+  final VenuesApi venuesApi = VenuesApi();
 
   final Map<String, AnimationInfo> animationsMap =
       Animations.utilityPagesAnimations;
@@ -42,10 +42,10 @@ class WebRatingsPageModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final venues = await venueApi.getVenuesByOwner(ownerId);
+    final venues = await venuesApi.getVenuesByOwner(ownerId);
 
     for (final venue in venues.content) {
-      final ratings = await venueApi.getAllVenueRatings(venue.id);
+      final ratings = await venuesApi.getAllVenueRatings(venue.id);
       venueNamesById[venue.id] = venue.name;
 
       final counts = <int, int>{1: 0, 2: 0, 3: 0, 4: 0, 5: 0};

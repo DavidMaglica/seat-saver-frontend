@@ -10,7 +10,7 @@ class RatingsPageModel extends ChangeNotifier {
   final int venueId;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final VenueApi venueApi = VenueApi();
+  final VenuesApi venuesApi = VenuesApi();
 
   final FocusNode commentFocusNode = FocusNode();
   final TextEditingController commentTextController = TextEditingController();
@@ -40,7 +40,7 @@ class RatingsPageModel extends ChangeNotifier {
 
   Future<void> _loadVenue() async {
     try {
-      final loadedVenue = await venueApi.getVenue(venueId);
+      final loadedVenue = await venuesApi.getVenue(venueId);
       if (loadedVenue == null) {
         if (!ctx.mounted) return;
         Toaster.displayError(ctx, 'Failed to load venue data');
@@ -57,7 +57,7 @@ class RatingsPageModel extends ChangeNotifier {
 
   Future<void> _loadReviews() async {
     try {
-      ratings = await venueApi.getAllVenueRatings(venueId);
+      ratings = await venuesApi.getAllVenueRatings(venueId);
       notifyListeners();
     } catch (e) {
       if (!ctx.mounted) return;
@@ -68,7 +68,7 @@ class RatingsPageModel extends ChangeNotifier {
 
   Future<void> rateVenue(int userId, double newRating, String comment) async {
     BasicResponse response =
-        await venueApi.rateVenue(venueId, newRating, userId, comment);
+        await venuesApi.rateVenue(venueId, newRating, userId, comment);
 
     if (!ctx.mounted) return;
     ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
@@ -79,7 +79,7 @@ class RatingsPageModel extends ChangeNotifier {
       Toaster.displayError(ctx, response.message);
     }
 
-    final updatedRating = await venueApi.getVenueRating(venueId);
+    final updatedRating = await venuesApi.getVenueRating(venueId);
     if (updatedRating == null) {
       if (!ctx.mounted) return;
       Toaster.displayError(ctx, 'Error fetching updated rating');
@@ -92,7 +92,7 @@ class RatingsPageModel extends ChangeNotifier {
     venue.rating = updatedRating;
     commentTextController.clear();
     commentFocusNode.unfocus();
-    ratings = await venueApi.getAllVenueRatings(venueId);
+    ratings = await venuesApi.getAllVenueRatings(venueId);
 
     notifyListeners();
   }

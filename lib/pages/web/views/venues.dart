@@ -56,11 +56,11 @@ class _WebVenuesPageState extends State<WebVenuesPage>
 
   Expanded _buildPaginatedVenues(BuildContext context, VenuesModel model) {
     if (model.paginatedVenues.isEmpty) {
-      return const Expanded(
+      return  Expanded(
         child: Center(
           child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Text('No venues available'),
+            padding: const EdgeInsets.all(16),
+            child: Text('No venues available', style: Theme.of(context).textTheme.titleLarge),
           ),
         ),
       );

@@ -11,8 +11,8 @@ class ReservationHistoryModel extends ChangeNotifier {
   final Position? userLocation;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final ReservationApi reservationApi = ReservationApi();
-  final VenueApi venueApi = VenueApi();
+  final ReservationsApi reservationsApi = ReservationsApi();
+  final VenuesApi venuesApi = VenuesApi();
 
   List<ReservationDetails>? reservations;
   final Map<int, String> _venueNameCache = {};
@@ -28,7 +28,7 @@ class ReservationHistoryModel extends ChangeNotifier {
   }
 
   Future<void> _loadReservationsFromApi() async {
-    List<ReservationDetails> response = await reservationApi
+    List<ReservationDetails> response = await reservationsApi
         .getUserReservations(userId);
 
     if (response.isNotEmpty) {
@@ -45,7 +45,7 @@ class ReservationHistoryModel extends ChangeNotifier {
   }
 
   Future<void> deleteReservation(int reservationId) async {
-    final response = await reservationApi.deleteReservation(reservationId);
+    final response = await reservationsApi.deleteReservation(reservationId);
 
     if (response.success) {
       reservations?.removeWhere(
@@ -68,7 +68,7 @@ class ReservationHistoryModel extends ChangeNotifier {
   Future<void> _fetchVenueName(int venueId) async {
     if (_venueNameCache.containsKey(venueId)) return;
 
-    final venue = await venueApi.getVenue(venueId);
+    final venue = await venuesApi.getVenue(venueId);
 
     if (venue != null) {
       _venueNameCache[venueId] = venue.name;

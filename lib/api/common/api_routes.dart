@@ -32,6 +32,9 @@ class ApiRoutes {
 
   static String venuesByOwnerId(int ownerId) => '$venues/owner/$ownerId';
 
+  static String venuesCountByOwnerId(int ownerId) =>
+      '${venuesByOwnerId(ownerId)}/count';
+
   static String venueHeaderImage(int venueId) =>
       '${venueById(venueId)}/header-image';
 
@@ -45,10 +48,10 @@ class ApiRoutes {
 
   static String allVenueRatings(int venueId) => '${venueById(venueId)}/ratings';
 
-  static String venueRatingsCount(int ownerId) => '$venues/ratings/count/$ownerId';
+  static String venueRatingsCount(int ownerId) =>
+      '$venues/ratings/count/$ownerId';
 
-  static String overallRating(int ownerId) =>
-      '$venues/overall-rating/$ownerId';
+  static String overallRating(int ownerId) => '$venues/overall-rating/$ownerId';
 
   static String venueUtilisationRate(int ownerId) =>
       '$venues/utilisation-rate/$ownerId';

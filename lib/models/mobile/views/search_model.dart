@@ -30,7 +30,7 @@ class SearchModel extends ChangeNotifier {
 
   final ScrollController scrollController = ScrollController();
 
-  final VenueApi venueApi = VenueApi();
+  final VenuesApi venuesApi = VenuesApi();
 
   List<String> venueTypeOptions = [];
   List<String> selectedTypes = [];
@@ -69,7 +69,7 @@ class SearchModel extends ChangeNotifier {
   }
 
   Future<void> _loadVenueTypes() async {
-    final venueTypes = await venueApi.getAllVenueTypes();
+    final venueTypes = await venuesApi.getAllVenueTypes();
     venueTypeMap = {
       for (var type in venueTypes) type.id: type.type.toTitleCase(),
     };
@@ -81,15 +81,15 @@ class SearchModel extends ChangeNotifier {
 
     isLoading = true;
 
-    PagedResponse<Venue> paged = await venueApi.getAllVenues(
+    PagedResponse<Venue> pagedVenues = await venuesApi.getAllVenues(
       _currentPage,
       _pageSize,
       searchQuery.isEmpty ? null : searchQuery,
       selectedTypeIds.isEmpty ? null : selectedTypeIds,
     );
 
-    paginatedVenues.addAll(paged.content);
-    hasMorePages = _currentPage < paged.totalPages - 1;
+    paginatedVenues.addAll(pagedVenues.items);
+    hasMorePages = _currentPage < pagedVenues.totalPages - 1;
     _currentPage++;
 
     isLoading = false;

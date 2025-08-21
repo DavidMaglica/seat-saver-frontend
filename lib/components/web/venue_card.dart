@@ -20,7 +20,7 @@ class WebVenueCard extends StatefulWidget {
 }
 
 class _WebVenueCardState extends State<WebVenueCard> {
-  final VenueApi venueApi = VenueApi();
+  final VenuesApi venuesApi = VenuesApi();
 
   @override
   void initState() {
@@ -79,7 +79,7 @@ class _WebVenueCardState extends State<WebVenueCard> {
     }
 
     return FutureBuilder<Uint8List?>(
-      future: venueApi.getVenueHeaderImage(widget.venue.id),
+      future: venuesApi.getVenueHeaderImage(widget.venue.id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(

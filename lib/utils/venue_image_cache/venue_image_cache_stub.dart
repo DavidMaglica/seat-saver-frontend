@@ -9,6 +9,10 @@ class VenueImageCache {
     _cache[venueId] = imageBytes;
   }
 
+  static void invalidate(int venueId) {
+    _cache.remove(venueId);
+  }
+
   static void clear({bool clearLocalStorage = false}) {
     _cache.clear();
   }
