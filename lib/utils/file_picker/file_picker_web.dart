@@ -22,10 +22,10 @@ Future<FileData?> imagePicker() async {
 
     final file = files.first;
 
-    const maxSizeInBytes = 5 * 1024 * 1024;
+    const maxSizeInBytes = 3 * 1024 * 1024;
     if (file.size > maxSizeInBytes) {
       completer.completeError(
-        'File "${file.name}" exceeds the max size of 5 MB.',
+        'File "${file.name}" exceeds the max size of 3 MB.',
       );
       return;
     }
