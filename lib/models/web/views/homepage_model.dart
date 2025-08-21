@@ -14,6 +14,8 @@ import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/web/components/side_nav_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/pages/web/views/landing.dart';
+import 'package:table_reserver/pages/web/views/ratings_page.dart';
+import 'package:table_reserver/pages/web/views/reservations_graphs_page.dart';
 import 'package:table_reserver/utils/animations.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
@@ -115,11 +117,11 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
       size: 50,
     );
 
+    venues.clear();
     if (pagedVenues.items.isNotEmpty) {
-      venues.clear();
       venues.addAll(pagedVenues.items);
       isLoadingTable = ValueNotifier<bool>(false);
-      if (pagedVenues.items. length > 1) {
+      if (pagedVenues.items.length > 1) {
         bestPerformingVenueId = pagedVenues.items
             .reduce((a, b) => a.rating > b.rating ? a : b)
             .id;
@@ -157,5 +159,41 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
     overallRating = await venuesApi.getOverallRating(ownerId);
     overallUtilisationRate = await venuesApi.getVenueUtilisationRate(ownerId);
     notifyListeners();
+  }
+
+  Function() goToRatingsPage(BuildContext context) {
+    return () {
+      if (venues.isNotEmpty) {
+        Navigator.of(context).push(
+          FadeInRoute(
+            page: WebRatingsPage(ownerId: ownerId),
+            routeName: '${Routes.webRatingsPage}?ownerId=$ownerId',
+          ),
+        );
+      } else {
+        WebToaster.displayInfo(
+          context,
+          'You have no venues registered yet. Register a venues first to view details.',
+        );
+      }
+    };
+  }
+
+  Function() goToReservationsGraphsPage(BuildContext context) {
+    return () {
+      if (venues.isNotEmpty) {
+        Navigator.of(context).push(
+          FadeInRoute(
+            page: ReservationsGraphsPage(ownerId: ownerId),
+            routeName: '${Routes.webReservationsGraphs}?ownerId=$ownerId',
+          ),
+        );
+      } else {
+        WebToaster.displayInfo(
+          context,
+          'You have no venues registered yet. Register a venues first to view details.',
+        );
+      }
+    };
   }
 }

@@ -433,6 +433,48 @@ class VenuesApi {
     }
   }
 
+  Future<BasicResponse<int>> createVenue({
+    required int ownerId,
+    required String name,
+    required String location,
+    required int maximumCapacity,
+    required int typeId,
+    required String workingHours,
+    String? description,
+  }) async {
+    try {
+      final Map<String, dynamic> data = {
+        'ownerId': ownerId,
+        'name': name,
+        'location': location,
+        'maximumCapacity': maximumCapacity,
+        'typeId': typeId,
+        'workingHours': workingHours,
+        'description': description,
+      };
+
+      Response response = await dio.post(ApiRoutes.venues, data: data);
+
+      final int? venueId = response.data['data'] as int?;
+
+      if (venueId == null) {
+        return BasicResponse(
+          success: false,
+          message: 'Failed to create venue. Please try again.',
+        );
+      }
+
+      return BasicResponse<int>(
+        success: true,
+        message: 'Venue created successfully.',
+        data: venueId,
+      );
+    } catch (e) {
+      logger.e('Error creating venue: $e');
+      return BasicResponse(success: false, message: 'Error creating venue');
+    }
+  }
+
   Future<BasicResponse> editVenue({
     required int venueId,
     String? name,

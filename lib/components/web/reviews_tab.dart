@@ -58,7 +58,7 @@ class ReviewsTab extends StatelessWidget {
         children: [
           _buildTotalReviews(context),
           const SizedBox(height: 8),
-          _buildRating(context, model.loadedVenue.rating, 'Average Rating'),
+          _buildRating(context, model.venueRating, 'Average Rating'),
         ],
       ),
     );

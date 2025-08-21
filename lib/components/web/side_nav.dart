@@ -301,7 +301,7 @@ class _SideNavState extends State<SideNav> {
             width: double.infinity,
             height: 44,
             decoration: BoxDecoration(
-              color: route == Routes.webReservations
+              color: route?.startsWith(Routes.webReservations) == true
                   ? WebTheme.successColor
                   : Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(8),

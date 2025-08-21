@@ -17,8 +17,13 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
     with ChangeNotifier {
   final int venueId;
   final bool? shouldOpenReviewsTab;
+  final bool? shouldOpenImagesTab;
 
-  VenuePageModel({required this.venueId, this.shouldOpenReviewsTab});
+  VenuePageModel({
+    required this.venueId,
+    this.shouldOpenReviewsTab,
+    this.shouldOpenImagesTab,
+  });
 
   TabController? tabBarController;
 
@@ -58,6 +63,9 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
     typeId: 0,
     description: "",
   );
+
+  double get venueRating => loadedVenue.rating;
+
   String venueType = '';
   int lifetimeReservations = 0;
 
@@ -77,6 +85,10 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
     if (shouldOpenReviewsTab == true) {
       _fetchReviews(context);
     }
+    if (shouldOpenImagesTab == true) {
+      _fetchVenueImages(context);
+      _fetchMenuImages(context);
+    }
     fetchData(context);
   }
 
@@ -89,7 +101,11 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
     tabBarController = TabController(
       vsync: vsync,
       length: 3,
-      initialIndex: shouldOpenReviewsTab == true ? 1 : 0,
+      initialIndex: shouldOpenReviewsTab == true
+          ? 1
+          : shouldOpenImagesTab == true
+          ? 2
+          : 0,
     )..addListener(notifyListeners);
 
     tabBarController?.addListener(() {
@@ -99,6 +115,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
         case 0:
           break;
         case 1:
+          fetchVenue(context);
           _fetchReviews(context);
           break;
         case 2:

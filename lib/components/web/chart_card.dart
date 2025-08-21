@@ -77,8 +77,8 @@ class ChartCard extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).push(
               FadeInRoute(
-                page: const WebReservations(),
-                routeName:'${Routes.webReservations}?venueId=${venue.id}',
+                page: WebReservations(venueId: venue.id),
+                routeName: '${Routes.webReservations}?venueId=${venue.id}',
               ),
             );
           },

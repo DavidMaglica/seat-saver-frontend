@@ -19,12 +19,14 @@ class WebVenuePage extends StatefulWidget {
   final int venueId;
   final bool shouldReturnToHomepage;
   final bool shouldOpenReviewsTab;
+  final bool shouldOpenImagesTab;
 
   const WebVenuePage({
     super.key,
     required this.venueId,
     required this.shouldReturnToHomepage,
     this.shouldOpenReviewsTab = false,
+    this.shouldOpenImagesTab = false,
   });
 
   @override
@@ -48,6 +50,7 @@ class _WebVenuePageState extends State<WebVenuePage>
       create: (_) => VenuePageModel(
         venueId: widget.venueId,
         shouldOpenReviewsTab: widget.shouldOpenReviewsTab,
+        shouldOpenImagesTab: widget.shouldOpenImagesTab,
       )..init(context, this),
       child: Consumer<VenuePageModel>(
         builder: (context, model, _) {

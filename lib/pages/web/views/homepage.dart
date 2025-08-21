@@ -16,8 +16,6 @@ import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/components/web/stat_card.dart';
 import 'package:table_reserver/models/web/modals/create_venue_model.dart';
 import 'package:table_reserver/models/web/views/homepage_model.dart';
-import 'package:table_reserver/pages/web/views/ratings_page.dart';
-import 'package:table_reserver/pages/web/views/reservations_graphs_page.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
@@ -71,18 +69,34 @@ class _WebHomepageState extends State<WebHomepage>
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              _buildTitleRow(context, model).animateOnPageLoad(model.animationsMap['titleRowOnLoad']!,),
-                              _buildTopStats(context, model).animateOnPageLoad(model.animationsMap['titleRowOnLoad']!,),
+                              _buildTitleRow(context, model).animateOnPageLoad(
+                                model.animationsMap['titleRowOnLoad']!,
+                              ),
+                              _buildTopStats(context, model).animateOnPageLoad(
+                                model.animationsMap['titleRowOnLoad']!,
+                              ),
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  _buildCircularStats(model).animateOnPageLoad(model.animationsMap['circularStatsOnLoad']!),
-                                  _buildVenues(context, model).animateOnPageLoad(model.animationsMap['tableOnLoad']!),
+                                  _buildCircularStats(model).animateOnPageLoad(
+                                    model.animationsMap['circularStatsOnLoad']!,
+                                  ),
+                                  _buildVenues(
+                                    context,
+                                    model,
+                                  ).animateOnPageLoad(
+                                    model.animationsMap['tableOnLoad']!,
+                                  ),
                                 ].divide(const SizedBox(width: 16)),
                               ),
                               const SizedBox(height: 16),
-                              _buildPerformance(context, model).animateOnPageLoad(model.animationsMap['performanceOnLoad']!),
+                              _buildPerformance(
+                                context,
+                                model,
+                              ).animateOnPageLoad(
+                                model.animationsMap['performanceOnLoad']!,
+                              ),
                             ].addToStart(const SizedBox(height: 24)),
                           ),
                         ),
@@ -166,30 +180,14 @@ class _WebHomepageState extends State<WebHomepage>
           CircularStatCard(
             title: 'Rating',
             description: 'Your average rating across all venues.',
-            onPressed: () {
-              Navigator.of(context).push(
-                FadeInRoute(
-                  page: WebRatingsPage(ownerId: model.ownerId),
-                  routeName:
-                      '${Routes.webRatingsPage}?ownerId=${model.ownerId}',
-                ),
-              );
-            },
+            onPressed: model.goToRatingsPage(context),
             rating: model.overallRating,
             ratingCount: model.totalReviewsCount,
           ),
           CircularStatCard(
             title: 'How Busy You Are',
             description: 'A quick look at how busy your venues are right now.',
-            onPressed: () {
-              Navigator.of(context).push(
-                FadeInRoute(
-                  page: ReservationsGraphsPage(ownerId: model.ownerId),
-                  routeName:
-                      '${Routes.webReservationsGraphs}?ownerId=${model.ownerId}',
-                ),
-              );
-            },
+            onPressed: model.goToReservationsGraphsPage(context),
             utilisationRatio: model.overallUtilisationRate,
             hint:
                 'Sum of available capacity divided by sum of maximum capacity times 100',
@@ -260,7 +258,7 @@ class _WebHomepageState extends State<WebHomepage>
                                       maxWidth: 1000,
                                     ),
                                     child: ChangeNotifierProvider(
-                                      create: (_) => CreateVenueModel(),
+                                      create: (_) => CreateVenueModel()..init(),
                                       child: Consumer<CreateVenueModel>(
                                         builder: (context, model, _) {
                                           return CreateVenueModal(model: model);
@@ -527,10 +525,16 @@ class _WebHomepageState extends State<WebHomepage>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: PerformanceCard(title: 'Best Performing Venue', venueId: model.bestPerformingVenueId),
+          child: PerformanceCard(
+            title: 'Best Performing Venue',
+            venueId: model.bestPerformingVenueId,
+          ),
         ),
         Expanded(
-          child: PerformanceCard(title: 'Worst Performing Venue', venueId: model.worstPerformingVenueId),
+          child: PerformanceCard(
+            title: 'Worst Performing Venue',
+            venueId: model.worstPerformingVenueId,
+          ),
         ),
       ].divide(const SizedBox(width: 16)),
     );

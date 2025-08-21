@@ -60,7 +60,7 @@ class WebRatingsPage extends StatelessWidget {
                           children: [
                             _buildRefreshButton(context, model)
                               ..animateOnPageLoad(
-                                model.animationsMap['titleOnLoad']!,
+                                model.animationsMap['titleRowOnLoad']!,
                               ),
                             const SizedBox(height: 16),
                             !model.isLoading

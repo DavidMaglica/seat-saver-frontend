@@ -11,7 +11,6 @@ import 'package:table_reserver/models/web/views/reservations_graphs_page_model.d
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/utils/routes.dart';
 
 class ReservationsGraphsPage extends StatelessWidget {
@@ -60,7 +59,7 @@ class ReservationsGraphsPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildHeaderRow(context, model).animateOnPageLoad(
-                              model.animationsMap['titleOnLoad']!,
+                              model.animationsMap['titleRowOnLoad']!,
                             ),
                             const SizedBox(height: 16),
                             Container(
@@ -73,8 +72,7 @@ class ReservationsGraphsPage extends StatelessWidget {
                                 ),
                                 child: _buildMasonryGrid(context, model)
                                     .animateOnPageLoad(
-                                      model
-                                          .animationsMap['gridOnLoad']!,
+                                      model.animationsMap['gridOnLoad']!,
                                     ),
                               ),
                             ),
@@ -107,7 +105,7 @@ class ReservationsGraphsPage extends StatelessWidget {
           const SizedBox(width: 24),
           FFButtonWidget(
             onPressed: () {
-              logger.i('Refreshing data...');
+              model.init();
             },
             text: 'Refresh data',
             icon: const Icon(CupertinoIcons.refresh, size: 18),

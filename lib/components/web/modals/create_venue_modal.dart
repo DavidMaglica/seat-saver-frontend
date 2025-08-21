@@ -1,9 +1,9 @@
-import 'package:table_reserver/components/web/modals/modal_widgets.dart';
-import 'package:table_reserver/models/web/modals/create_venue_model.dart';
-import 'package:table_reserver/themes/web_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:table_reserver/components/web/modals/modal_widgets.dart';
+import 'package:table_reserver/models/web/modals/create_venue_model.dart';
+import 'package:table_reserver/themes/web_theme.dart';
 
 class CreateVenueModal extends StatefulWidget {
   final CreateVenueModel model;
@@ -61,9 +61,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
                 ),
               ].divide(const SizedBox(height: 16)),
             ),
-          ).animateOnPageLoad(
-            widget.model.animationsMap['modalOnLoad']!,
-          ),
+          ).animateOnPageLoad(widget.model.animationsMap['modalOnLoad']!),
         ],
       ),
     );
@@ -113,7 +111,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              _buildWorkingHoursPicker(context),
+              _buildWorkingHoursPicker(context, widget.model),
             ].divide(const SizedBox(width: 32)),
           ),
           Row(
@@ -129,7 +127,6 @@ class _CreateVenueModalState extends State<CreateVenueModal>
               ),
             ].divide(const SizedBox(width: 16)),
           ),
-          _buildImageButtons(context),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -212,8 +209,10 @@ class _CreateVenueModalState extends State<CreateVenueModal>
       children: [
         FlutterFlowDropDown<String>(
           controller: widget.model.dropDownValueController,
-          options: widget.model.venueTypes,
-          optionLabels: widget.model.venueTypes
+          options: widget.model.venueTypeMap.keys
+              .map((id) => id.toString())
+              .toList(),
+          optionLabels: widget.model.venueTypeMap.values
               .map((type) => '   $type')
               .toList(),
           onChanged: (val) =>
@@ -258,41 +257,19 @@ class _CreateVenueModalState extends State<CreateVenueModal>
     );
   }
 
-  Widget _buildWorkingHoursPicker(BuildContext context) {
+  Widget _buildWorkingHoursPicker(
+    BuildContext context,
+    CreateVenueModel model,
+  ) {
     return SizedBox(
       width: 470,
       child: TextFormField(
-        controller: widget.model.workingHoursTextController,
-        focusNode: widget.model.workingHoursFocusNode,
-        readOnly: true,
-        onTap: () async {
-          TimeOfDay? startTime = await _buildTimePicker(context);
-
-          if (startTime == null) return;
-
-          if (!context.mounted) return;
-          TimeOfDay? endTime = await _buildTimePicker(
-            context,
-            initialTime: TimeOfDay(
-              hour: startTime.hour + 1,
-              minute: startTime.minute,
-            ),
-          );
-
-          if (endTime == null) return;
-
-          if (!context.mounted) return;
-          final String formattedStart = startTime.format(context);
-          final String formattedEnd = endTime.format(context);
-
-          widget.model.workingHoursTextController.text =
-              '$formattedStart - $formattedEnd';
-          widget.model.workingHoursErrorText = null;
-        },
+        controller: model.workingHoursTextController,
+        focusNode: model.workingHoursFocusNode,
         decoration: InputDecoration(
-          labelText: 'Working Hours (hh:mm - HH:MM) *',
+          labelText: 'Working Hours (hh:mm - hh:mm)',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
-          errorText: widget.model.workingHoursErrorText,
+          errorText: model.workingHoursErrorText,
           errorStyle: TextStyle(
             color: Theme.of(context).colorScheme.error,
             fontSize: 14,
@@ -304,9 +281,9 @@ class _CreateVenueModalState extends State<CreateVenueModal>
             ),
             borderRadius: BorderRadius.circular(8),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: WebTheme.infoColor, width: 1),
-            borderRadius: BorderRadius.circular(8),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           errorBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: WebTheme.errorColor, width: 1),
@@ -324,113 +301,6 @@ class _CreateVenueModalState extends State<CreateVenueModal>
         style: Theme.of(context).textTheme.bodyLarge,
         cursorColor: Theme.of(context).colorScheme.onPrimary,
       ),
-    );
-  }
-
-  Widget _buildImageButtons(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildImageButton(
-          context,
-          'Add heading image',
-          () => widget.model.addImages(),
-        ),
-        _buildImageButton(
-          context,
-          'Add venue images',
-          () => widget.model.addImages(),
-        ),
-        _buildImageButton(
-          context,
-          'Add menu images',
-          () => widget.model.addImages(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildImageButton(
-    BuildContext context,
-    String label,
-    Function() onPressed,
-  ) {
-    return Container(
-      width: 200,
-      height: 40,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-      child: FFButtonWidget(
-        text: label,
-        onPressed: onPressed,
-        options: FFButtonOptions(
-          width: 200,
-          height: 40,
-          color: Theme.of(context).colorScheme.onPrimary,
-          textStyle: TextStyle(
-            fontSize: 14,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-          borderRadius: BorderRadius.circular(8),
-          splashColor: Theme.of(context).colorScheme.onPrimary,
-          hoverColor: Theme.of(context).colorScheme.onPrimary,
-        ),
-        showLoadingIndicator: false,
-      ),
-    );
-  }
-
-  Future<TimeOfDay?> _buildTimePicker(
-    BuildContext context, {
-    TimeOfDay? initialTime,
-  }) {
-    return showTimePicker(
-      context: context,
-      initialTime: initialTime ?? TimeOfDay.now(),
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            timePickerTheme: TimePickerThemeData(
-              backgroundColor: Theme.of(context).colorScheme.onSurface,
-              hourMinuteTextColor: Theme.of(context).colorScheme.onPrimary,
-              hourMinuteColor: Theme.of(context).colorScheme.surface,
-              dialHandColor: WebTheme.infoColor,
-              dialTextColor: Theme.of(context).colorScheme.onPrimary,
-              dialBackgroundColor: Theme.of(context).colorScheme.surface,
-              entryModeIconColor: Theme.of(context).colorScheme.onPrimary,
-              dayPeriodTextColor: Theme.of(context).colorScheme.onPrimary,
-              dayPeriodColor: WebTheme.infoColor,
-              cancelButtonStyle: ButtonStyle(
-                backgroundColor: const WidgetStatePropertyAll<Color>(
-                  WebTheme.errorColor,
-                ),
-                textStyle: WidgetStatePropertyAll<TextStyle>(
-                  Theme.of(context).textTheme.bodyLarge!,
-                ),
-                foregroundColor: WidgetStatePropertyAll<Color>(
-                  Theme.of(context).colorScheme.surface,
-                ),
-                elevation: const WidgetStatePropertyAll<double>(3.0),
-              ),
-              confirmButtonStyle: ButtonStyle(
-                backgroundColor: const WidgetStatePropertyAll<Color>(
-                  WebTheme.successColor,
-                ),
-                textStyle: WidgetStatePropertyAll<TextStyle>(
-                  Theme.of(context).textTheme.bodyLarge!,
-                ),
-                foregroundColor: WidgetStatePropertyAll<Color>(
-                  Theme.of(context).colorScheme.surface,
-                ),
-                elevation: const WidgetStatePropertyAll<double>(3.0),
-              ),
-            ),
-            textTheme: Theme.of(context).textTheme,
-          ),
-          child: child!,
-        );
-      },
     );
   }
 }

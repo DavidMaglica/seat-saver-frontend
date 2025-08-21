@@ -209,7 +209,6 @@ class MyApp extends StatelessWidget {
               ownerId: getOptionalArg(context, 'ownerId') ?? ownerIdFromCache,
             ),
             Routes.webVenues: (context) => const WebVenuesPage(),
-            Routes.webReservations: (context) => const WebReservations(),
             Routes.webAccount: (context) => const WebAccount(),
           },
           onGenerateRoute: (settings) {

@@ -59,9 +59,7 @@ class _EditVenueModalState extends State<EditVenueModal>
                       ),
                     ].divide(const SizedBox(height: 16)),
                   ),
-                ).animateOnPageLoad(
-                  model.animationsMap['modalOnLoad']!,
-                ),
+                ).animateOnPageLoad(model.animationsMap['modalOnLoad']!),
               ],
             ),
           );
@@ -296,50 +294,46 @@ class _EditVenueModalState extends State<EditVenueModal>
     BuildContext context,
     EditVenueModel model,
   ) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 470,
-          child: TextFormField(
-            controller: model.workingHoursTextController,
-            focusNode: model.workingHoursFocusNode,
-            decoration: InputDecoration(
-              labelText: 'Working Hours (hh:mm - hh:mm)',
-              labelStyle: Theme.of(context).textTheme.bodyLarge,
-              errorText: model.workingHoursErrorText,
-              errorStyle: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-                fontSize: 14,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-              errorBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: WebTheme.errorColor, width: 1),
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-              focusedErrorBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 24,
-              ),
+    return SizedBox(
+      width: 470,
+      child: TextFormField(
+        controller: model.workingHoursTextController,
+        focusNode: model.workingHoursFocusNode,
+        decoration: InputDecoration(
+          labelText: 'Working Hours (hh:mm - hh:mm)',
+          labelStyle: Theme.of(context).textTheme.bodyLarge,
+          errorText: model.workingHoursErrorText,
+          errorStyle: TextStyle(
+            color: Theme.of(context).colorScheme.error,
+            fontSize: 14,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.onPrimary,
+              width: 1,
             ),
-            style: Theme.of(context).textTheme.bodyLarge,
-            cursorColor: Theme.of(context).colorScheme.onPrimary,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          errorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: WebTheme.errorColor, width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          focusedErrorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 24,
           ),
         ),
-      ],
+        style: Theme.of(context).textTheme.bodyLarge,
+        cursorColor: Theme.of(context).colorScheme.onPrimary,
+      ),
     );
   }
 
