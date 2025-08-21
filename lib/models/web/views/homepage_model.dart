@@ -54,8 +54,8 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
 
   double overallUtilisationRate = 0;
 
-  int? bestPerformingVenueId;
-  int? worstPerformingVenueId;
+  Venue? bestPerformingVenue;
+  Venue? worstPerformingVenue;
 
   Timer? _refreshTimer;
 
@@ -122,13 +122,17 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
       venues.addAll(pagedVenues.items);
       isLoadingTable = ValueNotifier<bool>(false);
       if (pagedVenues.items.length > 1) {
-        bestPerformingVenueId = pagedVenues.items
-            .reduce((a, b) => a.rating > b.rating ? a : b)
-            .id;
-        worstPerformingVenueId = pagedVenues.items
-            .reduce((a, b) => a.rating < b.rating ? a : b)
-            .id;
+        bestPerformingVenue = pagedVenues.items.reduce(
+          (a, b) => a.rating > b.rating ? a : b,
+        );
+        worstPerformingVenue = pagedVenues.items
+            .where((venue) => venue.id != bestPerformingVenue!.id)
+            .reduce((a, b) => a.rating < b.rating ? a : b);
+      } else {
+        bestPerformingVenue = null;
+        worstPerformingVenue = null;
       }
+
       notifyListeners();
       return;
     }
