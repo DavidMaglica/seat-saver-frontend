@@ -15,6 +15,8 @@ import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/geolocation_api.dart';
 import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/components/mobile/location_permission.dart';
+import 'package:table_reserver/pages/mobile/views/venues_by_type.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/utils.dart';
 
@@ -177,52 +179,60 @@ class HomepageModel extends ChangeNotifier {
   }
 
   void openNearbyVenues() {
-    Navigator.of(context).pushNamed(
-      Routes.venuesByType,
-      arguments: {
-        'userId': userId,
-        'type': 'nearby',
-        'userLocation': userLocation ?? currentUserLocation,
-      },
+    Navigator.of(context).push(
+      FadeInRoute(
+        page: VenuesByType(
+          userId: userId,
+          userLocation: userLocation ?? currentUserLocation,
+          type: 'nearby',
+        ),
+        routeName: Routes.venuesByType,
+      ),
     );
     notifyListeners();
     return;
   }
 
   void openNewVenues() {
-    Navigator.of(context).pushNamed(
-      Routes.venuesByType,
-      arguments: {
-        'userId': userId,
-        'type': 'new',
-        'userLocation': userLocation ?? currentUserLocation,
-      },
+    Navigator.of(context).push(
+      FadeInRoute(
+        page: VenuesByType(
+          userId: userId,
+          userLocation: userLocation ?? currentUserLocation,
+          type: 'new',
+        ),
+        routeName: Routes.venuesByType,
+      ),
     );
     notifyListeners();
     return;
   }
 
   void openTrendingVenues() {
-    Navigator.of(context).pushNamed(
-      Routes.venuesByType,
-      arguments: {
-        'userId': userId,
-        'type': 'trending',
-        'userLocation': userLocation ?? currentUserLocation,
-      },
+    Navigator.of(context).push(
+      FadeInRoute(
+        page: VenuesByType(
+          userId: userId,
+          userLocation: userLocation ?? currentUserLocation,
+          type: 'trending',
+        ),
+        routeName: Routes.venuesByType,
+      ),
     );
     notifyListeners();
     return;
   }
 
   void openSuggestedVenues() {
-    Navigator.of(context).pushNamed(
-      Routes.venuesByType,
-      arguments: {
-        'userId': userId,
-        'type': 'suggested',
-        'userLocation': userLocation ?? currentUserLocation,
-      },
+    Navigator.of(context).push(
+      FadeInRoute(
+        page: VenuesByType(
+          userId: userId,
+          userLocation: userLocation ?? currentUserLocation,
+          type: 'suggested',
+        ),
+        routeName: Routes.venuesByType,
+      ),
     );
     notifyListeners();
     return;

@@ -1,4 +1,6 @@
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
+import 'package:table_reserver/pages/mobile/views/account.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -7,11 +9,8 @@ class TermsOfService extends StatefulWidget {
   final int? userId;
   final Position? userLocation;
 
-  const TermsOfService({
-    Key? key,
-    this.userId,
-    this.userLocation,
-  }) : super(key: key);
+  const TermsOfService({Key? key, this.userId, this.userLocation})
+    : super(key: key);
 
   @override
   State<TermsOfService> createState() => _TermsOfServiceState();
@@ -37,11 +36,17 @@ class _TermsOfServiceState extends State<TermsOfService> {
       child: Scaffold(
         appBar: CustomAppbar(
           title: 'Terms of Service',
-          onBack: () => Navigator.of(context).pushNamed(Routes.account,
-              arguments: {
-                'userId': widget.userId,
-                'userLocation': widget.userLocation
-              }),
+          onBack: () {
+            Navigator.of(context).push(
+              FadeInRoute(
+                page: Account(
+                  userId: widget.userId,
+                  userLocation: widget.userLocation,
+                ),
+                routeName: Routes.account,
+              ),
+            );
+          },
         ),
         key: scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -55,7 +60,8 @@ class _TermsOfServiceState extends State<TermsOfService> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     _buildBodyText(
-                        'Please read these terms of service carefully.'),
+                      'Please read these terms of service carefully.',
+                    ),
                     _buildDivider(),
                     _buildSection(
                       'Acceptance of Terms',
@@ -111,9 +117,11 @@ class _TermsOfServiceState extends State<TermsOfService> {
   Widget _buildBodyText(String text) {
     return Padding(
       padding: const EdgeInsetsDirectional.only(bottom: 8),
-      child: Text(text,
-          style: Theme.of(context).textTheme.bodyLarge,
-          textAlign: TextAlign.center),
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.bodyLarge,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -123,13 +131,17 @@ class _TermsOfServiceState extends State<TermsOfService> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(title,
-              style: Theme.of(context).textTheme.bodyLarge,
-              textAlign: TextAlign.center),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.bodyLarge,
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: 4),
-          Text(bodyText,
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center)
+          Text(
+            bodyText,
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );

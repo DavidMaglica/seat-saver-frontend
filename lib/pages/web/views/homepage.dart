@@ -11,7 +11,6 @@ import 'package:table_reserver/components/web/modals/create_venue_modal.dart';
 import 'package:table_reserver/components/web/modals/delete_modal.dart';
 import 'package:table_reserver/components/web/modals/edit_venue_modal.dart';
 import 'package:table_reserver/components/web/modals/modal_widgets.dart';
-import 'package:table_reserver/components/web/performance_card.dart';
 import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/components/web/stat_card.dart';
 import 'package:table_reserver/models/web/modals/create_venue_model.dart';
@@ -20,6 +19,7 @@ import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/venue_image_cache/venue_image_cache_stub.dart';
 
 class WebHomepage extends StatefulWidget {
   final int ownerId;
@@ -525,18 +525,194 @@ class _WebHomepageState extends State<WebHomepage>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: PerformanceCard(
-            title: 'Best Performing Venue',
-            venueId: model.bestPerformingVenueId,
+          child: _buildPerformanceCard(
+            context,
+            model,
+            'Best Performing Venue',
+            model.bestPerformingVenue,
           ),
         ),
         Expanded(
-          child: PerformanceCard(
-            title: 'Worst Performing Venue',
-            venueId: model.worstPerformingVenueId,
+          child: _buildPerformanceCard(
+            context,
+            model,
+            'Worst Performing Venue',
+            model.worstPerformingVenue,
           ),
         ),
       ].divide(const SizedBox(width: 16)),
+    );
+  }
+
+  InkWell _buildPerformanceCard(
+    BuildContext context,
+    HomepageModel model,
+    String title,
+    Venue? venue,
+  ) {
+    return InkWell(
+      mouseCursor: venue != null
+          ? SystemMouseCursors.click
+          : SystemMouseCursors.basic,
+      onTap: () {
+        if (venue != null) {
+          Navigator.of(context).push(
+            FadeInRoute(
+              page: WebVenuePage(
+                venueId: venue.id,
+                shouldReturnToHomepage: true,
+              ),
+              routeName: '${Routes.webVenue}?venueId=${venue.id}',
+            ),
+          );
+        }
+      },
+      child: Material(
+        color: Colors.transparent,
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: Container(
+          width: double.infinity,
+          constraints: const BoxConstraints(maxWidth: 1000.0),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.onSurface,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                _buildPerformanceTitle(context, title),
+                Divider(
+                  height: 1,
+                  thickness: 1,
+                  indent: 16,
+                  endIndent: 16,
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+                _buildPerformanceVenueDetails(context, venue),
+                _buildPerformanceHeaderImage(context, model, venue),
+              ].divide(const SizedBox(height: 8)),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPerformanceTitle(BuildContext context, String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.titleLarge,
+      ),
+    );
+  }
+
+  Widget _buildPerformanceVenueDetails(BuildContext context, Venue? venue) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            venue?.name ?? 'Not enough data to display. Please add more venues',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          Text(
+            venue?.rating.toStringAsFixed(2) ?? '',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPerformanceHeaderImage(
+    BuildContext context,
+    HomepageModel model,
+    Venue? venue,
+  ) {
+    if (venue == null) {
+      return _buildFallbackImage(context, venue);
+    }
+    Uint8List? cachedImage = VenueImageCache.getImage(venue.id);
+
+    if (cachedImage != null) {
+      return _buildPerformanceImage(venue, cachedImage);
+    }
+
+    return FutureBuilder<Uint8List?>(
+      future: model.venuesApi.getVenueHeaderImage(venue.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            width: double.infinity,
+            height: 200,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: WebTheme.transparentColour,
+            ),
+            child: LoadingAnimationWidget.threeArchedCircle(
+              color: WebTheme.accent1,
+              size: 75,
+            ),
+          );
+        }
+
+        if (snapshot.hasError || snapshot.data == null) {
+          return _buildFallbackImage(context, venue);
+        }
+
+        VenueImageCache.setImage(venue.id, snapshot.data!);
+
+        return _buildPerformanceImage(venue, snapshot.data!);
+      },
+    );
+  }
+
+  Widget _buildPerformanceImage(Venue model, Uint8List cachedImage) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.memory(
+          cachedImage,
+          width: double.infinity,
+          height: 200,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return _buildFallbackImage(context, model);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFallbackImage(BuildContext context, Venue? venue) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        width: double.infinity,
+        height: 200,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Theme.of(context).colorScheme.outline,
+        ),
+        child: const Icon(
+          Icons.no_photography_outlined,
+          color: WebTheme.accent1,
+          size: 50,
+        ),
+      ),
     );
   }
 }

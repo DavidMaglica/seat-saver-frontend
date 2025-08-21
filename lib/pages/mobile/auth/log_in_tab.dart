@@ -11,7 +11,9 @@ import 'package:table_reserver/api/data/user_response.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/mobile/auth/authentication_model.dart';
 import 'package:table_reserver/models/mobile/auth/login_tab_model.dart';
+import 'package:table_reserver/pages/mobile/views/homepage.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/toaster.dart';
 import 'package:table_reserver/utils/utils.dart';
@@ -63,10 +65,11 @@ class _LogInTabState extends State<LogInTab> {
   }
 
   void _goToHomepage(int userId, Position? userLocation) {
-    Navigator.pushNamed(
-      context,
-      Routes.homepage,
-      arguments: {'userId': userId, 'userLocation': userLocation},
+    Navigator.of(context).push(
+      FadeInRoute(
+        page: Homepage(userId: userId, userLocation: userLocation),
+        routeName: Routes.homepage,
+      ),
     );
   }
 

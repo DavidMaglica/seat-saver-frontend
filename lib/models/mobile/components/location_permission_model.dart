@@ -4,6 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/notification_settings.dart';
+import 'package:table_reserver/pages/mobile/views/homepage.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/toaster.dart';
 
@@ -86,10 +88,11 @@ class LocationPermissionPopUpModel extends ChangeNotifier {
     _accountApi.updateUserLocation(userId, userLocation);
 
     if (!context.mounted) return;
-    Navigator.popAndPushNamed(
-      context,
-      Routes.homepage,
-      arguments: {'userId': userId, 'userLocation': userLocation},
+    Navigator.of(context).push(
+      FadeInRoute(
+        page: Homepage(userId: userId, userLocation: userLocation),
+        routeName: Routes.homepage,
+      ),
     );
   }
 }

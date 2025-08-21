@@ -8,7 +8,9 @@ import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/mobile/auth/authentication_model.dart';
 import 'package:table_reserver/models/mobile/auth/signup_tab_model.dart';
+import 'package:table_reserver/pages/mobile/views/homepage.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/toaster.dart';
 
@@ -58,10 +60,11 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
   }
 
   void _goToHomepage(int userId) {
-    Navigator.pushNamed(
-      context,
-      Routes.homepage,
-      arguments: {'userId': userId, 'userLocation': null},
+    Navigator.of(context).push(
+      FadeInRoute(
+        page: Homepage(userId: userId, userLocation: null),
+        routeName: Routes.homepage,
+      ),
     );
   }
 

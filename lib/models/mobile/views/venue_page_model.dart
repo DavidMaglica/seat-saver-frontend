@@ -7,7 +7,9 @@ import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/reservation_api.dart';
 import 'package:table_reserver/api/venue_api.dart';
+import 'package:table_reserver/pages/mobile/views/successful_reservation.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/toaster.dart';
 
@@ -174,16 +176,17 @@ class VenuePageModel extends ChangeNotifier {
       return;
     }
 
-    Navigator.pushNamed(
-      ctx,
-      Routes.successfulReservation,
-      arguments: {
-        'venueName': venue.name,
-        'numberOfGuests': selectedNumberOfPeople,
-        'reservationDateTime': reservationDateTime,
-        'userId': userId,
-        'userLocation': userLocation,
-      },
+    Navigator.of(ctx).push(
+      FadeInRoute(
+        page: SuccessfulReservation(
+          venueName: venue.name,
+          numberOfGuests: selectedNumberOfPeople!,
+          reservationDateTime: reservationDateTime,
+          userId: userId!,
+          userLocation: userLocation,
+        ),
+        routeName: Routes.successfulReservation,
+      ),
     );
 
     return;

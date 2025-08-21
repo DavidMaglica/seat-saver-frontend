@@ -113,7 +113,11 @@ class CreateVenueModel extends FlutterFlowModel<CreateVenueModal>
 
       Navigator.of(context).push(
         FadeInRoute(
-          page: WebVenuePage(venueId: venueId!, shouldReturnToHomepage: false),
+          page: WebVenuePage(
+            venueId: venueId!,
+            shouldReturnToHomepage: true,
+            shouldOpenImagesTab: true,
+          ),
           routeName: '${Routes.webVenue}?venueId=$venueId',
         ),
       );

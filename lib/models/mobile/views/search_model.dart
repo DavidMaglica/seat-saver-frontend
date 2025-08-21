@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:table_reserver/api/data/paged_response.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/venue_api.dart';
+import 'package:table_reserver/pages/mobile/views/venue_page.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/extensions.dart';
 import 'package:flutter/material.dart';
@@ -130,18 +132,15 @@ class SearchModel extends ChangeNotifier {
     _fetchNextPage();
   }
 
-  Function() goToVenuePage(
-    Venue venue,
-    int? userId,
-    Position? userLocation,
-  ) =>
-      () => Navigator.pushNamed(
-            context,
-            Routes.venue,
-            arguments: {
-              'venueId': venue.id,
-              'userId': userId,
-              'userLocation': userLocation,
-            },
-          );
+  Function() goToVenuePage(Venue venue,
+      int? userId,
+      Position? userLocation,) {
+    return () {
+      Navigator.of(context).push(
+          FadeInRoute(page: VenuePage(
+            venueId: venue.id, userId: userId, userLocation: userLocation,),
+              routeName: Routes.venue)
+      );
+    };
+  }
 }
