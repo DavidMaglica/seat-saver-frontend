@@ -15,6 +15,10 @@ import 'package:table_reserver/utils/animations.dart';
 
 class ReservationsModel extends FlutterFlowModel<WebReservations>
     with ChangeNotifier {
+  int? venueId;
+
+  ReservationsModel({this.venueId});
+
   final ReservationsApi reservationsApi = ReservationsApi();
   final AccountApi accountApi = AccountApi();
   final VenuesApi venuesApi = VenuesApi();
@@ -22,6 +26,7 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
   final Map<String, AnimationInfo> animationsMap =
       Animations.reservationsAnimations;
 
+  int? selectedInterval = 30;
   Timer? _refreshTimer;
 
   final List<String> tableHeaders = [
@@ -48,13 +53,25 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
       fetchReservations();
     }
 
-    _refreshTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
+    startTimer();
+  }
+
+  void startTimer() {
+    _refreshTimer?.cancel();
+    if (selectedInterval == null) {
+      return;
+    }
+
+    _refreshTimer = Timer.periodic(Duration(seconds: selectedInterval!), (
+      timer,
+    ) {
       if (venueId != null) {
-        fetchVenueReservations(venueId);
+        fetchVenueReservations(venueId!);
       } else {
         fetchReservations();
       }
     });
+    notifyListeners();
   }
 
   @override

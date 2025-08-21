@@ -6,6 +6,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:rating_summary/rating_summary.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
+import 'package:table_reserver/components/web/timer_dropdown.dart';
 import 'package:table_reserver/models/web/views/ratings_page_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
@@ -102,6 +103,14 @@ class WebRatingsPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          TimerDropdown(
+            selectedInterval: model.selectedInterval,
+            onChanged: (value) {
+              model.selectedInterval = value;
+              model.startTimer();
+            },
+          ),
+          const SizedBox(width: 8),
           FFButtonWidget(
             onPressed: () {
               model.fetchData(ownerId);

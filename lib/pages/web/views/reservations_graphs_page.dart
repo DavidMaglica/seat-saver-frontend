@@ -7,6 +7,7 @@ import 'package:table_reserver/api/data/reservation_details.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/web/chart_card.dart';
+import 'package:table_reserver/components/web/timer_dropdown.dart';
 import 'package:table_reserver/models/web/views/reservations_graphs_page_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/themes/web_theme.dart';
@@ -103,6 +104,14 @@ class ReservationsGraphsPage extends StatelessWidget {
         children: [
           _buildToggleContainer(context, model),
           const SizedBox(width: 24),
+          TimerDropdown(
+            selectedInterval: model.selectedInterval,
+            onChanged: (value) {
+              model.selectedInterval = value;
+              model.startTimer();
+            },
+          ),
+          const SizedBox(width: 8),
           FFButtonWidget(
             onPressed: () {
               model.init();
