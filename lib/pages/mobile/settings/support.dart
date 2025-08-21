@@ -2,7 +2,7 @@ import 'package:table_reserver/components/mobile/action_button.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/mobile/modal_widgets.dart';
 import 'package:table_reserver/components/mobile/support_banner.dart';
-import 'package:table_reserver/models/mobile/support_model.dart';
+import 'package:table_reserver/models/mobile/views/support_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';

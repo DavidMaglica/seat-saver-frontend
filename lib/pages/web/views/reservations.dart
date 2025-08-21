@@ -1,24 +1,26 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_advanced_table/flutter_advanced_table.dart';
+import 'package:flutter_advanced_table/params.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:table_reserver/api/data/reservation_details.dart';
 import 'package:table_reserver/components/web/modals/create_reservation_modal.dart';
 import 'package:table_reserver/components/web/modals/delete_modal.dart';
 import 'package:table_reserver/components/web/modals/edit_reservation_modal.dart';
 import 'package:table_reserver/components/web/modals/modal_widgets.dart';
 import 'package:table_reserver/components/web/side_nav.dart';
-import 'package:table_reserver/models/web/create_reservation_model.dart';
-import 'package:table_reserver/models/web/reservation_model.dart';
+import 'package:table_reserver/models/web/modals/create_reservation_model.dart';
+import 'package:table_reserver/models/web/views/reservations_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_advanced_table/flutter_advanced_table.dart';
-import 'package:flutter_advanced_table/params.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:provider/provider.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 
 class WebReservations extends StatefulWidget {
-  const WebReservations({super.key});
+  final int? venueId;
 
-  static String routeName = 'Reservations';
-  static String routePath = '/reservations';
+  const WebReservations({super.key, this.venueId});
 
   @override
   State<WebReservations> createState() => _WebReservationsState();
@@ -26,78 +28,75 @@ class WebReservations extends StatefulWidget {
 
 class _WebReservationsState extends State<WebReservations>
     with TickerProviderStateMixin {
-  late ReservationsModel _model;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  ValueNotifier<bool> isLoadingTable = ValueNotifier<bool>(false);
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ReservationsModel());
-  }
-
-  @override
-  void dispose() {
-    _model.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        body: SafeArea(
-          top: true,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              wrapWithModel(
-                model: _model.sideNavModel,
-                updateCallback: () => safeSetState(() {}),
-                child: const SideNav(),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Material(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildHeading(context),
-                          SizedBox(
-                            height: 360,
-                            child: _buildTable(context),
-                          ),
-                        ],
+    return ChangeNotifierProvider(
+      create: (_) => ReservationsModel()..init(widget.venueId),
+      child: Consumer<ReservationsModel>(
+        builder: (context, model, _) {
+          return GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: Scaffold(
+              key: scaffoldKey,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              body: SafeArea(
+                top: true,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    const SideNav(),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child:
+                            Material(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildHeading(context, model),
+                                    Expanded(
+                                      child: _buildTable(context, model),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ).animateOnPageLoad(
+                              model
+                                  .animationsMap['reservationsOnLoad']!,
+                            ),
                       ),
                     ),
-                    // _buildReservations(context),
-                  ).animateOnPageLoad(
-                      _model.animationsMap['containerOnPageLoadAnimation']!),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Row _buildHeading(BuildContext context) {
+  Row _buildHeading(BuildContext context, ReservationsModel model) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -108,7 +107,7 @@ class _WebReservationsState extends State<WebReservations>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Your Reservations',
+                'Your Reservations${widget.venueId != null ? ' for ${model.venueNamesById[widget.venueId]}' : ''}',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 8),
@@ -119,21 +118,66 @@ class _WebReservationsState extends State<WebReservations>
             ],
           ),
         ),
+        widget.venueId != null
+            ? FFButtonWidget(
+                text: 'View Reservations for all your venues',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    FadeInRoute(
+                      page: const WebReservations(),
+                      routeName: Routes.webReservations,
+                    ),
+                  );
+                },
+                options: FFButtonOptions(
+                  height: 40,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                  elevation: 3,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              )
+            : const SizedBox.shrink(),
+        widget.venueId != null
+            ? const SizedBox(width: 16)
+            : const SizedBox.shrink(),
+        FFButtonWidget(
+          onPressed: () {
+            model.fetchReservations();
+          },
+          text: 'Refresh data',
+          icon: const Icon(CupertinoIcons.refresh, size: 18),
+          options: FFButtonOptions(
+            height: 40,
+            iconColor: Theme.of(context).colorScheme.primary,
+            color: WebTheme.infoColor,
+            textStyle: const TextStyle(fontSize: 16, color: WebTheme.offWhite),
+            elevation: 3,
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        const SizedBox(width: 8),
         FFButtonWidget(
           onPressed: () async {
-            await showDialog(
+            final shouldRefresh = await showDialog(
               context: context,
               barrierDismissible: true,
               builder: (context) {
                 return Dialog(
-                  insetPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                  insetPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 24,
+                  ),
                   backgroundColor: Colors.transparent,
                   child: Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 1000),
                       child: ChangeNotifierProvider(
-                        create: (_) => CreateReservationModel(),
+                        create: (_) =>
+                            CreateReservationModel()..fetchOwnedVenues(),
                         child: Consumer<CreateReservationModel>(
                           builder: (context, model, _) {
                             return CreateReservationModal(model: model);
@@ -145,20 +189,17 @@ class _WebReservationsState extends State<WebReservations>
                 );
               },
             );
+            if (shouldRefresh == true) {
+              model.fetchReservations();
+            }
           },
           text: 'Create a Reservation',
-          icon: const Icon(
-            CupertinoIcons.add_circled,
-            size: 24,
-          ),
+          icon: const Icon(CupertinoIcons.add_circled, size: 24),
           options: FFButtonOptions(
             height: 40,
             iconColor: Theme.of(context).colorScheme.primary,
             color: WebTheme.successColor,
-            textStyle: const TextStyle(
-              fontSize: 16,
-              color: WebTheme.offWhite,
-            ),
+            textStyle: const TextStyle(fontSize: 16, color: WebTheme.offWhite),
             elevation: 3,
             borderRadius: BorderRadius.circular(8),
           ),
@@ -167,9 +208,19 @@ class _WebReservationsState extends State<WebReservations>
     );
   }
 
-  dynamic _buildTable(BuildContext context) {
-    List<int> reservationIds =
-        _model.reservations.map((reservation) => reservation.id).toList();
+  dynamic _buildTable(BuildContext context, ReservationsModel model) {
+    List<int> reservationIds = model.reservations
+        .map((reservation) => reservation.id)
+        .toList();
+
+    if (model.reservations.isEmpty && !model.isLoadingTable.value) {
+      return Center(
+        child: Text(
+          'No reservations found.',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      );
+    }
 
     return AdvancedTableWidget(
       headerBuilder: (context, header) {
@@ -180,26 +231,35 @@ class _WebReservationsState extends State<WebReservations>
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       rowElementsBuilder: (context, rowParams) {
-        return _buildRows(
-          context,
-          rowParams,
-          _model.reservations,
-        );
+        return _buildRows(context, model, rowParams, model.reservations);
       },
-      items: _model.reservations,
-      isLoadingAll: ValueNotifier(false),
-      fullLoadingPlaceHolder: const Center(
-        child: CircularProgressIndicator(),
+      items: model.reservations,
+      isLoadingAll: model.isLoadingTable,
+      fullLoadingPlaceHolder: Center(
+        child: LoadingAnimationWidget.staggeredDotsWave(
+          color: WebTheme.accent1,
+          size: 75,
+        ),
       ),
-      headerItems: _model.tableHeaders,
+      headerItems: model.tableHeaders,
       actionBuilder: (context, actionParams) {
         final reservationId = reservationIds[actionParams.rowIndex];
-        return _buildActions(context, reservationId);
+        final reservation = model.reservations[actionParams.rowIndex];
+        final venueName =
+            model.venueNamesById[reservation.venueId] ?? 'Unknown Venue';
+        final userName =
+            model.userNamesById[reservation.userId] ?? 'Unknown User';
+
+        return _buildActions(
+          context,
+          reservationId,
+          reservation.venueId,
+          venueName,
+          userName,
+        );
       },
       actions: const [
-        {
-          "label": "edit and delete",
-        },
+        {"label": "edit and delete"},
       ],
       rowDecorationBuilder: (index, isHovered) {
         return _buildRowDecoration(context, index, isHovered);
@@ -207,7 +267,13 @@ class _WebReservationsState extends State<WebReservations>
     );
   }
 
-  Row _buildActions(BuildContext context, int reservationId) {
+  Row _buildActions(
+    BuildContext context,
+    int reservationId,
+    int venueId,
+    String venueName,
+    String userName,
+  ) {
     return Row(
       children: [
         IconButton(
@@ -216,15 +282,26 @@ class _WebReservationsState extends State<WebReservations>
             color: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () async {
-            await showModalBottomSheet(
+            bool? shouldRefresh = await showModalBottomSheet(
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
               enableDrag: false,
               context: context,
               builder: (_) {
-                return EditReservationModal(reservationId: reservationId);
+                return EditReservationModal(
+                  reservationId: reservationId,
+                  venueName: venueName,
+                  userName: userName,
+                );
               },
             );
+            if (shouldRefresh == true) {
+              if (!context.mounted) return;
+              Provider.of<ReservationsModel>(
+                context,
+                listen: false,
+              ).fetchReservations();
+            }
           },
         ),
         IconButton(
@@ -233,7 +310,7 @@ class _WebReservationsState extends State<WebReservations>
             color: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () async {
-            await showModalBottomSheet(
+            bool? shouldRefresh = await showModalBottomSheet(
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
               enableDrag: false,
@@ -242,11 +319,19 @@ class _WebReservationsState extends State<WebReservations>
                 return DeleteModal(
                   modalType: DeleteModalType.reservation,
                   reservationId: reservationId,
+                  venueName: venueName,
+                  userName: userName,
                 );
               },
             );
+            if (shouldRefresh == true) {
+              Provider.of<ReservationsModel>(
+                context,
+                listen: false,
+              ).fetchReservations();
+            }
           },
-        )
+        ),
       ],
     );
   }
@@ -259,9 +344,9 @@ class _WebReservationsState extends State<WebReservations>
       child: Center(
         child: Text(
           header.value,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -269,39 +354,44 @@ class _WebReservationsState extends State<WebReservations>
 
   List<SizedBox> _buildRows(
     BuildContext context,
+    ReservationsModel model,
     RowBuilderParams rowParams,
     List<ReservationDetails> reservations,
   ) {
     DateFormat dateFormat = DateFormat('dd MMMM, yyyy - HH:mm');
     final reservation = reservations[rowParams.index];
+    final venueName =
+        model.venueNamesById[reservation.venueId] ?? 'Unknown Venue';
+    final userName = model.userNamesById[reservation.userId] ?? 'Unknown User';
     return [
       SizedBox(
         width: rowParams.defualtWidth,
         child: Center(
-          child: Text('${reservation.venueId}',
-              style: Theme.of(context).textTheme.bodyLarge),
+          child: Text(venueName, style: Theme.of(context).textTheme.bodyLarge),
         ),
       ),
       SizedBox(
         width: rowParams.defualtWidth,
         child: Center(
-            child: Text(
-          '${reservation.userId}',
-          style: Theme.of(context).textTheme.bodyLarge,
-        )),
-      ),
-      SizedBox(
-        width: rowParams.defualtWidth,
-        child: Center(
-          child: Text('${reservation.numberOfGuests}',
-              style: Theme.of(context).textTheme.bodyLarge),
+          child: Text(userName, style: Theme.of(context).textTheme.bodyLarge),
         ),
       ),
       SizedBox(
         width: rowParams.defualtWidth,
         child: Center(
-          child: Text(dateFormat.format(reservation.datetime),
-              style: Theme.of(context).textTheme.bodyLarge),
+          child: Text(
+            '${reservation.numberOfGuests}',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+      ),
+      SizedBox(
+        width: rowParams.defualtWidth,
+        child: Center(
+          child: Text(
+            dateFormat.format(reservation.datetime),
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         ),
       ),
     ];
@@ -318,8 +408,8 @@ class _WebReservationsState extends State<WebReservations>
       color: isHover
           ? WebTheme.infoColor
           : !isOdd
-              ? Colors.transparent
-              : Theme.of(context).colorScheme.surface,
+          ? Colors.transparent
+          : Theme.of(context).colorScheme.surface,
     );
   }
 }

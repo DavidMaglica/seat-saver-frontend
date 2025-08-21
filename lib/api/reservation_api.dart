@@ -1,20 +1,16 @@
-import 'package:table_reserver/api/api_routes.dart';
+import 'package:dio/dio.dart';
+import 'package:table_reserver/api/common/api_routes.dart';
+import 'package:table_reserver/api/common/dio_setup.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/reservation_details.dart';
-import 'package:table_reserver/api/dio_setup.dart';
-import 'package:dio/dio.dart';
-import 'package:logger/logger.dart';
+import 'package:table_reserver/utils/logger.dart';
 
-final dio = setupDio(ApiRoutes.reservation);
-final logger = Logger();
+final dio = setupDio();
 
-class ReservationApi {
-  Future<List<ReservationDetails>> getReservations(int userId) async {
+class ReservationsApi {
+  Future<List<ReservationDetails>> getUserReservations(int userId) async {
     try {
-      Response response = await dio.get(
-        ApiRoutes.getReservations,
-        queryParameters: {'userId': userId},
-      );
+      Response response = await dio.get(ApiRoutes.userReservations(userId));
 
       List<ReservationDetails> reservations = (response.data as List)
           .map((reservation) => ReservationDetails.fromJson(reservation))
@@ -27,20 +23,88 @@ class ReservationApi {
     }
   }
 
-  Future<BasicResponse> createReservation(
-    int userId,
-    int venueId,
-    int numberOfPeople,
-    DateTime reservationDate,
-  ) async {
+  Future<List<ReservationDetails>> getOwnerReservations(int ownerId) async {
+    try {
+      Response response = await dio.get(ApiRoutes.ownerReservations(ownerId));
+
+      List<ReservationDetails> reservations = (response.data as List)
+          .map((reservation) => ReservationDetails.fromJson(reservation))
+          .toList();
+
+      return reservations;
+    } catch (e) {
+      logger.e('Error fetching reservations: $e');
+      return [];
+    }
+  }
+
+  Future<ReservationDetails?> getReservationById(int reservationId) async {
+    try {
+      Response response = await dio.get(
+        ApiRoutes.reservationById(reservationId),
+      );
+
+      return ReservationDetails.fromJson(response.data);
+    } catch (e) {
+      logger.e('Error fetching reservation by ID: $e');
+      return null;
+    }
+  }
+
+  Future<List<ReservationDetails>> getVenueReservations(int venueId) async {
+    try {
+      Response response = await dio.get(ApiRoutes.venueReservations(venueId));
+
+      List<ReservationDetails> reservations = (response.data as List)
+          .map((reservation) => ReservationDetails.fromJson(reservation))
+          .toList();
+
+      return reservations;
+    } catch (e) {
+      logger.e('Error fetching venue reservations: $e');
+      return [];
+    }
+  }
+
+  Future<int> getReservationCount(
+    int ownerId, {
+    int? venueId,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      Response response = await dio.get(
+        ApiRoutes.reservationCount(ownerId),
+        queryParameters: {
+          'venueId': venueId,
+          'startDate': startDate?.toIso8601String(),
+          'endDate': endDate?.toIso8601String(),
+        },
+      );
+
+      return response.data as int;
+    } catch (e) {
+      logger.e('Error fetching reservation count: $e');
+      return 0;
+    }
+  }
+
+  Future<BasicResponse> createReservation({
+    required int venueId,
+    required int numberOfGuests,
+    required DateTime reservationDate,
+    int? userId,
+    String? userEmail,
+  }) async {
     try {
       Response response = await dio.post(
-        ApiRoutes.createReservation,
+        ApiRoutes.reservations,
         data: {
           'userId': userId,
+          'userEmail': userEmail,
           'venueId': venueId,
           'reservationDate': reservationDate.toIso8601String(),
-          'numberOfPeople': numberOfPeople,
+          'numberOfGuests': numberOfGuests,
         },
       );
 
@@ -54,17 +118,34 @@ class ReservationApi {
     }
   }
 
-  Future<BasicResponse> deleteReservation(
-    int userId,
-    int reservationId,
-  ) async {
+  Future<BasicResponse> updateReservation({
+    required int reservationId,
+    required int numberOfGuests,
+    required DateTime reservationDate,
+  }) async {
+    try {
+      Response response = await dio.patch(
+        ApiRoutes.reservationById(reservationId),
+        data: {
+          'reservationDate': reservationDate.toIso8601String(),
+          'numberOfGuests': numberOfGuests,
+        },
+      );
+
+      return BasicResponse.fromJson(response.data, (json) => json);
+    } catch (e) {
+      logger.e('Error updating reservation: $e');
+      return BasicResponse(
+        success: false,
+        message: 'Failed to update reservation',
+      );
+    }
+  }
+
+  Future<BasicResponse> deleteReservation(int reservationId) async {
     try {
       Response response = await dio.delete(
-        ApiRoutes.deleteReservation,
-        queryParameters: {
-          'userId': userId,
-          'reservationId': reservationId,
-        },
+        ApiRoutes.reservationById(reservationId),
       );
       return BasicResponse.fromJson(response.data, (json) => json);
     } catch (e) {

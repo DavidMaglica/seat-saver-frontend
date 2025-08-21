@@ -1,18 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:google_sign_in_web/web_only.dart';
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/user.dart';
 import 'package:table_reserver/api/data/user_response.dart';
-import 'package:table_reserver/components/common/toaster.dart';
-import 'package:table_reserver/models/web/authentication_model.dart';
-import 'package:table_reserver/models/web/log_in_tab_model.dart';
+import 'package:table_reserver/main.dart';
+import 'package:table_reserver/models/web/auth/authentication_model.dart';
+import 'package:table_reserver/models/web/auth/log_in_tab_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/google_web/google_button_interface.dart';
 import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/sign_up_methods.dart';
+import 'package:table_reserver/utils/web_toaster.dart';
 
 class LogInTab extends StatefulWidget {
   final AuthenticationModel model;
@@ -25,12 +27,15 @@ class LogInTab extends StatefulWidget {
 
 class _LogInTabState extends State<LogInTab> {
   late LogInTabModel _model;
-  late final AccountApi accountApi = AccountApi();
+  final AccountApi accountApi = AccountApi();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => LogInTabModel());
+    _model = createModel(
+      context,
+      () => LogInTabModel(isActive: widget.model.tabBarController!.index == 1),
+    );
   }
 
   @override
@@ -40,31 +45,43 @@ class _LogInTabState extends State<LogInTab> {
   }
 
   void _performLogIn(String email, String password) async {
-    BasicResponse<int> response = await _model.logIn(email, password);
+    BasicResponse<int?> response = await _model.logIn(
+      email,
+      password,
+      AuthenticationMethod.custom,
+    );
     if (response.success && response.data != null) {
-      int userId = response.data!;
+      int ownerId = response.data!;
 
-      UserResponse? userResponse = await accountApi.getUser(userId);
+      UserResponse? userResponse = await accountApi.getUser(ownerId);
 
       if (userResponse != null && userResponse.success) {
         User user = userResponse.user!;
+
+        prefsWithCache.setInt('ownerId', ownerId);
 
         _goToHomepage(user.id);
       }
     } else {
       if (!mounted) return;
-      Toaster.displayError(context, response.message);
+      WebToaster.displayError(context, response.message);
     }
   }
 
-  void _goToHomepage(int userId) {
+  void _goToHomepage(int ownerId) {
     Navigator.of(context).push(
-      FadeInRoute(routeName: Routes.webHomepage, page: const WebHomepage()),
+      FadeInRoute(
+        routeName: Routes.webHomepage,
+        page: WebHomepage(ownerId: ownerId),
+      ),
     );
   }
 
   void _forgotPassword() {
-    Toaster.displayInfo(context, 'Not implemented yet');
+    WebToaster.displayInfo(
+      context,
+      'Forgot password functionality is not implemented yet.',
+    );
   }
 
   @override
@@ -89,13 +106,13 @@ class _LogInTabState extends State<LogInTab> {
                   const SizedBox(height: 16),
                   _buildText(context),
                   const SizedBox(height: 16),
-                  _buildGoogleButton(context),
+                  buildGoogleButton(),
                   const SizedBox(height: 16),
                   _buildForgotPassword(),
                 ],
               ),
             ).animateOnPageLoad(
-              widget.model.animationsMap['columnOnPageLoadAnimation2']!,
+              widget.model.animationsMap['tabOnLoad']!,
             ),
       ),
     );
@@ -113,8 +130,8 @@ class _LogInTabState extends State<LogInTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
-        controller: widget.model.emailAddressTextController,
-        focusNode: widget.model.emailAddressFocusNode,
+        controller: widget.model.loginEmailTextController,
+        focusNode: widget.model.loginEmailFocusNode,
         autofocus: false,
         obscureText: false,
         decoration: InputDecoration(
@@ -144,10 +161,10 @@ class _LogInTabState extends State<LogInTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
-        controller: widget.model.passwordTextController,
-        focusNode: widget.model.passwordFocusNode,
+        controller: widget.model.loginPasswordTextController,
+        focusNode: widget.model.loginPasswordFocusNode,
         autofocus: false,
-        obscureText: !widget.model.passwordVisibility,
+        obscureText: !widget.model.loginPasswordVisibility,
         decoration: InputDecoration(
           labelText: 'Password',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
@@ -165,12 +182,12 @@ class _LogInTabState extends State<LogInTab> {
           contentPadding: const EdgeInsetsDirectional.fromSTEB(24, 24, 0, 24),
           suffixIcon: InkWell(
             onTap: () => safeSetState(
-              () => widget.model.passwordVisibility =
-                  !widget.model.passwordVisibility,
+              () => widget.model.loginPasswordVisibility =
+                  !widget.model.loginPasswordVisibility,
             ),
             focusNode: FocusNode(skipTraversal: true),
             child: Icon(
-              widget.model.passwordVisibility
+              widget.model.loginPasswordVisibility
                   ? CupertinoIcons.eye_fill
                   : CupertinoIcons.eye_slash_fill,
               color: Theme.of(context).colorScheme.onPrimary,
@@ -178,7 +195,7 @@ class _LogInTabState extends State<LogInTab> {
             ),
           ),
         ),
-        style: Theme.of(context).textTheme.bodyMedium,
+        style: Theme.of(context).textTheme.bodyLarge,
         keyboardType: TextInputType.visiblePassword,
         cursorColor: Theme.of(context).colorScheme.onPrimary,
       ),
@@ -190,8 +207,8 @@ class _LogInTabState extends State<LogInTab> {
       alignment: const AlignmentDirectional(0, 0),
       child: FFButtonWidget(
         onPressed: () => _performLogIn(
-          widget.model.emailAddressCreateTextController.text,
-          widget.model.passwordTextController.text,
+          widget.model.loginEmailTextController.text,
+          widget.model.loginPasswordTextController.text,
         ),
         text: 'Log In',
         options: FFButtonOptions(
@@ -217,19 +234,6 @@ class _LogInTabState extends State<LogInTab> {
         'Or log in with',
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.bodyMedium,
-      ),
-    );
-  }
-
-  Widget _buildGoogleButton(BuildContext context) {
-    return Align(
-      alignment: const AlignmentDirectional(0, 0),
-      child: renderButton(
-        configuration: GSIButtonConfiguration(
-          type: GSIButtonType.icon,
-          theme: GSIButtonTheme.outline,
-          shape: GSIButtonShape.pill,
-        ),
       ),
     );
   }

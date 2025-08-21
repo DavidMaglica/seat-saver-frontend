@@ -1,16 +1,25 @@
-import 'package:table_reserver/themes/web_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:table_reserver/_patched_packages/flutterflow_ui/lib/flutterflow_ui.dart';
+import 'package:table_reserver/themes/web_theme.dart';
 
 class CircularStatCard extends StatelessWidget {
   final String title;
   final String description;
+  final Function() onPressed;
+  final double? rating;
+  final int? ratingCount;
+  final double? utilisationRatio;
   final String? hint;
 
   const CircularStatCard({
     super.key,
     required this.title,
     required this.description,
+    required this.onPressed,
+    this.rating,
+    this.ratingCount,
+    this.utilisationRatio,
     this.hint,
   });
 
@@ -19,9 +28,7 @@ class CircularStatCard extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -34,19 +41,19 @@ class CircularStatCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildTitleAndDescription(context),
-            const Divider(
-              height: 1,
-              thickness: 1,
-              indent: 16,
-              endIndent: 16,
-            ),
-            _buildCircularIndicator(context),
+            const Divider(height: 1, thickness: 1, indent: 16, endIndent: 16),
+            rating != null
+                ? _buildRatingIndicator(context, rating!, ratingCount!)
+                : _buildUtilisationRateIndicator(context, utilisationRatio!),
             if (hint != null)
               Padding(
                 padding: const EdgeInsets.only(left: 16, bottom: 6),
                 child: Text(
                   '*${hint!}',
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    fontSize: 10,
+                  ),
                 ),
               ),
           ],
@@ -70,14 +77,36 @@ class CircularStatCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium,
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(title, style: Theme.of(context).textTheme.titleLarge),
+                    FFButtonWidget(
+                      text: 'View details',
+                      onPressed: onPressed,
+                      options: FFButtonOptions(
+                        width: 100,
+                        height: 32,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        color: WebTheme.infoColor,
+                        textStyle: const TextStyle(
+                          color: WebTheme.offWhite,
+                          fontSize: 14,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Text(
                   description,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    fontSize: 14,
+                  ),
                 ),
               ],
             ),
@@ -87,41 +116,60 @@ class CircularStatCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCircularIndicator(BuildContext context) {
-    double utilisationRatio = 0.9;
-    double rating = 3.5;
-
-    double ratingRatio = rating / 5.0;
-
+  Widget _buildRatingIndicator(
+    BuildContext context,
+    double rating,
+    int ratingCount,
+  ) {
+    double ratingRatio = ratingCount > 0 ? (rating / 5.0) : 0.0;
     return Align(
       alignment: const AlignmentDirectional(0, 0),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 24,
-          vertical: 16,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: CircularPercentIndicator(
-          percent: title == 'Rating' ? ratingRatio : utilisationRatio,
+          percent: ratingRatio,
           radius: 55,
           lineWidth: 8,
           animation: true,
           animateFromLastPercent: true,
-          progressColor: title == 'Rating'
-              ? ratingRatio > 0.75
-                  ? WebTheme.successColor
-                  : ratingRatio > 0.25
-                      ? WebTheme.warningColor
-                      : WebTheme.errorColor
-              : utilisationRatio > 0.75
-                  ? WebTheme.errorColor
-                  : utilisationRatio > 0.25
-                      ? WebTheme.warningColor
-                      : WebTheme.successColor,
+          progressColor: rating > 0.75
+              ? WebTheme.successColor
+              : rating > 0.25
+              ? WebTheme.warningColor
+              : WebTheme.errorColor,
           backgroundColor: Theme.of(context).colorScheme.outline,
           center: Text(
-            title == 'Rating'
-                ? '${rating.toDouble()}'
-                : '${utilisationRatio * 100}%',
+            rating.toStringAsFixed(2),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUtilisationRateIndicator(
+    BuildContext context,
+    double utilisationRatio,
+  ) {
+    final normalizedRatio = utilisationRatio / 100;
+    return Align(
+      alignment: const AlignmentDirectional(0, 0),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        child: CircularPercentIndicator(
+          percent: normalizedRatio.clamp(0.0, 1.0),
+          radius: 55,
+          lineWidth: 8,
+          animation: true,
+          animateFromLastPercent: true,
+          progressColor: utilisationRatio > 0.75
+              ? WebTheme.errorColor
+              : utilisationRatio > 0.25
+              ? WebTheme.warningColor
+              : WebTheme.successColor,
+          backgroundColor: Theme.of(context).colorScheme.outline,
+          center: Text(
+            '${utilisationRatio.toStringAsFixed(1)}%',
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),

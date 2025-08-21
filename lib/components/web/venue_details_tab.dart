@@ -1,12 +1,12 @@
-import 'package:table_reserver/models/web/venue_page_model.dart';
-import 'package:table_reserver/themes/web_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:table_reserver/models/web/views/venue_page_model.dart';
+import 'package:table_reserver/themes/web_theme.dart';
 
 class VenueDetailsTab extends StatelessWidget {
-  final _model = VenuePageModel();
+  final VenuePageModel model;
 
-  VenueDetailsTab({super.key});
+  const VenueDetailsTab({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +15,7 @@ class VenueDetailsTab extends StatelessWidget {
       child: Material(
         color: Theme.of(context).colorScheme.onSurface,
         elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -32,8 +30,11 @@ class VenueDetailsTab extends StatelessWidget {
               endIndent: 16,
               color: Theme.of(context).colorScheme.onPrimary,
             ).animateOnPageLoad(
-                _model.animationsMap['textOnPageLoadAnimation5']!),
-            _buildIconDetails(context),
+              model.animationsMap['fadeInOnLoad']!,
+            ),
+            _buildIconDetails(
+              context,
+            ).animateOnPageLoad(model.animationsMap['fadeMoveUpOnLoad']!),
           ],
         ),
       ),
@@ -49,19 +50,16 @@ class VenueDetailsTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTitle(context, 'Venue Type'),
-          _buildDetail(context, _model.loadedVenue.typeId.toString()),
+          _buildDetail(context, model.venueType),
           const SizedBox(height: 8),
           _buildTitle(context, 'Description'),
-          _buildDetail(
-            context,
-            _model.loadedVenue.description!,
-          ),
+          _buildDetail(context, model.loadedVenue.description ?? ''),
           const SizedBox(height: 8),
           _buildTitle(context, 'Location'),
-          _buildDetail(context, _model.loadedVenue.location),
+          _buildDetail(context, model.loadedVenue.location),
           const SizedBox(height: 8),
           _buildTitle(context, 'Working Hours'),
-          _buildDetail(context, _model.loadedVenue.workingHours),
+          _buildDetail(context, model.loadedVenue.workingHours),
         ],
       ),
     );
@@ -71,14 +69,22 @@ class VenueDetailsTab extends StatelessWidget {
     return Text(
       title,
       style: Theme.of(context).textTheme.titleMedium,
-    ).animateOnPageLoad(_model.animationsMap['textOnPageLoadAnimation5']!);
+    ).animateOnPageLoad(model.animationsMap['fadeInOnLoad']!);
   }
 
-  Widget _buildDetail(BuildContext context, String detail) {
+  Widget _buildDetail(
+    BuildContext context,
+    String detail, {
+    bool isDescription = false,
+  }) {
     return Text(
       detail,
-      style: Theme.of(context).textTheme.bodyLarge,
-    ).animateOnPageLoad(_model.animationsMap['textOnPageLoadAnimation5']!);
+      style: isDescription
+          ? Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(fontStyle: FontStyle.italic)
+          : Theme.of(context).textTheme.bodyLarge,
+    ).animateOnPageLoad(model.animationsMap['fadeInOnLoad']!);
   }
 
   Widget _buildIconDetails(BuildContext context) {
@@ -90,22 +96,22 @@ class VenueDetailsTab extends StatelessWidget {
           context,
           Icons.table_restaurant_outlined,
           'Maximum Capacity',
-          _model.loadedVenue.maximumCapacity.toString(),
+          model.loadedVenue.maximumCapacity.toString(),
         ),
         _buildIconDetail(
           context,
           Icons.event_available_outlined,
           'Available Capacity',
-          _model.loadedVenue.availableCapacity.toString(),
+          model.loadedVenue.availableCapacity.toString(),
         ),
         _buildIconDetail(
           context,
           Icons.rsvp_outlined,
           'Lifetime reservations',
-          '138',
+          model.lifetimeReservations.toString(),
         ),
       ],
-    ).animateOnPageLoad(_model.animationsMap['rowOnPageLoadAnimation']!);
+    );
   }
 
   Column _buildIconDetail(
@@ -117,21 +123,11 @@ class VenueDetailsTab extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        Icon(
-          icon,
-          color: WebTheme.accent1,
-          size: 44,
-        ),
+        Icon(icon, color: WebTheme.accent1, size: 44),
         const SizedBox(height: 8),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        Text(value, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 4),
-        Text(
-          label,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        Text(label, style: Theme.of(context).textTheme.titleMedium),
       ],
     );
   }

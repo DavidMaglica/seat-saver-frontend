@@ -1,8 +1,9 @@
-import 'package:table_reserver/models/web/change_username_model.dart';
-import 'package:table_reserver/themes/web_theme.dart';
-import 'package:table_reserver/components/web/modals/modal_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:provider/provider.dart';
+import 'package:table_reserver/components/web/modals/modal_widgets.dart';
+import 'package:table_reserver/models/web/modals/change_username_model.dart';
+import 'package:table_reserver/themes/web_theme.dart';
 
 class ChangeUsernameModal extends StatefulWidget {
   const ChangeUsernameModal({super.key});
@@ -13,67 +14,63 @@ class ChangeUsernameModal extends StatefulWidget {
 
 class _ChangeUsernameModalState extends State<ChangeUsernameModal>
     with TickerProviderStateMixin {
-  late ChangeUsernameModel _model;
-
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
-    _model.onUpdate();
   }
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ChangeUsernameModel());
-  }
-
-  @override
-  void dispose() {
-    _model.maybeDispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
+    return ChangeNotifierProvider(
+      create: (_) => ChangeUsernameModel(),
+      child: Consumer<ChangeUsernameModel>(
+        builder: (context, model, _) {
+          return SizedBox(
             width: double.infinity,
-            constraints: const BoxConstraints(
-              maxWidth: 670,
-            ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(8),
-            ),
+            height: double.infinity,
             child: Column(
               mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                buildTitle(context, 'Change Username'),
-                const SizedBox(height: 16),
-                _buildBody(context),
-                const SizedBox(height: 8),
-                buildButtons(
-                  context,
-                  _model.updateUsername,
-                  'Change Username',
+                Container(
+                  width: double.infinity,
+                  constraints: const BoxConstraints(maxWidth: 670),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildTitle(context, 'Change Username'),
+                      const SizedBox(height: 16),
+                      _buildBody(context, model),
+                      const SizedBox(height: 8),
+                      buildButtons(
+                        context,
+                        () => model.updateUsername(context),
+                        'Change Username',
+                      ),
+                    ],
+                  ),
+                ).animateOnPageLoad(
+                  model.animationsMap['modalOnLoad']!,
                 ),
               ],
             ),
-          ).animateOnPageLoad(
-              _model.animationsMap['containerOnPageLoadAnimation']!),
-        ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _buildBody(BuildContext context, ChangeUsernameModel model) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,12 +78,17 @@ class _ChangeUsernameModalState extends State<ChangeUsernameModal>
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: TextFormField(
-            controller: _model.emailTextController,
-            focusNode: _model.emailFocusNode,
+            controller: model.usernameTextController,
+            focusNode: model.usernameFocusNode,
             obscureText: false,
             decoration: InputDecoration(
               labelText: 'Enter your new username',
               labelStyle: Theme.of(context).textTheme.bodyLarge,
+              errorText: model.usernameErrorText,
+              errorStyle: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontSize: 12,
+              ),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Theme.of(context).colorScheme.onPrimary,
@@ -101,10 +103,20 @@ class _ChangeUsernameModalState extends State<ChangeUsernameModal>
                 ),
                 borderRadius: BorderRadius.circular(8),
               ),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+              errorBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: WebTheme.errorColor, width: 1),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+              focusedErrorBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 24,
+              ),
             ),
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyLarge,
             maxLines: 1,
             minLines: 1,
             keyboardType: TextInputType.name,

@@ -1,6 +1,7 @@
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/mobile/modal_widgets.dart';
-import 'package:table_reserver/models/mobile/edit_profile_model.dart';
+import 'package:table_reserver/models/mobile/views/edit_profile_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,7 +30,10 @@ class EditProfile extends StatelessWidget {
       child: Consumer<EditProfileModel>(
         builder: (context, model, _) {
           if (model.currentUser == null) {
-            return const CircularProgressIndicator();
+            return LoadingAnimationWidget.threeArchedCircle(
+              color: MobileTheme.accent1,
+              size: 75,
+            );
           }
           return Scaffold(
             key: model.scaffoldKey,

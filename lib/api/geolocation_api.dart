@@ -1,11 +1,10 @@
-import 'package:table_reserver/api/api_routes.dart';
-import 'package:table_reserver/api/data/user_location.dart';
-import 'package:table_reserver/api/dio_setup.dart';
 import 'package:dio/dio.dart';
-import 'package:logger/logger.dart';
+import 'package:table_reserver/api/common/api_routes.dart';
+import 'package:table_reserver/api/common/dio_setup.dart';
+import 'package:table_reserver/api/data/user_location.dart';
+import 'package:table_reserver/utils/logger.dart';
 
-final dio = setupDio(ApiRoutes.geolocation);
-final logger = Logger();
+final dio = setupDio();
 
 class GeolocationApi {
   Future<List<String>> getNearbyCities(UserLocation userLocation) async {
@@ -14,11 +13,10 @@ class GeolocationApi {
         ApiRoutes.getNearbyCities,
         queryParameters: {
           'latitude': userLocation.latitude,
-          'longitude': userLocation.longitude
+          'longitude': userLocation.longitude,
         },
         options: Options(
-          validateStatus: (status) =>
-              status != null && status < 600,
+          validateStatus: (status) => status != null && status < 600,
         ),
       );
 

@@ -1,10 +1,10 @@
-import 'package:table_reserver/components/web/modals/modal_widgets.dart';
-import 'package:table_reserver/models/web/create_reservation_model.dart';
-import 'package:table_reserver/themes/web_theme.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:table_reserver/components/web/modals/modal_widgets.dart';
+import 'package:table_reserver/models/web/modals/create_reservation_model.dart';
+import 'package:table_reserver/themes/web_theme.dart';
 
 class CreateReservationModal extends StatefulWidget {
   final CreateReservationModel model;
@@ -27,12 +27,6 @@ class _CreateReservationModalState extends State<CreateReservationModal>
     super.initState();
   }
 
-  void createReservation(BuildContext context) {
-    if (widget.model.isFormValid()) {
-      widget.model.createReservation(context);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -44,9 +38,7 @@ class _CreateReservationModalState extends State<CreateReservationModal>
         children: [
           Container(
             width: double.infinity,
-            constraints: const BoxConstraints(
-              maxWidth: 1000,
-            ),
+            constraints: const BoxConstraints(maxWidth: 1000),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(8),
@@ -56,22 +48,23 @@ class _CreateReservationModalState extends State<CreateReservationModal>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildTitle(context, 'Create a Reservation'),
-                _buildBody(context),
+                _buildBody(context, widget.model),
                 buildButtons(
                   context,
-                  () => createReservation(context),
+                  () => widget.model.createReservation(context),
                   'Create Reservation',
                 ),
               ].divide(const SizedBox(height: 16)),
             ),
           ).animateOnPageLoad(
-              widget.model.animationsMap['containerOnPageLoadAnimation']!),
+            widget.model.animationsMap['modalOnLoad']!,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _buildBody(BuildContext context, CreateReservationModel model) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -81,20 +74,14 @@ class _CreateReservationModalState extends State<CreateReservationModal>
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              _buildInputField(
-                context: context,
-                label: 'Venue Name *',
-                controller: widget.model.nameTextController,
-                focusNode: widget.model.nameFocusNode,
-                errorText: widget.model.nameErrorText,
-              ),
+              _buildDropdown(context, model),
               _buildInputField(
                 context: context,
                 label: 'User Email *',
-                controller: widget.model.emailTextController,
-                focusNode: widget.model.emailFocusNode,
-                errorText: widget.model.emailErrorText,
-              )
+                controller: model.emailTextController,
+                focusNode: model.emailFocusNode,
+                errorText: model.emailErrorText,
+              ),
             ].divide(const SizedBox(width: 32)),
           ),
           Row(
@@ -103,15 +90,13 @@ class _CreateReservationModalState extends State<CreateReservationModal>
               _buildInputField(
                 context: context,
                 label: 'Number of Guests *',
-                controller: widget.model.guestsTextController,
-                focusNode: widget.model.guestsFocusNode,
-                errorText: widget.model.guestsErrorText,
+                controller: model.guestsTextController,
+                focusNode: model.guestsFocusNode,
+                errorText: model.guestsErrorText,
                 keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
-              _buildReservationDateInputField(context),
+              _buildReservationDateInputField(context, model),
             ].divide(const SizedBox(width: 32)),
           ),
           Row(
@@ -122,7 +107,7 @@ class _CreateReservationModalState extends State<CreateReservationModal>
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
-          )
+          ),
         ].divide(const SizedBox(height: 16)),
       ),
     );
@@ -162,24 +147,15 @@ class _CreateReservationModalState extends State<CreateReservationModal>
           borderRadius: BorderRadius.circular(8),
         ),
         focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: WebTheme.infoColor,
-            width: 1,
-          ),
+          borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         errorBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: WebTheme.errorColor,
-            width: 1,
-          ),
+          borderSide: BorderSide(color: WebTheme.errorColor, width: 1),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         focusedErrorBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: WebTheme.infoColor,
-            width: 1,
-          ),
+          borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         contentPadding: const EdgeInsets.symmetric(
@@ -198,11 +174,71 @@ class _CreateReservationModalState extends State<CreateReservationModal>
     return isExpanded ? Expanded(child: inputField) : inputField;
   }
 
-  Widget _buildReservationDateInputField(BuildContext context) {
+  Widget _buildDropdown(
+    BuildContext context,
+    CreateReservationModel model,
+  ) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FlutterFlowDropDown<String>(
+          controller: model.dropDownValueController,
+          options: model.venueNamesById.keys
+              .map((venueId) => venueId.toString())
+              .toList(),
+          optionLabels: model.venueNamesById.values
+              .map((name) => '    ${name.trim()}')
+              .toList(),
+          onChanged: (val) => safeSetState(() => model.dropDownValue = val),
+          width: 470,
+          height: 64,
+          searchHintTextStyle: Theme.of(context).textTheme.bodyMedium,
+          searchTextStyle: Theme.of(context).textTheme.bodyMedium,
+          textStyle: Theme.of(context).textTheme.bodyLarge!,
+          hintText: 'Venue *',
+          searchHintText: 'Search...',
+          icon: Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: Theme.of(context).colorScheme.onPrimary,
+            size: 24,
+          ),
+          fillColor: Theme.of(context).colorScheme.surface,
+          elevation: 3,
+          borderColor: model.dropDownErrorText != null
+              ? WebTheme.errorColor
+              : Theme.of(context).colorScheme.onPrimary,
+          borderWidth: 1,
+          borderRadius: 8,
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          hidesUnderline: true,
+          isOverButton: false,
+          isSearchable: true,
+          isMultiSelect: false,
+        ),
+        if (model.dropDownErrorText != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 4),
+            child: Text(
+              model.dropDownErrorText!,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontSize: 14,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildReservationDateInputField(
+    BuildContext context,
+    CreateReservationModel model,
+  ) {
     return Expanded(
       child: TextFormField(
-        controller: widget.model.reservationDateTextController,
-        focusNode: widget.model.reservationDateFocusNode,
+        controller: model.reservationDateTextController,
+        focusNode: model.reservationDateFocusNode,
         readOnly: true,
         onTap: () async {
           DateTime? pickedDate = await _buildDatePicker(context);
@@ -224,15 +260,15 @@ class _CreateReservationModalState extends State<CreateReservationModal>
 
               final formattedDateTime = dateFormat.format(combinedDateTime);
 
-              widget.model.reservationDateTextController.text =
-                  formattedDateTime;
+              model.reservationDateTextController.text = formattedDateTime;
+              model.reservationDate = combinedDateTime;
             }
           }
         },
         decoration: InputDecoration(
           labelText: 'Reservation Date *',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
-          errorText: widget.model.reservationDateErrorText,
+          errorText: model.reservationDateErrorText,
           errorStyle: TextStyle(
             color: Theme.of(context).colorScheme.error,
             fontSize: 14,
@@ -245,24 +281,15 @@ class _CreateReservationModalState extends State<CreateReservationModal>
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: WebTheme.infoColor,
-              width: 1,
-            ),
+            borderSide: const BorderSide(color: WebTheme.infoColor, width: 1),
             borderRadius: BorderRadius.circular(8),
           ),
           errorBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
-              color: WebTheme.errorColor,
-              width: 1,
-            ),
+            borderSide: BorderSide(color: WebTheme.errorColor, width: 1),
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           focusedErrorBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
-              color: WebTheme.infoColor,
-              width: 1,
-            ),
+            borderSide: BorderSide(color: WebTheme.infoColor, width: 1),
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           contentPadding: const EdgeInsets.symmetric(
@@ -290,30 +317,25 @@ class _CreateReservationModalState extends State<CreateReservationModal>
       currentDateDecoration: BoxDecoration(
         color: WebTheme.transparentColour,
         shape: BoxShape.circle,
-        border: Border.all(
-          color: WebTheme.infoColor,
-          width: 1,
-        ),
+        border: Border.all(color: WebTheme.infoColor, width: 1),
       ),
-      selectedCellTextStyle:
-          Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
+      selectedCellTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyLarge?.copyWith(color: Colors.white),
       selectedCellDecoration: const BoxDecoration(
         color: WebTheme.infoColor,
         shape: BoxShape.circle,
       ),
       enabledCellsTextStyle: Theme.of(context).textTheme.bodyLarge,
       disabledCellsTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color:
-                Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.4),
-          ),
-      leadingDateTextStyle: Theme.of(context)
-          .textTheme
-          .bodyLarge
-          ?.copyWith(fontWeight: FontWeight.bold),
-      daysOfTheWeekTextStyle: Theme.of(context)
-          .textTheme
-          .bodyMedium
-          ?.copyWith(fontWeight: FontWeight.bold),
+        color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.4),
+      ),
+      leadingDateTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+      daysOfTheWeekTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
     );
   }
 

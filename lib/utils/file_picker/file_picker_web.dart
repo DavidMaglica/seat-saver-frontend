@@ -1,34 +1,50 @@
 // This file is ONLY compiled on the web platform
 import 'dart:async';
 import 'dart:html';
+import 'dart:typed_data';
 
-Future<List<String>> imagePicker(bool isHeaderImage) async {
-  final completer = Completer<List<String>>();
-  FileUploadInputElement uploadInput = FileUploadInputElement()
-    ..multiple = !isHeaderImage
+import 'package:table_reserver/utils/file_data.dart';
+
+Future<FileData?> imagePicker() async {
+  final completer = Completer<FileData?>();
+  final uploadInput = FileUploadInputElement()
+    ..multiple = false
     ..accept = 'image/*';
+
   uploadInput.click();
-  uploadInput.addEventListener('change', (e) async {
+
+  uploadInput.onChange.listen((event) async {
     final files = uploadInput.files;
     if (files == null || files.isEmpty) {
-      completer.completeError('No files selected');
+      completer.complete(null);
       return;
     }
-    Iterable<Future<String>> resultsFutures = files.map((file) {
-      final reader = FileReader();
-      reader.readAsDataUrl(file);
-      reader.onError.listen((error) => completer.completeError(error));
-      return reader.onLoad.first.then((_) => reader.result as String);
-    });
 
-    final results = await Future.wait(resultsFutures);
-    if (!completer.isCompleted) {
-      completer.complete(results);
+    final file = files.first;
+
+    const maxSizeInBytes = 3 * 1024 * 1024;
+    if (file.size > maxSizeInBytes) {
+      completer.completeError(
+        'File "${file.name}" exceeds the max size of 3 MB.',
+      );
+      return;
     }
+
+    final reader = FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onLoad.listen((_) {
+      final bytes = reader.result as Uint8List;
+      if (!completer.isCompleted) {
+        completer.complete(FileData(imageBytes: bytes, filename: file.name));
+      }
+    });
+    reader.onError.listen((error) {
+      if (!completer.isCompleted) completer.completeError(error);
+    });
   });
 
   document.body?.append(uploadInput);
-  final List<String> images = await completer.future;
+  final result = await completer.future;
   uploadInput.remove();
-  return images;
+  return result;
 }

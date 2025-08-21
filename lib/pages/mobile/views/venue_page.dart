@@ -1,17 +1,18 @@
-import 'package:table_reserver/components/mobile/custom_appbar.dart';
-import 'package:table_reserver/components/common/full_image_view.dart';
-import 'package:table_reserver/components/mobile/venue_images_tab.dart';
-import 'package:table_reserver/models/mobile/venue_page_model.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/extensions.dart';
-import 'package:table_reserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:table_reserver/components/common/full_image_view.dart';
+import 'package:table_reserver/components/mobile/custom_appbar.dart';
+import 'package:table_reserver/components/mobile/venue_images_tab.dart';
+import 'package:table_reserver/models/mobile/views/venue_page_model.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/extensions.dart';
+import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/utils.dart';
 
 class VenuePage extends StatelessWidget {
   final int venueId;
@@ -52,8 +53,11 @@ class VenuePage extends StatelessWidget {
                 onBack: goBack(context),
               ),
               body: model.venueImageBytes == null
-                  ? const Center(
-                      child: CircularProgressIndicator(),
+                  ? Center(
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: MobileTheme.accent1,
+                        size: 75,
+                      ),
                     )
                   : Stack(
                       alignment: const AlignmentDirectional(0, 1),
@@ -395,9 +399,9 @@ class VenuePage extends StatelessWidget {
         value: model.selectedNumberOfPeople,
         hint: Text(
           'Select no. of people attending',
-          style: Theme.of(ctx).textTheme.bodyLarge,
+          style: Theme.of(ctx).textTheme.bodyMedium,
         ),
-        style: Theme.of(ctx).textTheme.bodyLarge,
+        style: Theme.of(ctx).textTheme.bodyMedium,
         dropdownColor: Theme.of(ctx).colorScheme.onSurface,
         underline: Container(),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -441,7 +445,7 @@ class VenuePage extends StatelessWidget {
               color: Theme.of(ctx).colorScheme.onPrimary,
             ),
             const SizedBox(width: 12),
-            Text(displayDate, style: Theme.of(ctx).textTheme.bodyLarge),
+            Text(displayDate, style: Theme.of(ctx).textTheme.bodyMedium),
           ],
         ),
       ),
@@ -482,7 +486,7 @@ class VenuePage extends StatelessWidget {
         'Select time',
         style: Theme.of(ctx).textTheme.bodyLarge,
       ),
-      style: Theme.of(ctx).textTheme.bodyLarge,
+      style: Theme.of(ctx).textTheme.bodyMedium,
       dropdownColor: Theme.of(ctx).colorScheme.onSurface,
       underline: Container(),
       borderRadius: const BorderRadius.all(Radius.circular(10)),

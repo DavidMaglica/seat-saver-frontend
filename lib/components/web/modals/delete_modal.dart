@@ -1,18 +1,23 @@
-import 'package:table_reserver/components/web/modals/modal_widgets.dart';
-import 'package:table_reserver/models/web/delete_venue_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:provider/provider.dart';
+import 'package:table_reserver/components/web/modals/modal_widgets.dart';
+import 'package:table_reserver/models/web/modals/delete_modal_model.dart';
 
 class DeleteModal extends StatefulWidget {
   final DeleteModalType modalType;
+  final String venueName;
   final int? venueId;
   final int? reservationId;
+  final String? userName;
 
   const DeleteModal({
     super.key,
     required this.modalType,
+    required this.venueName,
     this.venueId,
     this.reservationId,
+    this.userName,
   });
 
   @override
@@ -21,69 +26,68 @@ class DeleteModal extends StatefulWidget {
 
 class _DeleteModalState extends State<DeleteModal>
     with TickerProviderStateMixin {
-  late DeleteModalModel _model;
-
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
-    _model.onUpdate();
   }
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => DeleteModalModel());
-  }
-
-  @override
-  void dispose() {
-    _model.maybeDispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
+    return ChangeNotifierProvider(
+      create: (_) => DeleteModalModel(),
+      child: Consumer<DeleteModalModel>(
+        builder: (context, model, _) {
+          return SizedBox(
             width: double.infinity,
-            constraints: const BoxConstraints(
-              maxWidth: 670,
-            ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(8),
-            ),
+            height: double.infinity,
             child: Column(
               mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                buildTitle(
-                  context,
-                  widget.modalType == DeleteModalType.venue
-                      ? 'Delete Venue'
-                      : 'Delete Reservation',
+                Container(
+                  width: double.infinity,
+                  constraints: const BoxConstraints(maxWidth: 670),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildTitle(
+                        context,
+                        widget.modalType == DeleteModalType.venue
+                            ? 'Delete Venue'
+                            : 'Delete Reservation',
+                      ),
+                      const SizedBox(height: 16),
+                      _buildBody(context),
+                      const SizedBox(height: 8),
+                      buildButtons(
+                        context,
+                        widget.modalType == DeleteModalType.venue
+                            ? () => model.deleteVenue(context, widget.venueId!)
+                            : () =>
+                                  model.deleteReservation(context, widget.reservationId!),
+                        widget.modalType == DeleteModalType.venue
+                            ? 'Delete Venue'
+                            : 'Delete Reservation',
+                      ),
+                    ].divide(const SizedBox(height: 16)),
+                  ),
+                ).animateOnPageLoad(
+                  model.animationsMap['modalOnLoad']!,
                 ),
-                const SizedBox(height: 16),
-                _buildBody(context),
-                const SizedBox(height: 8),
-                buildButtons(
-                  context,
-                  () => {},
-                  widget.modalType == DeleteModalType.venue
-                      ? 'Delete Venue'
-                      : 'Delete Reservation',
-                ),
-              ].divide(const SizedBox(height: 16)),
+              ],
             ),
-          ).animateOnPageLoad(
-              _model.animationsMap['containerOnPageLoadAnimation']!),
-        ],
+          );
+        },
       ),
     );
   }
@@ -93,11 +97,11 @@ class _DeleteModalState extends State<DeleteModal>
       padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
       child: widget.modalType == DeleteModalType.venue
           ? Text(
-              'Are you sure you want to delete venue with Id ${widget.venueId}?',
+              'Are you sure you want to delete venue ${widget.venueName}?',
               style: Theme.of(context).textTheme.bodyLarge,
             )
           : Text(
-              'Are you sure you want to delete reservation with Id ${widget.reservationId}?',
+              'Are you sure you want to delete user ${widget.userName}`s reservation in ${widget.venueName}?',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
     );

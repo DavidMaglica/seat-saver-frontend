@@ -8,12 +8,12 @@ import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/user.dart';
 import 'package:table_reserver/api/data/user_response.dart';
-import 'package:table_reserver/components/common/toaster.dart';
 import 'package:table_reserver/main.dart';
-import 'package:table_reserver/models/mobile/authentication_model.dart';
-import 'package:table_reserver/models/mobile/login_tab_model.dart';
+import 'package:table_reserver/models/mobile/auth/authentication_model.dart';
+import 'package:table_reserver/models/mobile/auth/login_tab_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/toaster.dart';
 import 'package:table_reserver/utils/utils.dart';
 
 class LogInTab extends StatefulWidget {
@@ -27,7 +27,7 @@ class LogInTab extends StatefulWidget {
 
 class _LogInTabState extends State<LogInTab> {
   late LogInTabModel _model;
-  late final AccountApi accountApi = AccountApi();
+  final AccountApi accountApi = AccountApi();
 
   @override
   void initState() {
@@ -42,7 +42,7 @@ class _LogInTabState extends State<LogInTab> {
   }
 
   void _performLogIn(String email, String password) async {
-    BasicResponse<int> response = await _model.logIn(email, password);
+    BasicResponse<int?> response = await _model.logIn(email, password);
     if (response.success && response.data != null) {
       int userId = response.data!;
 

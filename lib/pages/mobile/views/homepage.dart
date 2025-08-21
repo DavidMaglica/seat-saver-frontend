@@ -9,7 +9,7 @@ import 'package:table_reserver/components/mobile/carousel_item.dart';
 import 'package:table_reserver/components/mobile/homepage_venue_card.dart';
 import 'package:table_reserver/components/mobile/navbar.dart';
 import 'package:table_reserver/components/mobile/suggested_venue_card.dart';
-import 'package:table_reserver/models/mobile/homepage_model.dart';
+import 'package:table_reserver/models/mobile/views/homepage_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/routing_utils.dart';
 
@@ -259,7 +259,7 @@ class Homepage extends StatelessWidget {
                 venue: venue,
                 userId: userId,
                 userLocation: userLocation,
-                venueIndex: venue.id,
+                venueId: venue.id,
               ),
             );
           }).toList(),

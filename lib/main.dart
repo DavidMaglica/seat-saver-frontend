@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:table_reserver/models/web/components/side_nav_model.dart';
 import 'package:table_reserver/pages/mobile/auth/authentication.dart';
 import 'package:table_reserver/pages/mobile/settings/edit_profile.dart';
 import 'package:table_reserver/pages/mobile/settings/notification_settings.dart';
@@ -22,12 +24,15 @@ import 'package:table_reserver/pages/web/auth/authentication.dart';
 import 'package:table_reserver/pages/web/views/account.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/pages/web/views/landing.dart';
+import 'package:table_reserver/pages/web/views/ratings_page.dart';
 import 'package:table_reserver/pages/web/views/reservations.dart';
+import 'package:table_reserver/pages/web/views/reservations_graphs_page.dart';
 import 'package:table_reserver/pages/web/views/venue_page.dart';
 import 'package:table_reserver/pages/web/views/venues.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/sign_up_methods.dart';
 import 'package:table_reserver/utils/theme_provider.dart';
 
 late final String iosGoogleClientId;
@@ -35,10 +40,18 @@ late final String webGoogleClientId;
 
 late final GoogleSignIn googleSignIn;
 
+late SharedPreferencesWithCache prefsWithCache;
+
+int get ownerIdFromCache =>
+    prefsWithCache.getInt('ownerId') ?? (throw Exception('User not logged in'));
+
+AuthenticationMethod currentAuthMethod = AuthenticationMethod.none;
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  initializeGoogleSignIn();
+  initialiseGoogleSignIn();
+  initialiseSharedPreferences();
 
   runApp(
     ChangeNotifierProvider(
@@ -48,17 +61,27 @@ void main() {
   );
 }
 
-void initializeGoogleSignIn() {
+void initialiseGoogleSignIn() {
   iosGoogleClientId = const String.fromEnvironment('IOS_GOOGLE_CLIENT_ID');
   webGoogleClientId = const String.fromEnvironment('WEB_GOOGLE_CLIENT_ID');
 
   if (iosGoogleClientId.isEmpty || webGoogleClientId.isEmpty) {
-    throw Exception('Missing required environment variable. Google client Ids must be provided for both iOS and Web.');
+    throw Exception(
+      'Missing required environment variable. Google client Ids must be provided for both iOS and Web.',
+    );
   }
 
   googleSignIn = GoogleSignIn.instance;
   googleSignIn.initialize(
     clientId: kIsWeb ? webGoogleClientId : iosGoogleClientId,
+  );
+}
+
+void initialiseSharedPreferences() async {
+  prefsWithCache = await SharedPreferencesWithCache.create(
+    cacheOptions: const SharedPreferencesWithCacheOptions(
+      allowList: <String>{'ownerId', 'userName', 'userEmail'},
+    ),
   );
 }
 
@@ -83,7 +106,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
-      return _buildWebMaterialApp();
+      return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => SideNavModel()..init()),
+        ],
+        child: _buildWebMaterialApp(),
+      );
     }
     return _buildMobileMaterialApp();
   }
@@ -177,13 +205,76 @@ class MyApp extends StatelessWidget {
           routes: {
             Routes.webLanding: (context) => const WebLanding(),
             Routes.webAuthentication: (context) => const WebAuthentication(),
-            Routes.webHomepage: (context) => const WebHomepage(),
-            Routes.webVenues: (context) => const WebVenuesPage(),
-            Routes.webVenue: (context) => WebVenuePage(
-              venueId: getOptionalArg<int>(context, 'venueId') ?? 1,
+            Routes.webHomepage: (context) => WebHomepage(
+              ownerId: getOptionalArg(context, 'ownerId') ?? ownerIdFromCache,
             ),
-            Routes.webReservations: (context) => const WebReservations(),
+            Routes.webVenues: (context) => const WebVenuesPage(),
             Routes.webAccount: (context) => const WebAccount(),
+          },
+          onGenerateRoute: (settings) {
+            final uri = Uri.parse(settings.name ?? '');
+
+            if (uri.path == Routes.webReservationsGraphs) {
+              final ownerId = int.tryParse(
+                uri.queryParameters['ownerId'] ?? '',
+              );
+
+              if (ownerId == null) {
+                throw Exception("Missing or invalid ownerId in URL");
+              }
+
+              return MaterialPageRoute(
+                settings: settings,
+                builder: (_) => ReservationsGraphsPage(ownerId: ownerId),
+              );
+            }
+
+            if (uri.path == Routes.webReservations) {
+              final venueId = int.tryParse(
+                uri.queryParameters['venueId'] ?? '',
+              );
+              return MaterialPageRoute(
+                settings: settings,
+                builder: (_) => WebReservations(venueId: venueId),
+              );
+            }
+
+            if (uri.path == Routes.webRatingsPage) {
+              final ownerId = int.tryParse(
+                uri.queryParameters['ownerId'] ?? '',
+              );
+
+              if (ownerId == null) {
+                throw Exception("Missing or invalid ownerId in URL");
+              }
+
+              return MaterialPageRoute(
+                settings: settings,
+                builder: (_) => WebRatingsPage(ownerId: ownerId),
+              );
+            }
+
+            if (uri.path == Routes.webVenue) {
+              final venueId = int.tryParse(
+                uri.queryParameters['venueId'] ?? '',
+              );
+              final shouldReturnToHomepage =
+                  uri.queryParameters['shouldReturnToHomepage'] == 'true';
+
+              if (venueId == null) {
+                throw Exception("Missing or invalid venueId in URL");
+              }
+
+              return MaterialPageRoute(
+                settings: settings,
+                builder: (_) => WebVenuePage(
+                  venueId: venueId,
+                  shouldReturnToHomepage: shouldReturnToHomepage,
+                ),
+              );
+            }
+
+            return null;
           },
         );
       },

@@ -1,13 +1,14 @@
-import 'package:table_reserver/models/web/side_nav_model.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:provider/provider.dart';
+import 'package:table_reserver/models/web/components/side_nav_model.dart';
 import 'package:table_reserver/pages/web/views/account.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/pages/web/views/reservations.dart';
 import 'package:table_reserver/pages/web/views/venues.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/routes.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class SideNav extends StatefulWidget {
   const SideNav({super.key});
@@ -17,59 +18,57 @@ class SideNav extends StatefulWidget {
 }
 
 class _SideNavState extends State<SideNav> {
-  late SideNavModel _model;
-
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
-    _model.onUpdate();
   }
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SideNavModel());
   }
 
   @override
   void dispose() {
-    _model.maybeDispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 270,
-      height: double.infinity,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onSurface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline,
-          width: 1,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildTitle(context),
-            _buildUserDetails(context),
-            const Divider(
-              height: 12,
-              thickness: 1,
-              indent: 16,
-              endIndent: 16,
+    return Consumer<SideNavModel>(
+      builder: (context, model, _) {
+        return Container(
+          width: 270,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.onSurface,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outline,
+              width: 1,
             ),
-            _buildNavigation(context),
-            _buildModeToggles(context),
-          ],
-        ),
-      ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTitle(context),
+                _buildUserDetails(context, model),
+                const Divider(
+                  height: 12,
+                  thickness: 1,
+                  indent: 16,
+                  endIndent: 16,
+                ),
+                _buildNavigation(context, model),
+                _buildModeToggles(context, model),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -84,13 +83,8 @@ class _SideNavState extends State<SideNav> {
             width: 40,
             height: 40,
             clipBehavior: Clip.antiAlias,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-            child: Image.asset(
-              'assets/icons/appIcon.png',
-              fit: BoxFit.cover,
-            ),
+            decoration: const BoxDecoration(shape: BoxShape.circle),
+            child: Image.asset('assets/icons/appIcon.png', fit: BoxFit.cover),
           ),
           Text(
             'Admin Dashboard',
@@ -101,7 +95,7 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Widget _buildUserDetails(BuildContext context) {
+  Widget _buildUserDetails(BuildContext context, SideNavModel model) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -114,13 +108,13 @@ class _SideNavState extends State<SideNav> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'user@email.com',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                model.userEmail,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontStyle: FontStyle.italic),
               ),
               Text(
-                'Username',
+                model.userName,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
@@ -130,7 +124,7 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Widget _buildNavigation(BuildContext context) {
+  Widget _buildNavigation(BuildContext context, SideNavModel model) {
     String? route = ModalRoute.of(context)?.settings.name;
 
     return Expanded(
@@ -145,9 +139,9 @@ class _SideNavState extends State<SideNav> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          _buildDashboardButton(context, route),
-          _buildVenuesButton(context, route),
-          _buildReservationsButton(context, route),
+          _buildDashboardButton(context, route, model),
+          _buildVenuesButton(context, route, model),
+          _buildReservationsButton(context, route, model),
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
             child: Text(
@@ -155,13 +149,17 @@ class _SideNavState extends State<SideNav> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          _buildAccountButton(context, route),
+          _buildAccountButton(context, route, model),
         ].divide(const SizedBox(height: 12)),
       ),
     );
   }
 
-  Widget _buildDashboardButton(BuildContext context, String? route) {
+  Widget _buildDashboardButton(
+    BuildContext context,
+    String? route,
+    SideNavModel model,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: InkWell(
@@ -169,17 +167,15 @@ class _SideNavState extends State<SideNav> {
         focusColor: Colors.transparent,
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        onTap: () => _model.goTo(
+        onTap: () => model.goTo(
           context,
-          const WebHomepage(),
+          WebHomepage(ownerId: model.ownerId),
           Routes.webHomepage,
         ),
         child: Material(
           color: Colors.transparent,
           elevation: 3,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Container(
             width: double.infinity,
             height: 44,
@@ -221,7 +217,11 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Padding _buildVenuesButton(BuildContext context, String? route) {
+  Padding _buildVenuesButton(
+    BuildContext context,
+    String? route,
+    SideNavModel model,
+  ) {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
       child: InkWell(
@@ -229,17 +229,12 @@ class _SideNavState extends State<SideNav> {
         focusColor: Colors.transparent,
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        onTap: () => _model.goTo(
-          context,
-          const WebVenuesPage(),
-          Routes.webVenues,
-        ),
+        onTap: () =>
+            model.goTo(context, const WebVenuesPage(), Routes.webVenues),
         child: Material(
           color: Colors.transparent,
           elevation: 3,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Container(
             width: double.infinity,
             height: 44,
@@ -281,7 +276,11 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Padding _buildReservationsButton(BuildContext context, String? route) {
+  Padding _buildReservationsButton(
+    BuildContext context,
+    String? route,
+    SideNavModel model,
+  ) {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
       child: InkWell(
@@ -289,7 +288,7 @@ class _SideNavState extends State<SideNav> {
         focusColor: Colors.transparent,
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        onTap: () => _model.goTo(
+        onTap: () => model.goTo(
           context,
           const WebReservations(),
           Routes.webReservations,
@@ -297,14 +296,12 @@ class _SideNavState extends State<SideNav> {
         child: Material(
           color: Colors.transparent,
           elevation: 3,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Container(
             width: double.infinity,
             height: 44,
             decoration: BoxDecoration(
-              color: route == Routes.webReservations
+              color: route?.startsWith(Routes.webReservations) == true
                   ? WebTheme.successColor
                   : Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(8),
@@ -341,7 +338,11 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Padding _buildAccountButton(BuildContext context, String? route) {
+  Padding _buildAccountButton(
+    BuildContext context,
+    String? route,
+    SideNavModel model,
+  ) {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
       child: InkWell(
@@ -349,17 +350,11 @@ class _SideNavState extends State<SideNav> {
         focusColor: Colors.transparent,
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        onTap: () => _model.goTo(
-          context,
-          const WebAccount(),
-          Routes.webAccount,
-        ),
+        onTap: () => model.goTo(context, const WebAccount(), Routes.webAccount),
         child: Material(
           color: Colors.transparent,
           elevation: 3,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Container(
             width: double.infinity,
             height: 44,
@@ -401,7 +396,7 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Widget _buildModeToggles(BuildContext context) {
+  Widget _buildModeToggles(BuildContext context, SideNavModel model) {
     return Align(
       alignment: const AlignmentDirectional(0, -1),
       child: Padding(
@@ -423,8 +418,8 @@ class _SideNavState extends State<SideNav> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                _buildLightModeButton(context),
-                _buildDarkModeButton(context),
+                _buildLightModeButton(context, model),
+                _buildDarkModeButton(context, model),
               ],
             ),
           ),
@@ -433,7 +428,7 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Expanded _buildLightModeButton(BuildContext context) {
+  Expanded _buildLightModeButton(BuildContext context, SideNavModel model) {
     return Expanded(
       child: InkWell(
         splashColor: Colors.transparent,
@@ -441,7 +436,7 @@ class _SideNavState extends State<SideNav> {
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
         onTap: () async {
-          _model.setDarkModeSetting(context, false);
+          model.setDarkModeSetting(context, false);
         },
         child: Container(
           width: 115,
@@ -480,7 +475,7 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Expanded _buildDarkModeButton(BuildContext context) {
+  Expanded _buildDarkModeButton(BuildContext context, SideNavModel model) {
     return Expanded(
       child: InkWell(
         splashColor: Colors.transparent,
@@ -488,7 +483,7 @@ class _SideNavState extends State<SideNav> {
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
         onTap: () async {
-          _model.setDarkModeSetting(context, true);
+          model.setDarkModeSetting(context, true);
         },
         child: Container(
           width: 115,

@@ -1,13 +1,13 @@
-import 'package:table_reserver/api/data/rating.dart';
-import 'package:table_reserver/models/web/venue_page_model.dart';
-import 'package:table_reserver/themes/web_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:table_reserver/api/data/rating.dart';
+import 'package:table_reserver/models/web/views/venue_page_model.dart';
+import 'package:table_reserver/themes/web_theme.dart';
 
 class ReviewsTab extends StatelessWidget {
-  final _model = VenuePageModel();
+  final VenuePageModel model;
 
-  ReviewsTab({super.key});
+  const ReviewsTab({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +16,7 @@ class ReviewsTab extends StatelessWidget {
       child: Material(
         color: Theme.of(context).colorScheme.onSurface,
         elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: SingleChildScrollView(
           child: SizedBox(
             height: MediaQuery.sizeOf(context).height,
@@ -26,7 +24,9 @@ class ReviewsTab extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                _buildOverall(context),
+                _buildOverall(context).animateOnPageLoad(
+                  model.animationsMap['fadeInOnLoad']!,
+                ),
                 const SizedBox(height: 8),
                 Divider(
                   thickness: 1,
@@ -34,10 +34,12 @@ class ReviewsTab extends StatelessWidget {
                   endIndent: 16,
                   color: Theme.of(context).colorScheme.onPrimary,
                 ).animateOnPageLoad(
-                    _model.animationsMap['textOnPageLoadAnimation5']!),
+                  model.animationsMap['fadeInOnLoad']!,
+                ),
                 const SizedBox(height: 8),
                 _buildReviews(context).animateOnPageLoad(
-                    _model.animationsMap['rowOnPageLoadAnimation']!),
+                  model.animationsMap['fadeMoveUpOnLoad']!,
+                ),
               ],
             ),
           ),
@@ -56,14 +58,10 @@ class ReviewsTab extends StatelessWidget {
         children: [
           _buildTotalReviews(context),
           const SizedBox(height: 8),
-          _buildRating(
-            context,
-            _model.loadedVenue.rating,
-            'Average Rating',
-          ),
+          _buildRating(context, model.venueRating, 'Average Rating'),
         ],
       ),
-    ).animateOnPageLoad(_model.animationsMap['textOnPageLoadAnimation5']!);
+    );
   }
 
   Widget _buildTotalReviews(BuildContext context) {
@@ -78,7 +76,7 @@ class ReviewsTab extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Text(
-          _model.reviews.length.toString(),
+          model.reviews.length.toString(),
           style: Theme.of(context).textTheme.titleMedium,
         ),
       ],
@@ -93,18 +91,18 @@ class ReviewsTab extends StatelessWidget {
           padding: EdgeInsets.zero,
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
-          children: _model.reviews
+          children: model.reviews
               .mapIndexed((index, review) {
                 return Column(
                   children: [
                     _buildReview(context, review),
-                    if (index < _model.reviews.length - 1)
+                    if (index < model.reviews.length - 1)
                       Divider(
                         thickness: 0.5,
                         indent: 16,
                         endIndent: 16,
                         color: Theme.of(context).colorScheme.onPrimary,
-                      )
+                      ),
                   ],
                 );
               })
@@ -132,10 +130,7 @@ class ReviewsTab extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 4),
-        Text(
-          review.comment,
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        Text(review.comment, style: Theme.of(context).textTheme.bodyLarge),
         const SizedBox(height: 4),
       ],
     );
@@ -146,10 +141,7 @@ class ReviewsTab extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         label != null
-            ? Text(
-                label,
-                style: Theme.of(context).textTheme.titleMedium,
-              )
+            ? Text(label, style: Theme.of(context).textTheme.titleMedium)
             : const SizedBox.shrink(),
         const SizedBox(width: 16),
         Container(
@@ -158,8 +150,8 @@ class ReviewsTab extends StatelessWidget {
             color: rating >= 4.0
                 ? WebTheme.successColor
                 : rating >= 2.5
-                    ? WebTheme.warningColor
-                    : WebTheme.errorColor,
+                ? WebTheme.warningColor
+                : WebTheme.errorColor,
             borderRadius: BorderRadius.circular(56),
           ),
           alignment: const AlignmentDirectional(0, 0),
@@ -167,10 +159,7 @@ class ReviewsTab extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Text(
               rating.toStringAsFixed(1),
-              style: const TextStyle(
-                fontSize: 14,
-                color: WebTheme.offWhite,
-              ),
+              style: const TextStyle(fontSize: 14, color: WebTheme.offWhite),
             ),
           ),
         ),

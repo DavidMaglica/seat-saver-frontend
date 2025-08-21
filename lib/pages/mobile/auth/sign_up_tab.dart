@@ -5,12 +5,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/components/common/toaster.dart';
 import 'package:table_reserver/main.dart';
-import 'package:table_reserver/models/mobile/authentication_model.dart';
-import 'package:table_reserver/models/mobile/signup_tab_model.dart';
+import 'package:table_reserver/models/mobile/auth/authentication_model.dart';
+import 'package:table_reserver/models/mobile/auth/signup_tab_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/toaster.dart';
 
 class SignUpTab extends StatefulWidget {
   final AuthenticationModel model;
@@ -23,7 +23,7 @@ class SignUpTab extends StatefulWidget {
 
 class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
   late SignUpTabModel _model;
-  late final AccountApi accountApi = AccountApi();
+  final AccountApi accountApi = AccountApi();
 
   @override
   void initState() {

@@ -1,11 +1,11 @@
-import 'package:table_reserver/models/web/landing_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:table_reserver/pages/web/auth/authentication.dart';
 import 'package:table_reserver/themes/web_theme.dart';
+import 'package:table_reserver/utils/animations.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/utils.dart';
-import 'package:flutter/material.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class WebLanding extends StatefulWidget {
   const WebLanding({super.key});
@@ -15,20 +15,12 @@ class WebLanding extends StatefulWidget {
 }
 
 class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
-  late LandingModel _model;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final Map<String, AnimationInfo> animationsMap = Animations.landingAnimations;
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => LandingModel());
-  }
-
-  @override
-  void dispose() {
-    _model.dispose();
-    super.dispose();
   }
 
   @override
@@ -46,28 +38,33 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Container(
-                width: double.infinity,
-                height: 500,
-                decoration: webBackgroundGradient(context),
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: webBackgroundAuxiliaryGradient(context),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildLogo(),
-                      _buildTitle(context),
-                    ],
-                  ),
-                ),
-              ).animateOnPageLoad(
-                _model.animationsMap['containerOnPageLoadAnimation1']!,
-              ),
+              child:
+                  Container(
+                    width: double.infinity,
+                    height: 500,
+                    decoration: webBackgroundGradient(context),
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: webBackgroundAuxiliaryGradient(context),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildLogo().animateOnPageLoad(
+                            animationsMap['logoOnLoad']!,
+                          ),
+                          _buildTitle(context).animateOnPageLoad(
+                            animationsMap['textOnLoad']!,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
             ),
-            _buildButton(context),
+            _buildButton(
+              context,
+            ).animateOnPageLoad(animationsMap['buttonOnLoad']!),
           ],
         ),
       ),
@@ -78,9 +75,7 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
     return Container(
       width: 120,
       height: 120,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-      ),
+      decoration: const BoxDecoration(shape: BoxShape.circle),
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: ClipRRect(
@@ -93,7 +88,7 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
           ),
         ),
       ),
-    ).animateOnPageLoad(_model.animationsMap['containerOnPageLoadAnimation2']!);
+    );
   }
 
   Widget _buildTitle(BuildContext context) {
@@ -103,8 +98,6 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
         'Welcome to your TableReserver Admin Dashboard!',
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.titleLarge,
-      ).animateOnPageLoad(
-        _model.animationsMap['textOnPageLoadAnimation']!,
       ),
     );
   }
@@ -144,7 +137,7 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
             ),
           ),
         ],
-      ).animateOnPageLoad(_model.animationsMap['rowOnPageLoadAnimation']!),
+      ),
     );
   }
 }

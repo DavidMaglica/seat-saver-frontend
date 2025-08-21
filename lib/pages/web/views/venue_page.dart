@@ -1,21 +1,32 @@
+import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:provider/provider.dart';
 import 'package:table_reserver/components/common/full_image_view.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/web/images_tab.dart';
 import 'package:table_reserver/components/web/modals/edit_venue_modal.dart';
 import 'package:table_reserver/components/web/reviews_tab.dart';
 import 'package:table_reserver/components/web/venue_details_tab.dart';
-import 'package:table_reserver/models/web/venue_page_model.dart';
+import 'package:table_reserver/main.dart';
+import 'package:table_reserver/models/web/views/venue_page_model.dart';
+import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/themes/web_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/utils.dart';
-import 'package:flutter/material.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class WebVenuePage extends StatefulWidget {
   final int venueId;
+  final bool shouldReturnToHomepage;
+  final bool shouldOpenReviewsTab;
+  final bool shouldOpenImagesTab;
 
   const WebVenuePage({
     super.key,
     required this.venueId,
+    required this.shouldReturnToHomepage,
+    this.shouldOpenReviewsTab = false,
+    this.shouldOpenImagesTab = false,
   });
 
   @override
@@ -24,88 +35,91 @@ class WebVenuePage extends StatefulWidget {
 
 class _WebVenuePageState extends State<WebVenuePage>
     with TickerProviderStateMixin {
-  late VenuePageModel _model;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => VenuePageModel());
-
-    _model.tabBarController = TabController(
-      vsync: this,
-      length: 3,
-      initialIndex: 0,
-    )..addListener(() => safeSetState(() {}));
   }
 
-  @override
-  void dispose() {
-    _model.dispose();
-    super.dispose();
-  }
+  final int ownerId = prefsWithCache.getInt('ownerId')!;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: CustomAppbar(
-          title: '${widget.venueId}',
-          onBack: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        body: SafeArea(
-          top: true,
-          child: Container(
-            width: 1920,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildHeader(context),
-                Expanded(
-                  child: SizedBox(
-                    height: MediaQuery.sizeOf(context).height,
-                    child: Column(
-                      children: [
-                        _buildTabBar(context),
-                        const SizedBox(height: 16),
-                        Expanded(
-                          child: TabBarView(
-                            controller: _model.tabBarController,
+    return ChangeNotifierProvider(
+      create: (_) => VenuePageModel(
+        venueId: widget.venueId,
+        shouldOpenReviewsTab: widget.shouldOpenReviewsTab,
+        shouldOpenImagesTab: widget.shouldOpenImagesTab,
+      )..init(context, this),
+      child: Consumer<VenuePageModel>(
+        builder: (context, model, _) {
+          return GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: Scaffold(
+              key: scaffoldKey,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              appBar: CustomAppbar(
+                title: model.loadedVenue.name,
+                onBack: () {
+                  widget.shouldReturnToHomepage
+                      ? Navigator.of(context).push(
+                          FadeInRoute(
+                            page: WebHomepage(ownerId: ownerId),
+                            routeName: Routes.webHomepage,
+                          ),
+                        )
+                      : Navigator.of(context).pop();
+                },
+              ),
+              body: SafeArea(
+                top: true,
+                child: Container(
+                  width: 1920,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildHeader(context, model),
+                      Expanded(
+                        child: SizedBox(
+                          height: MediaQuery.sizeOf(context).height,
+                          child: Column(
                             children: [
-                              VenueDetailsTab(),
-                              ReviewsTab(),
-                              ImagesTab()
+                              _buildTabBar(context, model),
+                              const SizedBox(height: 16),
+                              Expanded(
+                                child: TabBarView(
+                                  controller: model.tabBarController,
+                                  children: [
+                                    VenueDetailsTab(model: model),
+                                    ReviewsTab(model: model),
+                                    ImagesTab(model: model),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    bool hasImage =
-        _model.headerImage != null && _model.headerImage!.isNotEmpty;
+  Widget _buildHeader(BuildContext context, VenuePageModel model) {
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -113,31 +127,35 @@ class _WebVenuePageState extends State<WebVenuePage>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeaderImage(hasImage, context),
+          _buildHeaderImage(
+            context,
+            model,
+          ).animateOnPageLoad(model.animationsMap['headerImageOnLoad']!),
           const SizedBox(height: 16),
-          _buildHeaderRow(context),
+          _buildHeaderRow(
+            context,
+            model,
+          ).animateOnPageLoad(model.animationsMap['fadeInOnLoad']!),
         ],
       ),
     );
   }
 
-  Widget _buildHeaderImage(bool hasImage, BuildContext context) {
+  Widget _buildHeaderImage(BuildContext context, VenuePageModel model) {
     return InkWell(
-      mouseCursor: hasImage ? MouseCursor.uncontrolled : MouseCursor.defer,
       onTap: () {
-        if (!hasImage) return;
+        if (model.headerImage == null) return;
 
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => FullScreenImageView(
-              imageBytes: _model.headerImage!,
+              imageBytes: model.headerImage!,
               heroTag: 'headerImageTag',
             ),
           ),
         );
       },
-      child: hasImage
+      child: model.headerImage != null
           ? Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -146,11 +164,12 @@ class _WebVenuePageState extends State<WebVenuePage>
               ),
               alignment: Alignment.center,
               child: Image.memory(
-                _model.headerImage!,
+                model.headerImage!,
                 width: double.infinity,
                 height: 320,
                 fit: BoxFit.cover,
-              ))
+              ),
+            )
           : Container(
               width: double.infinity,
               height: 320,
@@ -160,19 +179,16 @@ class _WebVenuePageState extends State<WebVenuePage>
               ),
               alignment: Alignment.center,
               child: Text(
-                _model.loadedVenue.name,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(color: Colors.white),
+                model.loadedVenue.name,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(color: WebTheme.offWhite),
               ),
-            ).animateOnPageLoad(
-              _model.animationsMap['imageOnPageLoadAnimation']!,
             ),
     );
   }
 
-  Widget _buildHeaderRow(BuildContext context) {
+  Widget _buildHeaderRow(BuildContext context, VenuePageModel model) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -180,20 +196,20 @@ class _WebVenuePageState extends State<WebVenuePage>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            _model.loadedVenue.name,
+            model.loadedVenue.name,
             style: Theme.of(context).textTheme.titleLarge,
-          ).animateOnPageLoad(
-            _model.animationsMap['textOnPageLoadAnimation1']!,
           ),
           FFButtonWidget(
             onPressed: () async {
-              await showDialog(
+              bool? shouldRefresh = await showDialog(
                 context: context,
                 barrierDismissible: true,
                 builder: (context) {
                   return Dialog(
                     insetPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 24),
+                      horizontal: 16,
+                      vertical: 24,
+                    ),
                     backgroundColor: Colors.transparent,
                     child: Center(
                       child: ConstrainedBox(
@@ -204,12 +220,13 @@ class _WebVenuePageState extends State<WebVenuePage>
                   );
                 },
               );
+              if (shouldRefresh == true) {
+                if (!context.mounted) return;
+                model.fetchVenue(context);
+              }
             },
             text: 'Edit Venue Details',
-            icon: const Icon(
-              Icons.edit_outlined,
-              size: 24,
-            ),
+            icon: const Icon(Icons.edit_outlined, size: 24),
             options: FFButtonOptions(
               height: 40,
               color: WebTheme.infoColor,
@@ -226,7 +243,7 @@ class _WebVenuePageState extends State<WebVenuePage>
     );
   }
 
-  Widget _buildTabBar(BuildContext context) {
+  Widget _buildTabBar(BuildContext context, VenuePageModel model) {
     return Align(
       alignment: const Alignment(0, 0),
       child: TabBar(
@@ -243,7 +260,7 @@ class _WebVenuePageState extends State<WebVenuePage>
           Tab(text: 'Reviews'),
           Tab(text: 'Images'),
         ],
-        controller: _model.tabBarController,
+        controller: model.tabBarController,
         onTap: (i) async {
           [() async {}, () async {}, () async {}][i]();
         },

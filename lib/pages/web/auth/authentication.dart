@@ -1,10 +1,10 @@
-import 'package:table_reserver/models/web/authentication_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:table_reserver/models/web/auth/authentication_model.dart';
 import 'package:table_reserver/pages/web/auth/log_in_tab.dart';
 import 'package:table_reserver/pages/web/auth/sign_up_tab.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/utils.dart';
-import 'package:flutter/material.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class WebAuthentication extends StatefulWidget {
   const WebAuthentication({super.key});
@@ -70,38 +70,44 @@ class _WebAuthenticationState extends State<WebAuthentication>
                           alignment: const AlignmentDirectional(0, 0),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 12),
-                            child: Container(
-                              width: double.infinity,
-                              height: MediaQuery.sizeOf(context).height * 0.8,
-                              constraints: const BoxConstraints(
-                                maxWidth: 562,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.surface,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 16),
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      child: TabBarView(
-                                        controller: _model.tabBarController,
-                                        children: [
-                                          SignUpTab(model: _model),
-                                          LogInTab(model: _model),
-                                        ],
-                                      ),
+                            child:
+                                Container(
+                                  width: double.infinity,
+                                  height:
+                                      MediaQuery.sizeOf(context).height * 0.8,
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 562,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.surface,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 16),
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: TabBarView(
+                                            controller: _model.tabBarController,
+                                            children: [
+                                              SignUpTab(model: _model),
+                                              LogInTab(model: _model),
+                                            ],
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: const Alignment(0, 0),
+                                          child: _buildTabBar(context),
+                                        ),
+                                      ],
                                     ),
-                                    Align(
-                                      alignment: const Alignment(0, 0),
-                                      child: _buildTabBar(context),
-                                    ),
-                                  ],
+                                  ),
+                                ).animateOnPageLoad(
+                                  _model
+                                      .animationsMap['authOnLoad']!,
                                 ),
-                              ),
-                            ).animateOnPageLoad(_model.animationsMap[
-                                'containerOnPageLoadAnimation']!),
                           ),
                         ),
                       ),
@@ -127,12 +133,8 @@ class _WebAuthenticationState extends State<WebAuthentication>
       indicatorWeight: 3,
       dividerColor: Colors.transparent,
       tabs: const [
-        Tab(
-          text: 'Sign Up',
-        ),
-        Tab(
-          text: 'Log In',
-        ),
+        Tab(text: 'Sign Up'),
+        Tab(text: 'Log In'),
       ],
       controller: _model.tabBarController,
       onTap: (i) async {

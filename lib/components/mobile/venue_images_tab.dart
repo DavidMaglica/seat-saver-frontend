@@ -38,10 +38,11 @@ class VenueImagesTab extends StatelessWidget {
       child: Column(
         children: [
           TabBar(
-            labelColor: Theme.of(context).colorScheme.onPrimary,
+            labelColor: MobileTheme.accent1,
             indicatorColor: MobileTheme.accent1,
             labelStyle: Theme.of(context).textTheme.titleMedium,
             unselectedLabelStyle: Theme.of(context).textTheme.titleSmall,
+            unselectedLabelColor: Theme.of(context).colorScheme.onPrimary,
             indicatorSize: TabBarIndicatorSize.tab,
             indicatorWeight: 2,
             indicatorPadding: const EdgeInsets.symmetric(horizontal: 16),

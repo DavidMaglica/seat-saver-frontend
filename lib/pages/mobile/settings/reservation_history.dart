@@ -1,7 +1,7 @@
 import 'package:table_reserver/api/data/reservation_details.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/mobile/modal_widgets.dart';
-import 'package:table_reserver/models/mobile/reservation_history_model.dart';
+import 'package:table_reserver/models/mobile/views/reservation_history_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';

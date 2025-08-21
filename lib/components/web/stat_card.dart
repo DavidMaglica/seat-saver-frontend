@@ -14,7 +14,7 @@ class StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Material(
         color: Colors.transparent,
         elevation: 3,
@@ -24,7 +24,7 @@ class StatCard extends StatelessWidget {
         child: Container(
           height: 96,
           constraints: const BoxConstraints(
-            maxWidth: 270,
+            maxWidth: 316,
           ),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onSurface,

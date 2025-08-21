@@ -1,15 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:google_sign_in_web/web_only.dart';
+import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/components/common/toaster.dart';
-import 'package:table_reserver/models/web/authentication_model.dart';
-import 'package:table_reserver/models/web/sign_up_tab_model.dart';
+import 'package:table_reserver/api/data/user.dart';
+import 'package:table_reserver/api/data/user_response.dart';
+import 'package:table_reserver/main.dart';
+import 'package:table_reserver/models/web/auth/authentication_model.dart';
+import 'package:table_reserver/models/web/auth/sign_up_tab_model.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/google_web/google_button_interface.dart';
 import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/web_toaster.dart';
 
 class SignUpTab extends StatefulWidget {
   final AuthenticationModel model;
@@ -22,11 +26,15 @@ class SignUpTab extends StatefulWidget {
 
 class _SignUpTabState extends State<SignUpTab> {
   late SignUpTabModel _model;
+  final AccountApi accountApi = AccountApi();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SignUpTabModel());
+    _model = createModel(
+      context,
+      () => SignUpTabModel(isActive: widget.model.tabBarController!.index == 1),
+    );
   }
 
   @override
@@ -42,22 +50,35 @@ class _SignUpTabState extends State<SignUpTab> {
     String confirmPassword,
   ) async {
     BasicResponse<int?> response = await _model.signUp(
-      username,
-      email,
-      password,
-      confirmPassword,
+      username: username,
+      email: email,
+      password: password,
+      confirmedPassword: confirmPassword,
     );
     if (response.success && response.data != null) {
-      _goToHomepage(response.data!);
+      int ownerId = response.data!;
+
+      UserResponse? userResponse = await accountApi.getUser(ownerId);
+
+      if (userResponse != null && userResponse.success) {
+        User user = userResponse.user!;
+
+        prefsWithCache.setInt('ownerId', ownerId);
+
+        _goToHomepage(user.id);
+      }
     } else {
       if (!mounted) return;
-      Toaster.displayError(context, response.message);
+      WebToaster.displayError(context, response.message);
     }
   }
 
-  void _goToHomepage(int userId) {
+  void _goToHomepage(int ownerId) {
     Navigator.of(context).push(
-      FadeInRoute(routeName: Routes.webHomepage, page: const WebHomepage()),
+      FadeInRoute(
+        routeName: Routes.webHomepage,
+        page: WebHomepage(ownerId: ownerId),
+      ),
     );
   }
 
@@ -87,11 +108,11 @@ class _SignUpTabState extends State<SignUpTab> {
                   const SizedBox(height: 16),
                   _buildText(context),
                   const SizedBox(height: 16),
-                  _buildGoogleButton(context),
+                  buildGoogleButton(),
                 ],
               ),
             ).animateOnPageLoad(
-              widget.model.animationsMap['columnOnPageLoadAnimation1']!,
+              widget.model.animationsMap['tabOnLoad']!,
             ),
       ),
     );
@@ -109,8 +130,8 @@ class _SignUpTabState extends State<SignUpTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
-        controller: widget.model.emailAddressCreateTextController,
-        focusNode: widget.model.emailAddressCreateFocusNode,
+        controller: widget.model.signUpEmailTextController,
+        focusNode: widget.model.signUpEmailFocusNode,
         autofocus: false,
         obscureText: false,
         decoration: InputDecoration(
@@ -140,8 +161,8 @@ class _SignUpTabState extends State<SignUpTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
-        controller: widget.model.usernameCreateTextController,
-        focusNode: widget.model.usernameCreateFocusNode,
+        controller: widget.model.signUpUsernameTextController,
+        focusNode: widget.model.signUpUsernameFocusNode,
         autofocus: false,
         obscureText: false,
         decoration: InputDecoration(
@@ -171,10 +192,10 @@ class _SignUpTabState extends State<SignUpTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
-        controller: widget.model.passwordCreateTextController,
-        focusNode: widget.model.passwordCreateFocusNode,
+        controller: widget.model.signUpPasswordTextController,
+        focusNode: widget.model.signUpPasswordFocusNode,
         autofocus: false,
-        obscureText: !widget.model.passwordCreateVisibility,
+        obscureText: !widget.model.signUpPasswordVisibility,
         decoration: InputDecoration(
           labelText: 'Password',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
@@ -192,12 +213,12 @@ class _SignUpTabState extends State<SignUpTab> {
           contentPadding: const EdgeInsets.all(24),
           suffixIcon: InkWell(
             onTap: () => safeSetState(
-              () => widget.model.passwordCreateVisibility =
-                  !widget.model.passwordCreateVisibility,
+              () => widget.model.signUpPasswordVisibility =
+                  !widget.model.signUpPasswordVisibility,
             ),
             focusNode: FocusNode(skipTraversal: true),
             child: Icon(
-              widget.model.passwordCreateVisibility
+              widget.model.signUpPasswordVisibility
                   ? CupertinoIcons.eye_fill
                   : CupertinoIcons.eye_slash_fill,
               color: Theme.of(context).colorScheme.onPrimary,
@@ -215,10 +236,10 @@ class _SignUpTabState extends State<SignUpTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
-        controller: widget.model.passwordCreateConfirmTextController,
-        focusNode: widget.model.passwordCreateConfirmFocusNode,
+        controller: widget.model.signUpPasswordConfirmTextController,
+        focusNode: widget.model.signUpPasswordConfirmFocusNode,
         autofocus: false,
-        obscureText: !widget.model.passwordCreateConfirmVisibility,
+        obscureText: !widget.model.signUpPasswordConfirmVisibility,
         decoration: InputDecoration(
           labelText: 'Confirm password',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
@@ -236,12 +257,12 @@ class _SignUpTabState extends State<SignUpTab> {
           contentPadding: const EdgeInsets.all(24),
           suffixIcon: InkWell(
             onTap: () => safeSetState(
-              () => widget.model.passwordCreateConfirmVisibility =
-                  !widget.model.passwordCreateConfirmVisibility,
+              () => widget.model.signUpPasswordConfirmVisibility =
+                  !widget.model.signUpPasswordConfirmVisibility,
             ),
             focusNode: FocusNode(skipTraversal: true),
             child: Icon(
-              widget.model.passwordCreateConfirmVisibility
+              widget.model.signUpPasswordConfirmVisibility
                   ? CupertinoIcons.eye_fill
                   : CupertinoIcons.eye_slash_fill,
               color: Theme.of(context).colorScheme.onPrimary,
@@ -261,10 +282,10 @@ class _SignUpTabState extends State<SignUpTab> {
       alignment: const AlignmentDirectional(0, 0),
       child: FFButtonWidget(
         onPressed: () => _performSignUp(
-          widget.model.emailAddressCreateTextController.text,
-          widget.model.usernameCreateTextController.text,
-          widget.model.passwordCreateTextController.text,
-          widget.model.passwordCreateConfirmTextController.text,
+          widget.model.signUpEmailTextController.text,
+          widget.model.signUpUsernameTextController.text,
+          widget.model.signUpPasswordTextController.text,
+          widget.model.signUpPasswordConfirmTextController.text,
         ),
         text: 'Sign Up',
         options: FFButtonOptions(
@@ -290,19 +311,6 @@ class _SignUpTabState extends State<SignUpTab> {
         'Or sign up with',
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.bodyMedium,
-      ),
-    );
-  }
-
-  Widget _buildGoogleButton(BuildContext context) {
-    return Align(
-      alignment: const AlignmentDirectional(0, 0),
-      child: renderButton(
-        configuration: GSIButtonConfiguration(
-          type: GSIButtonType.icon,
-          theme: GSIButtonTheme.outline,
-          shape: GSIButtonShape.pill,
-        ),
       ),
     );
   }
