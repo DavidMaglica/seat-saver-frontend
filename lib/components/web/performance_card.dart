@@ -189,7 +189,7 @@ class _PerformanceCardState extends State<PerformanceCard> {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: WebTheme.successColor,
+          color: const Color(0xFF1a3ca2),
         ),
         child: Text(
           model.loadedVenue?.name ?? 'No venue available.',
