@@ -1,5 +1,7 @@
-import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:table_reserver/pages/mobile/views/homepage.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 
 class LandingModel extends ChangeNotifier {
   final BuildContext context;
@@ -16,10 +18,8 @@ class LandingModel extends ChangeNotifier {
 
   Future<void> sendToMainPage() async {
     if (!context.mounted) return;
-    Navigator.pushNamed(
+    Navigator.of(
       context,
-      Routes.homepage,
-      arguments: {'userId': ''},
-    );
+    ).push(FadeInRoute(page: const Homepage(), routeName: Routes.homepage));
   }
 }

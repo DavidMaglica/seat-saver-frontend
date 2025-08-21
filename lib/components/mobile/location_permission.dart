@@ -1,18 +1,18 @@
-import 'package:table_reserver/models/mobile/components/location_permission_model.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
+import 'package:table_reserver/models/mobile/components/location_permission_model.dart';
+import 'package:table_reserver/pages/mobile/views/homepage.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 
 class LocationPermissionPopUp extends StatelessWidget {
   final int userId;
 
-  const LocationPermissionPopUp({
-    Key? key,
-    required this.userId,
-  }) : super(key: key);
+  const LocationPermissionPopUp({Key? key, required this.userId})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +60,10 @@ class LocationPermissionPopUp extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 96),
         child: Text(
-            'Find your favourite spots! Activate location services to easily locate venues near you!',
-            textAlign: TextAlign.center,
-            style: Theme.of(ctx).textTheme.bodyMedium),
+          'Find your favourite spots! Activate location services to easily locate venues near you!',
+          textAlign: TextAlign.center,
+          style: Theme.of(ctx).textTheme.bodyMedium,
+        ),
       ),
     );
   }
@@ -86,8 +87,11 @@ class LocationPermissionPopUp extends StatelessWidget {
       alignment: AlignmentDirectional(0, -1),
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 24),
-        child: Icon(CupertinoIcons.location_solid,
-            color: MobileTheme.accent1, size: 64),
+        child: Icon(
+          CupertinoIcons.location_solid,
+          color: MobileTheme.accent1,
+          size: 64,
+        ),
       ),
     );
   }
@@ -95,9 +99,11 @@ class LocationPermissionPopUp extends StatelessWidget {
   Widget _buildDenyButton(BuildContext ctx) {
     return FFButtonWidget(
       onPressed: () {
-        Navigator.of(ctx).popAndPushNamed(
-          Routes.homepage,
-          arguments: {'userId': userId, 'userLocation': null},
+        Navigator.of(ctx).push(
+          FadeInRoute(
+            page: Homepage(userId: userId, userLocation: null),
+            routeName: Routes.homepage,
+          ),
         );
       },
       text: 'No, thanks',

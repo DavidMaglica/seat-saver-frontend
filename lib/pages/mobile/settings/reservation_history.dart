@@ -1,24 +1,23 @@
-import 'package:table_reserver/api/data/reservation_details.dart';
-import 'package:table_reserver/components/mobile/custom_appbar.dart';
-import 'package:table_reserver/components/mobile/modal_widgets.dart';
-import 'package:table_reserver/models/mobile/views/reservation_history_model.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+import 'package:table_reserver/api/data/reservation_details.dart';
+import 'package:table_reserver/components/mobile/custom_appbar.dart';
+import 'package:table_reserver/components/mobile/modal_widgets.dart';
+import 'package:table_reserver/models/mobile/views/reservation_history_model.dart';
+import 'package:table_reserver/pages/mobile/views/account.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 
 class ReservationHistory extends StatelessWidget {
   final int userId;
   final Position? userLocation;
 
-  const ReservationHistory({
-    Key? key,
-    required this.userId,
-    this.userLocation,
-  }) : super(key: key);
+  const ReservationHistory({Key? key, required this.userId, this.userLocation})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +36,17 @@ class ReservationHistory extends StatelessWidget {
             backgroundColor: Theme.of(context).colorScheme.surface,
             appBar: CustomAppbar(
               title: 'Reservation History',
-              onBack: () => Navigator.of(context).pushNamed(
-                Routes.account,
-                arguments: {
-                  'userId': userId,
-                  'userLocation': model.userLocation,
-                },
-              ),
+              onBack: () {
+                Navigator.of(context).push(
+                  FadeInRoute(
+                    page: Account(
+                      userId: userId,
+                      userLocation: model.userLocation,
+                    ),
+                    routeName: Routes.account,
+                  ),
+                );
+              },
             ),
             body: SafeArea(
               child: SingleChildScrollView(
@@ -62,7 +65,7 @@ class ReservationHistory extends StatelessWidget {
                               blurRadius: 3,
                               color: Theme.of(context).colorScheme.outline,
                               offset: const Offset(0, 1),
-                            )
+                            ),
                           ],
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -97,10 +100,7 @@ class ReservationHistory extends StatelessWidget {
     );
   }
 
-  Widget _buildReservation(
-    BuildContext ctx,
-    ReservationHistoryModel model,
-  ) {
+  Widget _buildReservation(BuildContext ctx, ReservationHistoryModel model) {
     return Column(
       children: model.reservations!.asMap().entries.map((entry) {
         int index = entry.key;
@@ -109,11 +109,8 @@ class ReservationHistory extends StatelessWidget {
         return Column(
           children: [
             InkWell(
-              onTap: () => _openReservationDetailsBottomSheet(
-                ctx,
-                model,
-                reservation,
-              ),
+              onTap: () =>
+                  _openReservationDetailsBottomSheet(ctx, model, reservation),
               child: Padding(
                 padding: const EdgeInsetsDirectional.all(12),
                 child: Row(
@@ -130,18 +127,17 @@ class ReservationHistory extends StatelessWidget {
                           child: Text(
                             'view details',
                             style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-                                  color: Theme.of(ctx)
-                                      .colorScheme
-                                      .onPrimary
-                                      .withValues(alpha: 0.6),
-                                ),
+                              color: Theme.of(
+                                ctx,
+                              ).colorScheme.onPrimary.withValues(alpha: 0.6),
+                            ),
                           ),
                         ),
                         Icon(
                           CupertinoIcons.chevron_right,
                           color: Theme.of(ctx).colorScheme.onPrimary,
                           size: 14,
-                        )
+                        ),
                       ],
                     ),
                   ],
@@ -190,10 +186,9 @@ class ReservationHistory extends StatelessWidget {
                   children: [
                     _buildDetailRow(context, 'Venue name', venueName),
                     Divider(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onPrimary
-                          .withValues(alpha: 0.5),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onPrimary.withValues(alpha: 0.5),
                       thickness: 0.5,
                     ),
                     _buildDetailRow(
@@ -202,17 +197,17 @@ class ReservationHistory extends StatelessWidget {
                       reservation.numberOfGuests.toString(),
                     ),
                     Divider(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onPrimary
-                          .withValues(alpha: 0.5),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onPrimary.withValues(alpha: 0.5),
                       thickness: 0.5,
                     ),
                     _buildDetailRow(
                       context,
                       'Date (dd-MM-yyyy HH:mm)',
-                      DateFormat('dd-MM-yyyy HH:mm')
-                          .format(reservation.datetime),
+                      DateFormat(
+                        'dd-MM-yyyy HH:mm',
+                      ).format(reservation.datetime),
                     ),
                   ],
                 ),
@@ -231,7 +226,7 @@ class ReservationHistory extends StatelessWidget {
                     'Delete',
                     () => model.deleteReservation(reservation.id),
                     MobileTheme.errorColor,
-                  )
+                  ),
                 ],
               ),
               const SizedBox(height: 36),
@@ -248,14 +243,8 @@ class ReservationHistory extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: Theme.of(ctx).textTheme.titleSmall,
-          ),
-          Text(
-            value,
-            style: Theme.of(ctx).textTheme.bodyMedium,
-          ),
+          Text(label, style: Theme.of(ctx).textTheme.titleSmall),
+          Text(value, style: Theme.of(ctx).textTheme.bodyMedium),
         ],
       ),
     );

@@ -9,8 +9,10 @@ import 'package:table_reserver/components/common/full_image_view.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/mobile/venue_images_tab.dart';
 import 'package:table_reserver/models/mobile/views/venue_page_model.dart';
+import 'package:table_reserver/pages/mobile/views/ratings_page.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/extensions.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/utils.dart';
 
@@ -27,21 +29,20 @@ class VenuePage extends StatelessWidget {
   }) : super(key: key);
 
   Function() goBack(BuildContext context) {
-    return () => Navigator.of(context).pop({
-          'userId': userId,
-          'userLocation': userLocation,
-        });
+    return () => Navigator.of(
+      context,
+    ).pop({'userId': userId, 'userLocation': userLocation});
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => VenuePageModel(
-          ctx: context,
-          venueId: venueId,
-          userId: userId,
-          userLocation: userLocation)
-        ..init(),
+        ctx: context,
+        venueId: venueId,
+        userId: userId,
+        userLocation: userLocation,
+      )..init(),
       child: Consumer<VenuePageModel>(
         builder: (context, model, _) {
           return GestureDetector(
@@ -49,9 +50,7 @@ class VenuePage extends StatelessWidget {
             child: Scaffold(
               key: model.scaffoldKey,
               backgroundColor: Theme.of(context).colorScheme.surface,
-              appBar: CustomAppbar(
-                onBack: goBack(context),
-              ),
+              appBar: CustomAppbar(onBack: goBack(context)),
               body: model.venueImageBytes == null
                   ? Center(
                       child: LoadingAnimationWidget.staggeredDotsWave(
@@ -78,7 +77,7 @@ class VenuePage extends StatelessWidget {
                               VenueImagesTab(
                                 venueImages: model.venueImageBytes,
                                 menuImages: model.menuImageBytes,
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -124,16 +123,13 @@ class VenuePage extends StatelessWidget {
               : Container(
                   width: double.infinity,
                   height: 320,
-                  decoration: BoxDecoration(
-                    gradient: fallbackImageGradient(),
-                  ),
+                  decoration: BoxDecoration(gradient: fallbackImageGradient()),
                   alignment: Alignment.center,
                   child: Text(
                     model.venue.name,
-                    style: Theme.of(ctx)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(color: Colors.white),
+                    style: Theme.of(
+                      ctx,
+                    ).textTheme.titleLarge?.copyWith(color: Colors.white),
                   ),
                 ),
         ),
@@ -171,14 +167,18 @@ class VenuePage extends StatelessWidget {
 
   Widget _buildViewRatingsButton(BuildContext ctx, VenuePageModel model) {
     return FFButtonWidget(
-      onPressed: () => Navigator.of(ctx).pushNamed(
-        Routes.venueRatings,
-        arguments: {
-          'venueId': model.venue.id,
-          'userId': model.userId,
-          'userLocation': model.userLocation,
-        },
-      ),
+      onPressed: () {
+        Navigator.of(ctx).push(
+          FadeInRoute(
+            page: RatingsPage(
+              venueId: venueId,
+              userId: model.userId,
+              userLocation: model.userLocation,
+            ),
+            routeName: Routes.venueRatings,
+          ),
+        );
+      },
       text: 'View Ratings & Reviews',
       showLoadingIndicator: false,
       options: FFButtonOptions(
@@ -191,10 +191,7 @@ class VenuePage extends StatelessWidget {
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
-        borderSide: const BorderSide(
-          color: MobileTheme.accent1,
-          width: 1,
-        ),
+        borderSide: const BorderSide(color: MobileTheme.accent1, width: 1),
         elevation: 3,
         borderRadius: BorderRadius.circular(8),
       ),
@@ -220,34 +217,29 @@ class VenuePage extends StatelessWidget {
           size: 16,
         ),
         const SizedBox(width: 8),
-        Text(
-          model.venue.location,
-          style: Theme.of(ctx).textTheme.bodyMedium,
-        ),
+        Text(model.venue.location, style: Theme.of(ctx).textTheme.bodyMedium),
       ],
     );
   }
 
   Widget _buildAvailability(BuildContext ctx, VenuePageModel model) {
     final availabilityColour = calculateAvailabilityColour(
-        model.venue.maximumCapacity, model.venue.availableCapacity);
+      model.venue.maximumCapacity,
+      model.venue.availableCapacity,
+    );
 
     return Row(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Icon(
-          CupertinoIcons.person_2,
-          color: availabilityColour,
-          size: 16,
-        ),
+        Icon(CupertinoIcons.person_2, color: availabilityColour, size: 16),
         const SizedBox(width: 8),
         Text(
           '${model.venue.availableCapacity} / ${model.venue.maximumCapacity} currently available',
-          style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-                color: availabilityColour,
-              ),
+          style: Theme.of(
+            ctx,
+          ).textTheme.bodyMedium?.copyWith(color: availabilityColour),
         ),
       ],
     );
@@ -281,10 +273,8 @@ class VenuePage extends StatelessWidget {
       children: [
         RatingBar.builder(
           onRatingUpdate: (_) => {},
-          itemBuilder: (context, index) => const Icon(
-            CupertinoIcons.star_fill,
-            color: MobileTheme.accent1,
-          ),
+          itemBuilder: (context, index) =>
+              const Icon(CupertinoIcons.star_fill, color: MobileTheme.accent1),
           unratedColor: const Color(0xFF57636C).withValues(alpha: 0.5),
           direction: Axis.horizontal,
           glow: false,
@@ -314,19 +304,18 @@ class VenuePage extends StatelessWidget {
           padding: const EdgeInsets.only(top: 16),
           child: Text(
             'About this venue',
-            style: Theme.of(ctx)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(fontWeight: FontWeight.w800),
+            style: Theme.of(
+              ctx,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 4),
           child: Text(
             model.venue.description ?? 'No description available',
-            style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-                  fontStyle: FontStyle.italic,
-                ),
+            style: Theme.of(
+              ctx,
+            ).textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
           ),
         ),
       ],
@@ -344,10 +333,9 @@ class VenuePage extends StatelessWidget {
             children: [
               Text(
                 'Make a reservation',
-                style: Theme.of(ctx)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontFamily: 'Roboto'),
+                style: Theme.of(
+                  ctx,
+                ).textTheme.titleMedium?.copyWith(fontFamily: 'Roboto'),
               ),
               const SizedBox(height: 16),
               _buildPeopleButton(ctx, model),
@@ -362,7 +350,7 @@ class VenuePage extends StatelessWidget {
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
@@ -385,7 +373,7 @@ class VenuePage extends StatelessWidget {
               size: 28,
             ),
             const SizedBox(width: 12),
-            _buildPeopleDropdown(ctx, model)
+            _buildPeopleDropdown(ctx, model),
           ],
         ),
       ),
@@ -406,19 +394,23 @@ class VenuePage extends StatelessWidget {
         underline: Container(),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         items: List.generate(12, (i) => i + 1)
-            .map((value) => DropdownMenuItem(
-                  value: value,
-                  child: Text(value == 1 ? '$value person' : '$value people'),
-                ))
+            .map(
+              (value) => DropdownMenuItem(
+                value: value,
+                child: Text(value == 1 ? '$value person' : '$value people'),
+              ),
+            )
             .toList(),
         onChanged: (value) {
           model.setPeople(value);
         },
         selectedItemBuilder: (context) => List.generate(12, (i) => i + 1)
-            .map((value) => DropdownMenuItem(
-                  value: value,
-                  child: Text(value == 1 ? '$value person' : '$value people'),
-                ))
+            .map(
+              (value) => DropdownMenuItem(
+                value: value,
+                child: Text(value == 1 ? '$value person' : '$value people'),
+              ),
+            )
             .toList(),
       ),
     );
@@ -469,7 +461,7 @@ class VenuePage extends StatelessWidget {
               color: Theme.of(ctx).colorScheme.onPrimary,
             ),
             const SizedBox(width: 12),
-            _buildTimeDropdown(ctx, model)
+            _buildTimeDropdown(ctx, model),
           ],
         ),
       ),
@@ -482,20 +474,14 @@ class VenuePage extends StatelessWidget {
   ) {
     return DropdownButton<TimeOfDay>(
       value: model.selectedTime,
-      hint: Text(
-        'Select time',
-        style: Theme.of(ctx).textTheme.bodyLarge,
-      ),
+      hint: Text('Select time', style: Theme.of(ctx).textTheme.bodyLarge),
       style: Theme.of(ctx).textTheme.bodyMedium,
       dropdownColor: Theme.of(ctx).colorScheme.onSurface,
       underline: Container(),
       borderRadius: const BorderRadius.all(Radius.circular(10)),
       items: model.timeOptions.map((time) {
         final formatted = time.format(ctx);
-        return DropdownMenuItem(
-          value: time,
-          child: Text(formatted),
-        );
+        return DropdownMenuItem(value: time, child: Text(formatted));
       }).toList(),
       onChanged: (value) {
         model.setTime(value);
@@ -545,16 +531,11 @@ class VenuePage extends StatelessWidget {
 
   ButtonStyle _reservationButtonsStyle(BuildContext ctx) {
     return OutlinedButton.styleFrom(
-      side: BorderSide(
-        color: Theme.of(ctx).colorScheme.onPrimary,
-        width: 1,
-      ),
+      side: BorderSide(color: Theme.of(ctx).colorScheme.onPrimary, width: 1),
       splashFactory: NoSplash.splashFactory,
       elevation: 3,
       backgroundColor: Theme.of(ctx).colorScheme.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     );
   }
 }

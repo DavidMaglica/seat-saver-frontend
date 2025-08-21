@@ -1,10 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/api/data/paged_response.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/pages/mobile/views/homepage.dart';
+import 'package:table_reserver/pages/mobile/views/venue_page.dart';
 import 'package:table_reserver/utils/extensions.dart';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 
 class VenuesByTypeModel extends ChangeNotifier {
   final BuildContext context;
@@ -105,23 +108,24 @@ class VenuesByTypeModel extends ChangeNotifier {
   }
 
   void goToVenuePage(int venueId) {
-    Navigator.of(context).pushNamed(
-      Routes.venue,
-      arguments: {
-        'venueId': venueId,
-        'userId': userId,
-        'userLocation': userLocation,
-      },
+    Navigator.of(context).push(
+      FadeInRoute(
+        page: VenuePage(
+          venueId: venueId,
+          userId: userId,
+          userLocation: userLocation,
+        ),
+        routeName: Routes.venue,
+      ),
     );
   }
 
   void goBack() {
-    Navigator.of(context).pushNamed(
-      Routes.homepage,
-      arguments: {
-        'userId': userId,
-        'userLocation': userLocation,
-      },
+    Navigator.of(context).push(
+      FadeInRoute(
+        page: Homepage(userId: userId, userLocation: userLocation),
+        routeName: Routes.homepage,
+      ),
     );
   }
 }

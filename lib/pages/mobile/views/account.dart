@@ -1,7 +1,9 @@
 import 'package:table_reserver/api/data/user.dart';
 import 'package:table_reserver/components/mobile/navbar.dart';
 import 'package:table_reserver/models/mobile/views/account_model.dart';
+import 'package:table_reserver/pages/mobile/auth/authentication.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/routing_utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,7 +53,10 @@ class Account extends StatelessWidget {
                       _buildHistorySettings(context, model),
                       _buildAccountSettings(context, model),
                       _buildApplicationSettings(context, model),
-                      _buildOpenAuthentication(context, model.currentUser?.email),
+                      _buildOpenAuthentication(
+                        context,
+                        model.currentUser?.email,
+                      ),
                     ],
                   ),
                 ),
@@ -122,7 +127,7 @@ class Account extends StatelessWidget {
               spreadRadius: 3,
               offset: const Offset(0, 1),
               color: Theme.of(ctx).colorScheme.outline,
-            )
+            ),
           ],
           borderRadius: BorderRadius.circular(8),
         ),
@@ -136,8 +141,11 @@ class Account extends StatelessWidget {
                 const SizedBox(width: 12),
                 Text(text, style: Theme.of(ctx).textTheme.titleMedium),
                 const Spacer(),
-                Icon(CupertinoIcons.chevron_forward,
-                    size: 14, color: Theme.of(ctx).colorScheme.onPrimary),
+                Icon(
+                  CupertinoIcons.chevron_forward,
+                  size: 14,
+                  color: Theme.of(ctx).colorScheme.onPrimary,
+                ),
               ],
             ),
           ),
@@ -216,8 +224,9 @@ class Account extends StatelessWidget {
   Widget _buildOpenAuthentication(BuildContext ctx, String? userEmail) {
     final isLoggedIn = userEmail != null;
     final text = isLoggedIn ? 'Log out' : 'Log in';
-    final color =
-        isLoggedIn ? Theme.of(ctx).colorScheme.error : MobileTheme.successColor;
+    final color = isLoggedIn
+        ? Theme.of(ctx).colorScheme.error
+        : MobileTheme.successColor;
 
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(12, 48, 12, 0),
@@ -226,25 +235,28 @@ class Account extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(ctx).colorScheme.onSurface,
           boxShadow: [
-            BoxShadow(
-              blurRadius: 10,
-              color: color.withValues(alpha: 0.8),
-            ),
+            BoxShadow(blurRadius: 10, color: color.withValues(alpha: 0.8)),
           ],
           borderRadius: BorderRadius.circular(8),
         ),
         child: InkWell(
-          onTap: () => Navigator.pushNamed(ctx, Routes.authentication),
+          onTap: () {
+            Navigator.of(ctx).push(
+              FadeInRoute(
+                page: const Authentication(),
+                routeName: Routes.authentication,
+              ),
+            );
+          },
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
                 Text(
                   text,
-                  style: Theme.of(ctx)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(color: color.withValues(alpha: 0.8)),
+                  style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
+                    color: color.withValues(alpha: 0.8),
+                  ),
                 ),
                 const Spacer(),
                 Icon(CupertinoIcons.chevron_forward, color: color, size: 14),

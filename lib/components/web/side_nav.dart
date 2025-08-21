@@ -314,7 +314,7 @@ class _SideNavState extends State<SideNav> {
                 children: [
                   Icon(
                     Icons.rsvp_rounded,
-                    color: route == Routes.webReservations
+                    color: route?.startsWith(Routes.webReservations) == true
                         ? WebTheme.offWhite
                         : Theme.of(context).colorScheme.onPrimary,
                     size: 24,
@@ -323,7 +323,7 @@ class _SideNavState extends State<SideNav> {
                   Text(
                     'Reservations',
                     style: TextStyle(
-                      color: route == Routes.webReservations
+                      color: route?.startsWith(Routes.webReservations) == true
                           ? WebTheme.offWhite
                           : Theme.of(context).colorScheme.onPrimary,
                       fontSize: 14,

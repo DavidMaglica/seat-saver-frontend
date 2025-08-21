@@ -528,6 +528,7 @@ class _WebHomepageState extends State<WebHomepage>
           child: _buildPerformanceCard(
             context,
             model,
+            'Best Performing Venue',
             model.bestPerformingVenue,
           ),
         ),
@@ -535,6 +536,7 @@ class _WebHomepageState extends State<WebHomepage>
           child: _buildPerformanceCard(
             context,
             model,
+            'Worst Performing Venue',
             model.worstPerformingVenue,
           ),
         ),
@@ -545,6 +547,7 @@ class _WebHomepageState extends State<WebHomepage>
   InkWell _buildPerformanceCard(
     BuildContext context,
     HomepageModel model,
+    String title,
     Venue? venue,
   ) {
     return InkWell(
@@ -583,7 +586,7 @@ class _WebHomepageState extends State<WebHomepage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 8),
-                _buildPerformanceTitle(context, venue),
+                _buildPerformanceTitle(context, title),
                 Divider(
                   height: 1,
                   thickness: 1,
@@ -601,14 +604,12 @@ class _WebHomepageState extends State<WebHomepage>
     );
   }
 
-  Widget _buildPerformanceTitle(BuildContext context, Venue? venue) {
+  Widget _buildPerformanceTitle(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Text(
-        venue != null
-            ? venue.name
-            : 'Not enough data to display. Please add more venues.',
-        style: Theme.of(context).textTheme.titleMedium,
+        title,
+        style: Theme.of(context).textTheme.titleLarge,
       ),
     );
   }
@@ -620,7 +621,10 @@ class _WebHomepageState extends State<WebHomepage>
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(venue?.name ?? '', style: Theme.of(context).textTheme.bodyLarge),
+          Text(
+            venue?.name ?? 'Not enough data to display. Please add more venues',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
           Text(
             venue?.rating.toStringAsFixed(2) ?? '',
             style: Theme.of(context).textTheme.bodyLarge,
@@ -701,20 +705,13 @@ class _WebHomepageState extends State<WebHomepage>
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: WebTheme.transparentColour,
+          color: Theme.of(context).colorScheme.outline,
         ),
         child: const Icon(
           Icons.no_photography_outlined,
           color: WebTheme.accent1,
           size: 50,
         ),
-        // TODO check later
-        // child: Text(
-        //   venue?.name ?? 'No data',
-        //   style: Theme.of(
-        //     context,
-        //   ).textTheme.titleLarge?.copyWith(color: WebTheme.offWhite),
-        // ),
       ),
     );
   }

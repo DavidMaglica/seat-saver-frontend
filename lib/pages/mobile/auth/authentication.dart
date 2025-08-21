@@ -6,7 +6,9 @@ import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/models/mobile/auth/authentication_model.dart';
 import 'package:table_reserver/pages/mobile/auth/log_in_tab.dart';
 import 'package:table_reserver/pages/mobile/auth/sign_up_tab.dart';
+import 'package:table_reserver/pages/mobile/views/homepage.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 
 class Authentication extends StatefulWidget {
@@ -100,14 +102,14 @@ class _AuthenticationState extends State<Authentication>
                                           decoration: TextDecoration.underline,
                                         ),
                                       ),
-                                      onPressed: () => Navigator.pushNamed(
-                                        context,
-                                        Routes.homepage,
-                                        arguments: {
-                                          'userId': null,
-                                          'userLocation': null,
-                                        },
-                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                          FadeInRoute(
+                                            page: const Homepage(),
+                                            routeName: Routes.homepage,
+                                          ),
+                                        );
+                                      },
                                     ),
                                   )
                                 : const SizedBox(),

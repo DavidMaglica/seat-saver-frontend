@@ -1,6 +1,11 @@
-import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:table_reserver/pages/mobile/views/account.dart';
+import 'package:table_reserver/pages/mobile/views/homepage.dart';
+import 'package:table_reserver/pages/mobile/views/nearby.dart';
+import 'package:table_reserver/pages/mobile/views/search.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 
 void onNavbarItemTapped(
   BuildContext ctx,
@@ -14,20 +19,36 @@ void onNavbarItemTapped(
   }
   switch (index) {
     case 0:
-      Navigator.pushNamed(ctx, Routes.homepage,
-          arguments: {'userId': userId, 'userLocation': userLocation});
+      Navigator.of(ctx).push(
+        FadeInRoute(
+          page: Homepage(userId: userId, userLocation: userLocation),
+          routeName: Routes.homepage,
+        ),
+      );
       break;
     case 1:
-      Navigator.pushNamed(ctx, Routes.search,
-          arguments: {'userId': userId, 'userLocation': userLocation});
+      Navigator.of(ctx).push(
+        FadeInRoute(
+          page: Search(userId: userId, userLocation: userLocation),
+          routeName: Routes.search,
+        ),
+      );
       break;
     case 2:
-      Navigator.pushNamed(ctx, Routes.nearby,
-          arguments: {'userId': userId, 'userLocation': userLocation});
+      Navigator.of(ctx).push(
+        FadeInRoute(
+          page: Nearby(userId: userId, userLocation: userLocation),
+          routeName: Routes.nearby,
+        ),
+      );
       break;
     case 3:
-      Navigator.pushNamed(ctx, Routes.account,
-          arguments: {'userId': userId, 'userLocation': userLocation});
+      Navigator.of(ctx).push(
+        FadeInRoute(
+          page: Account(userId: userId, userLocation: userLocation),
+          routeName: Routes.account,
+        ),
+      );
       break;
     default:
       break;

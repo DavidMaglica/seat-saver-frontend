@@ -1,9 +1,10 @@
 import 'dart:async';
 
+import 'package:table_reserver/pages/mobile/views/homepage.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-
 
 class SuccessfulReservationModel extends ChangeNotifier {
   final BuildContext context;
@@ -49,9 +50,11 @@ class SuccessfulReservationModel extends ChangeNotifier {
 
   void navigateToHomepage() {
     if (!context.mounted) return;
-    Navigator.popAndPushNamed(context, Routes.homepage, arguments: {
-      'userId': userId,
-      'userLocation': userLocation,
-    });
+    Navigator.of(context).push(
+      FadeInRoute(
+        page: Homepage(userId: userId, userLocation: userLocation),
+        routeName: Routes.homepage,
+      ),
+    );
   }
 }

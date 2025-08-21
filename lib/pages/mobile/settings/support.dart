@@ -3,7 +3,9 @@ import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/mobile/modal_widgets.dart';
 import 'package:table_reserver/components/mobile/support_banner.dart';
 import 'package:table_reserver/models/mobile/views/support_model.dart';
+import 'package:table_reserver/pages/mobile/views/account.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +16,8 @@ class Support extends StatefulWidget {
   final int userId;
   final Position? userLocation;
 
-  const Support({
-    Key? key,
-    required this.userId,
-    this.userLocation,
-  }) : super(key: key);
+  const Support({Key? key, required this.userId, this.userLocation})
+    : super(key: key);
 
   @override
   State<Support> createState() => _SupportState();
@@ -54,13 +53,17 @@ class _SupportState extends State<Support> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppbar(
           title: 'Support',
-          onBack: () => Navigator.of(context).pushNamed(
-            Routes.account,
-            arguments: {
-              'userId': widget.userId,
-              'userLocation': widget.userLocation
-            },
-          ),
+          onBack: () {
+            Navigator.of(context).push(
+              FadeInRoute(
+                page: Account(
+                  userId: widget.userId,
+                  userLocation: widget.userLocation,
+                ),
+                routeName: Routes.account,
+              ),
+            );
+          },
         ),
         body: SafeArea(
           child: Padding(
@@ -70,8 +73,9 @@ class _SupportState extends State<Support> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding:
-                        const EdgeInsetsDirectional.symmetric(vertical: 24),
+                    padding: const EdgeInsetsDirectional.symmetric(
+                      vertical: 24,
+                    ),
                     child: Text(
                       'Have you encountered an issue with the application? Search for answers in our FAQs or submit a ticket in the form below to contact us.',
                       style: Theme.of(context).textTheme.bodyMedium,
@@ -177,8 +181,9 @@ class _SupportState extends State<Support> {
         labelStyle: Theme.of(context).textTheme.bodyLarge,
         hintText: hintText,
         hintStyle: Theme.of(context).textTheme.bodyMedium,
-        enabledBorder:
-            outlineInputBorder(Theme.of(context).colorScheme.onPrimary),
+        enabledBorder: outlineInputBorder(
+          Theme.of(context).colorScheme.onPrimary,
+        ),
         focusedBorder: outlineInputBorder(MobileTheme.infoColor),
         errorBorder: outlineInputBorder(Theme.of(context).colorScheme.error),
         focusedErrorBorder: outlineInputBorder(MobileTheme.infoColor),

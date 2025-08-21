@@ -1,13 +1,15 @@
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/api/venue_api.dart';
+import 'package:table_reserver/pages/mobile/views/venue_page.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/utils.dart';
 
 class VenueCard extends StatefulWidget {
   final Venue venue;
@@ -44,7 +46,9 @@ class _VenueCardState extends State<VenueCard> {
   }
 
   Future<void> _loadVenueImage() async {
-    List<Uint8List> venueImages = await venuesApi.getVenueImages(widget.venue.id);
+    List<Uint8List> venueImages = await venuesApi.getVenueImages(
+      widget.venue.id,
+    );
     if (venueImages.isNotEmpty) {
       setState(() => _venueImage = venueImages.first);
     } else {
@@ -52,12 +56,18 @@ class _VenueCardState extends State<VenueCard> {
     }
   }
 
-  void _openVenuePage() =>
-      Navigator.pushNamed(context, Routes.venue, arguments: {
-        'venueId': widget.venue.id,
-        'userId': widget.userId,
-        'userLocation': widget.userLocation,
-      });
+  void _openVenuePage() {
+    Navigator.of(context).push(
+      FadeInRoute(
+        page: VenuePage(
+          venueId: widget.venueId,
+          userId: widget.userId,
+          userLocation: widget.userLocation,
+        ),
+        routeName: Routes.venue,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +83,7 @@ class _VenueCardState extends State<VenueCard> {
             blurRadius: 2,
             spreadRadius: 2,
             offset: const Offset(0, 2),
-          )
+          ),
         ],
       ),
       child: Flex(
@@ -143,13 +153,12 @@ class _VenueCardState extends State<VenueCard> {
       width: double.infinity,
       height: 80,
       alignment: Alignment.center,
-      decoration: BoxDecoration(
-        gradient: fallbackImageGradient(),
-      ),
+      decoration: BoxDecoration(gradient: fallbackImageGradient()),
       child: Text(
         widget.venue.name,
-        style:
-            Theme.of(ctx).textTheme.titleSmall?.copyWith(color: Colors.white),
+        style: Theme.of(
+          ctx,
+        ).textTheme.titleSmall?.copyWith(color: Colors.white),
       ),
     );
   }
@@ -159,16 +168,18 @@ class _VenueCardState extends State<VenueCard> {
       name.toUpperCase(),
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
-      style: Theme.of(context)
-          .textTheme
-          .titleSmall
-          ?.copyWith(color: MobileTheme.accent1, fontSize: 12),
+      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+        color: MobileTheme.accent1,
+        fontSize: 12,
+      ),
     );
   }
 
   Widget _buildLocationAndAvailability(String location) {
     final availabilityColour = calculateAvailabilityColour(
-        widget.venue.maximumCapacity, widget.venue.availableCapacity);
+      widget.venue.maximumCapacity,
+      widget.venue.availableCapacity,
+    );
 
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
@@ -180,7 +191,9 @@ class _VenueCardState extends State<VenueCard> {
           Text(
             location,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
+              color: Theme.of(
+                context,
+              ).colorScheme.onPrimary.withValues(alpha: 0.7),
               fontWeight: FontWeight.w800,
               fontSize: 9,
             ),
@@ -199,13 +212,13 @@ class _VenueCardState extends State<VenueCard> {
               Text(
                 '${widget.venue.availableCapacity}/${widget.venue.maximumCapacity}',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                      color: availabilityColour,
-                    ),
+                  fontSize: 10,
+                  fontWeight: FontWeight.w500,
+                  color: availabilityColour,
+                ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -233,10 +246,10 @@ class _VenueCardState extends State<VenueCard> {
             padding: const EdgeInsets.only(left: 4, top: 1),
             child: Text(
               ' ${rating.toStringAsFixed(1)}',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(fontSize: 10, fontWeight: FontWeight.w500),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],
