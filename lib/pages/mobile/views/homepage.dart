@@ -52,41 +52,41 @@ class Homepage extends StatelessWidget {
                         elevation: 3,
                         child: SingleChildScrollView(
                           child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            _buildHeader(context, model),
-                            _buildCarouselComponent(model),
-                            _buildVenues(
-                              context,
-                              'Nearby Venues',
-                              model.openNearbyVenues,
-                              model.nearbyVenues ?? [],
-                            ),
-                            _buildVenues(
-                              context,
-                              'New Venues',
-                              model.openNewVenues,
-                              model.newVenues ?? [],
-                            ),
-                            _buildVenues(
-                              context,
-                              'Trending Venues',
-                              model.openTrendingVenues,
-                              model.trendingVenues ?? [],
-                            ),
-                            if (model.suggestedVenues != null &&
-                                model.suggestedVenues!.isNotEmpty)
-                              _buildSuggestedVenues(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              _buildHeader(context, model),
+                              _buildCarouselComponent(model),
+                              _buildVenues(
                                 context,
-                                model.openSuggestedVenues,
-                                model.suggestedVenues!,
-                              )
-                            else
-                              const SizedBox.shrink(),
-                            const SizedBox(height: 24),
-                          ],
+                                'Nearby Venues',
+                                model.openNearbyVenues,
+                                model.nearbyVenues ?? [],
+                              ),
+                              _buildVenues(
+                                context,
+                                'New Venues',
+                                model.openNewVenues,
+                                model.newVenues ?? [],
+                              ),
+                              _buildVenues(
+                                context,
+                                'Trending Venues',
+                                model.openTrendingVenues,
+                                model.trendingVenues ?? [],
+                              ),
+                              if (model.suggestedVenues != null &&
+                                  model.suggestedVenues!.isNotEmpty)
+                                _buildSuggestedVenues(
+                                  context,
+                                  model.openSuggestedVenues,
+                                  model.suggestedVenues!,
+                                )
+                              else
+                                const SizedBox.shrink(),
+                              const SizedBox(height: 24),
+                            ],
+                          ),
                         ),
-                      ),
                       ),
                     ),
                   ),

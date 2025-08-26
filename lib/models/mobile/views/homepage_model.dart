@@ -155,7 +155,10 @@ class HomepageModel extends ChangeNotifier {
   }
 
   Future<void> getNearbyVenues() async {
-    PagedResponse<Venue> pagedVenues = await venuesApi.getNearbyVenues();
+    PagedResponse<Venue> pagedVenues = await venuesApi.getNearbyVenues(
+      userLocation?.latitude,
+      userLocation?.longitude,
+    );
     nearbyVenues = pagedVenues.items;
     notifyListeners();
   }
