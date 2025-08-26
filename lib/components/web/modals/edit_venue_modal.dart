@@ -97,6 +97,18 @@ class _EditVenueModalState extends State<EditVenueModal>
           ),
           Row(
             mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                'Working Days:',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(width: 16),
+              _buildWorkingDaysChips(context, model),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
             children: [
               _buildDescriptionInputField(context, model),
             ].divide(const SizedBox(width: 16)),
@@ -334,6 +346,59 @@ class _EditVenueModalState extends State<EditVenueModal>
         style: Theme.of(context).textTheme.bodyLarge,
         cursorColor: Theme.of(context).colorScheme.onPrimary,
       ),
+    );
+  }
+
+  Widget _buildWorkingDaysChips(BuildContext context, EditVenueModel model) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          children: List.generate(model.days.length, (index) {
+            final day = model.days[index];
+            final isSelected = model.selectedWorkingDays.contains(index);
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: FilterChip(
+                selectedColor: WebTheme.successColor,
+                backgroundColor: Theme.of(context).colorScheme.outline,
+                labelStyle: isSelected
+                    ? Theme.of(
+                        context,
+                      ).textTheme.bodyLarge?.copyWith(color: WebTheme.offWhite)
+                    : Theme.of(context).textTheme.bodyLarge,
+                showCheckmark: false,
+                elevation: 3,
+                label: Text(day),
+                selected: isSelected,
+                onSelected: (selected) {
+                  setState(() {
+                    if (selected) {
+                      model.selectedWorkingDays.add(index);
+                    } else {
+                      model.selectedWorkingDays.remove(index);
+                    }
+                  });
+                },
+              ),
+            );
+          }),
+        ),
+        model.workingDaysErrorText != null
+            ? Padding(
+                padding: const EdgeInsets.only(left: 4, top: 4),
+                child: Text(
+                  model.workingDaysErrorText!,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                    fontSize: 14,
+                  ),
+                ),
+              )
+            : const SizedBox.shrink(),
+      ],
     );
   }
 

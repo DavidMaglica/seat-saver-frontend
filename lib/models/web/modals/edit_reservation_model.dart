@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/reservation_details.dart';
+import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/reservation_api.dart';
+import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/components/web/modals/edit_reservation_modal.dart';
 import 'package:table_reserver/utils/animations.dart';
+import 'package:table_reserver/utils/utils.dart';
 import 'package:table_reserver/utils/web_toaster.dart';
 
 class EditReservationModel extends FlutterFlowModel<EditReservationModal>
@@ -25,21 +28,22 @@ class EditReservationModel extends FlutterFlowModel<EditReservationModal>
   DateTime reservationDate = DateTime.now();
 
   final ReservationsApi reservationsApi = ReservationsApi();
+  final VenuesApi venuesApi = VenuesApi();
 
   final Map<String, AnimationInfo> animationsMap = Animations.modalAnimations;
 
+  Venue? venue;
   ReservationDetails? reservationDetails;
 
   @override
-  void initState(BuildContext context) {
-    reservationDetails = ReservationDetails(
-      id: 1,
-      userId: 1,
-      venueId: 1,
-      numberOfGuests: 3,
-      datetime: DateTime.now(),
-    );
+  void initState(BuildContext context) {}
+
+  void init(BuildContext context, int reservationId, String venueName,
+      String userName) async {
     DateFormat dateFormat = DateFormat('dd MMMM, yyyy - HH:mm');
+    await _fetchReservationDetails(context, reservationId, venueName, userName);
+    await _fetchVenue();
+
     if (reservationDetails != null) {
       venueNameTextController.text = reservationDetails!.venueId.toString();
       userTextController.text = reservationDetails!.userId.toString();
@@ -67,7 +71,17 @@ class EditReservationModel extends FlutterFlowModel<EditReservationModal>
     reservationDateTextController.dispose();
   }
 
-  Future<void> fetchReservationDetails(
+  Future<void> _fetchVenue() async {
+    if (reservationDetails == null) return;
+    final int venueId = reservationDetails!.venueId;
+    final Venue? response = await venuesApi.getVenue(venueId);
+    if (response != null) {
+      venue = response;
+    }
+    notifyListeners();
+  }
+
+  Future<void> _fetchReservationDetails(
     BuildContext context,
     int reservationId,
     String venueName,
@@ -124,8 +138,23 @@ class EditReservationModel extends FlutterFlowModel<EditReservationModal>
       numberOfGuestsErrorText = null;
     }
 
+    final bool isWorkingDay = venue!.workingDays.contains(
+      reservationDate.weekday - 1,
+    );
+    final bool isWorkingHour = isWithinWorkingHours(
+      reservationDate,
+      venue!.workingHours,
+    );
     if (reservationDateTextController.text.isEmpty) {
-      reservationDateErrorText = 'Please enter the reservation date';
+      reservationDateErrorText = 'Please enter the reservation date.';
+      isValid = false;
+    } else if (!isWorkingDay) {
+      reservationDateErrorText =
+      'The selected date is not a working day for the venue.';
+      isValid = false;
+    } else if (!isWorkingHour) {
+      reservationDateErrorText =
+      'The selected time is outside the venue\'s working hours.';
       isValid = false;
     } else {
       reservationDateErrorText = null;

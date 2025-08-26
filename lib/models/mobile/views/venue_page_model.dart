@@ -12,6 +12,7 @@ import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/toaster.dart';
+import 'package:table_reserver/utils/utils.dart';
 
 class VenuePageModel extends ChangeNotifier {
   final BuildContext ctx;
@@ -28,6 +29,7 @@ class VenuePageModel extends ChangeNotifier {
     id: 0,
     name: '',
     location: '',
+    workingDays: [],
     workingHours: '',
     maximumCapacity: 0,
     availableCapacity: 0,
@@ -125,6 +127,28 @@ class VenuePageModel extends ChangeNotifier {
 
     if (validationErrors.isNotEmpty) {
       Toaster.displayError(ctx, validationErrors.first);
+      return false;
+    }
+
+    final reservationDateTime = DateTime(
+      selectedDate!.year,
+      selectedDate!.month,
+      selectedDate!.day,
+      selectedTime!.hour,
+      selectedTime!.minute,
+    );
+
+    final isWorkingDay = venue.workingDays.contains(
+        reservationDateTime.weekday - 1);
+    if (!isWorkingDay) {
+      Toaster.displayError(
+          ctx, 'The selected date is not a working day for the venue.');
+      return false;
+    }
+
+    if (!isWithinWorkingHours(reservationDateTime, venue.workingHours)) {
+      Toaster.displayError(
+          ctx, 'The selected time is outside of the venue\'s working hours.');
       return false;
     }
 

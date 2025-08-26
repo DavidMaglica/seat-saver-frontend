@@ -130,7 +130,9 @@ class _WebHomepageState extends State<WebHomepage>
           TimerDropdown(
             selectedInterval: model.selectedInterval,
             onChanged: (value) {
-              model.selectedInterval = value;
+              setState(() {
+                model.selectedInterval = value;
+              });
               model.startTimer(context);
             },
           ),
@@ -441,12 +443,9 @@ class _WebHomepageState extends State<WebHomepage>
   }
 
   Widget _buildHeader(BuildContext context, HeaderBuilder header) {
-    bool isWideHeader =
-        header.value == 'Name' ||
-        header.value == 'Location' ||
-        header.value == 'Working Hours';
+    bool isWideHeader = header.value == 'Name' || header.value == 'Location';
     return Container(
-      width: isWideHeader ? 130 : 100,
+      width: isWideHeader ? 190 : 100,
       padding: const EdgeInsets.all(8),
       alignment: Alignment.centerLeft,
       child: Center(
@@ -469,19 +468,13 @@ class _WebHomepageState extends State<WebHomepage>
     final venue = venues[rowParams.index];
     return [
       SizedBox(
-        width: 130,
-        child: Text(venue.name, overflow: TextOverflow.ellipsis),
+        width: 190,
+        child: Center(child: Text(venue.name, overflow: TextOverflow.ellipsis)),
       ),
       SizedBox(
-        width: 130,
+        width: 190,
         child: Center(
           child: Text(venue.location, overflow: TextOverflow.ellipsis),
-        ),
-      ),
-      SizedBox(
-        width: 130,
-        child: Center(
-          child: Text(venue.workingHours, overflow: TextOverflow.ellipsis),
         ),
       ),
       SizedBox(

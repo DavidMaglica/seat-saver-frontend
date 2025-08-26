@@ -148,7 +148,9 @@ class _WebReservationsState extends State<WebReservations>
         TimerDropdown(
           selectedInterval: model.selectedInterval,
           onChanged: (value) {
-            model.selectedInterval = value;
+            setState(() {
+              model.selectedInterval = value;
+            });
             model.startTimer();
           },
         ),
@@ -265,6 +267,7 @@ class _WebReservationsState extends State<WebReservations>
 
         return _buildActions(
           context,
+          model,
           reservationId,
           reservation.venueId,
           venueName,
@@ -282,6 +285,7 @@ class _WebReservationsState extends State<WebReservations>
 
   Row _buildActions(
     BuildContext context,
+    ReservationsModel model,
     int reservationId,
     int venueId,
     String venueName,
@@ -295,25 +299,31 @@ class _WebReservationsState extends State<WebReservations>
             color: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () async {
-            bool? shouldRefresh = await showModalBottomSheet(
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              enableDrag: false,
+            final shouldRefresh = await showDialog(
               context: context,
-              builder: (_) {
-                return EditReservationModal(
-                  reservationId: reservationId,
-                  venueName: venueName,
-                  userName: userName,
+              barrierDismissible: true,
+              builder: (context) {
+                return Dialog(
+                  insetPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 24,
+                  ),
+                  backgroundColor: Colors.transparent,
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1000),
+                      child: EditReservationModal(
+                        reservationId: reservationId,
+                        venueName: venueName,
+                        userName: userName,
+                      ),
+                    ),
+                  ),
                 );
               },
             );
             if (shouldRefresh == true) {
-              if (!context.mounted) return;
-              Provider.of<ReservationsModel>(
-                context,
-                listen: false,
-              ).fetchReservations();
+              model.fetchReservations();
             }
           },
         ),

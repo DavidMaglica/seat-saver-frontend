@@ -1,16 +1,16 @@
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/pages/mobile/views/venue_page.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/extensions.dart';
-import 'package:table_reserver/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/api/venue_api.dart';
+import 'package:table_reserver/pages/mobile/views/venue_page.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/extensions.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
+import 'package:table_reserver/utils/utils.dart';
 
 class VenueSuggestedCard extends StatefulWidget {
   final Venue venue;
@@ -113,10 +113,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
                   _buildImage(),
                   _buildNameAndType(widget.venue.name, _venueType),
                   _buildLocationAndAvailability(),
-                  _buildRatingBarAndWorkingHours(
-                    widget.venue.rating,
-                    widget.venue.workingHours,
-                  ),
+                  _buildRatingBarAndWorkingHours(widget.venue.rating),
                 ],
               ),
             ),
@@ -240,47 +237,34 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
     );
   }
 
-  Widget _buildRatingBarAndWorkingHours(double rating, String workingHours) {
+  Widget _buildRatingBarAndWorkingHours(double rating) {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
       child: Row(
         mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              RatingBarIndicator(
-                itemBuilder: (context, index) => Icon(
-                  CupertinoIcons.star_fill,
-                  color: Theme.of(context).colorScheme.onTertiary,
-                ),
-                direction: Axis.horizontal,
-                rating: rating,
-                unratedColor: const Color(0xFF57636C).withValues(alpha: 0.5),
-                itemCount: 5,
-                itemSize: 14,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 4, top: 2),
-                child: Text(
-                  ' ${rating.toStringAsFixed(1)}',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
+          RatingBarIndicator(
+            itemBuilder: (context, index) => Icon(
+              CupertinoIcons.star_fill,
+              color: Theme.of(context).colorScheme.onTertiary,
+            ),
+            direction: Axis.horizontal,
+            rating: rating,
+            unratedColor: const Color(0xFF57636C).withValues(alpha: 0.5),
+            itemCount: 5,
+            itemSize: 14,
           ),
-          Text(
-            workingHours,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(fontSize: 9),
+          Padding(
+            padding: const EdgeInsets.only(left: 4, top: 2),
+            child: Text(
+              ' ${rating.toStringAsFixed(1)}',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
         ],
       ),

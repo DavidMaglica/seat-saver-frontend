@@ -188,16 +188,23 @@ class _VenueCardState extends State<VenueCard> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            location,
-            style: TextStyle(
-              color: Theme.of(
-                context,
-              ).colorScheme.onPrimary.withValues(alpha: 0.7),
-              fontWeight: FontWeight.w800,
-              fontSize: 9,
+          Flexible(
+            child: Text(
+              location,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: TextStyle(
+                color: Theme
+                    .of(context)
+                    .colorScheme
+                    .onPrimary
+                    .withValues(alpha: 0.7),
+                fontWeight: FontWeight.w800,
+                fontSize: 9,
+              ),
             ),
           ),
+          const SizedBox(width: 8),
           Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -32,6 +32,19 @@ class ChartCard extends StatelessWidget {
         ? countReservationsPerDay(reservations)
         : countReservationsPerHourBins(reservations, bins);
 
+    final List<String> days = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
+    final List<String> workingDays = venue.workingDays
+        .map((dayIndex) => days[dayIndex])
+        .toList();
+
     return Material(
       color: Colors.transparent,
       elevation: 3,
@@ -51,6 +64,13 @@ class ChartCard extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 'Working hours: ${venue.workingHours}',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontSize: 14,
+                ),
+              ),
+              Text(
+                'Working days: ${workingDays.join(', ')}',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onPrimary,
                   fontSize: 14,
@@ -166,41 +186,27 @@ class ChartCard extends StatelessWidget {
           getTitlesWidget: (value, meta) {
             final workingRanges = parseWorkingHours(venue.workingHours);
 
+            bool? isOpen = false;
+
             String text;
             if (isWeekly) {
               text = [
-                'Mon',
-                'Tue',
-                'Wed',
-                'Thu',
-                'Fri',
-                'Sat',
-                'Sun',
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday',
+                'Sunday',
               ][value.toInt()];
+              isOpen = venue.workingDays.contains(value.toInt());
             } else {
               final start = (value.toInt() * 4);
               final end = ((value.toInt() + 1) * 4).clamp(0, 24);
               text =
                   '${start.toString().padLeft(2, '0')}-${end.toString().padLeft(2, '0')}';
 
-              final isOpen = isBinInWorkingHours(start, end, workingRanges);
-
-              return SideTitleWidget(
-                axisSide: meta.axisSide,
-                space: 4,
-                child: Text(
-                  text,
-                  style: TextStyle(
-                    color: isOpen
-                        ? Theme.of(context).colorScheme.onPrimary
-                        : Theme.of(
-                            context,
-                          ).colorScheme.onPrimary.withValues(alpha: 0.5),
-                    fontWeight: isOpen ? FontWeight.bold : FontWeight.normal,
-                    fontSize: 12,
-                  ),
-                ),
-              );
+              isOpen = isBinInWorkingHours(start, end, workingRanges);
             }
 
             return SideTitleWidget(
@@ -209,8 +215,12 @@ class ChartCard extends StatelessWidget {
               child: Text(
                 text,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  fontWeight: FontWeight.bold,
+                  color: isOpen
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(
+                          context,
+                        ).colorScheme.onPrimary.withValues(alpha: 0.5),
+                  fontWeight: isOpen ? FontWeight.bold : FontWeight.normal,
                   fontSize: 12,
                 ),
               ),

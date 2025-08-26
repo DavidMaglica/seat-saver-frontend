@@ -14,15 +14,21 @@ import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 
-class ReservationsGraphsPage extends StatelessWidget {
+class ReservationsGraphsPage extends StatefulWidget {
   final int ownerId;
 
   const ReservationsGraphsPage({super.key, required this.ownerId});
 
   @override
+  State<ReservationsGraphsPage> createState() => _ReservationsGraphsPageState();
+}
+
+class _ReservationsGraphsPageState extends State<ReservationsGraphsPage> {
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ReservationsGraphsPageModel(ownerId: ownerId)..init(),
+      create: (_) =>
+          ReservationsGraphsPageModel(ownerId: widget.ownerId)..init(),
       child: Consumer<ReservationsGraphsPageModel>(
         builder: (context, model, _) {
           return Scaffold(
@@ -32,7 +38,7 @@ class ReservationsGraphsPage extends StatelessWidget {
               onBack: () {
                 Navigator.of(context).push(
                   FadeInRoute(
-                    page: WebHomepage(ownerId: ownerId),
+                    page: WebHomepage(ownerId: widget.ownerId),
                     routeName: Routes.webHomepage,
                   ),
                 );
@@ -107,7 +113,9 @@ class ReservationsGraphsPage extends StatelessWidget {
           TimerDropdown(
             selectedInterval: model.selectedInterval,
             onChanged: (value) {
-              model.selectedInterval = value;
+              setState(() {
+                model.selectedInterval = value;
+              });
               model.startTimer();
             },
           ),

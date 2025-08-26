@@ -2,6 +2,7 @@ class Venue {
   final int id;
   final String name;
   final String location;
+  final List<int> workingDays;
   final String workingHours;
   final int maximumCapacity;
   final int availableCapacity;
@@ -13,6 +14,7 @@ class Venue {
     required this.id,
     required this.name,
     required this.location,
+    required this.workingDays,
     required this.workingHours,
     required this.maximumCapacity,
     required this.availableCapacity,
@@ -26,13 +28,13 @@ class Venue {
       id: map['id'],
       name: map['name'],
       location: map['location'],
+      workingDays: List<int>.from(map['workingDays']),
       workingHours: map['workingHours'],
       maximumCapacity: map['maximumCapacity'],
       availableCapacity: map['availableCapacity'],
       rating: map['averageRating'],
       typeId: map['venueTypeId'],
       description: map['description'],
-      // imageLinks: map['imageLinks'],
     );
   }
 
@@ -47,13 +49,12 @@ class Venue {
       'rating': rating,
       'type': typeId,
       'description': description,
-      // 'imageLinks': imageLinks,
     };
   }
 
   @override
   String toString() {
-    return 'Venue(id: $id, name: $name, location: $location, workingHours: $workingHours, rating: $rating, type: $typeId, description: $description)';
+    return 'Venue(id: $id, name: $name, location: $location, workingDays: $workingDays, workingHours: $workingHours, rating: $rating, type: $typeId, description: $description)';
   }
 
   @override
@@ -64,6 +65,7 @@ class Venue {
         other.id == id &&
         other.name == name &&
         other.location == location &&
+        other.workingDays == workingDays &&
         other.workingHours == workingHours &&
         other.maximumCapacity == maximumCapacity &&
         other.availableCapacity == availableCapacity &&
@@ -77,6 +79,7 @@ class Venue {
     return id.hashCode ^
         name.hashCode ^
         location.hashCode ^
+        workingDays.hashCode ^
         workingHours.hashCode ^
         maximumCapacity.hashCode ^
         availableCapacity.hashCode ^

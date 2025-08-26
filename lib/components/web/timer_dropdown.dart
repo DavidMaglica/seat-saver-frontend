@@ -70,7 +70,7 @@ class TimerDropdown extends StatelessWidget {
               iconEnabledColor: WebTheme.accent1,
             ),
             dropdownStyleData: DropdownStyleData(
-              maxHeight: 220,
+              maxHeight: 260,
               width: 75,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),

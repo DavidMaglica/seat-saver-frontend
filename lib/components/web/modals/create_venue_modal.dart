@@ -26,12 +26,6 @@ class _CreateVenueModalState extends State<CreateVenueModal>
     super.initState();
   }
 
-  void createVenue(BuildContext context) {
-    if (widget.model.isFormValid()) {
-      widget.model.createVenue(context);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -56,7 +50,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
                 _buildBody(context),
                 buildButtons(
                   context,
-                  () => createVenue(context),
+                  () => widget.model.createVenue(context),
                   'Create Venue',
                 ),
               ].divide(const SizedBox(height: 16)),
@@ -111,8 +105,20 @@ class _CreateVenueModalState extends State<CreateVenueModal>
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              _buildWorkingHoursPicker(context, widget.model),
+              _buildWorkingHoursInputField(context, widget.model),
             ].divide(const SizedBox(width: 32)),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                'Working Days:',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(width: 16),
+              _buildWorkingDaysChips(context),
+            ],
           ),
           Row(
             mainAxisSize: MainAxisSize.max,
@@ -257,7 +263,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
     );
   }
 
-  Widget _buildWorkingHoursPicker(
+  Widget _buildWorkingHoursInputField(
     BuildContext context,
     CreateVenueModel model,
   ) {
@@ -301,6 +307,59 @@ class _CreateVenueModalState extends State<CreateVenueModal>
         style: Theme.of(context).textTheme.bodyLarge,
         cursorColor: Theme.of(context).colorScheme.onPrimary,
       ),
+    );
+  }
+
+  Widget _buildWorkingDaysChips(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          children: List.generate(widget.model.days.length, (index) {
+            final day = widget.model.days[index];
+            final isSelected = widget.model.selectedWorkingDays.contains(index);
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: FilterChip(
+                selectedColor: WebTheme.successColor,
+                backgroundColor: Theme.of(context).colorScheme.outline,
+                labelStyle: isSelected
+                    ? Theme.of(
+                        context,
+                      ).textTheme.bodyLarge?.copyWith(color: WebTheme.offWhite)
+                    : Theme.of(context).textTheme.bodyLarge,
+                showCheckmark: false,
+                elevation: 3,
+                label: Text(day),
+                selected: isSelected,
+                onSelected: (selected) {
+                  setState(() {
+                    if (selected) {
+                      widget.model.selectedWorkingDays.add(index);
+                    } else {
+                      widget.model.selectedWorkingDays.remove(index);
+                    }
+                  });
+                },
+              ),
+            );
+          }),
+        ),
+        widget.model.workingDaysErrorText != null
+            ? Padding(
+                padding: const EdgeInsets.only(left: 4, top: 4),
+                child: Text(
+                  widget.model.workingDaysErrorText!,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                    fontSize: 14,
+                  ),
+                ),
+              )
+            : const SizedBox.shrink(),
+      ],
     );
   }
 }

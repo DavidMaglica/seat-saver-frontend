@@ -37,7 +37,6 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
   final List<String> headers = [
     'Name',
     'Location',
-    'Working Hours',
     'Max. capacity',
     'Avail. capacity',
     'Rating',

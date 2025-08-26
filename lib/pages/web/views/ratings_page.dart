@@ -14,15 +14,20 @@ import 'package:table_reserver/themes/web_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 
-class WebRatingsPage extends StatelessWidget {
+class WebRatingsPage extends StatefulWidget {
   final int ownerId;
 
   const WebRatingsPage({super.key, required this.ownerId});
 
   @override
+  State<WebRatingsPage> createState() => _WebRatingsPageState();
+}
+
+class _WebRatingsPageState extends State<WebRatingsPage> {
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => WebRatingsPageModel(ownerId: ownerId)..init(),
+      create: (_) => WebRatingsPageModel(ownerId: widget.ownerId)..init(),
       child: Consumer<WebRatingsPageModel>(
         builder: (context, model, _) {
           return Scaffold(
@@ -32,7 +37,7 @@ class WebRatingsPage extends StatelessWidget {
               onBack: () {
                 Navigator.of(context).push(
                   FadeInRoute(
-                    page: WebHomepage(ownerId: ownerId),
+                    page: WebHomepage(ownerId: widget.ownerId),
                     routeName: Routes.webHomepage,
                   ),
                 );
@@ -106,14 +111,16 @@ class WebRatingsPage extends StatelessWidget {
           TimerDropdown(
             selectedInterval: model.selectedInterval,
             onChanged: (value) {
-              model.selectedInterval = value;
+              setState(() {
+                model.selectedInterval = value;
+              });
               model.startTimer();
             },
           ),
           const SizedBox(width: 8),
           FFButtonWidget(
             onPressed: () {
-              model.fetchData(ownerId);
+              model.fetchData(widget.ownerId);
             },
             text: 'Refresh data',
             icon: const Icon(CupertinoIcons.refresh, size: 18),

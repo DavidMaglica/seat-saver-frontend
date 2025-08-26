@@ -39,7 +39,7 @@ class _EditReservationModalState extends State<EditReservationModal>
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => EditReservationModel()
-        ..fetchReservationDetails(
+        ..init(
           context,
           widget.reservationId,
           widget.venueName,
