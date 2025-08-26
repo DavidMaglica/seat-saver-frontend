@@ -83,7 +83,6 @@ class SearchModel extends ChangeNotifier {
     if (locationQuery.isNotNullAndNotEmpty) {
       searchQuery = locationQuery!;
       searchBarController.text = locationQuery;
-      locationQuery = null;
     }
 
     PagedResponse<Venue> pagedVenues = await venuesApi.getAllVenues(
