@@ -8,11 +8,12 @@ import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/components/web/modals/create_reservation_modal.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/utils/animations.dart';
+import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/utils/web_toaster.dart';
 
 class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
     with ChangeNotifier {
-  Map<int, String> venueNamesById = {};
+  Map<int, Venue> venuesById = {};
   String? dropDownValue;
   FormFieldController<String> dropDownValueController =
       FormFieldController<String>(null);
@@ -63,9 +64,9 @@ class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
       return;
     }
 
-    venueNamesById
+    venuesById
       ..clear()
-      ..addEntries(pagedVenues.items.map((v) => MapEntry(v.id, v.name)));
+      ..addEntries(pagedVenues.items.map((venue) => MapEntry(venue.id, venue)));
 
     notifyListeners();
   }
@@ -105,6 +106,8 @@ class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
 
   bool _isFormValid() {
     bool isValid = true;
+    final int? venueId = int.tryParse(dropDownValueController.value!);
+    logger.i('venueId: $venueId');
     if (dropDownValueController.value == null ||
         dropDownValueController.value!.isEmpty) {
       dropDownErrorText = 'Please select a venue.';
@@ -127,8 +130,25 @@ class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
       guestsErrorText = null;
     }
 
+    final Venue venue = venuesById[venueId]!;
+
+    final bool isWorkingDay = venue.workingDays.contains(
+      reservationDate.weekday - 1,
+    );
+    final bool isWorkingHour = isWithinWorkingHours(
+      reservationDate,
+      venue.workingHours,
+    );
     if (reservationDateTextController.text.isEmpty) {
       reservationDateErrorText = 'Please enter the reservation date.';
+      isValid = false;
+    } else if (!isWorkingDay) {
+      reservationDateErrorText =
+          'The selected date is not a working day for the venue.';
+      isValid = false;
+    } else if (!isWorkingHour) {
+      reservationDateErrorText =
+          'The selected time is outside the venue\'s working hours.';
       isValid = false;
     } else {
       reservationDateErrorText = null;
@@ -136,5 +156,36 @@ class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
 
     notifyListeners();
     return isValid;
+  }
+
+  bool isWithinWorkingHours(DateTime reservationDate, String workingHours) {
+    final parts = workingHours.split('-').map((s) => s.trim()).toList();
+    if (parts.length != 2) return false;
+
+    final startParts = parts[0].split(':');
+    final endParts = parts[1].split(':');
+
+    final startHour = int.parse(startParts[0]);
+    final startMinute = int.parse(startParts[1]);
+    final endHour = int.parse(endParts[0]);
+    final endMinute = int.parse(endParts[1]);
+
+    final startTime = DateTime(
+      reservationDate.year,
+      reservationDate.month,
+      reservationDate.day,
+      startHour,
+      startMinute,
+    );
+    final endTime = DateTime(
+      reservationDate.year,
+      reservationDate.month,
+      reservationDate.day,
+      endHour,
+      endMinute,
+    );
+
+    return reservationDate.isAfter(startTime) &&
+        reservationDate.isBefore(endTime);
   }
 }

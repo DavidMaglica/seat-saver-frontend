@@ -184,11 +184,11 @@ class _CreateReservationModalState extends State<CreateReservationModal>
       children: [
         FlutterFlowDropDown<String>(
           controller: model.dropDownValueController,
-          options: model.venueNamesById.keys
+          options: model.venuesById.keys
               .map((venueId) => venueId.toString())
               .toList(),
-          optionLabels: model.venueNamesById.values
-              .map((name) => '    ${name.trim()}')
+          optionLabels: model.venuesById.values
+              .map((venue) => '    ${venue.name.trim()}')
               .toList(),
           onChanged: (val) => safeSetState(() => model.dropDownValue = val),
           width: 470,
