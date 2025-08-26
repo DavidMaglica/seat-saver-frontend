@@ -67,6 +67,8 @@ class VenuesByTypeModel extends ChangeNotifier {
     switch (type) {
       case 'nearby':
         pagedVenues = await venuesApi.getNearbyVenues(
+          userLocation?.latitude,
+          userLocation?.longitude,
           page: _currentPage,
           size: _pageSize,
         );

@@ -104,14 +104,22 @@ class VenuesApi {
     }
   }
 
-  Future<PagedResponse<Venue>> getNearbyVenues({
+  Future<PagedResponse<Venue>> getNearbyVenues(
+    double? latitude,
+    double? longitude, {
     int page = 0,
     int size = 15,
   }) async {
     try {
       Response response = await dio.get(
         ApiRoutes.venues,
-        queryParameters: {'category': 'nearby', 'page': page, 'size': size},
+        queryParameters: {
+          'category': 'nearby',
+          'page': page,
+          'size': size,
+          'latitude': latitude,
+          'longitude': longitude,
+        },
       );
 
       return PagedResponse.fromJson(

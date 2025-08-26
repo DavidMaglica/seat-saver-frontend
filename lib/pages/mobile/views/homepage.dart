@@ -10,7 +10,10 @@ import 'package:table_reserver/components/mobile/homepage_venue_card.dart';
 import 'package:table_reserver/components/mobile/navbar.dart';
 import 'package:table_reserver/components/mobile/suggested_venue_card.dart';
 import 'package:table_reserver/models/mobile/views/homepage_model.dart';
+import 'package:table_reserver/pages/mobile/views/search.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/routing_utils.dart';
 
 class Homepage extends StatelessWidget {
@@ -52,41 +55,41 @@ class Homepage extends StatelessWidget {
                         elevation: 3,
                         child: SingleChildScrollView(
                           child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            _buildHeader(context, model),
-                            _buildCarouselComponent(model),
-                            _buildVenues(
-                              context,
-                              'Nearby Venues',
-                              model.openNearbyVenues,
-                              model.nearbyVenues ?? [],
-                            ),
-                            _buildVenues(
-                              context,
-                              'New Venues',
-                              model.openNewVenues,
-                              model.newVenues ?? [],
-                            ),
-                            _buildVenues(
-                              context,
-                              'Trending Venues',
-                              model.openTrendingVenues,
-                              model.trendingVenues ?? [],
-                            ),
-                            if (model.suggestedVenues != null &&
-                                model.suggestedVenues!.isNotEmpty)
-                              _buildSuggestedVenues(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              _buildHeader(context, model),
+                              _buildCarouselComponent(context, model),
+                              _buildVenues(
                                 context,
-                                model.openSuggestedVenues,
-                                model.suggestedVenues!,
-                              )
-                            else
-                              const SizedBox.shrink(),
-                            const SizedBox(height: 24),
-                          ],
+                                'Nearby Venues',
+                                model.openNearbyVenues,
+                                model.nearbyVenues ?? [],
+                              ),
+                              _buildVenues(
+                                context,
+                                'New Venues',
+                                model.openNewVenues,
+                                model.newVenues ?? [],
+                              ),
+                              _buildVenues(
+                                context,
+                                'Trending Venues',
+                                model.openTrendingVenues,
+                                model.trendingVenues ?? [],
+                              ),
+                              if (model.suggestedVenues != null &&
+                                  model.suggestedVenues!.isNotEmpty)
+                                _buildSuggestedVenues(
+                                  context,
+                                  model.openSuggestedVenues,
+                                  model.suggestedVenues!,
+                                )
+                              else
+                                const SizedBox.shrink(),
+                              const SizedBox(height: 24),
+                            ],
+                          ),
                         ),
-                      ),
                       ),
                     ),
                   ),
@@ -109,7 +112,7 @@ class Homepage extends StatelessWidget {
     );
   }
 
-  Widget _buildCarouselComponent(HomepageModel model) {
+  Widget _buildCarouselComponent(BuildContext ctx, HomepageModel model) {
     if (model.nearbyCities.isEmpty) {
       return const SizedBox.shrink();
     } else {
@@ -135,7 +138,21 @@ class Homepage extends StatelessWidget {
                         padding: const EdgeInsetsDirectional.symmetric(
                           vertical: 12,
                         ),
-                        child: CarouselItem(city, model.cityImages[city]),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(ctx).push(
+                              FadeInRoute(
+                                page: Search(
+                                  userId: userId,
+                                  userLocation: userLocation,
+                                  locationQuery: city,
+                                ),
+                                routeName: Routes.search,
+                              ),
+                            );
+                          },
+                          child: CarouselItem(city, model.cityImages[city]),
+                        ),
                       ),
                     )
                     .toList(),

@@ -1,8 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:table_reserver/utils/toaster.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/utils.dart';
-import 'package:flutter/material.dart';
 
 class CarouselItem extends StatelessWidget {
   final String currentCity;
@@ -23,24 +22,18 @@ class CarouselItem extends StatelessWidget {
             blurRadius: 2,
             spreadRadius: 2,
             offset: const Offset(0, 1),
-          )
+          ),
         ],
       ),
-      child: InkWell(
-        onTap: () {
-          Toaster.displayInfo(
-              context, 'Searching by location currently unavailable');
-        },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (imageUri != null)
-              _buildImage(context, imageUri)
-            else
-              const SizedBox(height: 128),
-            _buildText(context),
-          ],
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          if (imageUri != null)
+            _buildImage(context, imageUri)
+          else
+            const SizedBox(height: 128),
+          _buildText(context),
+        ],
       ),
     );
   }
@@ -95,8 +88,10 @@ class CarouselItem extends StatelessWidget {
             alignment: const AlignmentDirectional(-1, 0),
             child: Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-              child: Text('Discover new restaurants in $currentCity!',
-                  style: Theme.of(ctx).textTheme.bodyMedium),
+              child: Text(
+                'Discover new restaurants in $currentCity!',
+                style: Theme.of(ctx).textTheme.bodyMedium,
+              ),
             ),
           ),
         ],
@@ -109,9 +104,7 @@ class CarouselItem extends StatelessWidget {
       width: double.infinity,
       height: 128,
       alignment: Alignment.center,
-      decoration: BoxDecoration(
-        gradient: fallbackImageGradientReverted(),
-      ),
+      decoration: BoxDecoration(gradient: fallbackImageGradientReverted()),
       child: Text(
         currentCity.toUpperCase(),
         style: Theme.of(ctx).textTheme.titleMedium,
