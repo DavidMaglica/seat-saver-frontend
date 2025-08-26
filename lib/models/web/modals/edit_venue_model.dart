@@ -32,6 +32,18 @@ class EditVenueModel extends FlutterFlowModel<EditVenueModal>
   TextEditingController workingHoursTextController = TextEditingController();
   String? workingHoursErrorText;
 
+  List<String> days = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+  List<int> selectedWorkingDays = [];
+  String? workingDaysErrorText;
+
   FocusNode descriptionFocusNode = FocusNode();
   TextEditingController descriptionTextController = TextEditingController();
   String? descriptionErrorText;
@@ -64,6 +76,7 @@ class EditVenueModel extends FlutterFlowModel<EditVenueModal>
       maxCapacityTextController.text = venue.maximumCapacity.toString();
       dropDownValueController.value = venue.typeId.toString();
       workingHoursTextController.text = venue.workingHours;
+      selectedWorkingDays = venue.workingDays;
       descriptionTextController.text = venue.description ?? '';
     } else {
       if (!context.mounted) return;
@@ -105,6 +118,7 @@ class EditVenueModel extends FlutterFlowModel<EditVenueModal>
       location: locationTextController.text.trim(),
       maximumCapacity: int.parse(maxCapacityTextController.text.trim()),
       typeId: int.parse(dropDownValueController.value!),
+      workingDays: selectedWorkingDays,
       workingHours: workingHoursTextController.text.trim(),
       description: descriptionTextController.text.trim().isEmpty
           ? null
@@ -175,6 +189,13 @@ class EditVenueModel extends FlutterFlowModel<EditVenueModal>
       isValid = false;
     } else {
       workingHoursErrorText = null;
+    }
+
+    if (selectedWorkingDays.isEmpty) {
+      workingDaysErrorText = 'Please select at least one working day.';
+      isValid = false;
+    } else {
+      workingDaysErrorText = null;
     }
 
     return isValid;

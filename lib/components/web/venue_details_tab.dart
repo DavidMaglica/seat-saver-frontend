@@ -29,9 +29,7 @@ class VenueDetailsTab extends StatelessWidget {
               indent: 16,
               endIndent: 16,
               color: Theme.of(context).colorScheme.onPrimary,
-            ).animateOnPageLoad(
-              model.animationsMap['fadeInOnLoad']!,
-            ),
+            ).animateOnPageLoad(model.animationsMap['fadeInOnLoad']!),
             _buildIconDetails(
               context,
             ).animateOnPageLoad(model.animationsMap['fadeMoveUpOnLoad']!),
@@ -53,13 +51,20 @@ class VenueDetailsTab extends StatelessWidget {
           _buildDetail(context, model.venueType),
           const SizedBox(height: 8),
           _buildTitle(context, 'Description'),
-          _buildDetail(context, model.loadedVenue.description ?? ''),
+          _buildDetail(
+            context,
+            model.loadedVenue.description ?? '',
+            isDescription: true,
+          ),
           const SizedBox(height: 8),
           _buildTitle(context, 'Location'),
           _buildDetail(context, model.loadedVenue.location),
           const SizedBox(height: 8),
           _buildTitle(context, 'Working Hours'),
           _buildDetail(context, model.loadedVenue.workingHours),
+          const SizedBox(height: 8),
+          _buildTitle(context, 'Working Days'),
+          _buildDetail(context, model.workingDays.join(', ')),
         ],
       ),
     );
@@ -123,8 +128,8 @@ class VenueDetailsTab extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        Icon(icon, color: WebTheme.accent1, size: 44),
-        const SizedBox(height: 8),
+        Icon(icon, color: WebTheme.accent1, size: 32),
+        const SizedBox(height: 4),
         Text(value, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 4),
         Text(label, style: Theme.of(context).textTheme.titleMedium),

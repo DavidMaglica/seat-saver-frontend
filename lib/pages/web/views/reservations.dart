@@ -148,7 +148,9 @@ class _WebReservationsState extends State<WebReservations>
         TimerDropdown(
           selectedInterval: model.selectedInterval,
           onChanged: (value) {
-            model.selectedInterval = value;
+            setState(() {
+              model.selectedInterval = value;
+            });
             model.startTimer();
           },
         ),

@@ -56,6 +56,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
     id: 0,
     name: "",
     location: "",
+    workingDays: [],
     workingHours: "",
     maximumCapacity: 0,
     availableCapacity: 0,
@@ -68,6 +69,8 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
 
   String venueType = '';
   int lifetimeReservations = 0;
+
+  List<String> workingDays = [];
 
   final int averageRating = 0;
   final List<Rating> reviews = [];
@@ -150,6 +153,19 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
       } else {
         this.venueType = 'Unknown';
       }
+
+      List<String> days = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday',
+      ];
+      workingDays = venue.workingDays
+          .map((dayIndex) => days[dayIndex])
+          .toList();
 
       lifetimeReservations = await reservationsApi.getReservationCount(
         ownerId,

@@ -28,6 +28,7 @@ class VenuePageModel extends ChangeNotifier {
     id: 0,
     name: '',
     location: '',
+    workingDays: [],
     workingHours: '',
     maximumCapacity: 0,
     availableCapacity: 0,

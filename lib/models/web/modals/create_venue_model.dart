@@ -35,6 +35,18 @@ class CreateVenueModel extends FlutterFlowModel<CreateVenueModal>
   TextEditingController workingHoursTextController = TextEditingController();
   String? workingHoursErrorText;
 
+  List<String> days = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+  List<int> selectedWorkingDays = [];
+  String? workingDaysErrorText;
+
   FocusNode descriptionFocusNode = FocusNode();
   TextEditingController descriptionTextController = TextEditingController();
 
@@ -87,6 +99,7 @@ class CreateVenueModel extends FlutterFlowModel<CreateVenueModal>
     )!;
     final int typeId = int.parse(dropDownValueController.value!);
     final String workingHours = workingHoursTextController.text.trim();
+    final List<int> workingDays = selectedWorkingDays;
     final String description = descriptionTextController.text.trim();
 
     final BasicResponse<int> response = await venuesApi.createVenue(
@@ -95,6 +108,7 @@ class CreateVenueModel extends FlutterFlowModel<CreateVenueModal>
       location: location,
       maximumCapacity: maxCapacity,
       typeId: typeId,
+      workingDays: workingDays,
       workingHours: workingHours,
       description: description,
     );
@@ -181,6 +195,13 @@ class CreateVenueModel extends FlutterFlowModel<CreateVenueModal>
       isValid = false;
     } else {
       workingHoursErrorText = null;
+    }
+
+    if (selectedWorkingDays.isEmpty) {
+      workingDaysErrorText = 'Please select at least one working day.';
+      isValid = false;
+    } else {
+      workingDaysErrorText = null;
     }
 
     notifyListeners();

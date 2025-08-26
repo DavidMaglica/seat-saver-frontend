@@ -439,6 +439,7 @@ class VenuesApi {
     required String location,
     required int maximumCapacity,
     required int typeId,
+    required List<int> workingDays,
     required String workingHours,
     String? description,
   }) async {
@@ -449,6 +450,7 @@ class VenuesApi {
         'location': location,
         'maximumCapacity': maximumCapacity,
         'typeId': typeId,
+        'workingDays': workingDays,
         'workingHours': workingHours,
         'description': description,
       };
@@ -481,6 +483,7 @@ class VenuesApi {
     String? location,
     int? maximumCapacity,
     int? typeId,
+    List<int>? workingDays,
     String? workingHours,
     String? description,
   }) async {
@@ -490,6 +493,7 @@ class VenuesApi {
         'location': location,
         'maximumCapacity': maximumCapacity,
         'typeId': typeId,
+        'workingDays': workingDays,
         'workingHours': workingHours,
         'description': description,
       };
