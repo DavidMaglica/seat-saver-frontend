@@ -8,7 +8,7 @@ import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/components/web/modals/create_reservation_modal.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/utils/animations.dart';
-import 'package:table_reserver/utils/logger.dart';
+import 'package:table_reserver/utils/utils.dart';
 import 'package:table_reserver/utils/web_toaster.dart';
 
 class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
@@ -107,7 +107,6 @@ class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
   bool _isFormValid() {
     bool isValid = true;
     final int? venueId = int.tryParse(dropDownValueController.value!);
-    logger.i('venueId: $venueId');
     if (dropDownValueController.value == null ||
         dropDownValueController.value!.isEmpty) {
       dropDownErrorText = 'Please select a venue.';
@@ -156,36 +155,5 @@ class CreateReservationModel extends FlutterFlowModel<CreateReservationModal>
 
     notifyListeners();
     return isValid;
-  }
-
-  bool isWithinWorkingHours(DateTime reservationDate, String workingHours) {
-    final parts = workingHours.split('-').map((s) => s.trim()).toList();
-    if (parts.length != 2) return false;
-
-    final startParts = parts[0].split(':');
-    final endParts = parts[1].split(':');
-
-    final startHour = int.parse(startParts[0]);
-    final startMinute = int.parse(startParts[1]);
-    final endHour = int.parse(endParts[0]);
-    final endMinute = int.parse(endParts[1]);
-
-    final startTime = DateTime(
-      reservationDate.year,
-      reservationDate.month,
-      reservationDate.day,
-      startHour,
-      startMinute,
-    );
-    final endTime = DateTime(
-      reservationDate.year,
-      reservationDate.month,
-      reservationDate.day,
-      endHour,
-      endMinute,
-    );
-
-    return reservationDate.isAfter(startTime) &&
-        reservationDate.isBefore(endTime);
   }
 }

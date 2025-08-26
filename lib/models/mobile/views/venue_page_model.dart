@@ -12,6 +12,7 @@ import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/toaster.dart';
+import 'package:table_reserver/utils/utils.dart';
 
 class VenuePageModel extends ChangeNotifier {
   final BuildContext ctx;
@@ -152,31 +153,6 @@ class VenuePageModel extends ChangeNotifier {
     }
 
     return true;
-  }
-
-  bool isWithinWorkingHours(DateTime reservation, String workingHours) {
-    final parts = workingHours.split('-').map((s) => s.trim()).toList();
-    if (parts.length != 2) return false;
-
-    final startParts = parts[0].split(':');
-    final endParts = parts[1].split(':');
-
-    final startTime = DateTime(
-      reservation.year,
-      reservation.month,
-      reservation.day,
-      int.parse(startParts[0]),
-      int.parse(startParts[1]),
-    );
-    final endTime = DateTime(
-      reservation.year,
-      reservation.month,
-      reservation.day,
-      int.parse(endParts[0]),
-      int.parse(endParts[1]),
-    );
-
-    return reservation.isAfter(startTime) && reservation.isBefore(endTime);
   }
 
   void selectDate(BuildContext ctx) async {

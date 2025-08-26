@@ -91,3 +91,34 @@ BoxDecoration webBackgroundAuxiliaryGradient(BuildContext context) {
     ),
   );
 }
+
+bool isWithinWorkingHours(DateTime reservationDate, String workingHours) {
+  final parts = workingHours.split('-').map((s) => s.trim()).toList();
+  if (parts.length != 2) return false;
+
+  final startParts = parts[0].split(':');
+  final endParts = parts[1].split(':');
+
+  final startHour = int.parse(startParts[0]);
+  final startMinute = int.parse(startParts[1]);
+  final endHour = int.parse(endParts[0]);
+  final endMinute = int.parse(endParts[1]);
+
+  final startTime = DateTime(
+    reservationDate.year,
+    reservationDate.month,
+    reservationDate.day,
+    startHour,
+    startMinute,
+  );
+  final endTime = DateTime(
+    reservationDate.year,
+    reservationDate.month,
+    reservationDate.day,
+    endHour,
+    endMinute,
+  );
+
+  return reservationDate.isAfter(startTime) &&
+      reservationDate.isBefore(endTime);
+}
