@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
-import 'package:table_reserver/components/common/full_image_view.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:table_reserver/components/common/full_image_view.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
 
 class VenueImagesTab extends StatelessWidget {
   final List<Uint8List>? venueImages;
@@ -84,8 +84,6 @@ class VenueImagesTab extends StatelessWidget {
       );
     }
 
-    final imageList = images.skip(1).toList();
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 12, 24, 96),
       child: MasonryGridView.builder(
@@ -94,10 +92,10 @@ class VenueImagesTab extends StatelessWidget {
         ),
         crossAxisSpacing: 24,
         mainAxisSpacing: 12,
-        itemCount: imageList.length,
+        itemCount: images.length,
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          final imageBytes = imageList[index];
+          final imageBytes = images[index];
           return InkWell(
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(

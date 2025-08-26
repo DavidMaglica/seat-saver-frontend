@@ -44,14 +44,14 @@ class Homepage extends StatelessWidget {
                   backgroundColor: Theme.of(context).colorScheme.surface,
                   body: SafeArea(
                     child: Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(
-                        0,
-                        16,
-                        0,
-                        0,
-                      ),
-                      child: SingleChildScrollView(
-                        child: Column(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          await model.init();
+                        },
+                        elevation: 3,
+                        child: SingleChildScrollView(
+                          child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             _buildHeader(context, model),
@@ -86,6 +86,7 @@ class Homepage extends StatelessWidget {
                             const SizedBox(height: 24),
                           ],
                         ),
+                      ),
                       ),
                     ),
                   ),

@@ -61,24 +61,30 @@ class VenuePage extends StatelessWidget {
                   : Stack(
                       alignment: const AlignmentDirectional(0, 1),
                       children: [
-                        SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              _buildHeadingImage(context, model),
-                              _buildObjectDetails(context, model),
-                              const SizedBox(height: 8),
-                              _buildDivider(context),
-                              const SizedBox(height: 8),
-                              _buildMakeReservation(context, model),
-                              const SizedBox(height: 8),
-                              _buildDivider(context),
-                              VenueImagesTab(
-                                venueImages: model.venueImageBytes,
-                                menuImages: model.menuImageBytes,
-                              ),
-                            ],
+                        RefreshIndicator(
+                          onRefresh: () async {
+                            await model.init();
+                          },
+                          elevation: 3,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                _buildHeadingImage(context, model),
+                                _buildObjectDetails(context, model),
+                                const SizedBox(height: 8),
+                                _buildDivider(context),
+                                const SizedBox(height: 8),
+                                _buildMakeReservation(context, model),
+                                const SizedBox(height: 8),
+                                _buildDivider(context),
+                                VenueImagesTab(
+                                  venueImages: model.venueImageBytes,
+                                  menuImages: model.menuImageBytes,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         _buildReserveSpotButton(context, model),
@@ -155,6 +161,8 @@ class VenuePage extends StatelessWidget {
           _buildAvailability(ctx, model),
           const SizedBox(height: 8),
           _buildVenueHours(ctx, model),
+          const SizedBox(height: 8),
+          _buildVenueDays(ctx, model),
           const SizedBox(height: 8),
           _buildVenueRating(ctx, model),
           const SizedBox(height: 8),
@@ -260,6 +268,40 @@ class VenuePage extends StatelessWidget {
         Text(
           'Working hours: ${model.venue.workingHours}',
           style: Theme.of(ctx).textTheme.bodyMedium,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVenueDays(BuildContext ctx, VenuePageModel model) {
+    final List<String> days = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
+
+    final workingDays = model.venue.workingDays
+        .map((dayIndex) => days[dayIndex])
+        .toList();
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          CupertinoIcons.calendar,
+          color: Theme.of(ctx).colorScheme.onPrimary,
+          size: 16,
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            'Working days: ${workingDays.join(', ')}',
+            style: Theme.of(ctx).textTheme.bodyMedium,
+            softWrap: true,
+          ),
         ),
       ],
     );

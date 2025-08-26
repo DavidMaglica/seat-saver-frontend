@@ -129,7 +129,54 @@ class VenuePageModel extends ChangeNotifier {
       return false;
     }
 
+    final reservationDateTime = DateTime(
+      selectedDate!.year,
+      selectedDate!.month,
+      selectedDate!.day,
+      selectedTime!.hour,
+      selectedTime!.minute,
+    );
+
+    final isWorkingDay = venue.workingDays.contains(
+        reservationDateTime.weekday - 1);
+    if (!isWorkingDay) {
+      Toaster.displayError(
+          ctx, 'The selected date is not a working day for the venue.');
+      return false;
+    }
+
+    if (!isWithinWorkingHours(reservationDateTime, venue.workingHours)) {
+      Toaster.displayError(
+          ctx, 'The selected time is outside of the venue\'s working hours.');
+      return false;
+    }
+
     return true;
+  }
+
+  bool isWithinWorkingHours(DateTime reservation, String workingHours) {
+    final parts = workingHours.split('-').map((s) => s.trim()).toList();
+    if (parts.length != 2) return false;
+
+    final startParts = parts[0].split(':');
+    final endParts = parts[1].split(':');
+
+    final startTime = DateTime(
+      reservation.year,
+      reservation.month,
+      reservation.day,
+      int.parse(startParts[0]),
+      int.parse(startParts[1]),
+    );
+    final endTime = DateTime(
+      reservation.year,
+      reservation.month,
+      reservation.day,
+      int.parse(endParts[0]),
+      int.parse(endParts[1]),
+    );
+
+    return reservation.isAfter(startTime) && reservation.isBefore(endTime);
   }
 
   void selectDate(BuildContext ctx) async {
