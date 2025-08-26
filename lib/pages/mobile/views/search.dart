@@ -15,8 +15,10 @@ import 'package:table_reserver/utils/routing_utils.dart';
 class Search extends StatelessWidget {
   final int? userId;
   final Position? userLocation;
+  final String? locationQuery;
 
-  const Search({Key? key, this.userId, this.userLocation}) : super(key: key);
+  const Search({Key? key, this.userId, this.userLocation, this.locationQuery})
+    : super(key: key);
 
   void _clear(BuildContext ctx, SearchModel model) {
     Navigator.pop(ctx);
@@ -39,7 +41,7 @@ class Search extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => SearchModel(context: context)..init(),
+      create: (_) => SearchModel(context: context)..init(locationQuery),
       child: Consumer<SearchModel>(
         builder: (context, model, _) {
           var brightness = Theme.of(context).brightness;
@@ -156,8 +158,8 @@ class Search extends StatelessWidget {
               child: TextField(
                 controller: model.searchBarController,
                 decoration: InputDecoration(
-                  hintText: 'Type to search for venues',
-                  hintStyle: Theme.of(ctx).textTheme.bodyLarge?.copyWith(
+                  hintText: 'Type to search for venues (by name or city)',
+                  hintStyle: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(
                       ctx,
                     ).colorScheme.onPrimary.withValues(alpha: 0.5),

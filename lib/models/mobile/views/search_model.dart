@@ -1,14 +1,14 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/api/data/paged_response.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/pages/mobile/views/venue_page.dart';
+import 'package:table_reserver/utils/extensions.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/extensions.dart';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 
 class SearchModel extends ChangeNotifier {
   final BuildContext context;
@@ -49,16 +49,16 @@ class SearchModel extends ChangeNotifier {
     super.dispose();
   }
 
-  Future<void> init() async {
+  Future<void> init(String? locationQuery) async {
     await _loadVenueTypes();
-    await _fetchNextPage();
+    await _fetchNextPage(locationQuery);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollController.addListener(() {
         if (scrollController.position.pixels >=
             scrollController.position.maxScrollExtent - 50) {
           if (!isLoading && hasMorePages) {
-            _fetchNextPage();
+            _fetchNextPage(locationQuery);
           }
         }
       });
@@ -75,10 +75,16 @@ class SearchModel extends ChangeNotifier {
     venueTypeOptions = venueTypeMap.values.toList();
   }
 
-  Future<void> _fetchNextPage() async {
+  Future<void> _fetchNextPage(String? locationQuery) async {
     if (isLoading || !hasMorePages) return;
 
     isLoading = true;
+
+    if (locationQuery.isNotNullAndNotEmpty) {
+      searchQuery = locationQuery!;
+      searchBarController.text = locationQuery;
+      locationQuery = null;
+    }
 
     PagedResponse<Venue> pagedVenues = await venuesApi.getAllVenues(
       _currentPage,
@@ -126,7 +132,7 @@ class SearchModel extends ChangeNotifier {
     paginatedVenues.clear();
     _currentPage = 0;
     hasMorePages = true;
-    _fetchNextPage();
+    _fetchNextPage(null);
   }
 
   Function() goToVenuePage(Venue venue, int? userId, Position? userLocation) {
