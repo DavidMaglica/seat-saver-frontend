@@ -12,7 +12,6 @@ import 'package:table_reserver/utils/routes.dart';
 class VenuesByTypeModel extends ChangeNotifier {
   final BuildContext context;
   final String type;
-  final int? userId;
   final Position? userLocation;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -31,7 +30,6 @@ class VenuesByTypeModel extends ChangeNotifier {
   VenuesByTypeModel({
     required this.context,
     required this.type,
-    this.userId,
     this.userLocation,
   });
 
@@ -111,23 +109,17 @@ class VenuesByTypeModel extends ChangeNotifier {
 
   void goToVenuePage(int venueId) {
     Navigator.of(context).push(
-      FadeInRoute(
-        page: VenuePage(
-          venueId: venueId,
-          userId: userId,
-          userLocation: userLocation,
-        ),
+      MobileFadeInRoute(
+        page: VenuePage(venueId: venueId),
         routeName: Routes.venue,
+        arguments: {'venueId': venueId},
       ),
     );
   }
 
   void goBack() {
     Navigator.of(context).push(
-      FadeInRoute(
-        page: Homepage(userId: userId, userLocation: userLocation),
-        routeName: Routes.homepage,
-      ),
+      MobileFadeInRoute(page: const Homepage(), routeName: Routes.homepage),
     );
   }
 }

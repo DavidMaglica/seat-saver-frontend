@@ -29,9 +29,7 @@ class VenuePage extends StatelessWidget {
   }) : super(key: key);
 
   Function() goBack(BuildContext context) {
-    return () => Navigator.of(
-      context,
-    ).pop({'userId': userId, 'userLocation': userLocation});
+    return () => Navigator.of(context).pop();
   }
 
   @override
@@ -177,13 +175,10 @@ class VenuePage extends StatelessWidget {
     return FFButtonWidget(
       onPressed: () {
         Navigator.of(ctx).push(
-          FadeInRoute(
-            page: RatingsPage(
-              venueId: venueId,
-              userId: model.userId,
-              userLocation: model.userLocation,
-            ),
+          MobileFadeInRoute(
+            page: RatingsPage(venueId: venueId),
             routeName: Routes.venueRatings,
+            arguments: {'venueId': venueId},
           ),
         );
       },

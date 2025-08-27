@@ -52,10 +52,22 @@ class _LogInTabState extends State<LogInTab> {
 
       User user = userResponse!.user!;
 
+      sharedPreferencesCache.setInt('userId', user.id);
+
       Position? lastKnownLocation = getPositionFromLatAndLong(
         user.lastKnownLatitude,
         user.lastKnownLongitude,
       );
+
+      if (lastKnownLocation != null) {
+        await sharedPreferencesCache.setString(
+          'lastKnownLocation',
+          jsonEncode({
+            'lat': lastKnownLocation.latitude,
+            'lng': lastKnownLocation.longitude,
+          }),
+        );
+      }
 
       _goToHomepage(user.id, lastKnownLocation);
     } else {
@@ -66,10 +78,7 @@ class _LogInTabState extends State<LogInTab> {
 
   void _goToHomepage(int userId, Position? userLocation) {
     Navigator.of(context).push(
-      FadeInRoute(
-        page: Homepage(userId: userId, userLocation: userLocation),
-        routeName: Routes.homepage,
-      ),
+      MobileFadeInRoute(page: const Homepage(), routeName: Routes.homepage),
     );
   }
 

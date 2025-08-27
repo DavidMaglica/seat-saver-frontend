@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:table_reserver/api/data/reservation_details.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
@@ -14,19 +13,14 @@ import 'package:table_reserver/utils/routes.dart';
 
 class ReservationHistory extends StatelessWidget {
   final int userId;
-  final Position? userLocation;
 
-  const ReservationHistory({Key? key, required this.userId, this.userLocation})
-    : super(key: key);
+  const ReservationHistory({Key? key, required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ReservationHistoryModel(
-        context: context,
-        userId: userId,
-        userLocation: userLocation,
-      )..init(),
+      create: (_) =>
+          ReservationHistoryModel(context: context, userId: userId)..init(),
       child: Builder(
         builder: (context) {
           final model = context.watch<ReservationHistoryModel>();
@@ -38,11 +32,8 @@ class ReservationHistory extends StatelessWidget {
               title: 'Reservation History',
               onBack: () {
                 Navigator.of(context).push(
-                  FadeInRoute(
-                    page: Account(
-                      userId: userId,
-                      userLocation: model.userLocation,
-                    ),
+                  MobileFadeInRoute(
+                    page: const Account(),
                     routeName: Routes.account,
                   ),
                 );

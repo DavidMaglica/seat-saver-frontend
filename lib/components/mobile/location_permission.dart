@@ -100,10 +100,7 @@ class LocationPermissionPopUp extends StatelessWidget {
     return FFButtonWidget(
       onPressed: () {
         Navigator.of(ctx).push(
-          FadeInRoute(
-            page: Homepage(userId: userId, userLocation: null),
-            routeName: Routes.homepage,
-          ),
+          MobileFadeInRoute(page: const Homepage(), routeName: Routes.homepage),
         );
       },
       text: 'No, thanks',

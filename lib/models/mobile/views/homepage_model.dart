@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'
@@ -15,6 +17,7 @@ import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/geolocation_api.dart';
 import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/components/mobile/location_permission.dart';
+import 'package:table_reserver/main.dart';
 import 'package:table_reserver/pages/mobile/views/venues_by_type.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
@@ -65,6 +68,15 @@ class HomepageModel extends ChangeNotifier {
         userLocation = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.best,
         );
+        if (userLocation != null) {
+          await sharedPreferencesCache.setString(
+            'lastKnownLocation',
+            jsonEncode({
+              'lat': userLocation!.latitude,
+              'lng': userLocation!.longitude,
+            }),
+          );
+        }
         accountApi.updateUserLocation(userId!, userLocation!);
       }
     }
@@ -183,13 +195,10 @@ class HomepageModel extends ChangeNotifier {
 
   void openNearbyVenues() {
     Navigator.of(context).push(
-      FadeInRoute(
-        page: VenuesByType(
-          userId: userId,
-          userLocation: userLocation ?? currentUserLocation,
-          type: 'nearby',
-        ),
+      MobileFadeInRoute(
+        page: const VenuesByType(type: 'nearby'),
         routeName: Routes.venuesByType,
+        arguments: {'type': 'nearby'},
       ),
     );
     notifyListeners();
@@ -198,13 +207,10 @@ class HomepageModel extends ChangeNotifier {
 
   void openNewVenues() {
     Navigator.of(context).push(
-      FadeInRoute(
-        page: VenuesByType(
-          userId: userId,
-          userLocation: userLocation ?? currentUserLocation,
-          type: 'new',
-        ),
+      MobileFadeInRoute(
+        page: const VenuesByType(type: 'new'),
         routeName: Routes.venuesByType,
+        arguments: {'type': 'new'},
       ),
     );
     notifyListeners();
@@ -213,13 +219,10 @@ class HomepageModel extends ChangeNotifier {
 
   void openTrendingVenues() {
     Navigator.of(context).push(
-      FadeInRoute(
-        page: VenuesByType(
-          userId: userId,
-          userLocation: userLocation ?? currentUserLocation,
-          type: 'trending',
-        ),
+      MobileFadeInRoute(
+        page: const VenuesByType(type: 'trending'),
         routeName: Routes.venuesByType,
+        arguments: {'type': 'trending'},
       ),
     );
     notifyListeners();
@@ -228,13 +231,10 @@ class HomepageModel extends ChangeNotifier {
 
   void openSuggestedVenues() {
     Navigator.of(context).push(
-      FadeInRoute(
-        page: VenuesByType(
-          userId: userId,
-          userLocation: userLocation ?? currentUserLocation,
-          type: 'suggested',
-        ),
+      MobileFadeInRoute(
+        page: const VenuesByType(type: 'suggested'),
         routeName: Routes.venuesByType,
+        arguments: {'type': 'suggested'},
       ),
     );
     notifyListeners();

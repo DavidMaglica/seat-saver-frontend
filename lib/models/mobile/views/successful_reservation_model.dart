@@ -1,18 +1,15 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:table_reserver/pages/mobile/views/homepage.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 
 class SuccessfulReservationModel extends ChangeNotifier {
   final BuildContext context;
   final String venueName;
   final int numberOfGuests;
   final DateTime reservationDateTime;
-  final int userId;
-  final Position? userLocation;
 
   int countdown = 15;
   Timer? _timer;
@@ -22,8 +19,6 @@ class SuccessfulReservationModel extends ChangeNotifier {
     required this.venueName,
     required this.numberOfGuests,
     required this.reservationDateTime,
-    required this.userId,
-    required this.userLocation,
   });
 
   @override
@@ -51,10 +46,7 @@ class SuccessfulReservationModel extends ChangeNotifier {
   void navigateToHomepage() {
     if (!context.mounted) return;
     Navigator.of(context).push(
-      FadeInRoute(
-        page: Homepage(userId: userId, userLocation: userLocation),
-        routeName: Routes.homepage,
-      ),
+      MobileFadeInRoute(page: const Homepage(), routeName: Routes.homepage),
     );
   }
 }

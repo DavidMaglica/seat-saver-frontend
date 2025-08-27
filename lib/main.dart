@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -5,21 +7,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_reserver/models/web/components/side_nav_model.dart';
-import 'package:table_reserver/pages/mobile/auth/authentication.dart';
-import 'package:table_reserver/pages/mobile/settings/edit_profile.dart';
-import 'package:table_reserver/pages/mobile/settings/notification_settings.dart';
-import 'package:table_reserver/pages/mobile/settings/reservation_history.dart';
-import 'package:table_reserver/pages/mobile/settings/support.dart';
-import 'package:table_reserver/pages/mobile/settings/terms_of_service.dart';
-import 'package:table_reserver/pages/mobile/views/account.dart';
 import 'package:table_reserver/pages/mobile/views/homepage.dart';
 import 'package:table_reserver/pages/mobile/views/landing.dart';
-import 'package:table_reserver/pages/mobile/views/nearby.dart';
-import 'package:table_reserver/pages/mobile/views/ratings_page.dart';
-import 'package:table_reserver/pages/mobile/views/search.dart';
-import 'package:table_reserver/pages/mobile/views/successful_reservation.dart';
-import 'package:table_reserver/pages/mobile/views/venue_page.dart';
-import 'package:table_reserver/pages/mobile/views/venues_by_type.dart';
 import 'package:table_reserver/pages/web/auth/authentication.dart';
 import 'package:table_reserver/pages/web/views/account.dart';
 import 'package:table_reserver/pages/web/views/homepage.dart';
@@ -42,17 +31,36 @@ late final GoogleSignIn googleSignIn;
 
 late SharedPreferencesWithCache sharedPreferencesCache;
 
-int get ownerIdFromCache =>
-    sharedPreferencesCache.getInt('ownerId') ??
-    (throw Exception('User not logged in'));
+int? get cachedOwnerId => sharedPreferencesCache.getInt('ownerId');
+
+int? get cachedUserId => sharedPreferencesCache.getInt('userId');
+
+Position? get cachedUserLocation {
+  final locJson = sharedPreferencesCache.getString('lastKnownLocation');
+  if (locJson == null) return null;
+
+  final data = jsonDecode(locJson);
+  return Position(
+    latitude: data['lat'],
+    longitude: data['lng'],
+    timestamp: DateTime.now(),
+    accuracy: 0.0,
+    altitude: 0.0,
+    heading: 0.0,
+    speed: 0.0,
+    speedAccuracy: 0.0,
+    altitudeAccuracy: 0.0,
+    headingAccuracy: 0.0,
+  );
+}
 
 AuthenticationMethod currentAuthMethod = AuthenticationMethod.none;
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  initialiseGoogleSignIn();
-  initialiseSharedPreferences();
+  await initialiseGoogleSignIn();
+  await initialiseSharedPreferences();
 
   runApp(
     ChangeNotifierProvider(
@@ -62,7 +70,7 @@ void main() {
   );
 }
 
-void initialiseGoogleSignIn() {
+Future<void> initialiseGoogleSignIn() async {
   iosGoogleClientId = const String.fromEnvironment('IOS_GOOGLE_CLIENT_ID');
   webGoogleClientId = const String.fromEnvironment('WEB_GOOGLE_CLIENT_ID');
 
@@ -78,24 +86,22 @@ void initialiseGoogleSignIn() {
   );
 }
 
-void initialiseSharedPreferences() async {
+Future<void> initialiseSharedPreferences() async {
   sharedPreferencesCache = await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(
-      allowList: <String>{'ownerId', 'userName', 'userEmail'},
+      allowList: <String>{
+        'userId',
+        'lastKnownLocation',
+        'ownerId',
+        'userName',
+        'userEmail',
+      },
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  T getRequiredArg<T>(BuildContext context, String key) {
-    final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    final value = args?[key];
-    if (value is T) return value;
-    throw Exception("Missing or invalid argument '$key'");
-  }
 
   T? getOptionalArg<T>(BuildContext context, String key) {
     final args =
@@ -123,77 +129,15 @@ class MyApp extends StatelessWidget {
       theme: MobileTheme.lightTheme,
       darkTheme: MobileTheme.darkTheme,
       themeMode: ThemeMode.system,
-      home: const Landing(),
+      home: cachedUserId != null
+          ? Homepage(userId: cachedUserId, userLocation: cachedUserLocation)
+          : const Landing(),
       debugShowCheckedModeBanner: false,
-      routes: {
-        Routes.landing: (context) => const Landing(),
-        Routes.homepage: (context) => Homepage(
-          userId: getOptionalArg<int>(context, 'userId'),
-          userLocation: getOptionalArg<Position>(context, 'userLocation'),
-        ),
-        Routes.search: (context) => Search(
-          userId: getOptionalArg<int>(context, 'userId'),
-          userLocation: getOptionalArg<Position>(context, 'userLocation'),
-        ),
-        Routes.nearby: (context) => Nearby(
-          userId: getOptionalArg<int>(context, 'userId'),
-          userLocation: getOptionalArg<Position>(context, 'userLocation'),
-        ),
-        Routes.account: (context) => Account(
-          userId: getOptionalArg<int>(context, 'userId'),
-          userLocation: getOptionalArg<Position>(context, 'userLocation'),
-        ),
-        Routes.reservationHistory: (context) => ReservationHistory(
-          userId: getRequiredArg<int>(context, 'userId'),
-          userLocation: getOptionalArg<Position>(context, 'userLocation'),
-        ),
-        Routes.notificationSettings: (context) => NotificationSettings(
-          userId: getRequiredArg<int>(context, 'userId'),
-          userLocation: getOptionalArg<Position>(context, 'userLocation'),
-        ),
-        Routes.support: (context) => Support(
-          userId: getRequiredArg<int>(context, 'userId'),
-          userLocation: getOptionalArg<Position>(context, 'userLocation'),
-        ),
-        Routes.editProfile: (context) => EditProfile(
-          userId: getRequiredArg<int>(context, 'userId'),
-          userLocation: getOptionalArg<Position>(context, 'userLocation'),
-        ),
-        Routes.termsOfService: (context) => TermsOfService(
-          userId: getOptionalArg<int>(context, 'userId'),
-          userLocation: getOptionalArg<Position>(context, 'userLocation'),
-        ),
-        Routes.authentication: (context) => const Authentication(),
-        Routes.venue: (context) => VenuePage(
-          venueId: getRequiredArg<int>(context, 'venueId'),
-          userId: getOptionalArg<int>(context, 'userId'),
-          userLocation: getOptionalArg<Position>(context, 'userLocation'),
-        ),
-        Routes.venueRatings: (context) => RatingsPage(
-          venueId: getRequiredArg<int>(context, 'venueId'),
-          userId: getOptionalArg<int>(context, 'userId'),
-          userLocation: getOptionalArg<Position>(context, 'userLocation'),
-        ),
-        Routes.venuesByType: (context) => VenuesByType(
-          type: getRequiredArg<String>(context, 'type'),
-          userId: getOptionalArg<int>(context, 'userId'),
-          userLocation: getOptionalArg<Position>(context, 'userLocation'),
-        ),
-        Routes.successfulReservation: (context) => SuccessfulReservation(
-          venueName: getRequiredArg<String>(context, 'venueName'),
-          numberOfGuests: getRequiredArg<int>(context, 'numberOfGuests'),
-          reservationDateTime: getRequiredArg<DateTime>(
-            context,
-            'reservationDateTime',
-          ),
-          userId: getRequiredArg<int>(context, 'userId'),
-          userLocation: getOptionalArg<Position>(context, 'userLocation'),
-        ),
-      },
     );
   }
 
   Widget _buildWebMaterialApp() {
+    int? ownerId = sharedPreferencesCache.getInt('ownerId');
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, _) {
         return MaterialApp(
@@ -201,14 +145,15 @@ class MyApp extends StatelessWidget {
           theme: WebTheme.lightTheme,
           darkTheme: WebTheme.darkTheme,
           themeMode: themeProvider.themeMode,
-          home: const WebLanding(),
+          home: ownerId != null
+              ? WebHomepage(ownerId: ownerId)
+              : const WebLanding(),
           debugShowCheckedModeBanner: false,
           routes: {
             Routes.webLanding: (context) => const WebLanding(),
             Routes.webAuthentication: (context) => const WebAuthentication(),
-            Routes.webHomepage: (context) => WebHomepage(
-              ownerId: getOptionalArg(context, 'ownerId') ?? ownerIdFromCache,
-            ),
+            Routes.webHomepage: (context) =>
+                WebHomepage(ownerId: getOptionalArg(context, 'ownerId')),
             Routes.webVenues: (context) => const WebVenuesPage(),
             Routes.webAccount: (context) => const WebAccount(),
           },

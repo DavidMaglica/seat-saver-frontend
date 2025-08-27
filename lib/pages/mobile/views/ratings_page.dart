@@ -1,16 +1,16 @@
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:table_reserver/components/mobile/custom_appbar.dart';
-import 'package:table_reserver/components/mobile/modal_widgets.dart';
-import 'package:table_reserver/utils/toaster.dart';
-import 'package:table_reserver/models/mobile/views/ratings_model.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:rating_summary/rating_summary.dart';
+import 'package:table_reserver/components/mobile/custom_appbar.dart';
+import 'package:table_reserver/components/mobile/modal_widgets.dart';
+import 'package:table_reserver/models/mobile/views/ratings_model.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/toaster.dart';
 
 class RatingsPage extends StatelessWidget {
   final int venueId;
@@ -33,10 +33,12 @@ class RatingsPage extends StatelessWidget {
           bool isAtBottom = false;
 
           while (model.ratings == null) {
-            return Center(child: LoadingAnimationWidget.staggeredDotsWave(
-              color: MobileTheme.accent1,
-              size: 75,
-            ));
+            return Center(
+              child: LoadingAnimationWidget.staggeredDotsWave(
+                color: MobileTheme.accent1,
+                size: 75,
+              ),
+            );
           }
 
           return GestureDetector(
@@ -44,12 +46,7 @@ class RatingsPage extends StatelessWidget {
             child: Scaffold(
               key: model.scaffoldKey,
               backgroundColor: Theme.of(context).colorScheme.surface,
-              appBar: CustomAppbar(
-                onBack: () => Navigator.of(context).pop({
-                  'userId': userId,
-                  'userLocation': userLocation,
-                }),
-              ),
+              appBar: CustomAppbar(onBack: () => Navigator.of(context).pop()),
               body: SafeArea(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
@@ -57,7 +54,7 @@ class RatingsPage extends StatelessWidget {
                     _buildContainer(context, model),
                     Expanded(
                       child: Stack(
-                        alignment: const AlignmentDirectional(-1,-1),
+                        alignment: const AlignmentDirectional(-1, -1),
                         children: [
                           NotificationListener<ScrollNotification>(
                             onNotification: (notification) {
@@ -125,7 +122,7 @@ class RatingsPage extends StatelessWidget {
             blurRadius: 3,
             color: Theme.of(ctx).colorScheme.outline,
             offset: const Offset(0, 5),
-          )
+          ),
         ],
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(12),
@@ -143,16 +140,26 @@ class RatingsPage extends StatelessWidget {
           counterTwoStars: twoStars,
           counterOneStars: oneStar,
           color: MobileTheme.accent1,
-          labelCounterOneStars:
-              Text('1', style: Theme.of(ctx).textTheme.bodyMedium),
-          labelCounterTwoStars:
-              Text('2', style: Theme.of(ctx).textTheme.bodyMedium),
-          labelCounterThreeStars:
-              Text('3', style: Theme.of(ctx).textTheme.bodyMedium),
-          labelCounterFourStars:
-              Text('4', style: Theme.of(ctx).textTheme.bodyMedium),
-          labelCounterFiveStars:
-              Text('5', style: Theme.of(ctx).textTheme.bodyMedium),
+          labelCounterOneStars: Text(
+            '1',
+            style: Theme.of(ctx).textTheme.bodyMedium,
+          ),
+          labelCounterTwoStars: Text(
+            '2',
+            style: Theme.of(ctx).textTheme.bodyMedium,
+          ),
+          labelCounterThreeStars: Text(
+            '3',
+            style: Theme.of(ctx).textTheme.bodyMedium,
+          ),
+          labelCounterFourStars: Text(
+            '4',
+            style: Theme.of(ctx).textTheme.bodyMedium,
+          ),
+          labelCounterFiveStars: Text(
+            '5',
+            style: Theme.of(ctx).textTheme.bodyMedium,
+          ),
         ),
       ),
     );
@@ -171,7 +178,7 @@ class RatingsPage extends StatelessWidget {
                 blurRadius: 3,
                 color: Theme.of(ctx).colorScheme.outline,
                 offset: const Offset(0, 3),
-              )
+              ),
             ],
             borderRadius: BorderRadius.circular(12),
           ),
@@ -201,8 +208,9 @@ class RatingsPage extends StatelessWidget {
                               ),
                               direction: Axis.horizontal,
                               rating: rating.rating.roundToDouble(),
-                              unratedColor:
-                                  const Color(0xFF57636C).withValues(alpha: 0.5),
+                              unratedColor: const Color(
+                                0xFF57636C,
+                              ).withValues(alpha: 0.5),
                               itemCount: 5,
                               itemSize: 24,
                             ),
@@ -228,8 +236,12 @@ class RatingsPage extends StatelessWidget {
                 ),
                 if (rating.comment.isNotEmpty == true)
                   Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 12),
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                      16,
+                      4,
+                      16,
+                      12,
+                    ),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -317,11 +329,13 @@ class RatingsPage extends StatelessWidget {
                                 },
                                 itemBuilder: (context, index) => Icon(
                                   CupertinoIcons.star_fill,
-                                  color:
-                                      Theme.of(context).colorScheme.onTertiary,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onTertiary,
                                 ),
-                                unratedColor:
-                                    const Color(0xFF57636C).withValues(alpha: 0.5),
+                                unratedColor: const Color(
+                                  0xFF57636C,
+                                ).withValues(alpha: 0.5),
                                 direction: Axis.horizontal,
                                 glow: false,
                                 ignoreGestures: false,
@@ -359,33 +373,21 @@ class RatingsPage extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        buildModalButton(
-          'Cancel',
-          () {
-            Navigator.of(context).pop();
-          },
-          Theme.of(context).colorScheme.onPrimary,
-        ),
-        buildModalButton(
-          'Rate',
-          () {
-            if (rating == 0) {
-              Toaster.displayError(
-                context,
-                'Please select a rating before submitting.',
-              );
-              return;
-            }
-
-            model.rateVenue(
-              userId!,
-              rating,
-              model.commentTextController.text,
+        buildModalButton('Cancel', () {
+          Navigator.of(context).pop();
+        }, Theme.of(context).colorScheme.onPrimary),
+        buildModalButton('Rate', () {
+          if (rating == 0) {
+            Toaster.displayError(
+              context,
+              'Please select a rating before submitting.',
             );
-            Navigator.of(context).pop();
-          },
-          MobileTheme.successColor,
-        ),
+            return;
+          }
+
+          model.rateVenue(userId!, rating, model.commentTextController.text);
+          Navigator.of(context).pop();
+        }, MobileTheme.successColor),
       ],
     );
   }
@@ -406,10 +408,7 @@ class RatingsPage extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: MobileTheme.infoColor,
-            width: .5,
-          ),
+          borderSide: const BorderSide(color: MobileTheme.infoColor, width: .5),
           borderRadius: BorderRadius.circular(8),
         ),
         errorBorder: OutlineInputBorder(
@@ -436,12 +435,14 @@ class RatingsPage extends StatelessWidget {
   Widget _buildContainer(BuildContext ctx, RatingsPageModel model) {
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(
-        color: Theme.of(ctx).colorScheme.onSurface,
-      ),
+      decoration: BoxDecoration(color: Theme.of(ctx).colorScheme.onSurface),
       child: Padding(
-        padding:
-            const EdgeInsets.only(left: 12, top: 16, right: 12, bottom: 24),
+        padding: const EdgeInsets.only(
+          left: 12,
+          top: 16,
+          right: 12,
+          bottom: 24,
+        ),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -455,10 +456,7 @@ class RatingsPage extends StatelessWidget {
                   style: Theme.of(ctx).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 14),
-                Text(
-                  '# of Ratings',
-                  style: Theme.of(ctx).textTheme.bodyMedium,
-                ),
+                Text('# of Ratings', style: Theme.of(ctx).textTheme.bodyMedium),
               ],
             ),
             Column(
@@ -487,10 +485,7 @@ class RatingsPage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 14),
-                const Text(
-                  'Avg. Rating',
-                  style: TextStyle(),
-                ),
+                const Text('Avg. Rating', style: TextStyle()),
               ],
             ),
           ],

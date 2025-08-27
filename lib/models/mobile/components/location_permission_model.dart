@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/notification_settings.dart';
+import 'package:table_reserver/main.dart';
 import 'package:table_reserver/pages/mobile/views/homepage.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
@@ -85,14 +88,15 @@ class LocationPermissionPopUpModel extends ChangeNotifier {
       );
     }
 
+    await sharedPreferencesCache.setString(
+      'lastKnownLocation',
+      jsonEncode({'lat': userLocation.latitude, 'lng': userLocation.longitude}),
+    );
     _accountApi.updateUserLocation(userId, userLocation);
 
     if (!context.mounted) return;
     Navigator.of(context).push(
-      FadeInRoute(
-        page: Homepage(userId: userId, userLocation: userLocation),
-        routeName: Routes.homepage,
-      ),
+      MobileFadeInRoute(page: const Homepage(), routeName: Routes.homepage),
     );
   }
 }

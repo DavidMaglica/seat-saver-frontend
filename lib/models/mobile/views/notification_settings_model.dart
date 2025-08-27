@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/api/account_api.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/notification_settings.dart';
@@ -8,7 +7,6 @@ import 'package:table_reserver/themes/mobile_theme.dart';
 class NotificationSettingsModel extends ChangeNotifier {
   final BuildContext context;
   final int userId;
-  final Position? userLocation;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -18,11 +16,7 @@ class NotificationSettingsModel extends ChangeNotifier {
   bool isActiveEmailNotifications = false;
   bool isActiveLocationServices = false;
 
-  NotificationSettingsModel({
-    required this.context,
-    required this.userId,
-    this.userLocation,
-  });
+  NotificationSettingsModel({required this.context, required this.userId});
 
   Future<void> loadNotificationSettings() async {
     NotificationOptions? response = await accountApi.getNotificationOptions(

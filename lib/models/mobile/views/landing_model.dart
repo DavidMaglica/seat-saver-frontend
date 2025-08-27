@@ -18,8 +18,8 @@ class LandingModel extends ChangeNotifier {
 
   Future<void> sendToMainPage() async {
     if (!context.mounted) return;
-    Navigator.of(
-      context,
-    ).push(FadeInRoute(page: const Homepage(), routeName: Routes.homepage));
+    Navigator.of(context).push(
+      MobileFadeInRoute(page: const Homepage(), routeName: Routes.homepage),
+    );
   }
 }

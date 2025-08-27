@@ -58,13 +58,10 @@ class _VenueCardState extends State<VenueCard> {
 
   void _openVenuePage() {
     Navigator.of(context).push(
-      FadeInRoute(
-        page: VenuePage(
-          venueId: widget.venueId,
-          userId: widget.userId,
-          userLocation: widget.userLocation,
-        ),
+      MobileFadeInRoute(
+        page: VenuePage(venueId: widget.venueId),
         routeName: Routes.venue,
+        arguments: {'venueId': widget.venueId},
       ),
     );
   }
@@ -194,11 +191,9 @@ class _VenueCardState extends State<VenueCard> {
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
               style: TextStyle(
-                color: Theme
-                    .of(context)
-                    .colorScheme
-                    .onPrimary
-                    .withValues(alpha: 0.7),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onPrimary.withValues(alpha: 0.7),
                 fontWeight: FontWeight.w800,
                 fontSize: 9,
               ),

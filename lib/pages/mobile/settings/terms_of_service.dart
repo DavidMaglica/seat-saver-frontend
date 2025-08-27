@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/pages/mobile/views/account.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 
 class TermsOfService extends StatefulWidget {
   final int? userId;
@@ -38,13 +38,8 @@ class _TermsOfServiceState extends State<TermsOfService> {
           title: 'Terms of Service',
           onBack: () {
             Navigator.of(context).push(
-              FadeInRoute(
-                page: Account(
-                  userId: widget.userId,
-                  userLocation: widget.userLocation,
-                ),
-                routeName: Routes.account,
-              ),
+              MobileFadeInRoute(
+                  page: const Account(), routeName: Routes.account),
             );
           },
         ),

@@ -67,13 +67,10 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   void _openVenuePage() {
     Navigator.of(context).push(
-      FadeInRoute(
-        page: VenuePage(
-          venueId: widget.venue.id,
-          userId: widget.userId,
-          userLocation: widget.userLocation,
-        ),
+      MobileFadeInRoute(
+        page: VenuePage(venueId: widget.venue.id),
         routeName: Routes.venue,
+        arguments: {'venueId': widget.venue.id},
       ),
     );
   }

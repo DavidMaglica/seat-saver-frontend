@@ -1,26 +1,20 @@
-import 'package:table_reserver/models/mobile/views/successful_reservation_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
-
+import 'package:table_reserver/models/mobile/views/successful_reservation_model.dart';
 
 class SuccessfulReservation extends StatelessWidget {
   final String venueName;
   final int numberOfGuests;
   final DateTime reservationDateTime;
-  final int userId;
-  final Position? userLocation;
 
   const SuccessfulReservation({
     Key? key,
     required this.venueName,
     required this.numberOfGuests,
     required this.reservationDateTime,
-    required this.userId,
-    this.userLocation,
   }) : super(key: key);
 
   @override
@@ -31,8 +25,6 @@ class SuccessfulReservation extends StatelessWidget {
         venueName: venueName,
         numberOfGuests: numberOfGuests,
         reservationDateTime: reservationDateTime,
-        userId: userId,
-        userLocation: userLocation,
       )..startCountdown(),
       child: Consumer<SuccessfulReservationModel>(
         builder: (context, model, _) {
@@ -91,19 +83,19 @@ class SuccessfulReservation extends StatelessWidget {
                                   options: FFButtonOptions(
                                     width: 270,
                                     height: 50,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
                                     textStyle: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onPrimary,
                                       fontSize: 16,
                                     ),
                                     borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onPrimary,
                                       width: 2,
                                     ),
                                     elevation: 3,
@@ -132,10 +124,7 @@ class SuccessfulReservation extends StatelessWidget {
       height: 196,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(
-          color: Theme.of(ctx).colorScheme.primary,
-          width: 4,
-        ),
+        border: Border.all(color: Theme.of(ctx).colorScheme.primary, width: 4),
       ),
       child: Icon(
         CupertinoIcons.check_mark,

@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/mobile/modal_widgets.dart';
 import 'package:table_reserver/models/mobile/views/edit_profile_model.dart';
@@ -6,26 +9,16 @@ import 'package:table_reserver/pages/mobile/views/account.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
 
 class EditProfile extends StatelessWidget {
   final int userId;
-  final Position? userLocation;
 
-  const EditProfile({Key? key, required this.userId, this.userLocation})
-    : super(key: key);
+  const EditProfile({Key? key, required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => EditProfileModel(
-        context: context,
-        userId: userId,
-        userLocation: userLocation,
-      )..init(),
+      create: (_) => EditProfileModel(context: context, userId: userId)..init(),
       child: Consumer<EditProfileModel>(
         builder: (context, model, _) {
           if (model.currentUser == null) {
@@ -41,11 +34,8 @@ class EditProfile extends StatelessWidget {
               title: 'Edit Profile',
               onBack: () {
                 Navigator.of(context).push(
-                  FadeInRoute(
-                    page: Account(
-                      userId: model.userId,
-                      userLocation: userLocation,
-                    ),
+                  MobileFadeInRoute(
+                    page: const Account(),
                     routeName: Routes.account,
                   ),
                 );

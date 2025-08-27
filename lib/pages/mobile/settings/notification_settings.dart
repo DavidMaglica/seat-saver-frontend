@@ -1,21 +1,18 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:table_reserver/components/mobile/action_button.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/models/mobile/views/notification_settings_model.dart';
 import 'package:table_reserver/pages/mobile/views/account.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
 
 class NotificationSettings extends StatelessWidget {
   final int userId;
-  final Position? userLocation;
 
   const NotificationSettings({
     Key? key,
     required this.userId,
-    this.userLocation,
   }) : super(key: key);
 
   @override
@@ -24,7 +21,6 @@ class NotificationSettings extends StatelessWidget {
       create: (_) => NotificationSettingsModel(
         context: context,
         userId: userId,
-        userLocation: userLocation,
       )..loadNotificationSettings(),
       builder: (context, _) {
         final model = context.watch<NotificationSettingsModel>();
@@ -36,10 +32,8 @@ class NotificationSettings extends StatelessWidget {
             title: 'Notification Settings',
             onBack: () {
               Navigator.of(context).push(
-                FadeInRoute(
-                  page: Account(userId: userId, userLocation: userLocation),
-                  routeName: Routes.account,
-                ),
+                MobileFadeInRoute(
+                    page: const Account(), routeName: Routes.account),
               );
             },
           ),
