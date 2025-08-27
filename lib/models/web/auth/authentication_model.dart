@@ -44,7 +44,7 @@ class AuthenticationModel extends FlutterFlowModel<WebAuthentication> {
 
   @override
   void initState(BuildContext context) {
-    final int? ownerId = prefsWithCache.getInt('ownerId');
+    final int? ownerId = sharedPreferencesCache.getInt('ownerId');
 
     if (ownerId != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

@@ -47,7 +47,7 @@ class VenuesModel extends FlutterFlowModel<WebVenuesPage> with ChangeNotifier {
   }
 
   Future<void> _fetchNextPage() async {
-    int ownerId = prefsWithCache.getInt('ownerId')!;
+    int ownerId = sharedPreferencesCache.getInt('ownerId')!;
     if (isLoading || !hasMorePages) return;
 
     isLoading = true;

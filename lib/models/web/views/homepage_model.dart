@@ -102,8 +102,8 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
     UserResponse? response = await accountApi.getUser(ownerId);
     if (response != null && response.success && response.user != null) {
       User user = response.user!;
-      await prefsWithCache.setString('userEmail', user.email);
-      await prefsWithCache.setString('userName', user.username);
+      await sharedPreferencesCache.setString('userEmail', user.email);
+      await sharedPreferencesCache.setString('userName', user.username);
       Provider.of<SideNavModel>(context, listen: false).getUserFromCache();
     } else {
       if (!context.mounted) return;
@@ -111,7 +111,7 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
         context,
         'Error happened while logging you in. Please try again later.¬',
       );
-      prefsWithCache.clear();
+      sharedPreferencesCache.clear();
       currentAuthMethod = AuthenticationMethod.none;
       Navigator.of(context).pushReplacement(
         FadeInRoute(page: const WebLanding(), routeName: Routes.webLanding),

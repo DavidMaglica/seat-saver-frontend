@@ -87,7 +87,7 @@ class CreateVenueModel extends FlutterFlowModel<CreateVenueModal>
   }
 
   Future<void> createVenue(BuildContext context) async {
-    final int ownerId = prefsWithCache.getInt('ownerId')!;
+    final int ownerId = sharedPreferencesCache.getInt('ownerId')!;
     if (!isFormValid()) {
       notifyListeners();
       return;

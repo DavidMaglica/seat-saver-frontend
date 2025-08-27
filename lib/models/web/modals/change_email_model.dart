@@ -33,7 +33,7 @@ class ChangeEmailModel extends FlutterFlowModel<ChangeEmailModal>
 
   Future<void> updateEmail(BuildContext context) async {
     final String newEmail = emailTextController.text.trim();
-    final String currentEmail = prefsWithCache.getString('userEmail')!;
+    final String currentEmail = sharedPreferencesCache.getString('userEmail')!;
 
     if (!isValidEmail(newEmail, currentEmail)) {
       notifyListeners();
@@ -42,7 +42,7 @@ class ChangeEmailModel extends FlutterFlowModel<ChangeEmailModal>
 
     emailErrorText = null;
 
-    final int ownerId = ownerIdFromCache;
+    final int ownerId = sharedPreferencesCache.getInt('userId')!;
 
     final BasicResponse response = await accountApi.changeEmail(
       ownerId,
@@ -52,7 +52,7 @@ class ChangeEmailModel extends FlutterFlowModel<ChangeEmailModal>
     if (response.success) {
       if (!context.mounted) return;
 
-      prefsWithCache.setString('userEmail', newEmail);
+      sharedPreferencesCache.setString('userEmail', newEmail);
 
       emailTextController.clear();
       WebToaster.displaySuccess(context, response.message);

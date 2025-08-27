@@ -45,7 +45,7 @@ class ChangePasswordModel extends FlutterFlowModel<ChangePasswordModal>
       return;
     }
 
-    final int ownerId = prefsWithCache.getInt('ownerId')!;
+    final int ownerId = sharedPreferencesCache.getInt('ownerId')!;
 
     BasicResponse response = await accountApi.changePassword(
       ownerId,

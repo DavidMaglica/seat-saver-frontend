@@ -138,7 +138,7 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
   }
 
   Future<void> fetchVenue(BuildContext context) async {
-    int ownerId = prefsWithCache.getInt('ownerId')!;
+    int ownerId = sharedPreferencesCache.getInt('ownerId')!;
     Venue? venue = await venuesApi.getVenue(venueId);
 
     if (venue != null) {

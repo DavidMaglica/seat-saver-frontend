@@ -40,10 +40,11 @@ late final String webGoogleClientId;
 
 late final GoogleSignIn googleSignIn;
 
-late SharedPreferencesWithCache prefsWithCache;
+late SharedPreferencesWithCache sharedPreferencesCache;
 
 int get ownerIdFromCache =>
-    prefsWithCache.getInt('ownerId') ?? (throw Exception('User not logged in'));
+    sharedPreferencesCache.getInt('ownerId') ??
+    (throw Exception('User not logged in'));
 
 AuthenticationMethod currentAuthMethod = AuthenticationMethod.none;
 
@@ -78,7 +79,7 @@ void initialiseGoogleSignIn() {
 }
 
 void initialiseSharedPreferences() async {
-  prefsWithCache = await SharedPreferencesWithCache.create(
+  sharedPreferencesCache = await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(
       allowList: <String>{'ownerId', 'userName', 'userEmail'},
     ),
