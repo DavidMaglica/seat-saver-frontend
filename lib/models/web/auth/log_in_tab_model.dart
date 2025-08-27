@@ -28,7 +28,7 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
 
   @override
   void initState(BuildContext context) {
-    final int? ownerId = prefsWithCache.getInt('ownerId');
+    final int? ownerId = sharedPreferencesCache.getInt('ownerId');
     authListener(context);
     if (isActive) {
       if (ownerId != null) return;
@@ -71,7 +71,7 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> {
     if (response.success && response.data != null) {
       if (!context.mounted) return;
       int ownerId = response.data!;
-      prefsWithCache.setInt('ownerId', ownerId);
+      sharedPreferencesCache.setInt('ownerId', ownerId);
 
       Navigator.of(context).push(
         FadeInRoute(

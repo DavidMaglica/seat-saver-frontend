@@ -15,7 +15,7 @@ class AccountModel extends FlutterFlowModel<WebAccount> with ChangeNotifier {
   int? numberOfReservations;
   int? venuesOwned;
 
-  int get ownerId => prefsWithCache.getInt('ownerId')!;
+  int get ownerId => sharedPreferencesCache.getInt('ownerId')!;
 
   ReservationsApi reservationsApi = ReservationsApi();
   VenuesApi venuesApi = VenuesApi();
@@ -43,12 +43,12 @@ class AccountModel extends FlutterFlowModel<WebAccount> with ChangeNotifier {
   Future<void> logOut(BuildContext context) async {
     switch (currentAuthMethod) {
       case AuthenticationMethod.google:
-        prefsWithCache.clear();
+        sharedPreferencesCache.clear();
         await googleSignIn.signOut();
         redirectToLanding(context);
         return;
       case AuthenticationMethod.custom:
-        prefsWithCache.clear();
+        sharedPreferencesCache.clear();
         redirectToLanding(context);
         return;
       case AuthenticationMethod.none:

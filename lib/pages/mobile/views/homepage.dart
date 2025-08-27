@@ -95,13 +95,8 @@ class Homepage extends StatelessWidget {
                   ),
                   bottomNavigationBar: NavBar(
                     currentIndex: model.pageIndex,
-                    onTap: (index, context) => onNavbarItemTapped(
-                      context,
-                      model.pageIndex,
-                      index,
-                      userId,
-                      model.currentUserLocation ?? userLocation,
-                    ),
+                    onTap: (index, context) =>
+                        onNavbarItemTapped(context, model.pageIndex, index),
                   ),
                 ),
               ),
@@ -141,13 +136,10 @@ class Homepage extends StatelessWidget {
                         child: InkWell(
                           onTap: () {
                             Navigator.of(ctx).push(
-                              FadeInRoute(
-                                page: Search(
-                                  userId: userId,
-                                  userLocation: userLocation,
-                                  locationQuery: city,
-                                ),
+                              MobileFadeInRoute(
+                                page: Search(locationQuery: city),
                                 routeName: Routes.search,
+                                arguments: {'locationQuery': city},
                               ),
                             );
                           },

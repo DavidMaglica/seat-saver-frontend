@@ -51,8 +51,10 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
       password,
       confirmPassword,
     );
-    if (response.success && response.data != null) {
-      _goToHomepage(response.data!);
+    int? userId = response.data;
+    if (response.success && userId != null) {
+      sharedPreferencesCache.setInt('userId', userId);
+      _goToHomepage(userId);
     } else {
       if (!mounted) return;
       Toaster.displayError(context, response.message);
@@ -61,10 +63,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
 
   void _goToHomepage(int userId) {
     Navigator.of(context).push(
-      FadeInRoute(
-        page: Homepage(userId: userId, userLocation: null),
-        routeName: Routes.homepage,
-      ),
+      MobileFadeInRoute(page: const Homepage(), routeName: Routes.homepage),
     );
   }
 

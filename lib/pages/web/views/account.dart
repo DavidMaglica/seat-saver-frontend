@@ -9,8 +9,8 @@ import 'package:table_reserver/components/web/modals/modal_widgets.dart';
 import 'package:table_reserver/components/web/modals/support_modal.dart';
 import 'package:table_reserver/components/web/side_nav.dart';
 import 'package:table_reserver/main.dart';
-import 'package:table_reserver/models/web/views/account_model.dart';
 import 'package:table_reserver/models/web/components/side_nav_model.dart';
+import 'package:table_reserver/models/web/views/account_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
 class WebAccount extends StatefulWidget {
@@ -21,9 +21,9 @@ class WebAccount extends StatefulWidget {
 }
 
 class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
-  final int ownerId = ownerIdFromCache;
-  String userName = prefsWithCache.getString('userName')!;
-  String userEmail = prefsWithCache.getString('userEmail')!;
+  final int ownerId = sharedPreferencesCache.getInt('userId')!;
+  String userName = sharedPreferencesCache.getString('userName')!;
+  String userEmail = sharedPreferencesCache.getString('userEmail')!;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -34,8 +34,8 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
 
   void _refreshUserData() {
     setState(() {
-      userName = prefsWithCache.getString('userName')!;
-      userEmail = prefsWithCache.getString('userEmail')!;
+      userName = sharedPreferencesCache.getString('userName')!;
+      userEmail = sharedPreferencesCache.getString('userEmail')!;
     });
     Provider.of<SideNavModel>(context, listen: false).getUserFromCache();
   }

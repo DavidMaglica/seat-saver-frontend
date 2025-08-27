@@ -28,7 +28,7 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
 
   @override
   void initState(BuildContext context) {
-    final int? ownerId = prefsWithCache.getInt('ownerId');
+    final int? ownerId = sharedPreferencesCache.getInt('ownerId');
     authListener(context);
     if (isActive) {
       if (ownerId != null) return;
@@ -72,7 +72,7 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
     if (response.success && response.data != null) {
       if (!context.mounted) return;
       int ownerId = response.data!;
-      prefsWithCache.setInt('ownerId', ownerId);
+      sharedPreferencesCache.setInt('ownerId', ownerId);
 
       if (!context.mounted) return;
       Navigator.of(context).push(

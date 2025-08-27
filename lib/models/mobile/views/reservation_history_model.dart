@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/api/data/reservation_details.dart';
 import 'package:table_reserver/api/reservation_api.dart';
 import 'package:table_reserver/api/venue_api.dart';
@@ -8,7 +7,6 @@ import 'package:table_reserver/utils/toaster.dart';
 class ReservationHistoryModel extends ChangeNotifier {
   final BuildContext context;
   final int userId;
-  final Position? userLocation;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final ReservationsApi reservationsApi = ReservationsApi();
@@ -17,11 +15,7 @@ class ReservationHistoryModel extends ChangeNotifier {
   List<ReservationDetails>? reservations;
   final Map<int, String> _venueNameCache = {};
 
-  ReservationHistoryModel({
-    required this.context,
-    required this.userId,
-    this.userLocation,
-  });
+  ReservationHistoryModel({required this.context, required this.userId});
 
   void init() {
     _loadReservationsFromApi();

@@ -104,7 +104,7 @@ class _AuthenticationState extends State<Authentication>
                                       ),
                                       onPressed: () {
                                         Navigator.of(context).push(
-                                          FadeInRoute(
+                                          MobileFadeInRoute(
                                             page: const Homepage(),
                                             routeName: Routes.homepage,
                                           ),

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/api/data/paged_response.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/venue_api.dart';
@@ -134,16 +133,13 @@ class SearchModel extends ChangeNotifier {
     _fetchNextPage(null);
   }
 
-  Function() goToVenuePage(Venue venue, int? userId, Position? userLocation) {
+  Function() goToVenuePage(Venue venue) {
     return () {
       Navigator.of(context).push(
-        FadeInRoute(
-          page: VenuePage(
-            venueId: venue.id,
-            userId: userId,
-            userLocation: userLocation,
-          ),
+        MobileFadeInRoute(
+          page: VenuePage(venueId: venue.id),
           routeName: Routes.venue,
+          arguments: {'venueId': venue.id},
         ),
       );
     };

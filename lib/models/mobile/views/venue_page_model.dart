@@ -139,16 +139,21 @@ class VenuePageModel extends ChangeNotifier {
     );
 
     final isWorkingDay = venue.workingDays.contains(
-        reservationDateTime.weekday - 1);
+      reservationDateTime.weekday - 1,
+    );
     if (!isWorkingDay) {
       Toaster.displayError(
-          ctx, 'The selected date is not a working day for the venue.');
+        ctx,
+        'The selected date is not a working day for the venue.',
+      );
       return false;
     }
 
     if (!isWithinWorkingHours(reservationDateTime, venue.workingHours)) {
       Toaster.displayError(
-          ctx, 'The selected time is outside of the venue\'s working hours.');
+        ctx,
+        'The selected time is outside of the venue\'s working hours.',
+      );
       return false;
     }
 
@@ -201,15 +206,18 @@ class VenuePageModel extends ChangeNotifier {
     }
 
     Navigator.of(ctx).push(
-      FadeInRoute(
+      MobileFadeInRoute(
         page: SuccessfulReservation(
           venueName: venue.name,
           numberOfGuests: selectedNumberOfPeople!,
           reservationDateTime: reservationDateTime,
-          userId: userId!,
-          userLocation: userLocation,
         ),
         routeName: Routes.successfulReservation,
+        arguments: {
+          'venueName': venue.name,
+          'numberOfGuests': selectedNumberOfPeople!,
+          'reservationDateTime': reservationDateTime,
+        },
       ),
     );
 

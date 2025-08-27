@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:table_reserver/components/mobile/action_button.dart';
 import 'package:table_reserver/components/mobile/custom_appbar.dart';
 import 'package:table_reserver/components/mobile/modal_widgets.dart';
@@ -7,17 +10,11 @@ import 'package:table_reserver/pages/mobile/views/account.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:geolocator/geolocator.dart';
 
 class Support extends StatefulWidget {
   final int userId;
-  final Position? userLocation;
 
-  const Support({Key? key, required this.userId, this.userLocation})
-    : super(key: key);
+  const Support({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<Support> createState() => _SupportState();
@@ -29,11 +26,7 @@ class _SupportState extends State<Support> {
   @override
   void initState() {
     super.initState();
-    model = SupportModel(
-      context: context,
-      userId: widget.userId,
-      position: widget.userLocation,
-    );
+    model = SupportModel(context: context, userId: widget.userId);
   }
 
   @override
@@ -55,13 +48,8 @@ class _SupportState extends State<Support> {
           title: 'Support',
           onBack: () {
             Navigator.of(context).push(
-              FadeInRoute(
-                page: Account(
-                  userId: widget.userId,
-                  userLocation: widget.userLocation,
-                ),
-                routeName: Routes.account,
-              ),
+              MobileFadeInRoute(
+                  page: const Account(), routeName: Routes.account),
             );
           },
         ),

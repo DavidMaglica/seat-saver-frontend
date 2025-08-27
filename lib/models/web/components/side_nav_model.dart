@@ -7,7 +7,7 @@ import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/theme_provider.dart';
 
 class SideNavModel extends FlutterFlowModel<SideNav> with ChangeNotifier {
-  final int ownerId = prefsWithCache.getInt('ownerId')!;
+  final int ownerId = sharedPreferencesCache.getInt('ownerId')!;
 
   String userEmail = '';
   String userName = '';
@@ -20,8 +20,8 @@ class SideNavModel extends FlutterFlowModel<SideNav> with ChangeNotifier {
   }
 
   Future<void> getUserFromCache() async {
-    userEmail = prefsWithCache.getString('userEmail')!;
-    userName = prefsWithCache.getString('userName')!;
+    userEmail = sharedPreferencesCache.getString('userEmail')!;
+    userName = sharedPreferencesCache.getString('userName')!;
     notifyListeners();
   }
 

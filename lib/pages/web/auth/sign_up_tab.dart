@@ -63,7 +63,7 @@ class _SignUpTabState extends State<SignUpTab> {
       if (userResponse != null && userResponse.success) {
         User user = userResponse.user!;
 
-        prefsWithCache.setInt('ownerId', ownerId);
+        sharedPreferencesCache.setInt('ownerId', ownerId);
 
         _goToHomepage(user.id);
       }

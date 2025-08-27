@@ -123,7 +123,7 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
   Future<void> fetchReservations() async {
     isLoadingTable.value = true;
     notifyListeners();
-    final int ownerId = prefsWithCache.getInt('ownerId')!;
+    final int ownerId = sharedPreferencesCache.getInt('ownerId')!;
     List<ReservationDetails> fetchedReservations = await reservationsApi
         .getOwnerReservations(ownerId);
 
@@ -150,7 +150,7 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
   }
 
   Future<void> fetchOwnedVenues() async {
-    final int ownerId = prefsWithCache.getInt('ownerId')!;
+    final int ownerId = sharedPreferencesCache.getInt('ownerId')!;
     PagedResponse<Venue> pagedVenues = await venuesApi.getVenuesByOwner(
       ownerId,
       size: 50,

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:table_reserver/api/data/venue.dart';
@@ -14,11 +13,9 @@ import 'package:table_reserver/utils/routing_utils.dart';
 
 class Search extends StatelessWidget {
   final int? userId;
-  final Position? userLocation;
   final String? locationQuery;
 
-  const Search({Key? key, this.userId, this.userLocation, this.locationQuery})
-    : super(key: key);
+  const Search({Key? key, this.userId, this.locationQuery}) : super(key: key);
 
   void _clear(BuildContext ctx, SearchModel model) {
     Navigator.pop(ctx);
@@ -86,13 +83,8 @@ class Search extends StatelessWidget {
                 ),
                 bottomNavigationBar: NavBar(
                   currentIndex: model.pageIndex,
-                  onTap: (index, context) => onNavbarItemTapped(
-                    context,
-                    model.pageIndex,
-                    index,
-                    userId,
-                    userLocation,
-                  ),
+                  onTap: (index, context) =>
+                      onNavbarItemTapped(context, model.pageIndex, index),
                 ),
               ),
             ),
@@ -200,7 +192,7 @@ class Search extends StatelessWidget {
         vertical: 6,
       ),
       child: ListTile(
-        onTap: model.goToVenuePage(venue, userId, userLocation),
+        onTap: model.goToVenuePage(venue),
         title: Text(venue.name, style: Theme.of(ctx).textTheme.titleMedium),
         subtitle: Text(
           venueType != null ? venueType.toTitleCase() : 'Loading...',

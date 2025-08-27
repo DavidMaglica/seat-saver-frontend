@@ -33,7 +33,9 @@ class ChangeUsernameModel extends FlutterFlowModel<ChangeUsernameModal>
 
   Future<void> updateUsername(BuildContext context) async {
     final String newUsername = usernameTextController.text.trim();
-    final String currentUsername = prefsWithCache.getString('userName')!;
+    final String currentUsername = sharedPreferencesCache.getString(
+      'userName',
+    )!;
 
     if (!isValidUsername(newUsername, currentUsername)) {
       notifyListeners();
@@ -42,7 +44,7 @@ class ChangeUsernameModel extends FlutterFlowModel<ChangeUsernameModal>
 
     usernameErrorText = null;
 
-    final int ownerId = prefsWithCache.getInt('ownerId')!;
+    final int ownerId = sharedPreferencesCache.getInt('ownerId')!;
 
     final BasicResponse response = await accountApi.changeUsername(
       ownerId,
@@ -52,7 +54,7 @@ class ChangeUsernameModel extends FlutterFlowModel<ChangeUsernameModal>
     if (response.success) {
       if (!context.mounted) return;
 
-      prefsWithCache.setString('userName', newUsername);
+      sharedPreferencesCache.setString('userName', newUsername);
 
       usernameTextController.clear();
       WebToaster.displaySuccess(context, response.message);
@@ -77,7 +79,8 @@ class ChangeUsernameModel extends FlutterFlowModel<ChangeUsernameModal>
       return false;
     }
     if (!RegExp(r'^[a-zA-Z0-9_ ]+$').hasMatch(newUsername)) {
-      usernameErrorText = 'Username can only contain letters, numbers, and underscores';
+      usernameErrorText =
+          'Username can only contain letters, numbers, and underscores';
       return false;
     }
     return true;

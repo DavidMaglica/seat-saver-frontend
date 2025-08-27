@@ -1,22 +1,21 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:table_reserver/api/data/user.dart';
 import 'package:table_reserver/components/mobile/navbar.dart';
+import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/mobile/views/account_model.dart';
 import 'package:table_reserver/pages/mobile/auth/authentication.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/routing_utils.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
 
 class Account extends StatelessWidget {
   final int? userId;
-  final Position? userLocation;
 
-  const Account({super.key, this.userId, this.userLocation});
+  const Account({super.key, this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,6 @@ class Account extends StatelessWidget {
       create: (_) => AccountModel(
         context: context,
         userId: userId,
-        userLocation: userLocation,
       )..init(),
       child: Consumer<AccountModel>(
         builder: (context, model, _) {
@@ -62,13 +60,8 @@ class Account extends StatelessWidget {
                 ),
                 bottomNavigationBar: NavBar(
                   currentIndex: model.pageIndex,
-                  onTap: (index, context) => onNavbarItemTapped(
-                    context,
-                    model.pageIndex,
-                    index,
-                    userId,
-                    userLocation,
-                  ),
+                  onTap: (index, context) =>
+                      onNavbarItemTapped(context, model.pageIndex, index),
                 ),
               ),
             ),
@@ -241,8 +234,12 @@ class Account extends StatelessWidget {
         ),
         child: InkWell(
           onTap: () {
+            if (isLoggedIn) {
+              sharedPreferencesCache.remove('userId');
+              sharedPreferencesCache.remove('userLocation');
+            }
             Navigator.of(ctx).push(
-              FadeInRoute(
+              MobileFadeInRoute(
                 page: const Authentication(),
                 routeName: Routes.authentication,
               ),
