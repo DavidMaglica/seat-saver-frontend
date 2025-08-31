@@ -20,7 +20,7 @@ class Homepage extends StatelessWidget {
   final int? userId;
   final Position? userLocation;
 
-  const Homepage({Key? key, this.userId, this.userLocation}) : super(key: key);
+  const Homepage({super.key, this.userId, this.userLocation});
 
   @override
   Widget build(BuildContext context) {

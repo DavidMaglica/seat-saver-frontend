@@ -1,15 +1,11 @@
-import 'package:table_reserver/themes/web_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:table_reserver/themes/web_theme.dart';
 
 class StatCard extends StatelessWidget {
   final String title;
   final int value;
 
-  const StatCard({
-    super.key,
-    required this.title,
-    required this.value,
-  });
+  const StatCard({super.key, required this.title, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +14,10 @@ class StatCard extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Container(
           height: 96,
-          constraints: const BoxConstraints(
-            maxWidth: 316,
-          ),
+          constraints: const BoxConstraints(maxWidth: 316),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onSurface,
             borderRadius: BorderRadius.circular(8),
@@ -34,10 +26,7 @@ class StatCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisSize: MainAxisSize.max,
-              children: [
-                _buildIcon(),
-                _buildStat(context),
-              ],
+              children: [_buildIcon(), _buildStat(context)],
             ),
           ),
         ),
@@ -48,11 +37,7 @@ class StatCard extends StatelessWidget {
   Widget _buildIcon() {
     return const Padding(
       padding: EdgeInsets.only(right: 16),
-      child: Icon(
-        Icons.trending_up_rounded,
-        color: WebTheme.accent1,
-        size: 36,
-      ),
+      child: Icon(Icons.trending_up_rounded, color: WebTheme.accent1, size: 36),
     );
   }
 
@@ -65,8 +50,9 @@ class StatCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style:
-                Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontSize: 14),
           ),
           Row(
             mainAxisSize: MainAxisSize.max,
@@ -76,10 +62,9 @@ class StatCard extends StatelessWidget {
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 4, 0),
                   child: Text(
                     '$value',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontSize: 32),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleLarge?.copyWith(fontSize: 32),
                   ),
                 ),
               ),

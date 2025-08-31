@@ -109,53 +109,50 @@ class ImagesTab extends StatelessWidget {
                     horizontal: 16,
                     vertical: 16,
                   ),
-                  child:
-                      GridView(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                              childAspectRatio: 1,
-                            ),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        children: images.map((imageBytes) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => FullScreenImageView(
-                                    imageBytes: imageBytes,
-                                    heroTag:
-                                        'imageTag_${images.indexOf(imageBytes)}',
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Material(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.memory(
-                                    imageBytes,
-                                    width: double.infinity,
-                                    height: 200,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                  child: GridView(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 1,
+                        ),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    children: images.map((imageBytes) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => FullScreenImageView(
+                                imageBytes: imageBytes,
+                                heroTag:
+                                    'imageTag_${images.indexOf(imageBytes)}',
                               ),
                             ),
                           );
-                        }).toList(),
-                      ).animateOnPageLoad(
-                        model.animationsMap['fadeInOnLoad']!,
-                      ),
+                        },
+                        child: Material(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.memory(
+                                imageBytes,
+                                width: double.infinity,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ).animateOnPageLoad(model.animationsMap['fadeInOnLoad']!),
                 )
               : isLoading
               ? Align(

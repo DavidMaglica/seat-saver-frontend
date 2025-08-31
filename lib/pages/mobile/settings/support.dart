@@ -14,7 +14,7 @@ import 'package:table_reserver/utils/routes.dart';
 class Support extends StatefulWidget {
   final int userId;
 
-  const Support({Key? key, required this.userId}) : super(key: key);
+  const Support({super.key, required this.userId});
 
   @override
   State<Support> createState() => _SupportState();
@@ -49,7 +49,9 @@ class _SupportState extends State<Support> {
           onBack: () {
             Navigator.of(context).push(
               MobileFadeInRoute(
-                  page: const Account(), routeName: Routes.account),
+                page: const Account(),
+                routeName: Routes.account,
+              ),
             );
           },
         ),

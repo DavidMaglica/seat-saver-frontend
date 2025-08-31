@@ -29,10 +29,7 @@ class RatingsPageModel extends ChangeNotifier {
     description: '',
   );
 
-  RatingsPageModel({
-    required this.ctx,
-    required this.venueId,
-  });
+  RatingsPageModel({required this.ctx, required this.venueId});
 
   void init() {
     _loadVenue();
@@ -52,7 +49,9 @@ class RatingsPageModel extends ChangeNotifier {
     } catch (e) {
       if (!ctx.mounted) return;
       Toaster.displayError(
-          ctx, 'Failed to load venue. Please try again later.');
+        ctx,
+        'Failed to load venue. Please try again later.',
+      );
     }
   }
 
@@ -63,13 +62,19 @@ class RatingsPageModel extends ChangeNotifier {
     } catch (e) {
       if (!ctx.mounted) return;
       Toaster.displayError(
-          ctx, 'Failed to load reviews. Please try again later.');
+        ctx,
+        'Failed to load reviews. Please try again later.',
+      );
     }
   }
 
   Future<void> rateVenue(int userId, double newRating, String comment) async {
-    BasicResponse response =
-        await venuesApi.rateVenue(venueId, newRating, userId, comment);
+    BasicResponse response = await venuesApi.rateVenue(
+      venueId,
+      newRating,
+      userId,
+      comment,
+    );
 
     if (!ctx.mounted) return;
     ScaffoldMessenger.of(ctx).hideCurrentSnackBar();

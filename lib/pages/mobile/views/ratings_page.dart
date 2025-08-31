@@ -18,11 +18,11 @@ class RatingsPage extends StatelessWidget {
   final Position? userLocation;
 
   const RatingsPage({
-    Key? key,
+    super.key,
     required this.venueId,
     this.userId,
     this.userLocation,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

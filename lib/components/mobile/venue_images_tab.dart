@@ -10,10 +10,10 @@ class VenueImagesTab extends StatelessWidget {
   final List<Uint8List>? menuImages;
 
   const VenueImagesTab({
-    Key? key,
+    super.key,
     required this.venueImages,
     required this.menuImages,
-  }) : super(key: key);
+  });
 
   double calculateTabHeight(List<Uint8List>? images) {
     if (images == null || images.isEmpty) {
@@ -52,8 +52,9 @@ class VenueImagesTab extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height:
-                venueTabHeight > menuTabHeight ? venueTabHeight : menuTabHeight,
+            height: venueTabHeight > menuTabHeight
+                ? venueTabHeight
+                : menuTabHeight,
             child: TabBarView(
               children: [
                 _buildMasonryGrid(context, venueImages, 'venue'),

@@ -6,11 +6,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final VoidCallback? onBack;
 
-  const CustomAppbar({
-    super.key,
-    this.title,
-    this.onBack,
-  });
+  const CustomAppbar({super.key, this.title, this.onBack});
 
   @override
   Widget build(BuildContext context) {

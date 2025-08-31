@@ -11,11 +11,11 @@ class SuccessfulReservation extends StatelessWidget {
   final DateTime reservationDateTime;
 
   const SuccessfulReservation({
-    Key? key,
+    super.key,
     required this.venueName,
     required this.numberOfGuests,
     required this.reservationDateTime,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -38,29 +38,28 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child:
-                  Container(
-                    width: double.infinity,
-                    height: 500,
-                    decoration: webBackgroundGradient(context),
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      decoration: webBackgroundAuxiliaryGradient(context),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildLogo().animateOnPageLoad(
-                            animationsMap['logoOnLoad']!,
-                          ),
-                          _buildTitle(context).animateOnPageLoad(
-                            animationsMap['textOnLoad']!,
-                          ),
-                        ],
+              child: Container(
+                width: double.infinity,
+                height: 500,
+                decoration: webBackgroundGradient(context),
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: webBackgroundAuxiliaryGradient(context),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildLogo().animateOnPageLoad(
+                        animationsMap['logoOnLoad']!,
                       ),
-                    ),
-                  )
+                      _buildTitle(
+                        context,
+                      ).animateOnPageLoad(animationsMap['textOnLoad']!),
+                    ],
+                  ),
+                ),
+              ),
             ),
             _buildButton(
               context,

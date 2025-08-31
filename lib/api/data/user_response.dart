@@ -5,11 +5,7 @@ class UserResponse {
   String message;
   User? user;
 
-  UserResponse({
-    required this.success,
-    required this.message,
-    this.user,
-  });
+  UserResponse({required this.success, required this.message, this.user});
 
   factory UserResponse.fromJson(Map<String, dynamic> json) {
     return UserResponse(

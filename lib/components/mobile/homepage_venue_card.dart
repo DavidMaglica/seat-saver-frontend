@@ -18,12 +18,12 @@ class VenueCard extends StatefulWidget {
   final Position? userLocation;
 
   const VenueCard({
-    Key? key,
+    super.key,
     required this.venue,
     required this.venueId,
     this.userId,
     this.userLocation,
-  }) : super(key: key);
+  });
 
   @override
   State<VenueCard> createState() => _VenueCardState();

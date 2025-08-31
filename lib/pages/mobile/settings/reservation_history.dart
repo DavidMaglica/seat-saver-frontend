@@ -14,7 +14,7 @@ import 'package:table_reserver/utils/routes.dart';
 class ReservationHistory extends StatelessWidget {
   final int userId;
 
-  const ReservationHistory({Key? key, required this.userId}) : super(key: key);
+  const ReservationHistory({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {

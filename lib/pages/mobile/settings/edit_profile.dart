@@ -13,7 +13,7 @@ import 'package:table_reserver/utils/routes.dart';
 class EditProfile extends StatelessWidget {
   final int userId;
 
-  const EditProfile({Key? key, required this.userId}) : super(key: key);
+  const EditProfile({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {

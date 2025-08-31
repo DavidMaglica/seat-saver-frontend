@@ -43,7 +43,10 @@ class _WebVenuesPageState extends State<WebVenuesPage>
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     const SideNav(),
-                    _buildPaginatedVenues(context, model).animateOnPageLoad(model.animationsMap['gridOnLoad']!),
+                    _buildPaginatedVenues(
+                      context,
+                      model,
+                    ).animateOnPageLoad(model.animationsMap['gridOnLoad']!),
                   ],
                 ),
               ),
@@ -56,11 +59,14 @@ class _WebVenuesPageState extends State<WebVenuesPage>
 
   Expanded _buildPaginatedVenues(BuildContext context, VenuesModel model) {
     if (model.paginatedVenues.isEmpty) {
-      return  Expanded(
+      return Expanded(
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Text('No venues available', style: Theme.of(context).textTheme.titleLarge),
+            child: Text(
+              'No venues available',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
           ),
         ),
       );

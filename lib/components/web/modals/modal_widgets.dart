@@ -1,22 +1,12 @@
-import 'package:table_reserver/themes/web_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:table_reserver/themes/web_theme.dart';
 
-enum SupportModalType {
-  featureRequest,
-  bugReport,
-}
+enum SupportModalType { featureRequest, bugReport }
 
-enum DeleteModalType {
-  venue,
-  reservation,
-}
+enum DeleteModalType { venue, reservation }
 
-Widget buildButtons(
-  BuildContext context,
-  VoidCallback onSubmit,
-  String label,
-) {
+Widget buildButtons(BuildContext context, VoidCallback onSubmit, String label) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
     child: Row(
@@ -63,9 +53,6 @@ Widget buildButtons(
 Widget buildTitle(BuildContext context, String title) {
   return Padding(
     padding: const EdgeInsets.only(left: 24, top: 24),
-    child: Text(
-      title,
-      style: Theme.of(context).textTheme.titleLarge,
-    ),
+    child: Text(title, style: Theme.of(context).textTheme.titleLarge),
   );
 }

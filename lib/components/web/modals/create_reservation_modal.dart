@@ -56,9 +56,7 @@ class _CreateReservationModalState extends State<CreateReservationModal>
                 ),
               ].divide(const SizedBox(height: 16)),
             ),
-          ).animateOnPageLoad(
-            widget.model.animationsMap['modalOnLoad']!,
-          ),
+          ).animateOnPageLoad(widget.model.animationsMap['modalOnLoad']!),
         ],
       ),
     );
@@ -174,10 +172,7 @@ class _CreateReservationModalState extends State<CreateReservationModal>
     return isExpanded ? Expanded(child: inputField) : inputField;
   }
 
-  Widget _buildDropdown(
-    BuildContext context,
-    CreateReservationModel model,
-  ) {
+  Widget _buildDropdown(BuildContext context, CreateReservationModel model) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -70,9 +70,7 @@ class _SupportModalState extends State<SupportModal>
                       ),
                     ],
                   ),
-                ).animateOnPageLoad(
-                  model.animationsMap['modalOnLoad']!,
-                ),
+                ).animateOnPageLoad(model.animationsMap['modalOnLoad']!),
               ],
             ),
           );

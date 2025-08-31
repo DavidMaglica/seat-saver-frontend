@@ -9,8 +9,7 @@ class TermsOfService extends StatefulWidget {
   final int? userId;
   final Position? userLocation;
 
-  const TermsOfService({Key? key, this.userId, this.userLocation})
-    : super(key: key);
+  const TermsOfService({super.key, this.userId, this.userLocation});
 
   @override
   State<TermsOfService> createState() => _TermsOfServiceState();
@@ -39,7 +38,9 @@ class _TermsOfServiceState extends State<TermsOfService> {
           onBack: () {
             Navigator.of(context).push(
               MobileFadeInRoute(
-                  page: const Account(), routeName: Routes.account),
+                page: const Account(),
+                routeName: Routes.account,
+              ),
             );
           },
         ),

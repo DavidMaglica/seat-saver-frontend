@@ -105,8 +105,7 @@ class _WebAuthenticationState extends State<WebAuthentication>
                                     ),
                                   ),
                                 ).animateOnPageLoad(
-                                  _model
-                                      .animationsMap['authOnLoad']!,
+                                  _model.animationsMap['authOnLoad']!,
                                 ),
                           ),
                         ),

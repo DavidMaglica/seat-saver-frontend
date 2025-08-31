@@ -1,19 +1,19 @@
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/models/mobile/components/venue_card_by_type_model.dart';
-import 'package:table_reserver/utils/utils.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:table_reserver/api/data/venue.dart';
+import 'package:table_reserver/models/mobile/components/venue_card_by_type_model.dart';
+import 'package:table_reserver/utils/utils.dart';
 
 class VenueCardByType extends StatelessWidget {
   final Venue venue;
   final String venueType;
 
   const VenueCardByType({
-    Key? key,
+    super.key,
     required this.venue,
     required this.venueType,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class VenueCardByType extends StatelessWidget {
                   blurRadius: 3,
                   color: Theme.of(context).colorScheme.outline,
                   offset: const Offset(0, 1),
-                )
+                ),
               ],
               borderRadius: BorderRadius.circular(8.0),
             ),
@@ -99,10 +99,7 @@ class VenueCardByType extends StatelessWidget {
   }
 
   Widget _buildName(BuildContext context, String name) {
-    return Text(
-      name,
-      style: Theme.of(context).textTheme.titleSmall,
-    );
+    return Text(name, style: Theme.of(context).textTheme.titleSmall);
   }
 
   Widget _buildCategory(BuildContext context, String venueType) {
@@ -150,19 +147,16 @@ class VenueCardByType extends StatelessWidget {
       width: 80,
       height: 80,
       alignment: Alignment.center,
-      decoration: BoxDecoration(
-        gradient: fallbackImageGradient(),
-      ),
+      decoration: BoxDecoration(gradient: fallbackImageGradient()),
       child: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Text(
             venue.name,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(ctx)
-                .textTheme
-                .titleSmall
-                ?.copyWith(color: Colors.white, fontSize: 10),
+            style: Theme.of(
+              ctx,
+            ).textTheme.titleSmall?.copyWith(color: Colors.white, fontSize: 10),
           ),
         ),
       ),

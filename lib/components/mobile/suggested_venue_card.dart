@@ -18,11 +18,11 @@ class VenueSuggestedCard extends StatefulWidget {
   final Position? userLocation;
 
   const VenueSuggestedCard({
-    Key? key,
+    super.key,
     required this.venue,
     this.userId,
     this.userLocation,
-  }) : super(key: key);
+  });
 
   @override
   State<VenueSuggestedCard> createState() => _VenueSuggestedCardState();

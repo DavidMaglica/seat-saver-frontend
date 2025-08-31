@@ -1,23 +1,17 @@
-import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
 
 class NavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int, BuildContext) onTap;
 
-  const NavBar({
-    super.key,
-    required this.currentIndex,
-    required this.onTap,
-  });
+  const NavBar({super.key, required this.currentIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
-      ),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
       child: BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: (index) => onTap(index, context),

@@ -90,16 +90,14 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
                                         context,
                                         model,
                                       ).animateOnPageLoad(
-                                        model
-                                            .animationsMap['actionsOnLoad']!,
+                                        model.animationsMap['actionsOnLoad']!,
                                       ),
                                       const SizedBox(height: 16),
                                       _buildSupport(
                                         context,
                                         model,
                                       ).animateOnPageLoad(
-                                        model
-                                            .animationsMap['actionsOnLoad']!,
+                                        model.animationsMap['actionsOnLoad']!,
                                       ),
                                       const SizedBox(height: 32),
                                       _buildLogOut(

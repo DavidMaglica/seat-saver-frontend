@@ -184,8 +184,7 @@ class EditVenueModel extends FlutterFlowModel<EditVenueModal>
       workingHoursErrorText = 'Please enter the working hours.';
       isValid = false;
     } else if (!workingHoursRegex.hasMatch(workingHoursValue)) {
-      workingHoursErrorText =
-          'Please use the format: HH:MM - HH:MM';
+      workingHoursErrorText = 'Please use the format: HH:MM - HH:MM';
       isValid = false;
     } else {
       workingHoursErrorText = null;

@@ -22,11 +22,11 @@ class VenuePage extends StatelessWidget {
   final Position? userLocation;
 
   const VenuePage({
-    Key? key,
+    super.key,
     required this.venueId,
     this.userId,
     this.userLocation,
-  }) : super(key: key);
+  });
 
   Function() goBack(BuildContext context) {
     return () => Navigator.of(context).pop();

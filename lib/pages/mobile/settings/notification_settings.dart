@@ -10,18 +10,14 @@ import 'package:table_reserver/utils/routes.dart';
 class NotificationSettings extends StatelessWidget {
   final int userId;
 
-  const NotificationSettings({
-    Key? key,
-    required this.userId,
-  }) : super(key: key);
+  const NotificationSettings({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<NotificationSettingsModel>(
-      create: (_) => NotificationSettingsModel(
-        context: context,
-        userId: userId,
-      )..loadNotificationSettings(),
+      create: (_) =>
+          NotificationSettingsModel(context: context, userId: userId)
+            ..loadNotificationSettings(),
       builder: (context, _) {
         final model = context.watch<NotificationSettingsModel>();
 
@@ -33,7 +29,9 @@ class NotificationSettings extends StatelessWidget {
             onBack: () {
               Navigator.of(context).push(
                 MobileFadeInRoute(
-                    page: const Account(), routeName: Routes.account),
+                  page: const Account(),
+                  routeName: Routes.account,
+                ),
               );
             },
           ),

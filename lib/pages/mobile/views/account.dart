@@ -20,10 +20,7 @@ class Account extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AccountModel(
-        context: context,
-        userId: userId,
-      )..init(),
+      create: (_) => AccountModel(context: context, userId: userId)..init(),
       child: Consumer<AccountModel>(
         builder: (context, model, _) {
           var brightness = Theme.of(context).brightness;

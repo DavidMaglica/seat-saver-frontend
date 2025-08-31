@@ -15,7 +15,7 @@ class Search extends StatelessWidget {
   final int? userId;
   final String? locationQuery;
 
-  const Search({Key? key, this.userId, this.locationQuery}) : super(key: key);
+  const Search({super.key, this.userId, this.locationQuery});
 
   void _clear(BuildContext ctx, SearchModel model) {
     Navigator.pop(ctx);

@@ -5,9 +5,6 @@ class VenueType {
   VenueType({required this.id, required this.type});
 
   factory VenueType.fromJson(Map<String, dynamic> json) {
-    return VenueType(
-      id: json['id'],
-      type: json['type'],
-    );
+    return VenueType(id: json['id'], type: json['type']);
   }
 }

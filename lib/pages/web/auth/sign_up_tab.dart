@@ -88,32 +88,29 @@ class _SignUpTabState extends State<SignUpTab> {
       alignment: const AlignmentDirectional(0, -1),
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 0),
-        child:
-            SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildTitle(context),
-                  const SizedBox(height: 32),
-                  _buildEmailField(context),
-                  const SizedBox(height: 16),
-                  _buildUsernameField(context),
-                  const SizedBox(height: 16),
-                  _buildPasswordField(context),
-                  const SizedBox(height: 16),
-                  _buildConfirmPasswordField(context),
-                  const SizedBox(height: 32),
-                  _buildSignUpButton(context),
-                  const SizedBox(height: 16),
-                  _buildText(context),
-                  const SizedBox(height: 16),
-                  buildGoogleButton(),
-                ],
-              ),
-            ).animateOnPageLoad(
-              widget.model.animationsMap['tabOnLoad']!,
-            ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTitle(context),
+              const SizedBox(height: 32),
+              _buildEmailField(context),
+              const SizedBox(height: 16),
+              _buildUsernameField(context),
+              const SizedBox(height: 16),
+              _buildPasswordField(context),
+              const SizedBox(height: 16),
+              _buildConfirmPasswordField(context),
+              const SizedBox(height: 32),
+              _buildSignUpButton(context),
+              const SizedBox(height: 16),
+              _buildText(context),
+              const SizedBox(height: 16),
+              buildGoogleButton(),
+            ],
+          ),
+        ).animateOnPageLoad(widget.model.animationsMap['tabOnLoad']!),
       ),
     );
   }

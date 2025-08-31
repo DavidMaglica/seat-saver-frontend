@@ -8,10 +8,10 @@ class FullScreenImageView extends StatelessWidget {
   final String heroTag;
 
   const FullScreenImageView({
-    Key? key,
+    super.key,
     required this.imageBytes,
     required this.heroTag,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => Scaffold(
