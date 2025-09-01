@@ -12,9 +12,11 @@ import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/data/venue_type.dart';
 import 'package:table_reserver/utils/logger.dart';
 
-final dio = setupDio();
-
 class VenuesApi {
+  final Dio dio;
+
+  VenuesApi({Dio? dio}) : dio = dio ?? setupDio();
+
   Future<Venue?> getVenue(int venueId) async {
     try {
       Response response = await dio.get(ApiRoutes.venueById(venueId));

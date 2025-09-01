@@ -4,9 +4,11 @@ import 'package:table_reserver/api/common/dio_setup.dart';
 import 'package:table_reserver/api/data/user_location.dart';
 import 'package:table_reserver/utils/logger.dart';
 
-final dio = setupDio();
-
 class GeolocationApi {
+  final Dio dio;
+
+  GeolocationApi({Dio? dio}) : dio = dio ?? setupDio();
+
   Future<List<String>> getNearbyCities(UserLocation userLocation) async {
     try {
       var response = await dio.get(

@@ -51,40 +51,4 @@ class Venue {
       'description': description,
     };
   }
-
-  @override
-  String toString() {
-    return 'Venue(id: $id, name: $name, location: $location, workingDays: $workingDays, workingHours: $workingHours, rating: $rating, type: $typeId, description: $description)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Venue &&
-        other.id == id &&
-        other.name == name &&
-        other.location == location &&
-        other.workingDays == workingDays &&
-        other.workingHours == workingHours &&
-        other.maximumCapacity == maximumCapacity &&
-        other.availableCapacity == availableCapacity &&
-        other.rating == rating &&
-        other.typeId == typeId &&
-        other.description == description;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        name.hashCode ^
-        location.hashCode ^
-        workingDays.hashCode ^
-        workingHours.hashCode ^
-        maximumCapacity.hashCode ^
-        availableCapacity.hashCode ^
-        rating.hashCode ^
-        typeId.hashCode ^
-        description.hashCode;
-  }
 }
