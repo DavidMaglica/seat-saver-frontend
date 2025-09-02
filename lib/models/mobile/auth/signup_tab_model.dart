@@ -7,7 +7,6 @@ import 'package:table_reserver/main.dart';
 import 'package:table_reserver/pages/mobile/auth/sign_up_tab.dart';
 import 'package:table_reserver/pages/mobile/views/homepage.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/toaster.dart';
 
@@ -76,7 +75,6 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> with ChangeNotifier {
       emailErrorText = 'Email cannot be empty';
       isValid = false;
     } else if (!emailRegex.hasMatch(email)) {
-      logger.i('$email does not match regex');
       emailErrorText = 'Invalid email address';
       isValid = false;
     } else {

@@ -131,17 +131,11 @@ class _LogInTabState extends State<LogInTab> {
           borderRadius: BorderRadius.circular(8),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: .5,
-          ),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
           borderRadius: BorderRadius.circular(8),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: .5,
-          ),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
           borderRadius: BorderRadius.circular(8),
         ),
         contentPadding: const EdgeInsets.all(24),
@@ -179,17 +173,11 @@ class _LogInTabState extends State<LogInTab> {
           borderRadius: BorderRadius.circular(8),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: .5,
-          ),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
           borderRadius: BorderRadius.circular(8),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: .5,
-          ),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
           borderRadius: BorderRadius.circular(8),
         ),
         contentPadding: const EdgeInsets.all(24),

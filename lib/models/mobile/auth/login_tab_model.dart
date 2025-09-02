@@ -34,22 +34,7 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> with ChangeNotifier {
     String userEmail,
     String password,
   ) async {
-    if (userEmail.isEmpty || password.isEmpty) {
-      emailErrorText = userEmail.isEmpty ? 'Email cannot be empty' : null;
-      passwordErrorText = password.isEmpty ? 'Password cannot be empty' : null;
-      notifyListeners();
-      return;
-    }
-
-    if (!emailRegex.hasMatch(userEmail)) {
-      emailErrorText = 'Please enter a valid email address';
-      notifyListeners();
-      return;
-    }
-
-    emailErrorText = null;
-    passwordErrorText = null;
-    notifyListeners();
+    if (!_validateFields(userEmail, password)) return;
 
     BasicResponse<int?> response = await accountApi.logIn(userEmail, password);
 
@@ -92,5 +77,28 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> with ChangeNotifier {
         arguments: {'userId': userId, 'userLocation': userLocation},
       ),
     );
+  }
+
+  bool _validateFields(String email, String password) {
+    bool isValid = true;
+    if (email.isEmpty) {
+      emailErrorText = 'Email cannot be empty';
+      isValid = false;
+    } else if (!emailRegex.hasMatch(email)) {
+      emailErrorText = 'Please enter a valid email address';
+      isValid = false;
+    } else {
+      emailErrorText = null;
+    }
+
+    if (password.isEmpty) {
+      passwordErrorText = 'Password cannot be empty';
+      isValid = false;
+    } else {
+      passwordErrorText = null;
+    }
+
+    notifyListeners();
+    return isValid;
   }
 }
