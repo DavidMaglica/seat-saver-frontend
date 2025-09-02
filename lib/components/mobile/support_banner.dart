@@ -8,9 +8,8 @@ class SupportBanner extends StatelessWidget {
   const SupportBanner({super.key, required this.title, required this.icon});
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-    child: Container(
+  Widget build(BuildContext context) {
+    return Container(
       width: 120,
       constraints: const BoxConstraints(maxWidth: 500),
       decoration: BoxDecoration(
@@ -22,24 +21,22 @@ class SupportBanner extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(8, 16, 8, 16),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(icon, color: MobileTheme.accent1, size: 36),
-            Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),
       ),
-    ),
-  );
+    );
+  }
 }

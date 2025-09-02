@@ -57,14 +57,14 @@ class _SupportState extends State<Support> {
         ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: const EdgeInsetsDirectional.symmetric(
-                      vertical: 24,
+                      vertical: 36,
                     ),
                     child: Text(
                       'Have you encountered an issue with the application? Search for answers in our FAQs or submit a ticket in the form below to contact us.',
@@ -111,36 +111,35 @@ class _SupportState extends State<Support> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsetsDirectional.only(bottom: 12),
-                          child: Text(
-                            'Submit a Ticket',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
+                  const SizedBox(height: 16),
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(bottom: 12),
+                        child: Text(
+                          'Submit a Ticket',
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
-                        _buildInputField(
-                          model.ticketTitleController,
-                          model.ticketTitleFocusNode,
-                          'Ticket title',
-                          'Enter a title for your ticket.',
-                          null,
-                          null,
-                        ),
-                        _buildInputField(
-                          model.ticketDescriptionController,
-                          model.ticketDescriptionFocusNode,
-                          'Short description',
-                          'Short description of what is going on...',
-                          16,
-                          6,
-                        ),
-                      ].divide(const SizedBox(height: 12)),
-                    ),
+                      ),
+                      _buildInputField(
+                        model.ticketTitleController,
+                        model.ticketTitleFocusNode,
+                        'Ticket title',
+                        'Enter a title for your ticket.',
+                        null,
+                        null,
+                      ),
+                      _buildInputField(
+                        model.ticketDescriptionController,
+                        model.ticketDescriptionFocusNode,
+                        'Short description',
+                        'Short description of what is going on...',
+                        16,
+                        6,
+                      ),
+                    ].divide(const SizedBox(height: 12)),
                   ),
+                  const SizedBox(height: 24),
                   ActionButton(
                     title: 'Submit Ticket',
                     onPressed: () => model.submitTicket(),
@@ -177,7 +176,10 @@ class _SupportState extends State<Support> {
         focusedBorder: outlineInputBorder(MobileTheme.infoColor),
         errorBorder: outlineInputBorder(Theme.of(context).colorScheme.error),
         focusedErrorBorder: outlineInputBorder(MobileTheme.infoColor),
-        contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
       ),
       style: Theme.of(context).textTheme.bodyLarge,
       maxLines: maxLines,

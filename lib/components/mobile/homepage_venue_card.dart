@@ -99,15 +99,18 @@ class _VenueCardState extends State<VenueCard> {
               child: Column(
                 children: [
                   _buildImage(),
+                  const SizedBox(height: 6),
                   Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(4, 6, 4, 0),
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildName(widget.venue.name),
+                        const SizedBox(height: 4),
                         _buildLocationAndAvailability(widget.venue.location),
+                        const SizedBox(height: 8),
                         _buildRatingBar(widget.venue.rating),
                       ],
                     ),
@@ -178,84 +181,76 @@ class _VenueCardState extends State<VenueCard> {
       widget.venue.availableCapacity,
     );
 
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            child: Text(
-              location,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              style: TextStyle(
-                color: Theme.of(
-                  context,
-                ).colorScheme.onPrimary.withValues(alpha: 0.7),
-                fontWeight: FontWeight.w800,
-                fontSize: 9,
-              ),
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          child: Text(
+            location,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            style: TextStyle(
+              color: Theme.of(
+                context,
+              ).colorScheme.onPrimary.withValues(alpha: 0.7),
+              fontWeight: FontWeight.w800,
+              fontSize: 9,
             ),
           ),
-          const SizedBox(width: 8),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                CupertinoIcons.person_2_fill,
+        ),
+        const SizedBox(width: 8),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              CupertinoIcons.person_2_fill,
+              color: availabilityColour,
+              size: 12,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              '${widget.venue.availableCapacity}/${widget.venue.maximumCapacity}',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
                 color: availabilityColour,
-                size: 12,
               ),
-              const SizedBox(width: 4),
-              Text(
-                '${widget.venue.availableCapacity}/${widget.venue.maximumCapacity}',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w500,
-                  color: availabilityColour,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
   Widget _buildRatingBar(double rating) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          RatingBarIndicator(
-            itemBuilder: (context, index) => Icon(
-              CupertinoIcons.star_fill,
-              color: Theme.of(context).colorScheme.onTertiary,
-            ),
-            direction: Axis.horizontal,
-            rating: rating,
-            unratedColor: const Color(0xFF57636C).withValues(alpha: 0.5),
-            itemCount: 5,
-            itemSize: 12,
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        RatingBarIndicator(
+          itemBuilder: (context, index) => Icon(
+            CupertinoIcons.star_fill,
+            color: Theme.of(context).colorScheme.onTertiary,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 4, top: 1),
-            child: Text(
-              ' ${rating.toStringAsFixed(1)}',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontSize: 10,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+          direction: Axis.horizontal,
+          rating: rating,
+          unratedColor: const Color(0xFF57636C).withValues(alpha: 0.5),
+          itemCount: 5,
+          itemSize: 12,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          ' ${rating.toStringAsFixed(1)}',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            fontSize: 10,
+            fontWeight: FontWeight.w500,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

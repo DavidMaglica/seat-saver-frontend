@@ -53,6 +53,7 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
                       _buildLogo().animateOnPageLoad(
                         animationsMap['logoOnLoad']!,
                       ),
+                      const SizedBox(height: 44),
                       _buildTitle(
                         context,
                       ).animateOnPageLoad(animationsMap['textOnLoad']!),
@@ -91,13 +92,10 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
   }
 
   Widget _buildTitle(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 44, 0, 0),
-      child: Text(
-        'Welcome to your TableReserver Admin Dashboard!',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
+    return Text(
+      'Welcome to your TableReserver Admin Dashboard!',
+      textAlign: TextAlign.center,
+      style: Theme.of(context).textTheme.titleLarge,
     );
   }
 

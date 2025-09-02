@@ -206,6 +206,7 @@ class EditProfile extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(height: 16),
               buildModalTitle(context, 'Change Username'),
               const SizedBox(height: 16),
               _buildInputField(
@@ -216,7 +217,7 @@ class EditProfile extends StatelessWidget {
                 model.newUsernameFocusNode,
                 TextInputType.text,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 36),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -264,7 +265,7 @@ class EditProfile extends StatelessWidget {
                 model.newEmailFocusNode,
                 TextInputType.emailAddress,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 36),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -322,6 +323,7 @@ class EditProfile extends StatelessWidget {
                       );
                     },
                   ),
+                  const SizedBox(height: 12),
                   _buildPasswordInputField(
                     ctx,
                     'Confirm New Password',
@@ -336,7 +338,7 @@ class EditProfile extends StatelessWidget {
                       );
                     },
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 36),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -371,7 +373,7 @@ class EditProfile extends StatelessWidget {
     TextInputType keyboardType,
   ) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: TextFormField(
         controller: controller,
         focusNode: focusNode,
@@ -392,7 +394,7 @@ class EditProfile extends StatelessWidget {
     VoidCallback toggleVisibility,
   ) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: TextFormField(
         controller: controller,
         focusNode: focusNode,

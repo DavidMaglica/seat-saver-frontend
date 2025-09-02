@@ -108,8 +108,11 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
               child: Column(
                 children: [
                   _buildImage(),
+                  const SizedBox(height: 8),
                   _buildNameAndType(widget.venue.name, _venueType),
+                  const SizedBox(height: 8),
                   _buildLocationAndAvailability(),
+                  const SizedBox(height: 8),
                   _buildRatingBarAndWorkingHours(widget.venue.rating),
                 ],
               ),
@@ -162,7 +165,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   Widget _buildNameAndType(String name, String type) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -194,7 +197,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
     );
 
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -236,7 +239,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   Widget _buildRatingBarAndWorkingHours(double rating) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,

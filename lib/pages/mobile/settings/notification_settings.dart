@@ -40,6 +40,7 @@ class NotificationSettings extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
+                  const SizedBox(height: 24),
                   _buildDescriptionText(context),
                   const SizedBox(height: 12),
                   _buildSwitchTile(
@@ -66,6 +67,7 @@ class NotificationSettings extends StatelessWidget {
                     value: model.isActiveLocationServices,
                     onChanged: model.toggleLocationServices,
                   ),
+                  const SizedBox(height: 24),
                   ActionButton(
                     title: 'Save Changes',
                     onPressed: model.saveChanges,
@@ -81,7 +83,7 @@ class NotificationSettings extends StatelessWidget {
 
   Widget _buildDescriptionText(BuildContext ctx) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 12, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
           Expanded(

@@ -38,7 +38,7 @@ class ImagesTab extends StatelessWidget {
 
   Widget _buildButtons(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(48, 16, 48, 16),
+      padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

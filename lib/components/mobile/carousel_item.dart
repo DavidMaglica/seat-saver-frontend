@@ -66,14 +66,14 @@ class CarouselItem extends StatelessWidget {
 
   Widget _buildText(BuildContext ctx) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
+      padding: const EdgeInsets.only(top: 12),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
           Align(
             alignment: const AlignmentDirectional(-1, 0),
             child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+              padding: const EdgeInsets.only(left: 12),
               child: Text(
                 currentCity,
                 style: const TextStyle(
@@ -87,7 +87,7 @@ class CarouselItem extends StatelessWidget {
           Align(
             alignment: const AlignmentDirectional(-1, 0),
             child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+              padding: const EdgeInsets.only(left: 12),
               child: Text(
                 'Discover new restaurants in $currentCity!',
                 style: Theme.of(ctx).textTheme.bodyMedium,

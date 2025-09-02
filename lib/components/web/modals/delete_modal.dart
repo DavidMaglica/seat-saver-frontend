@@ -94,7 +94,7 @@ class _DeleteModalState extends State<DeleteModal>
 
   Padding _buildBody(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
+      padding: const EdgeInsets.only(left: 24),
       child: widget.modalType == DeleteModalType.venue
           ? Text(
               'Are you sure you want to delete venue ${widget.venueName}?',

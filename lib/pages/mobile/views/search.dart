@@ -57,6 +57,7 @@ class Search extends StatelessWidget {
                   child: Column(
                     children: [
                       _buildSearchBar(context, model),
+                      const SizedBox(height: 36),
                       _buildFilterDropdown(context, model),
                       Expanded(
                         child: Padding(
@@ -139,44 +140,42 @@ class Search extends StatelessWidget {
   }
 
   Widget _buildSearchBar(BuildContext ctx, SearchModel model) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 36),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(36, 36, 36, 0),
-              child: TextField(
-                controller: model.searchBarController,
-                decoration: InputDecoration(
-                  hintText: 'Type to search for venues (by name or city)',
-                  hintStyle: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(
-                      ctx,
-                    ).colorScheme.onPrimary.withValues(alpha: 0.5),
-                  ),
-                  prefixIcon: Icon(
-                    CupertinoIcons.search,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(height: 36),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 36),
+            child: TextField(
+              controller: model.searchBarController,
+              decoration: InputDecoration(
+                hintText: 'Type to search for venues (by name or city)',
+                hintStyle: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(
+                    ctx,
+                  ).colorScheme.onPrimary.withValues(alpha: 0.5),
+                ),
+                prefixIcon: Icon(
+                  CupertinoIcons.search,
+                  color: Theme.of(ctx).colorScheme.onPrimary,
+                ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
                     color: Theme.of(ctx).colorScheme.onPrimary,
                   ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(ctx).colorScheme.onPrimary,
-                    ),
-                  ),
-                  focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: MobileTheme.accent1),
-                  ),
                 ),
-                cursorColor: Theme.of(ctx).colorScheme.onPrimary,
-                style: Theme.of(ctx).textTheme.bodyLarge,
-                onChanged: (value) => model.search(value),
+                focusedBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: MobileTheme.accent1),
+                ),
               ),
+              cursorColor: Theme.of(ctx).colorScheme.onPrimary,
+              style: Theme.of(ctx).textTheme.bodyLarge,
+              onChanged: (value) => model.search(value),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -212,14 +211,11 @@ class Search extends StatelessWidget {
   }
 
   Widget _buildDivider(BuildContext ctx) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-      child: Divider(
-        indent: 36,
-        endIndent: 36,
-        thickness: .5,
-        color: Theme.of(ctx).colorScheme.onPrimary,
-      ),
+    return Divider(
+      indent: 36,
+      endIndent: 36,
+      thickness: .5,
+      color: Theme.of(ctx).colorScheme.onPrimary,
     );
   }
 

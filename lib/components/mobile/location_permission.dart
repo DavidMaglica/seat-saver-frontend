@@ -31,20 +31,20 @@ class LocationPermissionPopUp extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 12),
                 _buildIcon(),
+                const SizedBox(height: 24),
                 _buildTitle(context),
+                const SizedBox(height: 12),
                 _buildSubTitle(context),
+                const SizedBox(height: 120),
                 Align(
                   alignment: const AlignmentDirectional(0, 1),
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                    child: _buildEnableButton(context, model),
-                  ),
+                  child: _buildEnableButton(context, model),
                 ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 24),
-                  child: _buildDenyButton(context),
-                ),
+                const SizedBox(height: 12),
+                _buildDenyButton(context),
+                const SizedBox(height: 24),
               ],
             ),
           ),
@@ -57,7 +57,7 @@ class LocationPermissionPopUp extends StatelessWidget {
     return Align(
       alignment: const AlignmentDirectional(0, 0),
       child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 96),
+        padding: const EdgeInsets.symmetric(horizontal: 36),
         child: Text(
           'Find your favourite spots! Activate location services to easily locate venues near you!',
           textAlign: TextAlign.center,
@@ -71,7 +71,7 @@ class LocationPermissionPopUp extends StatelessWidget {
     return Align(
       alignment: const AlignmentDirectional(0, 0),
       child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 12),
+        padding: const EdgeInsets.symmetric(horizontal: 36),
         child: Text(
           'Our app works best with location enabled',
           textAlign: TextAlign.center,
@@ -84,13 +84,10 @@ class LocationPermissionPopUp extends StatelessWidget {
   Widget _buildIcon() {
     return const Align(
       alignment: AlignmentDirectional(0, -1),
-      child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 24),
-        child: Icon(
-          CupertinoIcons.location_solid,
-          color: MobileTheme.accent1,
-          size: 64,
-        ),
+      child: Icon(
+        CupertinoIcons.location_solid,
+        color: MobileTheme.accent1,
+        size: 64,
       ),
     );
   }
@@ -106,8 +103,7 @@ class LocationPermissionPopUp extends StatelessWidget {
       options: FFButtonOptions(
         width: 270,
         height: 40,
-        padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-        iconPadding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         color: Theme.of(ctx).colorScheme.onSurface,
         textStyle: TextStyle(
           color: Theme.of(ctx).colorScheme.onPrimary,
@@ -133,8 +129,7 @@ class LocationPermissionPopUp extends StatelessWidget {
       options: FFButtonOptions(
         width: 270,
         height: 40,
-        padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-        iconPadding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         color: Theme.of(ctx).colorScheme.primary,
         textStyle: TextStyle(
           color: Theme.of(ctx).colorScheme.onSurface,

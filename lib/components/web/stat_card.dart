@@ -57,16 +57,12 @@ class StatCard extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 4, 0),
-                  child: Text(
-                    '$value',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleLarge?.copyWith(fontSize: 32),
-                  ),
-                ),
+              const SizedBox(height: 4),
+              Text(
+                '$value',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontSize: 32),
               ),
             ],
           ),

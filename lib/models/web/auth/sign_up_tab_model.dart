@@ -13,6 +13,7 @@ import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/sign_up_methods.dart';
 import 'package:table_reserver/utils/web_toaster.dart';
 
+// TODO with ChangeNotifier
 class SignUpTabModel extends FlutterFlowModel<SignUpTab> {
   bool isActive;
 

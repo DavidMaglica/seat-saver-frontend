@@ -48,6 +48,7 @@ class Account extends StatelessWidget {
                       _buildHistorySettings(context, model),
                       _buildAccountSettings(context, model),
                       _buildApplicationSettings(context, model),
+                      const SizedBox(height: 48),
                       _buildOpenAuthentication(
                         context,
                         model.currentUser?.email,
@@ -70,7 +71,7 @@ class Account extends StatelessWidget {
 
   Widget _buildTitle(BuildContext ctx, String title) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 0),
+      padding: const EdgeInsets.only(left: 24),
       child: Text(title, style: Theme.of(ctx).textTheme.titleMedium),
     );
   }
@@ -80,14 +81,15 @@ class Account extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
+          padding: const EdgeInsets.only(left: 24),
           child: Text(
             user?.username ?? '',
             style: Theme.of(ctx).textTheme.titleLarge,
           ),
         ),
+        const SizedBox(height: 4),
         Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(24, 4, 0, 16),
+          padding: const EdgeInsets.only(left: 24),
           child: Text(
             user?.email ?? '',
             style: Theme.of(ctx).textTheme.bodyMedium,
@@ -106,7 +108,7 @@ class Account extends StatelessWidget {
     String? action,
   ) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
         height: 60,
         decoration: BoxDecoration(
@@ -148,7 +150,9 @@ class Account extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 16),
         _buildTitle(ctx, 'Reservations'),
+        const SizedBox(height: 12),
         _buildSettingsItem(
           ctx,
           model,
@@ -165,7 +169,9 @@ class Account extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 16),
         _buildTitle(ctx, 'Account Settings'),
+        const SizedBox(height: 12),
         _buildSettingsItem(
           ctx,
           model,
@@ -174,6 +180,7 @@ class Account extends StatelessWidget {
           Routes.editProfile,
           'edit your profile',
         ),
+        const SizedBox(height: 12),
         _buildSettingsItem(
           ctx,
           model,
@@ -190,7 +197,9 @@ class Account extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 16),
         _buildTitle(ctx, 'Application Settings'),
+        const SizedBox(height: 12),
         _buildSettingsItem(
           ctx,
           model,
@@ -199,6 +208,7 @@ class Account extends StatelessWidget {
           Routes.support,
           'access support',
         ),
+        const SizedBox(height: 12),
         _buildSettingsItem(
           ctx,
           model,
@@ -219,7 +229,7 @@ class Account extends StatelessWidget {
         : MobileTheme.successColor;
 
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(12, 48, 12, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Container(
         height: 60,
         decoration: BoxDecoration(

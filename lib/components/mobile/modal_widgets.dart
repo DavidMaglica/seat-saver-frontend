@@ -15,7 +15,7 @@ EdgeInsets modalPadding(BuildContext ctx) => EdgeInsets.only(
 
 Widget buildModalTitle(BuildContext ctx, String title) {
   return Padding(
-    padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 0, 8),
+    padding: const EdgeInsets.only(left: 24, bottom: 8),
     child: Align(
       alignment: Alignment.centerLeft,
       child: Row(

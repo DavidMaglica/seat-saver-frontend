@@ -77,24 +77,18 @@ class _LogInTabState extends State<LogInTab> {
     );
   }
 
-  void _forgotPassword() {
-    WebToaster.displayInfo(
-      context,
-      'Forgot password functionality is not implemented yet.',
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: const AlignmentDirectional(0, -1),
       child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 0),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 16),
               _buildTitle(context),
               const SizedBox(height: 32),
               _buildEmailField(context),
@@ -106,8 +100,6 @@ class _LogInTabState extends State<LogInTab> {
               _buildText(context),
               const SizedBox(height: 16),
               buildGoogleButton(),
-              const SizedBox(height: 16),
-              _buildForgotPassword(),
             ],
           ),
         ).animateOnPageLoad(widget.model.animationsMap['tabOnLoad']!),
@@ -145,7 +137,7 @@ class _LogInTabState extends State<LogInTab> {
             borderSide: const BorderSide(color: WebTheme.infoColor, width: 1),
             borderRadius: BorderRadius.circular(8),
           ),
-          contentPadding: const EdgeInsetsDirectional.fromSTEB(24, 24, 0, 24),
+          contentPadding: const EdgeInsets.all(24),
         ),
         style: Theme.of(context).textTheme.bodyLarge,
         keyboardType: TextInputType.emailAddress,
@@ -176,7 +168,7 @@ class _LogInTabState extends State<LogInTab> {
             borderSide: const BorderSide(color: WebTheme.infoColor, width: 1),
             borderRadius: BorderRadius.circular(8),
           ),
-          contentPadding: const EdgeInsetsDirectional.fromSTEB(24, 24, 0, 24),
+          contentPadding: const EdgeInsets.all(24),
           suffixIcon: InkWell(
             onTap: () => safeSetState(
               () => widget.model.loginPasswordVisibility =
@@ -231,23 +223,6 @@ class _LogInTabState extends State<LogInTab> {
         'Or log in with',
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.bodyMedium,
-      ),
-    );
-  }
-
-  Widget _buildForgotPassword() {
-    return Align(
-      alignment: const AlignmentDirectional(0, 0),
-      child: TextButton(
-        onPressed: _forgotPassword,
-        child: const Text(
-          'Forgot password? Reset here.',
-          style: TextStyle(
-            fontSize: 14,
-            color: WebTheme.infoColor,
-            decoration: TextDecoration.underline,
-          ),
-        ),
       ),
     );
   }

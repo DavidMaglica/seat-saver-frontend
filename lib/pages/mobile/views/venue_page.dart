@@ -187,7 +187,6 @@ class VenuePage extends StatelessWidget {
       options: FFButtonOptions(
         width: 164,
         height: 30,
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
         color: Theme.of(ctx).colorScheme.surface,
         textStyle: const TextStyle(
           color: MobileTheme.accent1,
@@ -530,7 +529,9 @@ class VenuePage extends StatelessWidget {
     bool isDisabled = model.venue.availableCapacity == 0;
 
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 48),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 36,
+      ).add(EdgeInsets.only(bottom: 48)),
       child: FFButtonWidget(
         onPressed: () => isDisabled ? null : model.reserve(),
         text: isDisabled

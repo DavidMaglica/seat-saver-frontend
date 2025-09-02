@@ -87,12 +87,13 @@ class _SignUpTabState extends State<SignUpTab> {
     return Align(
       alignment: const AlignmentDirectional(0, -1),
       child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 0),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 16),
               _buildTitle(context),
               const SizedBox(height: 32),
               _buildEmailField(context),

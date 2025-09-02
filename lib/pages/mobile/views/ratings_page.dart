@@ -187,8 +187,9 @@ class RatingsPage extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                const SizedBox(height: 12),
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -235,21 +236,18 @@ class RatingsPage extends StatelessWidget {
                   ),
                 ),
                 if (rating.comment.isNotEmpty == true)
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(
-                      16,
-                      4,
-                      16,
-                      12,
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        rating.comment,
-                        style: Theme.of(ctx).textTheme.bodyMedium,
-                      ),
+                  const SizedBox(height: 4),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      rating.comment,
+                      style: Theme.of(ctx).textTheme.bodyMedium,
                     ),
                   ),
+                ),
+                const SizedBox(height: 12),
               ],
             ),
           ),
@@ -260,7 +258,7 @@ class RatingsPage extends StatelessWidget {
 
   Widget _buildLeaveReviewButton(BuildContext ctx, RatingsPageModel model) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 36),
       child: FFButtonWidget(
         onPressed: () => _buildRatingModal(ctx, model),
         text: 'Rate this venue',
@@ -425,7 +423,7 @@ class RatingsPage extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(8),
         ),
-        contentPadding: const EdgeInsetsDirectional.fromSTEB(24, 24, 0, 24),
+        contentPadding: const EdgeInsets.all(24),
       ),
       style: Theme.of(context).textTheme.bodyMedium,
       cursorColor: Theme.of(context).colorScheme.onPrimary,
