@@ -20,7 +20,7 @@ Widget buildModalTitle(BuildContext ctx, String title) {
       alignment: Alignment.centerLeft,
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [Text(title, style: Theme.of(ctx).textTheme.bodyLarge)],
+        children: [Text(title, style: Theme.of(ctx).textTheme.titleMedium)],
       ),
     ),
   );

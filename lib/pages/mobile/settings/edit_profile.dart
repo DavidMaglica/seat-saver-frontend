@@ -378,7 +378,11 @@ class EditProfile extends StatelessWidget {
         controller: controller,
         focusNode: focusNode,
         keyboardType: keyboardType,
-        decoration: InputDecoration(labelText: labelText, hintText: hint),
+        decoration: InputDecoration(
+          labelText: labelText,
+          hintText: hint,
+          labelStyle: Theme.of(ctx).textTheme.bodyMedium,
+        ),
         style: Theme.of(ctx).textTheme.bodyLarge,
       ),
     );
@@ -402,6 +406,7 @@ class EditProfile extends StatelessWidget {
         style: Theme.of(ctx).textTheme.bodyLarge,
         decoration: InputDecoration(
           labelText: labelText,
+          labelStyle: Theme.of(ctx).textTheme.bodyMedium,
           hintText: hint,
           suffixIcon: IconButton(
             icon: Icon(
