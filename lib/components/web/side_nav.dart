@@ -217,7 +217,7 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Padding _buildVenuesButton(
+  Widget _buildVenuesButton(
     BuildContext context,
     String? route,
     SideNavModel model,
@@ -276,7 +276,7 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Padding _buildReservationsButton(
+  Widget _buildReservationsButton(
     BuildContext context,
     String? route,
     SideNavModel model,
@@ -338,7 +338,7 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Padding _buildAccountButton(
+  Widget _buildAccountButton(
     BuildContext context,
     String? route,
     SideNavModel model,
@@ -428,7 +428,7 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Expanded _buildLightModeButton(BuildContext context, SideNavModel model) {
+  Widget _buildLightModeButton(BuildContext context, SideNavModel model) {
     return Expanded(
       child: InkWell(
         splashColor: Colors.transparent,
@@ -475,7 +475,7 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Expanded _buildDarkModeButton(BuildContext context, SideNavModel model) {
+  Widget _buildDarkModeButton(BuildContext context, SideNavModel model) {
     return Expanded(
       child: InkWell(
         splashColor: Colors.transparent,

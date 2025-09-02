@@ -119,7 +119,7 @@ class VenueDetailsTab extends StatelessWidget {
     );
   }
 
-  Column _buildIconDetail(
+  Widget _buildIconDetail(
     BuildContext context,
     IconData icon,
     String label,

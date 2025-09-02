@@ -243,8 +243,9 @@ class Search extends StatelessWidget {
     );
   }
 
-  Icon _buildDropdownIcon() =>
-      const Icon(CupertinoIcons.chevron_down, size: 16);
+  Widget _buildDropdownIcon() {
+    return const Icon(CupertinoIcons.chevron_down, size: 16);
+  }
 
   Widget _buildDropdownText(BuildContext ctx, SearchModel model) {
     return Expanded(

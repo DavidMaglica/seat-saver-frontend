@@ -73,7 +73,7 @@ class ReservationHistory extends StatelessWidget {
     );
   }
 
-  Padding _buildReservationHistory(
+  Widget _buildReservationHistory(
     BuildContext ctx,
     ReservationHistoryModel model,
   ) {

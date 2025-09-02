@@ -143,7 +143,7 @@ class _ReservationsGraphsPageState extends State<ReservationsGraphsPage> {
     );
   }
 
-  Material _buildToggleContainer(
+  Widget _buildToggleContainer(
     BuildContext context,
     ReservationsGraphsPageModel model,
   ) {

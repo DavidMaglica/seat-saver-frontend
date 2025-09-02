@@ -97,7 +97,7 @@ class _WebReservationsState extends State<WebReservations>
     );
   }
 
-  Row _buildHeading(BuildContext context, ReservationsModel model) {
+  Widget _buildHeading(BuildContext context, ReservationsModel model) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -283,7 +283,7 @@ class _WebReservationsState extends State<WebReservations>
     );
   }
 
-  Row _buildActions(
+  Widget _buildActions(
     BuildContext context,
     ReservationsModel model,
     int reservationId,

@@ -57,7 +57,7 @@ class _WebVenuesPageState extends State<WebVenuesPage>
     );
   }
 
-  Expanded _buildPaginatedVenues(BuildContext context, VenuesModel model) {
+  Widget _buildPaginatedVenues(BuildContext context, VenuesModel model) {
     if (model.paginatedVenues.isEmpty) {
       return Expanded(
         child: Center(

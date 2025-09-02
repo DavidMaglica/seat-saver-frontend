@@ -367,7 +367,7 @@ class _WebHomepageState extends State<WebHomepage>
     );
   }
 
-  Row _buildActions(BuildContext context, HomepageModel model, int venueId) {
+  Widget _buildActions(BuildContext context, HomepageModel model, int venueId) {
     return Row(
       children: [
         IconButton(
@@ -551,7 +551,7 @@ class _WebHomepageState extends State<WebHomepage>
     );
   }
 
-  InkWell _buildPerformanceCard(
+  Widget _buildPerformanceCard(
     BuildContext context,
     HomepageModel model,
     String title,
