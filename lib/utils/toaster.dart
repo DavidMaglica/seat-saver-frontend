@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
 
 /// A utility class for displaying toast-style messages using Flutter's [SnackBar].
 ///
@@ -30,7 +31,7 @@ class Toaster {
     ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
     ScaffoldMessenger.of(ctx).showSnackBar(
       SnackBar(
-        content: Text(text),
+        content: Text(text, style: TextStyle(color: MobileTheme.offWhite)),
         elevation: 3,
         backgroundColor: colour,
         duration: const Duration(seconds: 2),

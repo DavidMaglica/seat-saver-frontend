@@ -79,7 +79,7 @@ class AccountApi {
       if (userId == null) {
         return BasicResponse(
           success: false,
-          message: 'Sign up failed. Please try again.',
+          message: response.data['message'],
         );
       }
 

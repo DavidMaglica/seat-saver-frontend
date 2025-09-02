@@ -3,15 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/mobile/auth/authentication_model.dart';
 import 'package:table_reserver/models/mobile/auth/signup_tab_model.dart';
-import 'package:table_reserver/pages/mobile/views/homepage.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/toaster.dart';
 
 class SignUpTab extends StatefulWidget {
@@ -24,146 +21,96 @@ class SignUpTab extends StatefulWidget {
 }
 
 class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
-  late SignUpTabModel _model;
   final AccountApi accountApi = AccountApi();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SignUpTabModel());
-  }
-
-  @override
-  void dispose() {
-    _model.dispose();
-    super.dispose();
-  }
-
-  void _performSignUp(
-    String email,
-    String username,
-    String password,
-    String confirmPassword,
-  ) async {
-    BasicResponse<int?> response = await _model.signUp(
-      username,
-      email,
-      password,
-      confirmPassword,
-    );
-    int? userId = response.data;
-    if (response.success && userId != null) {
-      sharedPreferencesCache.setInt('userId', userId);
-      _goToHomepage(userId);
-    } else {
-      if (!mounted) return;
-      Toaster.displayError(context, response.message);
-    }
-  }
-
-  void _goToHomepage(int userId) {
-    Navigator.of(context).push(
-      MobileFadeInRoute(page: const Homepage(), routeName: Routes.homepage),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: const AlignmentDirectional(0, -1),
-      child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (responsiveVisibility(
-                context: context,
-                phone: false,
-                tablet: false,
-              ))
-                const SizedBox(width: 230, height: 16),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 24),
-                child: Text(
-                  'Create Account',
-                  textAlign: TextAlign.start,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: _buildEmailField(),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: _buildUsernameField(),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: _buildPasswordField(),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: _buildRetypePasswordField(),
-                ),
-              ),
-              _buildSignUpButton(),
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Align(
-                    alignment: const AlignmentDirectional(0, 0),
-                    child: Text(
-                      'Or sign up with',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyMedium,
+    return ChangeNotifierProvider(
+      create: (_) => SignUpTabModel(),
+      child: Consumer<SignUpTabModel>(
+        builder: (context, model, _) {
+          return Align(
+            alignment: const AlignmentDirectional(0, -1),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    Text(
+                      'Create Account',
+                      textAlign: TextAlign.start,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
-                  ),
-                  Align(
-                    alignment: const AlignmentDirectional(0, 0),
-                    child: Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(
-                        0,
-                        16,
-                        0,
-                        0,
-                      ),
-                      child: Wrap(
-                        spacing: 16,
-                        runSpacing: 0,
-                        alignment: WrapAlignment.center,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        direction: Axis.horizontal,
-                        runAlignment: WrapAlignment.center,
-                        verticalDirection: VerticalDirection.down,
-                        clipBehavior: Clip.none,
-                        children: [_buildGoogleSignUpButton()],
-                      ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: _buildEmailField(model),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: _buildUsernameField(model),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: _buildPasswordField(model),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: _buildRetypePasswordField(model),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildSignUpButton(model),
+                    const SizedBox(height: 16),
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Align(
+                          alignment: const AlignmentDirectional(0, 0),
+                          child: Text(
+                            'Or sign up with',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Align(
+                          alignment: const AlignmentDirectional(0, 0),
+                          child: Wrap(
+                            spacing: 16,
+                            runSpacing: 0,
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            direction: Axis.horizontal,
+                            runAlignment: WrapAlignment.center,
+                            verticalDirection: VerticalDirection.down,
+                            clipBehavior: Clip.none,
+                            children: [_buildGoogleSignUpButton(model)],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildEmailField() {
+  Widget _buildEmailField(SignUpTabModel model) {
     return TextFormField(
       controller: widget.model.emailAddressSignUpTextController,
       focusNode: widget.model.emailAddressSignUpFocusNode,
@@ -174,6 +121,11 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
         isDense: false,
         labelText: 'Email',
         labelStyle: Theme.of(context).textTheme.bodyMedium,
+        errorText: model.emailErrorText,
+        errorStyle: TextStyle(
+          color: Theme.of(context).colorScheme.error,
+          fontSize: 12,
+        ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.onPrimary,
@@ -182,7 +134,10 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
           borderRadius: BorderRadius.circular(8),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: MobileTheme.infoColor, width: .5),
+          borderSide: const BorderSide(
+            color: MobileTheme.infoColor,
+            width: 0.5,
+          ),
           borderRadius: BorderRadius.circular(8),
         ),
         errorBorder: OutlineInputBorder(
@@ -195,7 +150,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
         focusedErrorBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.error,
-            width: .5,
+            width: 0.5,
           ),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -207,7 +162,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildUsernameField() {
+  Widget _buildUsernameField(SignUpTabModel model) {
     return TextFormField(
       controller: widget.model.usernameSignUpTextController,
       focusNode: widget.model.usernameSignUpFocusNode,
@@ -218,6 +173,62 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
         isDense: false,
         labelText: 'Username',
         labelStyle: Theme.of(context).textTheme.bodyMedium,
+        errorText: model.usernameErrorText,
+        errorStyle: TextStyle(
+          color: Theme.of(context).colorScheme.error,
+          fontSize: 12,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.onPrimary,
+            width: 0.5,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: MobileTheme.infoColor,
+            width: 0.5,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.error,
+            width: 0.5,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.error,
+            width: 0.5,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsets.all(24),
+      ),
+      style: Theme.of(context).textTheme.bodyLarge,
+      keyboardType: TextInputType.name,
+      cursorColor: Theme.of(context).colorScheme.onPrimary,
+    );
+  }
+
+  Widget _buildPasswordField(SignUpTabModel model) {
+    return TextFormField(
+      controller: widget.model.passwordSignUpTextController,
+      focusNode: widget.model.passwordSignUpFocusNode,
+      autofocus: false,
+      autofillHints: const [AutofillHints.password],
+      obscureText: !widget.model.passwordSignUpVisibility,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        labelStyle: Theme.of(context).textTheme.bodyMedium,
+        errorText: model.passwordErrorText,
+        errorStyle: TextStyle(
+          color: Theme.of(context).colorScheme.error,
+          fontSize: 12,
+        ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.onPrimary,
@@ -244,49 +255,6 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
           borderRadius: BorderRadius.circular(8),
         ),
         contentPadding: const EdgeInsets.all(24),
-      ),
-      style: Theme.of(context).textTheme.bodyLarge,
-      keyboardType: TextInputType.name,
-      cursorColor: Theme.of(context).colorScheme.onPrimary,
-    );
-  }
-
-  Widget _buildPasswordField() {
-    return TextFormField(
-      controller: widget.model.passwordSignUpTextController,
-      focusNode: widget.model.passwordSignUpFocusNode,
-      autofocus: false,
-      autofillHints: const [AutofillHints.password],
-      obscureText: !widget.model.passwordSignUpVisibility,
-      decoration: InputDecoration(
-        labelText: 'Password',
-        labelStyle: Theme.of(context).textTheme.bodyMedium,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.onPrimary,
-            width: .5,
-          ),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: MobileTheme.infoColor, width: .5),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: .5,
-          ),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: .5,
-          ),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        contentPadding: const EdgeInsetsDirectional.fromSTEB(24, 24, 0, 24),
         suffixIcon: InkWell(
           onTap: () => setState(
             () => widget.model.passwordSignUpVisibility =
@@ -307,7 +275,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildRetypePasswordField() {
+  Widget _buildRetypePasswordField(SignUpTabModel model) {
     return TextFormField(
       controller: widget.model.passwordConfirmTextController,
       focusNode: widget.model.passwordConfirmFocusNode,
@@ -317,6 +285,11 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
       decoration: InputDecoration(
         labelText: 'Retype password',
         labelStyle: Theme.of(context).textTheme.bodyMedium,
+        errorText: model.confirmPasswordErrorText,
+        errorStyle: TextStyle(
+          color: Theme.of(context).colorScheme.error,
+          fontSize: 12,
+        ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.onPrimary,
@@ -342,7 +315,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
           ),
           borderRadius: BorderRadius.circular(8),
         ),
-        contentPadding: const EdgeInsetsDirectional.fromSTEB(24, 24, 0, 24),
+        contentPadding: const EdgeInsets.all(24),
         suffixIcon: InkWell(
           onTap: () => setState(
             () => widget.model.passwordConfirmVisibility =
@@ -363,64 +336,57 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSignUpButton() {
+  Widget _buildSignUpButton(SignUpTabModel model) {
     return Align(
-      child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
-        child: FFButtonWidget(
-          onPressed: () => _performSignUp(
-            widget.model.emailAddressSignUpTextController.text,
-            widget.model.usernameSignUpTextController.text,
-            widget.model.passwordSignUpTextController.text,
-            widget.model.passwordConfirmTextController.text,
-          ),
-          text: 'Sign up',
-          options: FFButtonOptions(
-            width: 270,
-            height: 50,
-            color: MobileTheme.successColor,
-            textStyle: const TextStyle(color: Colors.white, fontSize: 18),
-            borderSide: BorderSide.none,
-            elevation: 3,
-            borderRadius: BorderRadius.circular(8),
-          ),
+      child: FFButtonWidget(
+        onPressed: () => model.signUp(
+          context,
+          widget.model.emailAddressSignUpTextController.text,
+          widget.model.usernameSignUpTextController.text,
+          widget.model.passwordSignUpTextController.text,
+          widget.model.passwordConfirmTextController.text,
+        ),
+        text: 'Sign up',
+        options: FFButtonOptions(
+          width: 270,
+          height: 50,
+          color: MobileTheme.successColor,
+          textStyle: const TextStyle(color: Colors.white, fontSize: 18),
+          borderSide: BorderSide.none,
+          elevation: 3,
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );
   }
 
-  Widget _buildGoogleSignUpButton() {
+  Widget _buildGoogleSignUpButton(SignUpTabModel model) {
     return Align(
-      child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
-        child: FFButtonWidget(
-          onPressed: () async {
-            try {
-              GoogleSignInAccount account = await googleSignIn.authenticate();
-              _performSignUp(
-                account.email,
-                account.displayName ?? account.email,
-                account.id,
-                account.id,
-              );
-            } catch (e) {
-              if (!mounted) return;
-              Toaster.displayError(context, 'Google sign-in failed: $e');
-            }
-          },
-          text: 'Sign Up with Google',
-          icon: const Icon(FontAwesomeIcons.google, size: 16),
-          options: FFButtonOptions(
-            width: 270,
-            height: 50,
-            color: MobileTheme.infoColor,
-            textStyle: const TextStyle(
-              color: MobileTheme.offWhite,
-              fontSize: 18,
-            ),
-            elevation: 3,
-            borderRadius: BorderRadius.circular(8),
-          ),
+      child: FFButtonWidget(
+        onPressed: () async {
+          try {
+            GoogleSignInAccount account = await googleSignIn.authenticate();
+            model.signUp(
+              context,
+              account.email,
+              account.displayName ?? account.email,
+              account.id,
+              account.id,
+            );
+          } catch (e) {
+            if (!mounted) return;
+            Toaster.displayError(context, 'Google sign-in failed: $e');
+          }
+        },
+        text: 'Sign Up with Google',
+        icon: const Icon(FontAwesomeIcons.google, size: 16),
+        options: FFButtonOptions(
+          width: 270,
+          height: 50,
+          color: MobileTheme.infoColor,
+          textStyle: const TextStyle(color: MobileTheme.offWhite, fontSize: 18),
+          elevation: 3,
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );
