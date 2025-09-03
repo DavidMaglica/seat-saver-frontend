@@ -49,10 +49,7 @@ class Account extends StatelessWidget {
                       _buildAccountSettings(context, model),
                       _buildApplicationSettings(context, model),
                       const SizedBox(height: 48),
-                      _buildOpenAuthentication(
-                        context,
-                        model.currentUser?.email,
-                      ),
+                      _buildOpenAuthentication(context),
                     ],
                   ),
                 ),
@@ -221,8 +218,8 @@ class Account extends StatelessWidget {
     );
   }
 
-  Widget _buildOpenAuthentication(BuildContext ctx, String? userEmail) {
-    final isLoggedIn = userEmail != null;
+  Widget _buildOpenAuthentication(BuildContext ctx) {
+    final isLoggedIn = userId != null;
     final text = isLoggedIn ? 'Log out' : 'Log in';
     final color = isLoggedIn
         ? Theme.of(ctx).colorScheme.error

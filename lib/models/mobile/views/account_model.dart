@@ -19,9 +19,10 @@ class AccountModel extends ChangeNotifier {
   final int pageIndex = 3;
 
   User? currentUser;
-  final AccountApi accountApi = AccountApi();
+  final AccountApi accountApi;
 
-  AccountModel({required this.context, this.userId});
+  AccountModel({required this.context, this.userId, AccountApi? api})
+    : accountApi = api ?? AccountApi();
 
   Future<void> init() async {
     if (userId != null) {

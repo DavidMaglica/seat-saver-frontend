@@ -43,7 +43,6 @@ class _AuthenticationState extends State<Authentication>
   @override
   void dispose() {
     _model.dispose();
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
   }
 
@@ -86,6 +85,7 @@ class _AuthenticationState extends State<Authentication>
                                 ),
                                 child: CupertinoButton(
                                   child: const Text(
+                                    key: Key('continueWithoutAccount'),
                                     'Continue without account.',
                                     style: TextStyle(
                                       color: MobileTheme.infoColor,
@@ -120,8 +120,11 @@ class _AuthenticationState extends State<Authentication>
                             dividerColor: Colors.transparent,
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             tabs: const [
-                              Tab(text: 'Create Account'),
-                              Tab(text: 'Log In'),
+                              Tab(
+                                key: Key('signUpTab'),
+                                text: 'Create Account',
+                              ),
+                              Tab(key: Key('logInTab'), text: 'Log In'),
                             ],
                             controller: _model.tabBarController,
                             onTap: (i) async {

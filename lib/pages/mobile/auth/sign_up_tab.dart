@@ -9,6 +9,7 @@ import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/mobile/auth/authentication_model.dart';
 import 'package:table_reserver/models/mobile/auth/signup_tab_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/utils/toaster.dart';
 
 class SignUpTab extends StatefulWidget {
@@ -45,6 +46,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
                   children: [
                     const SizedBox(height: 20),
                     Text(
+                      key: const Key('createAccountText'),
                       'Create Account',
                       textAlign: TextAlign.start,
                       style: Theme.of(context).textTheme.titleLarge,
@@ -78,6 +80,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
                         Align(
                           alignment: const AlignmentDirectional(0, 0),
                           child: Text(
+                            key: const Key('orSignUpWithText'),
                             'Or sign up with',
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.bodyMedium,
@@ -112,6 +115,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
 
   Widget _buildEmailField(SignUpTabModel model) {
     return TextFormField(
+      key: const Key('emailSignUpField'),
       controller: widget.model.emailAddressSignUpTextController,
       focusNode: widget.model.emailAddressSignUpFocusNode,
       autofocus: false,
@@ -129,29 +133,19 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.onPrimary,
-            width: .5,
           ),
           borderRadius: BorderRadius.circular(8),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: MobileTheme.infoColor,
-            width: 0.5,
-          ),
+          borderSide: const BorderSide(color: MobileTheme.infoColor),
           borderRadius: BorderRadius.circular(8),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: .5,
-          ),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
           borderRadius: BorderRadius.circular(8),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: 0.5,
-          ),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
           borderRadius: BorderRadius.circular(8),
         ),
         contentPadding: const EdgeInsets.all(24),
@@ -164,6 +158,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
 
   Widget _buildUsernameField(SignUpTabModel model) {
     return TextFormField(
+      key: const Key('usernameSignUpField'),
       controller: widget.model.usernameSignUpTextController,
       focusNode: widget.model.usernameSignUpFocusNode,
       autofocus: false,
@@ -181,29 +176,19 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.onPrimary,
-            width: 0.5,
           ),
           borderRadius: BorderRadius.circular(8),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: MobileTheme.infoColor,
-            width: 0.5,
-          ),
+          borderSide: const BorderSide(color: MobileTheme.infoColor),
           borderRadius: BorderRadius.circular(8),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: 0.5,
-          ),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
           borderRadius: BorderRadius.circular(8),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: 0.5,
-          ),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
           borderRadius: BorderRadius.circular(8),
         ),
         contentPadding: const EdgeInsets.all(24),
@@ -216,6 +201,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
 
   Widget _buildPasswordField(SignUpTabModel model) {
     return TextFormField(
+      key: const Key('passwordSignUpField'),
       controller: widget.model.passwordSignUpTextController,
       focusNode: widget.model.passwordSignUpFocusNode,
       autofocus: false,
@@ -232,7 +218,6 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.onPrimary,
-            width: .5,
           ),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -241,17 +226,11 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
           borderRadius: BorderRadius.circular(8),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: .5,
-          ),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
           borderRadius: BorderRadius.circular(8),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: .5,
-          ),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
           borderRadius: BorderRadius.circular(8),
         ),
         contentPadding: const EdgeInsets.all(24),
@@ -277,6 +256,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
 
   Widget _buildRetypePasswordField(SignUpTabModel model) {
     return TextFormField(
+      key: const Key('retypePasswordField'),
       controller: widget.model.passwordConfirmTextController,
       focusNode: widget.model.passwordConfirmFocusNode,
       autofocus: false,
@@ -293,7 +273,6 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.onPrimary,
-            width: .5,
           ),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -302,17 +281,11 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
           borderRadius: BorderRadius.circular(8),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: .5,
-          ),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
           borderRadius: BorderRadius.circular(8),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: .5,
-          ),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
           borderRadius: BorderRadius.circular(8),
         ),
         contentPadding: const EdgeInsets.all(24),
@@ -339,13 +312,17 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
   Widget _buildSignUpButton(SignUpTabModel model) {
     return Align(
       child: FFButtonWidget(
-        onPressed: () => model.signUp(
-          context,
-          widget.model.emailAddressSignUpTextController.text,
-          widget.model.usernameSignUpTextController.text,
-          widget.model.passwordSignUpTextController.text,
-          widget.model.passwordConfirmTextController.text,
-        ),
+        key: const Key('signUpButton'),
+        onPressed: () {
+          logger.i('Sign up button pressed');
+          model.signUp(
+            context,
+            widget.model.emailAddressSignUpTextController.text,
+            widget.model.usernameSignUpTextController.text,
+            widget.model.passwordSignUpTextController.text,
+            widget.model.passwordConfirmTextController.text,
+          );
+        },
         text: 'Sign up',
         options: FFButtonOptions(
           width: 270,
@@ -363,6 +340,7 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
   Widget _buildGoogleSignUpButton(SignUpTabModel model) {
     return Align(
       child: FFButtonWidget(
+        key: const Key('googleSignUpButton'),
         onPressed: () async {
           try {
             GoogleSignInAccount account = await googleSignIn.authenticate();

@@ -9,6 +9,7 @@ import 'package:table_reserver/main.dart';
 import 'package:table_reserver/pages/mobile/auth/log_in_tab.dart';
 import 'package:table_reserver/pages/mobile/views/homepage.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/utils/toaster.dart';
 import 'package:table_reserver/utils/utils.dart';
 
@@ -36,6 +37,7 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> with ChangeNotifier {
   ) async {
     if (!_validateFields(userEmail, password)) return;
 
+    logger.i('Logging in user with email: $userEmail');
     BasicResponse<int?> response = await accountApi.logIn(userEmail, password);
 
     if (response.success && response.data != null) {

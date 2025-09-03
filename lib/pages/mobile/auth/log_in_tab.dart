@@ -9,6 +9,7 @@ import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/mobile/auth/authentication_model.dart';
 import 'package:table_reserver/models/mobile/auth/login_tab_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/utils/toaster.dart';
 
 class LogInTab extends StatefulWidget {
@@ -50,12 +51,14 @@ class _LogInTabState extends State<LogInTab> {
                   children: [
                     const SizedBox(height: 16),
                     Text(
+                      key: const Key('welcomeBackText'),
                       'Welcome Back',
                       textAlign: TextAlign.start,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 4),
                     Text(
+                      key: const Key('logInSubtitleText'),
                       'Fill out the information below in order to access your account.',
                       textAlign: TextAlign.start,
                       style: Theme.of(context).textTheme.bodyMedium,
@@ -76,6 +79,7 @@ class _LogInTabState extends State<LogInTab> {
                     Align(
                       alignment: const AlignmentDirectional(0, 0),
                       child: Text(
+                        key: const Key('orLogInWithText'),
                         'Or log in with',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyMedium,
@@ -105,6 +109,7 @@ class _LogInTabState extends State<LogInTab> {
 
   Widget _buildEmailField(LogInTabModel model) {
     return TextFormField(
+      key: const Key('emailLogInField'),
       controller: widget.model.emailAddressLogInTextController,
       focusNode: widget.model.emailAddressLogInFocusNode,
       autofocus: false,
@@ -122,7 +127,6 @@ class _LogInTabState extends State<LogInTab> {
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.onPrimary,
-            width: .5,
           ),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -148,6 +152,7 @@ class _LogInTabState extends State<LogInTab> {
 
   Widget _buildPasswordField(LogInTabModel model) {
     return TextFormField(
+      key: const Key('passwordLogInField'),
       controller: widget.model.passwordLogInTextController,
       focusNode: widget.model.passwordLogInFocusNode,
       autofocus: false,
@@ -164,7 +169,6 @@ class _LogInTabState extends State<LogInTab> {
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.onPrimary,
-            width: .5,
           ),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -204,7 +208,9 @@ class _LogInTabState extends State<LogInTab> {
   Widget _buildLogInButton(LogInTabModel model) {
     return Align(
       child: FFButtonWidget(
+        key: const Key('logInButton'),
         onPressed: () {
+          logger.i('Log In button pressed');
           model.logIn(
             context,
             widget.model.emailAddressLogInTextController.text,
@@ -228,6 +234,7 @@ class _LogInTabState extends State<LogInTab> {
   Widget _buildGoogleLogInButton(LogInTabModel model) {
     return Align(
       child: FFButtonWidget(
+        key: const Key('googleLogInButton'),
         onPressed: () async {
           try {
             GoogleSignInAccount account = await googleSignIn.authenticate();

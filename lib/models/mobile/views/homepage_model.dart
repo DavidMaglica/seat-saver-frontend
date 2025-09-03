@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'
-    show ScaffoldState, ScaffoldMessenger, Colors, Theme, showModalBottomSheet;
+    show ScaffoldState, Colors, Theme, showModalBottomSheet;
 import 'package:flutter/scheduler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/api/account_api.dart';
@@ -93,7 +93,6 @@ class HomepageModel extends ChangeNotifier {
   @override
   void dispose() {
     unfocusNode.dispose();
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
   }
 

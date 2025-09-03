@@ -25,12 +25,12 @@ class AuthenticationModel extends FlutterFlowModel<Authentication> {
   final FocusNode passwordSignUpFocusNode = FocusNode();
   final TextEditingController passwordSignUpTextController =
       TextEditingController();
-  late bool passwordSignUpVisibility;
+  bool passwordSignUpVisibility = false;
 
   final FocusNode passwordConfirmFocusNode = FocusNode();
   final TextEditingController passwordConfirmTextController =
       TextEditingController();
-  late bool passwordConfirmVisibility;
+  bool passwordConfirmVisibility = false;
 
   // logIn
   final FocusNode emailAddressLogInFocusNode = FocusNode();
@@ -40,14 +40,10 @@ class AuthenticationModel extends FlutterFlowModel<Authentication> {
   final FocusNode passwordLogInFocusNode = FocusNode();
   final TextEditingController passwordLogInTextController =
       TextEditingController();
-  late bool passwordLogInVisibility;
+  bool passwordLogInVisibility = false;
 
   @override
-  void initState(BuildContext context) {
-    passwordSignUpVisibility = false;
-    passwordConfirmVisibility = false;
-    passwordLogInVisibility = false;
-  }
+  void initState(BuildContext context) {}
 
   @override
   void dispose() {
