@@ -9,7 +9,6 @@ import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/mobile/auth/authentication_model.dart';
 import 'package:table_reserver/models/mobile/auth/signup_tab_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/utils/toaster.dart';
 
 class SignUpTab extends StatefulWidget {
@@ -314,7 +313,6 @@ class _SignUpTabState extends State<SignUpTab> with TickerProviderStateMixin {
       child: FFButtonWidget(
         key: const Key('signUpButton'),
         onPressed: () {
-          logger.i('Sign up button pressed');
           model.signUp(
             context,
             widget.model.emailAddressSignUpTextController.text,

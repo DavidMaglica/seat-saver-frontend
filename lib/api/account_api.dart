@@ -107,8 +107,6 @@ class AccountApi {
         queryParameters: <String, String>{'email': email, 'password': password},
       );
 
-      logger.i('LogIn response data: ${response.data}');
-
       final int? userId = response.data['data'] as int?;
       final String message = response.data['message'] as String;
 

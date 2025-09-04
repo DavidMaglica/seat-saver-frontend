@@ -13,14 +13,19 @@ import 'package:table_reserver/utils/routes.dart';
 
 class ReservationHistory extends StatelessWidget {
   final int userId;
+  final ReservationHistoryModel? modelOverride;
 
-  const ReservationHistory({super.key, required this.userId});
+  const ReservationHistory({
+    super.key,
+    required this.userId,
+    this.modelOverride,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) =>
-          ReservationHistoryModel(context: context, userId: userId)..init(),
+      create: (_) => modelOverride ?? ReservationHistoryModel(userId: userId)
+        ..init(context),
       child: Builder(
         builder: (context) {
           final model = context.watch<ReservationHistoryModel>();
@@ -100,6 +105,7 @@ class ReservationHistory extends StatelessWidget {
         return Column(
           children: [
             InkWell(
+              key: const Key('reservationEntryButton'),
               onTap: () =>
                   _openReservationDetailsBottomSheet(ctx, model, reservation),
               child: Padding(
@@ -116,6 +122,7 @@ class ReservationHistory extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(right: 8),
                           child: Text(
+                            key: const Key('viewDetailsText'),
                             'view details',
                             style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
                               color: Theme.of(
@@ -165,6 +172,7 @@ class ReservationHistory extends StatelessWidget {
       ),
       builder: (context) {
         return Padding(
+          key: const Key('reservationDetailModal'),
           padding: modalPadding(context),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -221,7 +229,7 @@ class ReservationHistory extends StatelessWidget {
                   buildModalButton(
                     'deleteModalButton',
                     'Delete',
-                    () => model.deleteReservation(reservation.id),
+                    () => model.deleteReservation(context, reservation.id),
                     MobileTheme.errorColor,
                   ),
                 ],
@@ -241,7 +249,15 @@ class ReservationHistory extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: Theme.of(ctx).textTheme.titleSmall),
-          Text(value, style: Theme.of(ctx).textTheme.bodyMedium),
+          Expanded(
+            child: Text(
+              value,
+              style: Theme.of(ctx).textTheme.bodyMedium,
+              textAlign: TextAlign.end,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+            ),
+          ),
         ],
       ),
     );

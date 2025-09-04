@@ -9,7 +9,6 @@ import 'package:table_reserver/models/mobile/views/account_model.dart';
 import 'package:table_reserver/pages/mobile/auth/authentication.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/routing_utils.dart';
 
@@ -258,7 +257,6 @@ class Account extends StatelessWidget {
               : const Key('loginButton'),
           onTap: () {
             if (isLoggedIn) {
-              logger.i('User logged out, clearing cache.');
               sharedPreferencesCache.remove('userId');
               sharedPreferencesCache.remove('userLocation');
             }

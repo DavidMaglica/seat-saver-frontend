@@ -9,7 +9,6 @@ import 'package:table_reserver/main.dart';
 import 'package:table_reserver/models/mobile/auth/authentication_model.dart';
 import 'package:table_reserver/models/mobile/auth/login_tab_model.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/utils/toaster.dart';
 
 class LogInTab extends StatefulWidget {
@@ -210,7 +209,6 @@ class _LogInTabState extends State<LogInTab> {
       child: FFButtonWidget(
         key: const Key('logInButton'),
         onPressed: () {
-          logger.i('Log In button pressed');
           model.logIn(
             context,
             widget.model.emailAddressLogInTextController.text,

@@ -24,6 +24,16 @@ void main() {
   const mockUsername = 'mockUser';
   const mockEmail = 'test@mail.com';
 
+  final mockedUserModel = AccountModel(
+    userId: mockUserId,
+    accountApi: FakeAccountApi(),
+  );
+
+  final nullUserModel = AccountModel(
+    userId: null,
+    accountApi: FakeAccountApi(),
+  );
+
   testWidgets('renders Account screen when logged out', (tester) async {
     final usernameText = find.byKey(Key('usernameText'));
     final emailText = find.byKey(Key('emailText'));
@@ -66,15 +76,11 @@ void main() {
     final logoutButton = find.byKey(const Key('logoutButton'));
     final loginButton = find.byKey(const Key('loginButton'));
 
-    final model = AccountModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
-    await model.init();
+    await mockedUserModel.init();
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Account(userId: mockUserId, modelOverride: model),
+        home: Account(userId: mockUserId, modelOverride: mockedUserModel),
       ),
     );
 
@@ -93,16 +99,12 @@ void main() {
       const Key('reservationHistoryButton'),
     );
 
-    final model = AccountModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
-    await model.init();
+    await mockedUserModel.init();
     setupSharedPrefsMock(initialValues: {'userId': mockUserId});
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Account(userId: mockUserId, modelOverride: model),
+        home: Account(userId: mockUserId, modelOverride: mockedUserModel),
         routes: {
           Routes.reservationHistory: (context) =>
               const ReservationHistory(userId: mockUserId),
@@ -127,12 +129,12 @@ void main() {
       const Key('reservationHistoryButton'),
     );
 
-    final model = AccountModel(userId: null, accountApi: FakeAccountApi());
-    await model.init();
+    await nullUserModel.init();
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(body: Account(userId: null, modelOverride: model)),
+        home: Scaffold(
+            body: Account(userId: null, modelOverride: nullUserModel)),
       ),
     );
 
@@ -152,16 +154,12 @@ void main() {
   testWidgets('should open edit profile when user logged in', (tester) async {
     final editProfileButton = find.byKey(const Key('editProfileButton'));
 
-    final model = AccountModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
-    await model.init();
+    await mockedUserModel.init();
     setupSharedPrefsMock(initialValues: {'userId': mockUserId});
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Account(userId: mockUserId, modelOverride: model),
+        home: Account(userId: mockUserId, modelOverride: mockedUserModel),
         routes: {
           Routes.editProfile: (context) =>
               const EditProfile(userId: mockUserId),
@@ -185,12 +183,12 @@ void main() {
   ) async {
     final editProfileButton = find.byKey(const Key('editProfileButton'));
 
-    final model = AccountModel(userId: null, accountApi: FakeAccountApi());
-    await model.init();
+    await nullUserModel.init();
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(body: Account(userId: null, modelOverride: model)),
+        home: Scaffold(
+            body: Account(userId: null, modelOverride: nullUserModel)),
       ),
     );
 
@@ -211,16 +209,12 @@ void main() {
       const Key('notificationSettingsButton'),
     );
 
-    final model = AccountModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
-    await model.init();
+    await mockedUserModel.init();
     setupSharedPrefsMock(initialValues: {'userId': mockUserId});
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Account(userId: mockUserId, modelOverride: model),
+        home: Account(userId: mockUserId, modelOverride: mockedUserModel),
         routes: {
           Routes.notificationSettings: (context) =>
               const NotificationSettings(userId: mockUserId),
@@ -245,12 +239,12 @@ void main() {
       const Key('notificationSettingsButton'),
     );
 
-    final model = AccountModel(userId: null, accountApi: FakeAccountApi());
-    await model.init();
+    await nullUserModel.init();
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(body: Account(userId: null, modelOverride: model)),
+        home: Scaffold(
+            body: Account(userId: null, modelOverride: nullUserModel)),
       ),
     );
 
@@ -270,16 +264,12 @@ void main() {
   testWidgets('should open support when user logged in', (tester) async {
     final supportButton = find.byKey(const Key('supportButton'));
 
-    final model = AccountModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
-    await model.init();
+    await mockedUserModel.init();
     setupSharedPrefsMock(initialValues: {'userId': mockUserId});
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Account(userId: mockUserId, modelOverride: model),
+        home: Account(userId: mockUserId, modelOverride: mockedUserModel),
         routes: {
           Routes.support: (context) => const Support(userId: mockUserId),
         },
@@ -301,12 +291,12 @@ void main() {
   ) async {
     final supportButton = find.byKey(const Key('supportButton'));
 
-    final model = AccountModel(userId: null, accountApi: FakeAccountApi());
-    await model.init();
+    await nullUserModel.init();
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(body: Account(userId: null, modelOverride: model)),
+        home: Scaffold(
+            body: Account(userId: null, modelOverride: nullUserModel)),
       ),
     );
 
@@ -323,15 +313,11 @@ void main() {
   testWidgets('should open terms of service', (tester) async {
     final termsOfServiceButton = find.byKey(const Key('termsOfServiceButton'));
 
-    final model = AccountModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
-    await model.init();
+    await mockedUserModel.init();
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Account(userId: mockUserId, modelOverride: model),
+        home: Account(userId: mockUserId, modelOverride: mockedUserModel),
         routes: {Routes.termsOfService: (context) => const TermsOfService()},
       ),
     );
@@ -355,16 +341,12 @@ void main() {
   ) async {
     final logoutButton = find.byKey(const Key('logoutButton'));
 
-    final model = AccountModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
-    await model.init();
+    await mockedUserModel.init();
     setupSharedPrefsMock(initialValues: {'userId': mockUserId});
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Account(userId: mockUserId, modelOverride: model),
+        home: Account(userId: mockUserId, modelOverride: mockedUserModel),
         routes: {Routes.authentication: (context) => const Authentication()},
       ),
     );
@@ -388,12 +370,12 @@ void main() {
   ) async {
     final loginButton = find.byKey(const Key('loginButton'));
 
-    final model = AccountModel(userId: null, accountApi: FakeAccountApi());
-    await model.init();
+    await nullUserModel.init();
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(body: Account(userId: null, modelOverride: model)),
+        home: Scaffold(
+            body: Account(userId: null, modelOverride: nullUserModel)),
         routes: {Routes.authentication: (context) => const Authentication()},
       ),
     );

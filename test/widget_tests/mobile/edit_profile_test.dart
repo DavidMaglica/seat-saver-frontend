@@ -20,6 +20,11 @@ void main() {
   const mockEmail = 'test@mail.com';
   const updatedMockEmail = 'newTest@mail.com';
 
+  final model = EditProfileModel(
+    userId: mockUserId,
+    accountApi: FakeAccountApi(),
+  );
+
   testWidgets('should display widget correctly', (tester) async {
     final customAppBar = find.byKey(const Key('customAppBar'));
     final changeUsernameButton = find.byKey(const Key('changeUsernameButton'));
@@ -27,11 +32,6 @@ void main() {
     final changePasswordButton = find.byKey(const Key('changePasswordButton'));
     final mockEmailText = find.text(mockEmail);
     final mockUsernameText = find.text(mockUsername);
-
-    final model = EditProfileModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
 
     await tester.pumpWidget(
       MaterialApp(
@@ -64,11 +64,6 @@ void main() {
     final cancelModalButton = find.byKey(const Key('cancelModalButton'));
     final saveModalButton = find.byKey(const Key('saveModalButton'));
 
-    final model = EditProfileModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
-
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -100,11 +95,6 @@ void main() {
       const Key('changeUsernameModalTitle'),
     );
     final cancelModalButton = find.byKey(const Key('cancelModalButton'));
-
-    final model = EditProfileModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
 
     await tester.pumpWidget(
       MaterialApp(
@@ -143,11 +133,6 @@ void main() {
     final usernameField = find.byKey(const Key('newUsernameField'));
     final cancelModalButton = find.byKey(const Key('cancelModalButton'));
     final saveModalButton = find.byKey(const Key('saveModalButton'));
-
-    final model = EditProfileModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
 
     await tester.pumpWidget(
       MaterialApp(
@@ -194,11 +179,6 @@ void main() {
     final cancelModalButton = find.byKey(const Key('cancelModalButton'));
     final saveModalButton = find.byKey(const Key('saveModalButton'));
 
-    final model = EditProfileModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
-
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -229,11 +209,6 @@ void main() {
     final cancelModalButton = find.byKey(const Key('cancelModalButton'));
     final changeEmailModalTitle = find.byKey(
       const Key('changeEmailModalTitle'),
-    );
-
-    final model = EditProfileModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
     );
 
     await tester.pumpWidget(
@@ -271,11 +246,6 @@ void main() {
     final newEmailField = find.byKey(const Key('newEmailField'));
     final cancelModalButton = find.byKey(const Key('cancelModalButton'));
     final saveModalButton = find.byKey(const Key('saveModalButton'));
-
-    final model = EditProfileModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
 
     await tester.pumpWidget(
       MaterialApp(
@@ -325,11 +295,6 @@ void main() {
     final cancelModalButton = find.byKey(const Key('cancelModalButton'));
     final saveModalButton = find.byKey(const Key('saveModalButton'));
 
-    final model = EditProfileModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
-
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -361,11 +326,6 @@ void main() {
     final cancelModalButton = find.byKey(const Key('cancelModalButton'));
     final changePasswordModalTitle = find.byKey(
       const Key('changePasswordModalTitle'),
-    );
-
-    final model = EditProfileModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
     );
 
     await tester.pumpWidget(
