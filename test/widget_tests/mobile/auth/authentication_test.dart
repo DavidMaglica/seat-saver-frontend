@@ -4,7 +4,7 @@ import 'package:table_reserver/pages/mobile/auth/authentication.dart';
 import 'package:table_reserver/pages/mobile/views/homepage.dart';
 import 'package:table_reserver/utils/routes.dart';
 
-import '../../test_utils/shared_preferences_mock.dart';
+import '../../../test_utils/shared_preferences_mock.dart';
 
 void main() {
   setUp(() {

@@ -8,7 +8,7 @@ import 'package:table_reserver/api/support_api.dart';
 import 'package:table_reserver/models/mobile/views/support_model.dart';
 import 'package:table_reserver/pages/mobile/settings/support.dart';
 
-import '../../test_utils/shared_preferences_mock.dart';
+import '../../../test_utils/shared_preferences_mock.dart';
 
 void main() {
   late SupportModel model;

@@ -9,7 +9,7 @@ import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/models/mobile/views/reservation_history_model.dart';
 import 'package:table_reserver/pages/mobile/settings/reservation_history.dart';
 
-import '../../test_utils/shared_preferences_mock.dart';
+import '../../../test_utils/shared_preferences_mock.dart';
 
 void main() {
   late ReservationHistoryModel model;

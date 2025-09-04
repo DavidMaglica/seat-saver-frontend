@@ -6,7 +6,7 @@ import 'package:table_reserver/api/data/notification_settings.dart';
 import 'package:table_reserver/models/mobile/views/notification_settings_model.dart';
 import 'package:table_reserver/pages/mobile/settings/notification_settings.dart';
 
-import '../../test_utils/shared_preferences_mock.dart';
+import '../../../test_utils/shared_preferences_mock.dart';
 
 void main() {
   const mockUserId = 1;

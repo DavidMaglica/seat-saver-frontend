@@ -7,7 +7,7 @@ import 'package:table_reserver/api/data/user_response.dart';
 import 'package:table_reserver/models/mobile/views/edit_profile_model.dart';
 import 'package:table_reserver/pages/mobile/settings/edit_profile.dart';
 
-import '../../test_utils/shared_preferences_mock.dart';
+import '../../../test_utils/shared_preferences_mock.dart';
 
 void main() {
   late EditProfileModel model;

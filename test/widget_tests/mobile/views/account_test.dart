@@ -13,7 +13,7 @@ import 'package:table_reserver/pages/mobile/settings/terms_of_service.dart';
 import 'package:table_reserver/pages/mobile/views/account.dart';
 import 'package:table_reserver/utils/routes.dart';
 
-import '../../test_utils/shared_preferences_mock.dart';
+import '../../../test_utils/shared_preferences_mock.dart';
 
 void main() {
   late AccountModel mockedUserModel;
