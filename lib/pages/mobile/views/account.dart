@@ -9,18 +9,21 @@ import 'package:table_reserver/models/mobile/views/account_model.dart';
 import 'package:table_reserver/pages/mobile/auth/authentication.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/routing_utils.dart';
 
 class Account extends StatelessWidget {
   final int? userId;
+  final AccountModel? modelOverride;
 
-  const Account({super.key, this.userId});
+  const Account({super.key, this.userId, this.modelOverride});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AccountModel(context: context, userId: userId)..init(),
+      create: (_) => modelOverride ?? AccountModel(userId: userId)
+        ..init(),
       child: Consumer<AccountModel>(
         builder: (context, model, _) {
           var brightness = Theme.of(context).brightness;
@@ -66,10 +69,14 @@ class Account extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(BuildContext ctx, String title) {
+  Widget _buildTitle(BuildContext ctx, String key, String title) {
     return Padding(
       padding: const EdgeInsets.only(left: 24),
-      child: Text(title, style: Theme.of(ctx).textTheme.titleMedium),
+      child: Text(
+        key: Key(key),
+        title,
+        style: Theme.of(ctx).textTheme.titleMedium,
+      ),
     );
   }
 
@@ -80,6 +87,7 @@ class Account extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 24),
           child: Text(
+            key: const Key('usernameText'),
             user?.username ?? '',
             style: Theme.of(ctx).textTheme.titleLarge,
           ),
@@ -88,6 +96,7 @@ class Account extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 24),
           child: Text(
+            key: const Key('emailText'),
             user?.email ?? '',
             style: Theme.of(ctx).textTheme.bodyMedium,
           ),
@@ -99,6 +108,7 @@ class Account extends StatelessWidget {
   Widget _buildSettingsItem(
     BuildContext ctx,
     AccountModel model,
+    String key,
     IconData icon,
     String text,
     String route,
@@ -121,7 +131,8 @@ class Account extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: InkWell(
-          onTap: () => model.openSettingsItem(route, action),
+          key: Key(key),
+          onTap: () => model.openSettingsItem(ctx, route, action),
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
@@ -148,11 +159,12 @@ class Account extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        _buildTitle(ctx, 'Reservations'),
+        _buildTitle(ctx, 'reservationHistoryTitle', 'Reservations'),
         const SizedBox(height: 12),
         _buildSettingsItem(
           ctx,
           model,
+          'reservationHistoryButton',
           CupertinoIcons.doc_on_clipboard,
           'Reservation history',
           Routes.reservationHistory,
@@ -167,11 +179,12 @@ class Account extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        _buildTitle(ctx, 'Account Settings'),
+        _buildTitle(ctx, 'accountSettingsTitle', 'Account Settings'),
         const SizedBox(height: 12),
         _buildSettingsItem(
           ctx,
           model,
+          'editProfileButton',
           CupertinoIcons.person_circle_fill,
           'Edit profile',
           Routes.editProfile,
@@ -181,6 +194,7 @@ class Account extends StatelessWidget {
         _buildSettingsItem(
           ctx,
           model,
+          'notificationSettingsButton',
           CupertinoIcons.bell_circle_fill,
           'Notification settings',
           Routes.notificationSettings,
@@ -195,11 +209,12 @@ class Account extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        _buildTitle(ctx, 'Application Settings'),
+        _buildTitle(ctx, 'applicationSettingsTitle', 'Application Settings'),
         const SizedBox(height: 12),
         _buildSettingsItem(
           ctx,
           model,
+          'supportButton',
           CupertinoIcons.question_circle_fill,
           'Support',
           Routes.support,
@@ -209,6 +224,7 @@ class Account extends StatelessWidget {
         _buildSettingsItem(
           ctx,
           model,
+          'termsOfServiceButton',
           CupertinoIcons.exclamationmark_shield_fill,
           'Terms of service',
           Routes.termsOfService,
@@ -237,8 +253,12 @@ class Account extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: InkWell(
+          key: isLoggedIn
+              ? const Key('logoutButton')
+              : const Key('loginButton'),
           onTap: () {
             if (isLoggedIn) {
+              logger.i('User logged out, clearing cache.');
               sharedPreferencesCache.remove('userId');
               sharedPreferencesCache.remove('userLocation');
             }
