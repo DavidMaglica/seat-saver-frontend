@@ -13,8 +13,9 @@ EdgeInsets modalPadding(BuildContext ctx) => EdgeInsets.only(
   top: 16,
 );
 
-Widget buildModalTitle(BuildContext ctx, String title) {
+Widget buildModalTitle(BuildContext ctx, String key, String title) {
   return Padding(
+    key: Key(key),
     padding: const EdgeInsets.only(left: 24, bottom: 8),
     child: Align(
       alignment: Alignment.centerLeft,
@@ -26,10 +27,12 @@ Widget buildModalTitle(BuildContext ctx, String title) {
   );
 }
 
-Widget buildModalButton(String text, Function() onPressed, Color buttonColour) {
+Widget buildModalButton(String key, String text, Function() onPressed,
+    Color buttonColour) {
   return Align(
     alignment: const AlignmentDirectional(-1, 0),
     child: CupertinoButton(
+      key: Key(key),
       onPressed: onPressed,
       child: Text(
         text,

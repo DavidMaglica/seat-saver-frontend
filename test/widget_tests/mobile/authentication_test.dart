@@ -15,56 +15,59 @@ void main() {
   final mockUserPassword = 'password';
   final mockUserUsername = 'username';
 
-  testWidgets('Authentication renders with both tabs and switches correctly', (
-    tester,
-  ) async {
-    await tester.pumpWidget(MaterialApp(home: Authentication()));
+  testWidgets(
+    'should render Authentication with both tabs and switch correctly',
+    (tester) async {
+      await tester.pumpWidget(MaterialApp(home: Authentication()));
 
-    final signUpTab = find.byKey(const Key('signUpTab'));
-    final logInTab = find.byKey(const Key('logInTab'));
-    final continueWithoutAccountButton = find.byKey(
-      const Key('continueWithoutAccount'),
-    );
+      final signUpTab = find.byKey(const Key('signUpTab'));
+      final logInTab = find.byKey(const Key('logInTab'));
+      final continueWithoutAccountButton = find.byKey(
+        const Key('continueWithoutAccount'),
+      );
 
-    final signUpTabText = find.byKey(const Key('createAccountText'));
-    final signUpEmailField = find.byKey(const Key('emailSignUpField'));
-    final signUpUsernameField = find.byKey(const Key('usernameSignUpField'));
-    final signUpPasswordField = find.byKey(const Key('passwordSignUpField'));
-    final signUpRetypePasswordField = find.byKey(
-      const Key('retypePasswordField'),
-    );
-    final signUpButton = find.byKey(const Key('signUpButton'));
-    final signUpWithGoogleButton = find.byKey(const Key('googleSignUpButton'));
+      final signUpTabText = find.byKey(const Key('createAccountText'));
+      final signUpEmailField = find.byKey(const Key('emailSignUpField'));
+      final signUpUsernameField = find.byKey(const Key('usernameSignUpField'));
+      final signUpPasswordField = find.byKey(const Key('passwordSignUpField'));
+      final signUpRetypePasswordField = find.byKey(
+        const Key('retypePasswordField'),
+      );
+      final signUpButton = find.byKey(const Key('signUpButton'));
+      final signUpWithGoogleButton = find.byKey(
+        const Key('googleSignUpButton'),
+      );
 
-    final logInTabText = find.byKey(const Key('welcomeBackText'));
-    final logInTabSubtitleText = find.byKey(const Key('logInSubtitleText'));
-    final logInEmailField = find.byKey(const Key('emailLogInField'));
-    final logInPasswordField = find.byKey(const Key('passwordLogInField'));
-    final logInButton = find.byKey(const Key('logInButton'));
-    final logInWithGoogleButton = find.byKey(const Key('googleLogInButton'));
+      final logInTabText = find.byKey(const Key('welcomeBackText'));
+      final logInTabSubtitleText = find.byKey(const Key('logInSubtitleText'));
+      final logInEmailField = find.byKey(const Key('emailLogInField'));
+      final logInPasswordField = find.byKey(const Key('passwordLogInField'));
+      final logInButton = find.byKey(const Key('logInButton'));
+      final logInWithGoogleButton = find.byKey(const Key('googleLogInButton'));
 
-    expect(signUpTab, findsOneWidget);
-    expect(logInTab, findsOneWidget);
-    expect(continueWithoutAccountButton, findsOneWidget);
+      expect(signUpTab, findsOneWidget);
+      expect(logInTab, findsOneWidget);
+      expect(continueWithoutAccountButton, findsOneWidget);
 
-    expect(signUpTabText, findsOneWidget);
-    expect(signUpEmailField, findsOneWidget);
-    expect(signUpUsernameField, findsOneWidget);
-    expect(signUpPasswordField, findsOneWidget);
-    expect(signUpRetypePasswordField, findsOneWidget);
-    expect(signUpButton, findsOneWidget);
-    expect(signUpWithGoogleButton, findsOneWidget);
+      expect(signUpTabText, findsOneWidget);
+      expect(signUpEmailField, findsOneWidget);
+      expect(signUpUsernameField, findsOneWidget);
+      expect(signUpPasswordField, findsOneWidget);
+      expect(signUpRetypePasswordField, findsOneWidget);
+      expect(signUpButton, findsOneWidget);
+      expect(signUpWithGoogleButton, findsOneWidget);
 
-    await tester.tap(logInTab);
-    await tester.pumpAndSettle();
+      await tester.tap(logInTab);
+      await tester.pumpAndSettle();
 
-    expect(logInTabText, findsOneWidget);
-    expect(logInTabSubtitleText, findsOneWidget);
-    expect(logInEmailField, findsOneWidget);
-    expect(logInPasswordField, findsOneWidget);
-    expect(logInButton, findsOneWidget);
-    expect(logInWithGoogleButton, findsOneWidget);
-  });
+      expect(logInTabText, findsOneWidget);
+      expect(logInTabSubtitleText, findsOneWidget);
+      expect(logInEmailField, findsOneWidget);
+      expect(logInPasswordField, findsOneWidget);
+      expect(logInButton, findsOneWidget);
+      expect(logInWithGoogleButton, findsOneWidget);
+    },
+  );
 
   testWidgets('should navigate to Homepage when continuing without account', (
     tester,

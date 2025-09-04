@@ -316,11 +316,13 @@ class Search extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       buildModalButton(
+                        'clearFiltersModalButton',
                         'Clear filters',
                         () => _clear(context, model),
                         MobileTheme.errorColor,
                       ),
                       buildModalButton(
+                        'applyFiltersModalButton',
                         'Apply',
                         () => _applyFilters(context, model, tempSelected),
                         MobileTheme.successColor,
@@ -333,6 +335,7 @@ class Search extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       buildModalButton(
+                        'cancelModalButton',
                         'Cancel',
                         () => _cancel(context),
                         Theme.of(context).colorScheme.onPrimary,

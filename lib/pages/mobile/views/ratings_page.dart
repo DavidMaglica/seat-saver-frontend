@@ -371,10 +371,10 @@ class RatingsPage extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        buildModalButton('Cancel', () {
+        buildModalButton('cancelModalButton', 'Cancel', () {
           Navigator.of(context).pop();
         }, Theme.of(context).colorScheme.onPrimary),
-        buildModalButton('Rate', () {
+        buildModalButton('rateModalButton', 'Rate', () {
           if (rating == 0) {
             Toaster.displayError(
               context,

@@ -6,10 +6,12 @@ import 'package:table_reserver/themes/mobile_theme.dart';
 import 'package:table_reserver/utils/toaster.dart';
 
 class EditProfileModel extends ChangeNotifier {
-  final BuildContext context;
   final int userId;
 
-  EditProfileModel({required this.context, required this.userId});
+  final AccountApi accountApi;
+
+  EditProfileModel({required this.userId, AccountApi? accountApi})
+    : accountApi = accountApi ?? AccountApi();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -31,8 +33,6 @@ class EditProfileModel extends ChangeNotifier {
   String? updatedPassword;
   String? updatedEmail;
 
-  final AccountApi accountApi = AccountApi();
-
   User? currentUser;
 
   @override
@@ -41,16 +41,16 @@ class EditProfileModel extends ChangeNotifier {
     super.dispose();
   }
 
-  void init() {
-    _getUser();
+  Future<void> init(BuildContext context) async {
+    _getUser(context);
   }
 
-  Future<void> _getUser() async {
+  Future<void> _getUser(BuildContext context) async {
     final response = await accountApi.getUser(userId);
     if (response != null && response.success && response.user != null) {
       currentUser = response.user!;
     } else {
-      _showToast('Failed to load user data', MobileTheme.errorColor);
+      _showToast(context, 'Failed to load user data', MobileTheme.errorColor);
     }
     notifyListeners();
   }
@@ -66,12 +66,16 @@ class EditProfileModel extends ChangeNotifier {
     confirmNewPasswordTextController.dispose();
   }
 
-  Future<void> changeUsername() async {
+  Future<void> changeUsername(BuildContext context) async {
     final newName = updatedUsername ?? newUsernameTextController.text;
 
     if (newName.isEmpty) {
       _hideKeyboard();
-      _showToast('Please enter a new username', MobileTheme.errorColor);
+      _showToast(
+        context,
+        'Please enter a new username',
+        MobileTheme.errorColor,
+      );
       return;
     }
 
@@ -79,12 +83,13 @@ class EditProfileModel extends ChangeNotifier {
 
     if (!response.success) {
       _hideKeyboard();
-      _showToast(response.message, MobileTheme.errorColor);
+      _showToast(context, response.message, MobileTheme.errorColor);
       return;
     }
 
     _hideKeyboard();
     _showToast(
+      context,
       response.message,
       response.success ? MobileTheme.successColor : MobileTheme.errorColor,
     );
@@ -98,12 +103,12 @@ class EditProfileModel extends ChangeNotifier {
     }
   }
 
-  Future<void> changeEmail() async {
+  Future<void> changeEmail(BuildContext context) async {
     final newEmail = newEmailTextController.text;
 
     if (newEmail.isEmpty) {
       _hideKeyboard();
-      _showToast('Please enter a new email', MobileTheme.errorColor);
+      _showToast(context, 'Please enter a new email', MobileTheme.errorColor);
       return;
     }
 
@@ -111,12 +116,13 @@ class EditProfileModel extends ChangeNotifier {
 
     if (!response.success) {
       _hideKeyboard();
-      _showToast(response.message, MobileTheme.errorColor);
+      _showToast(context, response.message, MobileTheme.errorColor);
       return;
     }
 
     _hideKeyboard();
     _showToast(
+      context,
       response.message,
       response.success ? MobileTheme.successColor : MobileTheme.errorColor,
     );
@@ -130,25 +136,34 @@ class EditProfileModel extends ChangeNotifier {
     }
   }
 
-  Future<void> changePassword() async {
+  Future<void> changePassword(BuildContext context) async {
     final newPassword = newPasswordTextController.text;
     final confirmNewPassword = confirmNewPasswordTextController.text;
 
     if (newPassword.isEmpty) {
       _hideKeyboard();
-      _showToast('Please enter a new password', MobileTheme.errorColor);
+      _showToast(
+        context,
+        'Please enter a new password',
+        MobileTheme.errorColor,
+      );
       return;
     }
 
     if (confirmNewPassword.isEmpty) {
       _hideKeyboard();
-      _showToast("New password hasn't been confirmed", MobileTheme.errorColor);
+      _showToast(
+        context,
+        'New password hasn\'t been confirmed',
+        MobileTheme.errorColor,
+      );
       return;
     }
 
     if (newPassword.length < 8) {
       _hideKeyboard();
       _showToast(
+        context,
         'Password must be at least 8 characters long',
         MobileTheme.errorColor,
       );
@@ -157,7 +172,7 @@ class EditProfileModel extends ChangeNotifier {
 
     if (newPassword != confirmNewPassword) {
       _hideKeyboard();
-      _showToast('Passwords do not match', MobileTheme.errorColor);
+      _showToast(context, 'Passwords do not match', MobileTheme.errorColor);
       return;
     }
 
@@ -165,12 +180,13 @@ class EditProfileModel extends ChangeNotifier {
 
     if (!response.success) {
       _hideKeyboard();
-      _showToast(response.message, MobileTheme.errorColor);
+      _showToast(context, response.message, MobileTheme.errorColor);
       return;
     }
 
     _hideKeyboard();
     _showToast(
+      context,
       response.message,
       response.success ? MobileTheme.successColor : MobileTheme.errorColor,
     );
@@ -185,9 +201,9 @@ class EditProfileModel extends ChangeNotifier {
     }
   }
 
-  void cancel() => Navigator.of(context).pop();
+  void cancel(BuildContext context) => Navigator.of(context).pop();
 
-  void _showToast(String message, Color color) {
+  void _showToast(BuildContext context, String message, Color color) {
     Toaster.display(context, message, color);
   }
 

@@ -12,13 +12,15 @@ import 'package:table_reserver/utils/routes.dart';
 
 class EditProfile extends StatelessWidget {
   final int userId;
+  final EditProfileModel? modelOverride;
 
-  const EditProfile({super.key, required this.userId});
+  const EditProfile({super.key, required this.userId, this.modelOverride});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => EditProfileModel(context: context, userId: userId)..init(),
+      create: (_) => modelOverride ?? EditProfileModel(userId: userId)
+        ..init(context),
       child: Consumer<EditProfileModel>(
         builder: (context, model, _) {
           if (model.currentUser == null) {
@@ -104,6 +106,7 @@ class EditProfile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsetsDirectional.all(12),
       child: InkWell(
+        key: const Key('changeUsernameButton'),
         onTap: () => _openChangeUsernameBottomSheet(ctx, model),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -139,6 +142,7 @@ class EditProfile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsetsDirectional.all(12),
       child: InkWell(
+        key: const Key('changeEmailButton'),
         onTap: () => _openChangeEmailBottomSheet(ctx, model),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,6 +178,7 @@ class EditProfile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsetsDirectional.all(12),
       child: InkWell(
+        key: const Key('changePasswordButton'),
         onTap: () => _openChangePasswordBottomSheet(ctx, model),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -202,15 +207,21 @@ class EditProfile extends StatelessWidget {
       ),
       builder: (context) {
         return Padding(
+          key: const Key('changeUsernameModal'),
           padding: modalPadding(context),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 16),
-              buildModalTitle(context, 'Change Username'),
+              buildModalTitle(
+                context,
+                'changeUsernameModalTitle',
+                'Change Username',
+              ),
               const SizedBox(height: 16),
               _buildInputField(
                 ctx,
+                'newUsernameField',
                 'New Username',
                 'Enter a new username',
                 model.newUsernameTextController,
@@ -223,13 +234,15 @@ class EditProfile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   buildModalButton(
+                    'cancelModalButton',
                     'Cancel',
-                    model.cancel,
+                    () => model.cancel(context),
                     Theme.of(context).colorScheme.onPrimary,
                   ),
                   buildModalButton(
+                    'saveModalButton',
                     'Save',
-                    model.changeUsername,
+                    () => model.changeUsername(context),
                     MobileTheme.successColor,
                   ),
                 ],
@@ -251,14 +264,16 @@ class EditProfile extends StatelessWidget {
       ),
       builder: (context) {
         return Padding(
+          key: const Key('changeEmailModal'),
           padding: modalPadding(context),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              buildModalTitle(context, 'Change Email'),
+              buildModalTitle(context, 'changeEmailModalTitle', 'Change Email'),
               const SizedBox(height: 16),
               _buildInputField(
                 ctx,
+                'newEmailField',
                 'New Email',
                 'Enter your new email',
                 model.newEmailTextController,
@@ -270,13 +285,15 @@ class EditProfile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   buildModalButton(
+                    'cancelModalButton',
                     'Cancel',
-                    model.cancel,
+                    () => model.cancel(context),
                     Theme.of(context).colorScheme.onPrimary,
                   ),
                   buildModalButton(
+                    'saveModalButton',
                     'Save',
-                    model.changeEmail,
+                    () => model.changeEmail(context),
                     MobileTheme.successColor,
                   ),
                 ],
@@ -303,14 +320,20 @@ class EditProfile extends StatelessWidget {
         return StatefulBuilder(
           builder: (context, setModalState) {
             return Padding(
+              key: const Key('changePasswordModal'),
               padding: modalPadding(context),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  buildModalTitle(context, 'Change Password'),
+                  buildModalTitle(
+                    context,
+                    'changePasswordModalTitle',
+                    'Change Password',
+                  ),
                   const SizedBox(height: 16),
                   _buildPasswordInputField(
                     ctx,
+                    'newPasswordField',
                     'New Password',
                     'Enter a new password',
                     model.newPasswordTextController,
@@ -326,6 +349,7 @@ class EditProfile extends StatelessWidget {
                   const SizedBox(height: 12),
                   _buildPasswordInputField(
                     ctx,
+                    'confirmNewPasswordField',
                     'Confirm New Password',
                     'Confirm your password',
                     model.confirmNewPasswordTextController,
@@ -343,13 +367,15 @@ class EditProfile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       buildModalButton(
+                        'cancelModalButton',
                         'Cancel',
-                        model.cancel,
+                        () => model.cancel(context),
                         Theme.of(context).colorScheme.onPrimary,
                       ),
                       buildModalButton(
+                        'saveModalButton',
                         'Save',
-                        model.changePassword,
+                        () => model.changePassword(context),
                         MobileTheme.successColor,
                       ),
                     ],
@@ -366,6 +392,7 @@ class EditProfile extends StatelessWidget {
 
   Widget _buildInputField(
     BuildContext ctx,
+    String key,
     String labelText,
     String hint,
     TextEditingController controller,
@@ -375,6 +402,7 @@ class EditProfile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: TextFormField(
+        key: Key(key),
         controller: controller,
         focusNode: focusNode,
         keyboardType: keyboardType,
@@ -390,6 +418,7 @@ class EditProfile extends StatelessWidget {
 
   Widget _buildPasswordInputField(
     BuildContext ctx,
+    String key,
     String labelText,
     String hint,
     TextEditingController controller,
@@ -400,6 +429,7 @@ class EditProfile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: TextFormField(
+        key: Key(key),
         controller: controller,
         focusNode: focusNode,
         obscureText: !isVisible,

@@ -169,7 +169,11 @@ class ReservationHistory extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              buildModalTitle(context, 'Reservation Detail'),
+              buildModalTitle(
+                context,
+                'reservationDetailModalTitle',
+                'Reservation Detail',
+              ),
               const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -209,11 +213,13 @@ class ReservationHistory extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   buildModalButton(
+                    'cancelModalButton',
                     'Cancel',
                     () => Navigator.pop(context),
                     Theme.of(context).colorScheme.onPrimary,
                   ),
                   buildModalButton(
+                    'deleteModalButton',
                     'Delete',
                     () => model.deleteReservation(reservation.id),
                     MobileTheme.errorColor,
