@@ -14,8 +14,14 @@ import 'package:table_reserver/utils/routing_utils.dart';
 class Search extends StatelessWidget {
   final int? userId;
   final String? locationQuery;
+  final SearchModel? modelOverride;
 
-  const Search({super.key, this.userId, this.locationQuery});
+  const Search({
+    super.key,
+    this.userId,
+    this.locationQuery,
+    this.modelOverride,
+  });
 
   void _clear(BuildContext ctx, SearchModel model) {
     Navigator.pop(ctx);
@@ -38,7 +44,9 @@ class Search extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => SearchModel(context: context)..init(locationQuery),
+      create: (_) =>
+      modelOverride ?? SearchModel()
+        ..init(locationQuery),
       child: Consumer<SearchModel>(
         builder: (context, model, _) {
           var brightness = Theme.of(context).brightness;
@@ -123,7 +131,8 @@ class Search extends StatelessWidget {
 
                 return Column(
                   children: [
-                    _buildListTitle(context, model, venue, venueType),
+                    _buildListTitle(
+                        context, model, 'venueListTile', venue, venueType),
                     if (index < model.paginatedVenues.length - 1)
                       _buildDivider(context),
                   ],
@@ -148,6 +157,7 @@ class Search extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 36),
             child: TextField(
+              key: const Key('searchBar'),
               controller: model.searchBarController,
               decoration: InputDecoration(
                 hintText: 'Type to search for venues (by name or city)',
@@ -182,6 +192,7 @@ class Search extends StatelessWidget {
   Widget _buildListTitle(
     BuildContext ctx,
     SearchModel model,
+      String key,
     Venue venue,
     String? venueType,
   ) {
@@ -191,7 +202,8 @@ class Search extends StatelessWidget {
         vertical: 6,
       ),
       child: ListTile(
-        onTap: model.goToVenuePage(venue),
+        key: Key(key),
+        onTap: model.goToVenuePage(ctx, venue),
         title: Text(venue.name, style: Theme.of(ctx).textTheme.titleMedium),
         subtitle: Text(
           venueType != null ? venueType.toTitleCase() : 'Loading...',
@@ -223,6 +235,7 @@ class Search extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: GestureDetector(
+        key: const Key('filterDropdown'),
         onTap: () => _showTypeFilter(ctx, model),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -272,6 +285,7 @@ class Search extends StatelessWidget {
         return StatefulBuilder(
           builder: (context, setModalState) {
             return Container(
+              key: const Key('filterModal'),
               height: 456,
               width: double.infinity,
               decoration: BoxDecoration(
@@ -376,6 +390,7 @@ class Search extends StatelessWidget {
           Transform.scale(
             scale: 0.8,
             child: CupertinoSwitch(
+              key: Key('filterSwitch_$type'),
               value: isSelected,
               onChanged: (bool value) {
                 setModalState(() {
