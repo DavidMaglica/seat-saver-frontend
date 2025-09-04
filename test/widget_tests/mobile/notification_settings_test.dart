@@ -21,7 +21,7 @@ void main() {
     );
   });
 
-  testWidgets('should render Notification Settings correctly', (tester) async {
+  testWidgets('should display widget correctly', (tester) async {
     final customAppBar = find.byKey(const Key('customAppBar'));
     final descriptionText = find.byKey(const Key('descriptionText'));
     final pushNotificationText = find.text('Push Notifications');

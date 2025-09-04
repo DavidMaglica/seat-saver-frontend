@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
 
 class ActionButton extends StatelessWidget {
   final String title;
@@ -26,11 +27,8 @@ class ActionButton extends StatelessWidget {
       options: FFButtonOptions(
         width: 270,
         height: 50,
-        color: Theme.of(context).colorScheme.primary,
-        textStyle: TextStyle(
-          color: Theme.of(context).colorScheme.onSurface,
-          fontSize: 16,
-        ),
+        color: MobileTheme.successColor,
+        textStyle: TextStyle(color: MobileTheme.offWhite, fontSize: 16),
         elevation: 3,
         borderRadius: BorderRadius.circular(8),
       ),

@@ -33,100 +33,98 @@ void main() {
     );
   });
 
-  testWidgets(
-    'should display no reservation history when no reservations made',
-    (tester) async {
-      final customAppBar = find.byKey(const Key('customAppBar'));
-      final noReservationsText = find.text('No Reservation History');
-      final reservationEntryButton = find.byKey(
-        const Key('reservationEntryButton'),
-      );
-      final viewDetailsText = find.byKey(const Key('viewDetailsText'));
-      final reservationDetailModal = find.byKey(
-        const Key('reservationDetailModal'),
-      );
-      final reservationDetailModalTitle = find.byKey(
-        const Key('reservationDetailModalTitle'),
-      );
+  testWidgets('should display widget correctly when no reservations made', (
+    tester,
+  ) async {
+    final customAppBar = find.byKey(const Key('customAppBar'));
+    final noReservationsText = find.text('No Reservation History');
+    final reservationEntryButton = find.byKey(
+      const Key('reservationEntryButton'),
+    );
+    final viewDetailsText = find.byKey(const Key('viewDetailsText'));
+    final reservationDetailModal = find.byKey(
+      const Key('reservationDetailModal'),
+    );
+    final reservationDetailModalTitle = find.byKey(
+      const Key('reservationDetailModalTitle'),
+    );
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: ReservationHistory(
-              userId: mockUserId,
-              modelOverride: emptyReservationModel,
-            ),
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: ReservationHistory(
+            userId: mockUserId,
+            modelOverride: emptyReservationModel,
           ),
         ),
-      );
+      ),
+    );
 
-      expect(customAppBar, findsOneWidget);
-      expect(noReservationsText, findsOneWidget);
-      expect(reservationEntryButton, findsNothing);
-      expect(viewDetailsText, findsNothing);
-      expect(reservationDetailModal, findsNothing);
-      expect(reservationDetailModalTitle, findsNothing);
-    },
-  );
+    expect(customAppBar, findsOneWidget);
+    expect(noReservationsText, findsOneWidget);
+    expect(reservationEntryButton, findsNothing);
+    expect(viewDetailsText, findsNothing);
+    expect(reservationDetailModal, findsNothing);
+    expect(reservationDetailModalTitle, findsNothing);
+  });
 
-  testWidgets(
-    'should display reservation history correctly when reservations made',
-    (tester) async {
-      final customAppBar = find.byKey(const Key('customAppBar'));
-      final noReservationsText = find.text('No Reservation History');
-      final reservationEntryButton = find.byKey(
-        const Key('reservationEntryButton'),
-      );
-      final viewDetailsText = find.byKey(const Key('viewDetailsText'));
-      final reservationDetailModal = find.byKey(
-        const Key('reservationDetailModal'),
-      );
-      final reservationDetailModalTitle = find.byKey(
-        const Key('reservationDetailModalTitle'),
-      );
-      final venueNameText = find.text('Venue name');
-      final venueNameValueText = find.text('First venue');
-      final numberOfGuestsText = find.text('Number of Guests');
-      final numberOfGuestsValueText = find.text('2');
-      final dateTimeText = find.textContaining('Date');
-      final dateTimeValueText = find.text(
-        DateFormat('dd-MM-yyyy HH:mm').format(DateTime.now()),
-      );
-      final cancelModalButton = find.byKey(const Key('cancelModalButton'));
-      final deleteModalButton = find.byKey(const Key('deleteModalButton'));
+  testWidgets('should display widget correctly when reservations made', (
+    tester,
+  ) async {
+    final customAppBar = find.byKey(const Key('customAppBar'));
+    final noReservationsText = find.text('No Reservation History');
+    final reservationEntryButton = find.byKey(
+      const Key('reservationEntryButton'),
+    );
+    final viewDetailsText = find.byKey(const Key('viewDetailsText'));
+    final reservationDetailModal = find.byKey(
+      const Key('reservationDetailModal'),
+    );
+    final reservationDetailModalTitle = find.byKey(
+      const Key('reservationDetailModalTitle'),
+    );
+    final venueNameText = find.text('Venue name');
+    final venueNameValueText = find.text('First venue');
+    final numberOfGuestsText = find.text('Number of Guests');
+    final numberOfGuestsValueText = find.text('2');
+    final dateTimeText = find.textContaining('Date');
+    final dateTimeValueText = find.text(
+      DateFormat('dd-MM-yyyy HH:mm').format(DateTime.now()),
+    );
+    final cancelModalButton = find.byKey(const Key('cancelModalButton'));
+    final deleteModalButton = find.byKey(const Key('deleteModalButton'));
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: ReservationHistory(userId: mockUserId, modelOverride: model),
-          ),
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: ReservationHistory(userId: mockUserId, modelOverride: model),
         ),
-      );
+      ),
+    );
 
-      await tester.pumpAndSettle();
+    await tester.pumpAndSettle();
 
-      expect(customAppBar, findsOneWidget);
-      expect(noReservationsText, findsNothing);
-      expect(reservationEntryButton, findsNWidgets(2));
-      expect(viewDetailsText, findsNWidgets(2));
-      expect(reservationDetailModal, findsNothing);
-      expect(reservationDetailModalTitle, findsNothing);
+    expect(customAppBar, findsOneWidget);
+    expect(noReservationsText, findsNothing);
+    expect(reservationEntryButton, findsNWidgets(2));
+    expect(viewDetailsText, findsNWidgets(2));
+    expect(reservationDetailModal, findsNothing);
+    expect(reservationDetailModalTitle, findsNothing);
 
-      await tester.tap(reservationEntryButton.first);
-      await tester.pumpAndSettle();
+    await tester.tap(reservationEntryButton.first);
+    await tester.pumpAndSettle();
 
-      expect(reservationDetailModal, findsOneWidget);
-      expect(reservationDetailModalTitle, findsOneWidget);
-      expect(venueNameText, findsOneWidget);
-      expect(venueNameValueText, findsNWidgets(3));
-      expect(numberOfGuestsText, findsOneWidget);
-      expect(numberOfGuestsValueText, findsOneWidget);
-      expect(dateTimeText, findsOneWidget);
-      expect(dateTimeValueText, findsOneWidget);
-      expect(cancelModalButton, findsOneWidget);
-      expect(deleteModalButton, findsOneWidget);
-    },
-  );
+    expect(reservationDetailModal, findsOneWidget);
+    expect(reservationDetailModalTitle, findsOneWidget);
+    expect(venueNameText, findsOneWidget);
+    expect(venueNameValueText, findsNWidgets(3));
+    expect(numberOfGuestsText, findsOneWidget);
+    expect(numberOfGuestsValueText, findsOneWidget);
+    expect(dateTimeText, findsOneWidget);
+    expect(dateTimeValueText, findsOneWidget);
+    expect(cancelModalButton, findsOneWidget);
+    expect(deleteModalButton, findsOneWidget);
+  });
 
   testWidgets('should close modal when cancel button tapped', (tester) async {
     final reservationEntryButton = find.byKey(

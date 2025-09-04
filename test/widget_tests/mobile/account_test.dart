@@ -34,7 +34,7 @@ void main() {
     nullUserModel = AccountModel(userId: null, accountApi: FakeAccountApi());
   });
 
-  testWidgets('renders Account screen when logged out', (tester) async {
+  testWidgets('should display widget', (tester) async {
     final usernameText = find.byKey(Key('usernameText'));
     final emailText = find.byKey(Key('emailText'));
     final reservationHistoryTitle = find.byKey(Key('reservationHistoryTitle'));
@@ -72,7 +72,7 @@ void main() {
     expect(loginButton, findsOneWidget);
   });
 
-  testWidgets('shows user details when logged in', (tester) async {
+  testWidgets('should display user details when logged in', (tester) async {
     final logoutButton = find.byKey(const Key('logoutButton'));
     final loginButton = find.byKey(const Key('loginButton'));
 
