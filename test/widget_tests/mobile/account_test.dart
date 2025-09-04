@@ -16,23 +16,23 @@ import 'package:table_reserver/utils/routes.dart';
 import '../../test_utils/shared_preferences_mock.dart';
 
 void main() {
-  setUp(() {
-    setupSharedPrefsMock(initialValues: {});
-  });
+  late AccountModel mockedUserModel;
+  late AccountModel nullUserModel;
 
   const mockUserId = 1;
   const mockUsername = 'mockUser';
   const mockEmail = 'test@mail.com';
 
-  final mockedUserModel = AccountModel(
-    userId: mockUserId,
-    accountApi: FakeAccountApi(),
-  );
+  setUp(() {
+    setupSharedPrefsMock(initialValues: {});
 
-  final nullUserModel = AccountModel(
-    userId: null,
-    accountApi: FakeAccountApi(),
-  );
+    mockedUserModel = AccountModel(
+      userId: mockUserId,
+      accountApi: FakeAccountApi(),
+    );
+
+    nullUserModel = AccountModel(userId: null, accountApi: FakeAccountApi());
+  });
 
   testWidgets('renders Account screen when logged out', (tester) async {
     final usernameText = find.byKey(Key('usernameText'));
@@ -134,7 +134,8 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-            body: Account(userId: null, modelOverride: nullUserModel)),
+          body: Account(userId: null, modelOverride: nullUserModel),
+        ),
       ),
     );
 
@@ -188,7 +189,8 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-            body: Account(userId: null, modelOverride: nullUserModel)),
+          body: Account(userId: null, modelOverride: nullUserModel),
+        ),
       ),
     );
 
@@ -244,7 +246,8 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-            body: Account(userId: null, modelOverride: nullUserModel)),
+          body: Account(userId: null, modelOverride: nullUserModel),
+        ),
       ),
     );
 
@@ -296,7 +299,8 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-            body: Account(userId: null, modelOverride: nullUserModel)),
+          body: Account(userId: null, modelOverride: nullUserModel),
+        ),
       ),
     );
 
@@ -375,7 +379,8 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-            body: Account(userId: null, modelOverride: nullUserModel)),
+          body: Account(userId: null, modelOverride: nullUserModel),
+        ),
         routes: {Routes.authentication: (context) => const Authentication()},
       ),
     );

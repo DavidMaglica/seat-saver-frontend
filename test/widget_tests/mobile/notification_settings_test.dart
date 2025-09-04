@@ -10,15 +10,16 @@ import '../../test_utils/shared_preferences_mock.dart';
 
 void main() {
   const mockUserId = 1;
+  late NotificationSettingsModel model;
 
   setUp(() {
     setupSharedPrefsMock(initialValues: {'userId': mockUserId});
-  });
 
-  final model = NotificationSettingsModel(
-    userId: mockUserId,
-    accountApi: FakeAccountApi(),
-  );
+    model = NotificationSettingsModel(
+      userId: mockUserId,
+      accountApi: FakeAccountApi(),
+    );
+  });
 
   testWidgets('should render Notification Settings correctly', (tester) async {
     final customAppBar = find.byKey(const Key('customAppBar'));

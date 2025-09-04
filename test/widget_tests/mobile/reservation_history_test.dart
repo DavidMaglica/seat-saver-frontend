@@ -12,23 +12,26 @@ import 'package:table_reserver/pages/mobile/settings/reservation_history.dart';
 import '../../test_utils/shared_preferences_mock.dart';
 
 void main() {
+  late ReservationHistoryModel model;
+  late ReservationHistoryModel emptyReservationModel;
+
   const mockUserId = 1;
 
   setUp(() {
     setupSharedPrefsMock(initialValues: {'userId': mockUserId});
+
+    model = ReservationHistoryModel(
+      userId: mockUserId,
+      reservationsApi: FakeReservationsApi(),
+      venuesApi: FakeVenuesApi(),
+    );
+
+    emptyReservationModel = ReservationHistoryModel(
+      userId: mockUserId,
+      reservationsApi: FakeReservationsApiEmpty(),
+      venuesApi: FakeVenuesApi(),
+    );
   });
-
-  final model = ReservationHistoryModel(
-    userId: mockUserId,
-    reservationsApi: FakeReservationsApi(),
-    venuesApi: FakeVenuesApi(),
-  );
-
-  final emptyReservationModel = ReservationHistoryModel(
-    userId: mockUserId,
-    reservationsApi: FakeReservationsApiEmpty(),
-    venuesApi: FakeVenuesApi(),
-  );
 
   testWidgets(
     'should display no reservation history when no reservations made',

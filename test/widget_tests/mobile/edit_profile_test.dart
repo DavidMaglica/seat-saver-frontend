@@ -10,9 +10,7 @@ import 'package:table_reserver/pages/mobile/settings/edit_profile.dart';
 import '../../test_utils/shared_preferences_mock.dart';
 
 void main() {
-  setUp(() {
-    setupSharedPrefsMock(initialValues: {'userId': 1});
-  });
+  late EditProfileModel model;
 
   const mockUserId = 1;
   const mockUsername = 'mockUser';
@@ -20,10 +18,10 @@ void main() {
   const mockEmail = 'test@mail.com';
   const updatedMockEmail = 'newTest@mail.com';
 
-  final model = EditProfileModel(
-    userId: mockUserId,
-    accountApi: FakeAccountApi(),
-  );
+  setUp(() {
+    setupSharedPrefsMock(initialValues: {'userId': 1});
+    model = EditProfileModel(userId: mockUserId, accountApi: FakeAccountApi());
+  });
 
   testWidgets('should display widget correctly', (tester) async {
     final customAppBar = find.byKey(const Key('customAppBar'));
