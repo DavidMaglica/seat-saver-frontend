@@ -3,12 +3,14 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class ActionButton extends StatelessWidget {
   final String title;
+  final String keyName;
   final IconData? iconData;
   final Function() onPressed;
 
   const ActionButton({
     super.key,
     required this.title,
+    required this.keyName,
     required this.onPressed,
     this.iconData,
   });
@@ -17,6 +19,7 @@ class ActionButton extends StatelessWidget {
   Widget build(BuildContext context) => Align(
     alignment: const AlignmentDirectional(0, 0),
     child: FFButtonWidget(
+      key: Key(keyName),
       onPressed: onPressed,
       text: title,
       icon: iconData != null ? Icon(iconData, size: 16) : null,

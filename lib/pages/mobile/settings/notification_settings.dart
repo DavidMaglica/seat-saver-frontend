@@ -9,15 +9,19 @@ import 'package:table_reserver/utils/routes.dart';
 
 class NotificationSettings extends StatelessWidget {
   final int userId;
+  final NotificationSettingsModel? modelOverride;
 
-  const NotificationSettings({super.key, required this.userId});
+  const NotificationSettings({
+    super.key,
+    required this.userId,
+    this.modelOverride,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<NotificationSettingsModel>(
-      create: (_) =>
-          NotificationSettingsModel(context: context, userId: userId)
-            ..loadNotificationSettings(),
+      create: (_) => modelOverride ?? NotificationSettingsModel(userId: userId)
+        ..loadNotificationSettings(),
       builder: (context, _) {
         final model = context.watch<NotificationSettingsModel>();
 
@@ -45,6 +49,7 @@ class NotificationSettings extends StatelessWidget {
                   const SizedBox(height: 12),
                   _buildSwitchTile(
                     context: context,
+                    key: 'pushNotificationsSwitch',
                     title: 'Push Notifications',
                     subtitle: 'Receive app updates via push notifications.',
                     value: model.isActivePushNotifications,
@@ -53,6 +58,7 @@ class NotificationSettings extends StatelessWidget {
                   _buildDivider(context),
                   _buildSwitchTile(
                     context: context,
+                    key: 'emailNotificationsSwitch',
                     title: 'Email Notifications',
                     subtitle: 'Get email updates from our marketing team.',
                     value: model.isActiveEmailNotifications,
@@ -61,6 +67,7 @@ class NotificationSettings extends StatelessWidget {
                   _buildDivider(context),
                   _buildSwitchTile(
                     context: context,
+                    key: 'locationServicesSwitch',
                     title: 'Location Services',
                     subtitle:
                         'Allow us to track your location for better services.',
@@ -69,8 +76,9 @@ class NotificationSettings extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   ActionButton(
+                    keyName: 'saveChangesButton',
                     title: 'Save Changes',
-                    onPressed: model.saveChanges,
+                    onPressed: () => model.saveChanges(context),
                   ),
                 ],
               ),
@@ -88,6 +96,7 @@ class NotificationSettings extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
+              key: const Key('descriptionText'),
               'Choose what notifications you want to receive below and we will update the settings.',
               style: Theme.of(ctx).textTheme.bodyMedium,
             ),
@@ -109,12 +118,14 @@ class NotificationSettings extends StatelessWidget {
 
   Widget _buildSwitchTile({
     required BuildContext context,
+    required String key,
     required String title,
     required String subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
     return SwitchListTile.adaptive(
+      key: Key(key),
       value: value,
       onChanged: onChanged,
       title: Text(title, style: Theme.of(context).textTheme.titleMedium),

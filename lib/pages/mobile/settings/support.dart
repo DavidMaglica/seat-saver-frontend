@@ -141,6 +141,7 @@ class _SupportState extends State<Support> {
                   ),
                   const SizedBox(height: 24),
                   ActionButton(
+                    keyName: 'submitTicketButton',
                     title: 'Submit Ticket',
                     onPressed: () => model.submitTicket(),
                     iconData: CupertinoIcons.paperplane_fill,
