@@ -10,12 +10,18 @@ import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 
 class VenuesByTypeModel extends ChangeNotifier {
-  final BuildContext context;
   final String type;
   final Position? userLocation;
 
+  VenuesApi venuesApi;
+
+  VenuesByTypeModel({
+    required this.type,
+    this.userLocation,
+    VenuesApi? venuesApi,
+  }) : venuesApi = venuesApi ?? VenuesApi();
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  VenuesApi venuesApi = VenuesApi();
 
   final ScrollController scrollController = ScrollController();
 
@@ -26,12 +32,6 @@ class VenuesByTypeModel extends ChangeNotifier {
   List<Venue> venues = [];
 
   Map<int, String> venueTypeMap = {};
-
-  VenuesByTypeModel({
-    required this.context,
-    required this.type,
-    this.userLocation,
-  });
 
   Future<void> init() async {
     await _fetchNextPage(type);
@@ -107,7 +107,7 @@ class VenuesByTypeModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void goToVenuePage(int venueId) {
+  void goToVenuePage(BuildContext context, int venueId) {
     Navigator.of(context).push(
       MobileFadeInRoute(
         page: VenuePage(venueId: venueId),
@@ -117,7 +117,7 @@ class VenuesByTypeModel extends ChangeNotifier {
     );
   }
 
-  void goBack() {
+  void goBack(BuildContext context) {
     Navigator.of(context).push(
       MobileFadeInRoute(page: const Homepage(), routeName: Routes.homepage),
     );
