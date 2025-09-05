@@ -16,18 +16,21 @@ class RatingsPage extends StatelessWidget {
   final int venueId;
   final int? userId;
   final Position? userLocation;
+  final RatingsPageModel? modelOverride;
 
   const RatingsPage({
     super.key,
     required this.venueId,
     this.userId,
     this.userLocation,
+    this.modelOverride,
   });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => RatingsPageModel(ctx: context, venueId: venueId)..init(),
+      create: (_) => modelOverride ?? RatingsPageModel(venueId: venueId)
+        ..init(context),
       child: Consumer<RatingsPageModel>(
         builder: (context, model, _) {
           bool isAtBottom = false;
@@ -132,6 +135,7 @@ class RatingsPage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: RatingSummary(
+          key: const Key('ratingSummary'),
           counter: model.ratings?.length ?? 0,
           showAverage: false,
           counterFiveStars: fiveStars,
@@ -170,6 +174,7 @@ class RatingsPage extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.only(top: 12),
         child: Container(
+          key: const Key('ratingEntryContainer'),
           width: double.infinity,
           decoration: BoxDecoration(
             color: Theme.of(ctx).colorScheme.onSurface,
@@ -260,6 +265,7 @@ class RatingsPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36),
       child: FFButtonWidget(
+        key: const Key('leaveReviewButton'),
         onPressed: () => _buildRatingModal(ctx, model),
         text: 'Rate this venue',
         showLoadingIndicator: false,
@@ -302,6 +308,7 @@ class RatingsPage extends StatelessWidget {
                   ),
                   child: Center(
                     child: Container(
+                      key: const Key('ratingModal'),
                       height: 216,
                       width: MediaQuery.sizeOf(context).width * 0.9,
                       decoration: BoxDecoration(
@@ -326,6 +333,7 @@ class RatingsPage extends StatelessWidget {
                                   });
                                 },
                                 itemBuilder: (context, index) => Icon(
+                                  key: Key('ratingStar_$index'),
                                   CupertinoIcons.star_fill,
                                   color: Theme.of(
                                     context,
@@ -383,7 +391,12 @@ class RatingsPage extends StatelessWidget {
             return;
           }
 
-          model.rateVenue(userId!, rating, model.commentTextController.text);
+          model.rateVenue(
+            context,
+            userId!,
+            rating,
+            model.commentTextController.text,
+          );
           Navigator.of(context).pop();
         }, MobileTheme.successColor),
       ],
@@ -392,6 +405,7 @@ class RatingsPage extends StatelessWidget {
 
   Widget _buildCommentTextField(BuildContext context, RatingsPageModel model) {
     return TextFormField(
+      key: const Key('commentField'),
       controller: model.commentTextController,
       focusNode: model.commentFocusNode,
       autofocus: false,
@@ -450,6 +464,7 @@ class RatingsPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
+                  key: const Key('numberOfRatingsText'),
                   '${model.ratings?.length}',
                   style: Theme.of(ctx).textTheme.titleMedium,
                 ),
@@ -468,6 +483,7 @@ class RatingsPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
+                      key: const Key('averageRatingText'),
                       model.venue.rating.toStringAsFixed(2),
                       style: Theme.of(ctx).textTheme.titleMedium,
                     ),
@@ -475,6 +491,7 @@ class RatingsPage extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.only(bottom: 2),
                       child: Icon(
+                        key: Key('averageRatingIcon'),
                         CupertinoIcons.star_fill,
                         color: MobileTheme.accent1,
                         size: 24,

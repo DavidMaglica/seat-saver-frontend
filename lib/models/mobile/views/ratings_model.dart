@@ -6,11 +6,13 @@ import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/utils/toaster.dart';
 
 class RatingsPageModel extends ChangeNotifier {
-  final BuildContext ctx;
   final int venueId;
+  final VenuesApi venuesApi;
+
+  RatingsPageModel({required this.venueId, VenuesApi? venuesApi})
+    : venuesApi = venuesApi ?? VenuesApi();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final VenuesApi venuesApi = VenuesApi();
 
   final FocusNode commentFocusNode = FocusNode();
   final TextEditingController commentTextController = TextEditingController();
@@ -29,46 +31,49 @@ class RatingsPageModel extends ChangeNotifier {
     description: '',
   );
 
-  RatingsPageModel({required this.ctx, required this.venueId});
-
-  void init() {
-    _loadVenue();
-    _loadReviews();
+  void init(BuildContext context) {
+    _loadVenue(context);
+    _loadReviews(context);
   }
 
-  Future<void> _loadVenue() async {
+  Future<void> _loadVenue(BuildContext context) async {
     try {
       final loadedVenue = await venuesApi.getVenue(venueId);
       if (loadedVenue == null) {
-        if (!ctx.mounted) return;
-        Toaster.displayError(ctx, 'Failed to load venue data');
+        if (!context.mounted) return;
+        Toaster.displayError(context, 'Failed to load venue data');
         return;
       }
       venue = loadedVenue;
       notifyListeners();
     } catch (e) {
-      if (!ctx.mounted) return;
+      if (!context.mounted) return;
       Toaster.displayError(
-        ctx,
+        context,
         'Failed to load venue. Please try again later.',
       );
     }
   }
 
-  Future<void> _loadReviews() async {
+  Future<void> _loadReviews(BuildContext context) async {
     try {
       ratings = await venuesApi.getAllVenueRatings(venueId);
       notifyListeners();
     } catch (e) {
-      if (!ctx.mounted) return;
+      if (!context.mounted) return;
       Toaster.displayError(
-        ctx,
+        context,
         'Failed to load reviews. Please try again later.',
       );
     }
   }
 
-  Future<void> rateVenue(int userId, double newRating, String comment) async {
+  Future<void> rateVenue(
+    BuildContext context,
+    int userId,
+    double newRating,
+    String comment,
+  ) async {
     BasicResponse response = await venuesApi.rateVenue(
       venueId,
       newRating,
@@ -76,24 +81,24 @@ class RatingsPageModel extends ChangeNotifier {
       comment,
     );
 
-    if (!ctx.mounted) return;
-    ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
     if (response.success) {
-      Toaster.displaySuccess(ctx, 'Rating updated successfully');
+      Toaster.displaySuccess(context, 'Rating updated successfully');
     } else {
-      Toaster.displayError(ctx, response.message);
+      Toaster.displayError(context, response.message);
     }
 
     final updatedRating = await venuesApi.getVenueRating(venueId);
     if (updatedRating == null) {
-      if (!ctx.mounted) return;
-      Toaster.displayError(ctx, 'Error fetching updated rating');
+      if (!context.mounted) return;
+      Toaster.displayError(context, 'Error fetching updated rating');
       return;
     }
 
-    if (!ctx.mounted) return;
-    Toaster.displaySuccess(ctx, 'Thanks for your feedback!');
+    if (!context.mounted) return;
+    Toaster.displaySuccess(context, 'Thanks for your feedback!');
 
     venue.rating = updatedRating;
     commentTextController.clear();
