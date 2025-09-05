@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:table_reserver/components/common/full_image_view.dart';
@@ -19,13 +18,13 @@ import 'package:table_reserver/utils/utils.dart';
 class VenuePage extends StatelessWidget {
   final int venueId;
   final int? userId;
-  final Position? userLocation;
+  final VenuePageModel? modelOverride;
 
   const VenuePage({
     super.key,
     required this.venueId,
     this.userId,
-    this.userLocation,
+    this.modelOverride,
   });
 
   Function() goBack(BuildContext context) {
@@ -35,12 +34,9 @@ class VenuePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => VenuePageModel(
-        ctx: context,
-        venueId: venueId,
-        userId: userId,
-        userLocation: userLocation,
-      )..init(),
+      create: (_) =>
+          modelOverride ?? VenuePageModel(venueId: venueId, userId: userId)
+            ..init(context),
       child: Consumer<VenuePageModel>(
         builder: (context, model, _) {
           return GestureDetector(
@@ -61,7 +57,7 @@ class VenuePage extends StatelessWidget {
                       children: [
                         RefreshIndicator(
                           onRefresh: () async {
-                            await model.init();
+                            await model.init(context);
                           },
                           elevation: 3,
                           child: SingleChildScrollView(
@@ -102,6 +98,7 @@ class VenuePage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 16),
       child: InkWell(
+        key: const Key('headerImage'),
         onTap: () {
           if (!hasImage) return;
 
@@ -173,6 +170,7 @@ class VenuePage extends StatelessWidget {
 
   Widget _buildViewRatingsButton(BuildContext ctx, VenuePageModel model) {
     return FFButtonWidget(
+      key: const Key('viewRatingsButton'),
       onPressed: () {
         Navigator.of(ctx).push(
           MobileFadeInRoute(
@@ -348,6 +346,7 @@ class VenuePage extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 4),
           child: Text(
+            key: const Key('venueDescription'),
             model.venue.description ?? 'No description available',
             style: Theme.of(
               ctx,
@@ -420,6 +419,7 @@ class VenuePage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 4),
       child: DropdownButton<int>(
+        key: const Key('peopleButton'),
         value: model.selectedNumberOfPeople,
         hint: Text(
           'Select no. of people attending',
@@ -458,6 +458,7 @@ class VenuePage extends StatelessWidget {
         ? dateFormat.format(model.selectedDate!)
         : 'Select date';
     return OutlinedButton(
+      key: const Key('dateButton'),
       onPressed: () => model.selectDate(ctx),
       style: _reservationButtonsStyle(ctx),
       child: SizedBox(
@@ -509,18 +510,23 @@ class VenuePage extends StatelessWidget {
     VenuePageModel model,
   ) {
     return DropdownButton<TimeOfDay>(
+      key: const Key('timeButton'),
       value: model.selectedTime,
       hint: Text('Select time', style: Theme.of(ctx).textTheme.bodyLarge),
       style: Theme.of(ctx).textTheme.bodyMedium,
       dropdownColor: Theme.of(ctx).colorScheme.onSurface,
       underline: Container(),
       borderRadius: const BorderRadius.all(Radius.circular(10)),
-      items: model.timeOptions.map((time) {
+      items: model.timeOptions.mapIndexed((index, time) {
         final formatted = time.format(ctx);
-        return DropdownMenuItem(value: time, child: Text(formatted));
+        return DropdownMenuItem(
+          key: Key('$index'),
+          value: time,
+          child: Text(formatted),
+        );
       }).toList(),
       onChanged: (value) {
-        model.setTime(value);
+        model.setTime(ctx, value);
       },
     );
   }
@@ -533,7 +539,8 @@ class VenuePage extends StatelessWidget {
         horizontal: 36,
       ).add(EdgeInsets.only(bottom: 48)),
       child: FFButtonWidget(
-        onPressed: () => isDisabled ? null : model.reserve(),
+        key: const Key('reserveSpotButton'),
+        onPressed: () => isDisabled ? null : model.reserve(ctx),
         text: isDisabled
             ? 'No seats currently available'
             : 'Reserve your spot now',

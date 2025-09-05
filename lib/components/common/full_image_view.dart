@@ -21,6 +21,7 @@ class FullScreenImageView extends StatelessWidget {
       elevation: 0,
       leading: IconButton(
         icon: Icon(
+          key: const Key('fullImageViewCloseButton'),
           CupertinoIcons.xmark_circle_fill,
           color: Theme.of(context).colorScheme.onPrimary,
         ),

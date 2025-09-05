@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/venue.dart';
 import 'package:table_reserver/api/reservation_api.dart';
@@ -15,10 +14,19 @@ import 'package:table_reserver/utils/toaster.dart';
 import 'package:table_reserver/utils/utils.dart';
 
 class VenuePageModel extends ChangeNotifier {
-  final BuildContext ctx;
   final int venueId;
   final int? userId;
-  final Position? userLocation;
+
+  final ReservationsApi reservationsApi;
+  final VenuesApi venuesApi;
+
+  VenuePageModel({
+    required this.venueId,
+    this.userId,
+    ReservationsApi? reservationsApi,
+    VenuesApi? venuesApi,
+  }) : reservationsApi = reservationsApi ?? ReservationsApi(),
+       venuesApi = venuesApi ?? VenuesApi();
 
   DateTime? selectedDate = DateTime.now();
   TimeOfDay? selectedTime = TimeOfDay.now();
@@ -52,18 +60,8 @@ class VenuePageModel extends ChangeNotifier {
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final ReservationsApi reservationsApi = ReservationsApi();
-  final VenuesApi venuesApi = VenuesApi();
-
-  VenuePageModel({
-    required this.ctx,
-    required this.venueId,
-    this.userId,
-    this.userLocation,
-  });
-
-  Future<void> init() async {
-    await _loadData();
+  Future<void> init(BuildContext context) async {
+    await _loadData(context);
     await _loadImages();
     final currentTime = _roundToNearestHalfHour(
       TimeOfDay(hour: selectedTime!.hour, minute: selectedTime!.minute),
@@ -72,18 +70,18 @@ class VenuePageModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _loadData() async {
+  Future<void> _loadData(BuildContext context) async {
     final loadedVenue = await venuesApi.getVenue(venueId);
     if (loadedVenue == null) {
-      if (!ctx.mounted) return;
-      Toaster.displayError(ctx, 'Failed to load venue data');
+      if (!context.mounted) return;
+      Toaster.displayError(context, 'Failed to load venue data');
       return;
     }
     venue = loadedVenue;
     final loadedVenueType = await venuesApi.getVenueType(venue.typeId);
     if (loadedVenueType == null) {
-      if (!ctx.mounted) return;
-      Toaster.displayError(ctx, 'Failed to load venue type');
+      if (!context.mounted) return;
+      Toaster.displayError(context, 'Failed to load venue type');
       return;
     }
     venueType = loadedVenueType;
@@ -117,7 +115,7 @@ class VenuePageModel extends ChangeNotifier {
     return TimeOfDay(hour: (time.hour + 1) % 24, minute: time.minute);
   }
 
-  bool _validateInput() {
+  bool _validateInput(BuildContext context) {
     final validationErrors = [
       if (userId == null) 'Please log in to reserve a spot',
       if (selectedDate == null) 'Please select a date',
@@ -126,7 +124,7 @@ class VenuePageModel extends ChangeNotifier {
     ];
 
     if (validationErrors.isNotEmpty) {
-      Toaster.displayError(ctx, validationErrors.first);
+      Toaster.displayError(context, validationErrors.first);
       return false;
     }
 
@@ -143,7 +141,7 @@ class VenuePageModel extends ChangeNotifier {
     );
     if (!isWorkingDay) {
       Toaster.displayError(
-        ctx,
+        context,
         'The selected date is not a working day for the venue.',
       );
       return false;
@@ -151,7 +149,7 @@ class VenuePageModel extends ChangeNotifier {
 
     if (!isWithinWorkingHours(reservationDateTime, venue.workingHours)) {
       Toaster.displayError(
-        ctx,
+        context,
         'The selected time is outside of the venue\'s working hours.',
       );
       return false;
@@ -180,8 +178,8 @@ class VenuePageModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> reserve() async {
-    if (!_validateInput()) return;
+  Future<void> reserve(BuildContext context) async {
+    if (!_validateInput(context)) return;
 
     DateTime reservationDateTime = DateTime(
       selectedDate!.year,
@@ -197,15 +195,15 @@ class VenuePageModel extends ChangeNotifier {
       numberOfGuests: selectedNumberOfPeople!,
       reservationDate: reservationDateTime,
     );
-    if (!ctx.mounted) return;
-    ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
     if (!response.success) {
-      Toaster.displayError(ctx, response.message);
+      Toaster.displayError(context, response.message);
       return;
     }
 
-    Navigator.of(ctx).push(
+    Navigator.of(context).push(
       MobileFadeInRoute(
         page: SuccessfulReservation(
           venueName: venue.name,
@@ -235,7 +233,7 @@ class VenuePageModel extends ChangeNotifier {
     }
   }
 
-  void setTime(TimeOfDay? timeOfDay) {
+  void setTime(BuildContext context, TimeOfDay? timeOfDay) {
     if (timeOfDay != null) {
       if (selectedTime != null &&
           selectedTime!.hour == timeOfDay.hour &&
@@ -248,8 +246,8 @@ class VenuePageModel extends ChangeNotifier {
       TimeOfDay currentTime = _roundToNearestHalfHour(TimeOfDay.now());
 
       if (!isBeforeOrEqual(currentTime, selectedTime!)) {
-        if (!ctx.mounted) return;
-        Toaster.displayWarning(ctx, 'Please select a different time');
+        if (!context.mounted) return;
+        Toaster.displayWarning(context, 'Please select a different time');
         selectedTime = null;
       }
 

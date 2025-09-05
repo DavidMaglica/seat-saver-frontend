@@ -38,6 +38,7 @@ class VenueImagesTab extends StatelessWidget {
       child: Column(
         children: [
           TabBar(
+            key: const Key('imagesTabBar'),
             labelColor: MobileTheme.accent1,
             indicatorColor: MobileTheme.accent1,
             labelStyle: Theme.of(context).textTheme.titleMedium,
