@@ -6,7 +6,6 @@ import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 
 class SuccessfulReservationModel extends ChangeNotifier {
-  final BuildContext context;
   final String venueName;
   final int numberOfGuests;
   final DateTime reservationDateTime;
@@ -15,7 +14,6 @@ class SuccessfulReservationModel extends ChangeNotifier {
   Timer? _timer;
 
   SuccessfulReservationModel({
-    required this.context,
     required this.venueName,
     required this.numberOfGuests,
     required this.reservationDateTime,
@@ -27,11 +25,11 @@ class SuccessfulReservationModel extends ChangeNotifier {
     super.dispose();
   }
 
-  void startCountdown() {
+  void startCountdown(BuildContext context) {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       if (countdown == 0) {
         timer.cancel();
-        navigateToHomepage();
+        navigateToHomepage(context);
       } else {
         countdown--;
         notifyListeners();
@@ -43,7 +41,7 @@ class SuccessfulReservationModel extends ChangeNotifier {
     _timer?.cancel();
   }
 
-  void navigateToHomepage() {
+  void navigateToHomepage(BuildContext context) {
     if (!context.mounted) return;
     Navigator.of(context).push(
       MobileFadeInRoute(page: const Homepage(), routeName: Routes.homepage),

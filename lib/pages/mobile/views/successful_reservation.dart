@@ -21,11 +21,10 @@ class SuccessfulReservation extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => SuccessfulReservationModel(
-        context: context,
         venueName: venueName,
         numberOfGuests: numberOfGuests,
         reservationDateTime: reservationDateTime,
-      )..startCountdown(),
+      )..startCountdown(context),
       child: Consumer<SuccessfulReservationModel>(
         builder: (context, model, _) {
           var brightness = Theme.of(context).brightness;
@@ -49,6 +48,7 @@ class SuccessfulReservation extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
+                                key: const Key('titleText'),
                                 'Successful Reservation',
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
@@ -57,6 +57,7 @@ class SuccessfulReservation extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(16),
                                 child: Text(
+                                  key: const Key('messageText'),
                                   'Your reservation was successfully placed.\n\n'
                                   '${model.venueName} will be preparing a table for ${model.numberOfGuests} '
                                   'at ${DateFormat('HH:mm').format(model.reservationDateTime)} hours '
@@ -75,9 +76,10 @@ class SuccessfulReservation extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(top: 24),
                                 child: FFButtonWidget(
+                                  key: const Key('backButton'),
                                   onPressed: () {
                                     model.cancelCountdown();
-                                    model.navigateToHomepage();
+                                    model.navigateToHomepage(context);
                                   },
                                   text: 'Back',
                                   options: FFButtonOptions(
@@ -127,6 +129,7 @@ class SuccessfulReservation extends StatelessWidget {
         border: Border.all(color: Theme.of(ctx).colorScheme.primary, width: 4),
       ),
       child: Icon(
+        key: const Key('icon'),
         CupertinoIcons.check_mark,
         color: Theme.of(ctx).colorScheme.primary,
         size: 72,
