@@ -120,18 +120,21 @@ class SuccessfulReservation extends StatelessWidget {
     );
   }
 
-  Widget _buildIcon(BuildContext ctx) {
+  Widget _buildIcon(BuildContext context) {
     return Container(
       width: 196,
       height: 196,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: Theme.of(ctx).colorScheme.primary, width: 4),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary,
+          width: 4,
+        ),
       ),
       child: Icon(
         key: const Key('icon'),
         CupertinoIcons.check_mark,
-        color: Theme.of(ctx).colorScheme.primary,
+        color: Theme.of(context).colorScheme.primary,
         size: 72,
       ),
     );

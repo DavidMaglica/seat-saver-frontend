@@ -148,7 +148,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
     );
   }
 
-  Widget _buildFallbackImage(BuildContext ctx) {
+  Widget _buildFallbackImage(BuildContext context) {
     return Container(
       width: double.infinity,
       height: 110,
@@ -157,7 +157,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
       child: Text(
         widget.venue.name,
         style: Theme.of(
-          ctx,
+          context,
         ).textTheme.titleMedium?.copyWith(color: Colors.white),
         textAlign: TextAlign.center,
       ),

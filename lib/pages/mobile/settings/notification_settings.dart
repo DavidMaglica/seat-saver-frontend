@@ -89,7 +89,7 @@ class NotificationSettings extends StatelessWidget {
     );
   }
 
-  Widget _buildDescriptionText(BuildContext ctx) {
+  Widget _buildDescriptionText(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
@@ -98,7 +98,7 @@ class NotificationSettings extends StatelessWidget {
             child: Text(
               key: const Key('descriptionText'),
               'Choose what notifications you want to receive below and we will update the settings.',
-              style: Theme.of(ctx).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
         ],
@@ -106,11 +106,11 @@ class NotificationSettings extends StatelessWidget {
     );
   }
 
-  Widget _buildDivider(BuildContext ctx) {
+  Widget _buildDivider(BuildContext context) {
     return Divider(
       height: 1,
       thickness: 1,
-      color: Theme.of(ctx).colorScheme.onPrimary,
+      color: Theme.of(context).colorScheme.onPrimary,
       indent: 12,
       endIndent: 12,
     );

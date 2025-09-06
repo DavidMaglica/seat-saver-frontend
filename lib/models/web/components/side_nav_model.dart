@@ -25,8 +25,8 @@ class SideNavModel extends FlutterFlowModel<SideNav> with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> goTo(BuildContext ctx, Widget page, String routeName) async {
-    Navigator.of(ctx).push(FadeInRoute(routeName: routeName, page: page));
+  Future<void> goTo(BuildContext context, Widget page, String routeName) async {
+    Navigator.of(context).push(FadeInRoute(routeName: routeName, page: page));
   }
 
   void setDarkModeSetting(BuildContext context, bool isDarkMode) {

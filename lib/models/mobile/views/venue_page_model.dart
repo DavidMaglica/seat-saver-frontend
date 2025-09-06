@@ -158,11 +158,11 @@ class VenuePageModel extends ChangeNotifier {
     return true;
   }
 
-  void selectDate(BuildContext ctx) async {
+  void selectDate(BuildContext context) async {
     DateTime? minDate = DateTime.now();
     DateTime? maxDate = DateTime.now().add(const Duration(days: 31));
 
-    final date = await _showDatePicker(ctx, maxDate, minDate);
+    final date = await _showDatePicker(context, maxDate, minDate);
 
     if (date == null) return;
 
@@ -255,19 +255,18 @@ class VenuePageModel extends ChangeNotifier {
     }
   }
 
-  Future<DateTime?> _showDatePicker(
-    BuildContext ctx,
+  Future<DateTime?> _showDatePicker(BuildContext context,
     DateTime maxDate,
     DateTime minDate,
   ) {
     return showDatePickerDialog(
-      context: ctx,
+      context: context,
       maxDate: maxDate,
       minDate: minDate,
       selectedDate: selectedDate,
       centerLeadingDate: true,
-      slidersColor: Theme.of(ctx).colorScheme.onPrimary,
-      currentDateTextStyle: Theme.of(ctx).textTheme.bodyMedium,
+      slidersColor: Theme.of(context).colorScheme.onPrimary,
+      currentDateTextStyle: Theme.of(context).textTheme.bodyMedium,
       currentDateDecoration: const BoxDecoration(
         color: MobileTheme.transparentColour,
         shape: BoxShape.circle,
@@ -279,21 +278,21 @@ class VenuePageModel extends ChangeNotifier {
         ),
       ),
       selectedCellTextStyle: Theme.of(
-        ctx,
+        context,
       ).textTheme.titleMedium?.copyWith(color: Colors.white),
       selectedCellDecoration: const BoxDecoration(
         color: MobileTheme.infoColor,
         shape: BoxShape.circle,
       ),
-      enabledCellsTextStyle: Theme.of(ctx).textTheme.bodyMedium,
-      disabledCellsTextStyle: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-        color: Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.4),
+      enabledCellsTextStyle: Theme.of(context).textTheme.bodyMedium,
+      disabledCellsTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.4),
       ),
       leadingDateTextStyle: Theme.of(
-        ctx,
+        context,
       ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
       daysOfTheWeekTextStyle: Theme.of(
-        ctx,
+        context,
       ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
     );
   }

@@ -68,18 +68,18 @@ class Account extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(BuildContext ctx, String key, String title) {
+  Widget _buildTitle(BuildContext context, String key, String title) {
     return Padding(
       padding: const EdgeInsets.only(left: 24),
       child: Text(
         key: Key(key),
         title,
-        style: Theme.of(ctx).textTheme.titleMedium,
+        style: Theme.of(context).textTheme.titleMedium,
       ),
     );
   }
 
-  Widget _buildAccountDetails(BuildContext ctx, User? user) {
+  Widget _buildAccountDetails(BuildContext context, User? user) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -88,7 +88,7 @@ class Account extends StatelessWidget {
           child: Text(
             key: const Key('usernameText'),
             user?.username ?? '',
-            style: Theme.of(ctx).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         const SizedBox(height: 4),
@@ -97,15 +97,14 @@ class Account extends StatelessWidget {
           child: Text(
             key: const Key('emailText'),
             user?.email ?? '',
-            style: Theme.of(ctx).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildSettingsItem(
-    BuildContext ctx,
+  Widget _buildSettingsItem(BuildContext context,
     AccountModel model,
     String key,
     IconData icon,
@@ -118,32 +117,32 @@ class Account extends StatelessWidget {
       child: Container(
         height: 60,
         decoration: BoxDecoration(
-          color: Theme.of(ctx).colorScheme.onSurface,
+          color: Theme.of(context).colorScheme.onSurface,
           boxShadow: [
             BoxShadow(
               blurRadius: 3,
               spreadRadius: 3,
               offset: const Offset(0, 1),
-              color: Theme.of(ctx).colorScheme.outline,
+              color: Theme.of(context).colorScheme.outline,
             ),
           ],
           borderRadius: BorderRadius.circular(8),
         ),
         child: InkWell(
           key: Key(key),
-          onTap: () => model.openSettingsItem(ctx, route, action),
+          onTap: () => model.openSettingsItem(context, route, action),
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
-                Icon(icon, color: Theme.of(ctx).colorScheme.onPrimary),
+                Icon(icon, color: Theme.of(context).colorScheme.onPrimary),
                 const SizedBox(width: 12),
-                Text(text, style: Theme.of(ctx).textTheme.titleMedium),
+                Text(text, style: Theme.of(context).textTheme.titleMedium),
                 const Spacer(),
                 Icon(
                   CupertinoIcons.chevron_forward,
                   size: 14,
-                  color: Theme.of(ctx).colorScheme.onPrimary,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ],
             ),
@@ -153,15 +152,15 @@ class Account extends StatelessWidget {
     );
   }
 
-  Widget _buildHistorySettings(BuildContext ctx, AccountModel model) {
+  Widget _buildHistorySettings(BuildContext context, AccountModel model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        _buildTitle(ctx, 'reservationHistoryTitle', 'Reservations'),
+        _buildTitle(context, 'reservationHistoryTitle', 'Reservations'),
         const SizedBox(height: 12),
         _buildSettingsItem(
-          ctx,
+          context,
           model,
           'reservationHistoryButton',
           CupertinoIcons.doc_on_clipboard,
@@ -173,15 +172,15 @@ class Account extends StatelessWidget {
     );
   }
 
-  Widget _buildAccountSettings(BuildContext ctx, AccountModel model) {
+  Widget _buildAccountSettings(BuildContext context, AccountModel model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        _buildTitle(ctx, 'accountSettingsTitle', 'Account Settings'),
+        _buildTitle(context, 'accountSettingsTitle', 'Account Settings'),
         const SizedBox(height: 12),
         _buildSettingsItem(
-          ctx,
+          context,
           model,
           'editProfileButton',
           CupertinoIcons.person_circle_fill,
@@ -191,7 +190,7 @@ class Account extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         _buildSettingsItem(
-          ctx,
+          context,
           model,
           'notificationSettingsButton',
           CupertinoIcons.bell_circle_fill,
@@ -203,15 +202,19 @@ class Account extends StatelessWidget {
     );
   }
 
-  Widget _buildApplicationSettings(BuildContext ctx, AccountModel model) {
+  Widget _buildApplicationSettings(BuildContext context, AccountModel model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        _buildTitle(ctx, 'applicationSettingsTitle', 'Application Settings'),
+        _buildTitle(
+          context,
+          'applicationSettingsTitle',
+          'Application Settings',
+        ),
         const SizedBox(height: 12),
         _buildSettingsItem(
-          ctx,
+          context,
           model,
           'supportButton',
           CupertinoIcons.question_circle_fill,
@@ -221,7 +224,7 @@ class Account extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         _buildSettingsItem(
-          ctx,
+          context,
           model,
           'termsOfServiceButton',
           CupertinoIcons.exclamationmark_shield_fill,
@@ -233,11 +236,11 @@ class Account extends StatelessWidget {
     );
   }
 
-  Widget _buildOpenAuthentication(BuildContext ctx) {
+  Widget _buildOpenAuthentication(BuildContext context) {
     final isLoggedIn = userId != null;
     final text = isLoggedIn ? 'Log out' : 'Log in';
     final color = isLoggedIn
-        ? Theme.of(ctx).colorScheme.error
+        ? Theme.of(context).colorScheme.error
         : MobileTheme.successColor;
 
     return Padding(
@@ -245,7 +248,7 @@ class Account extends StatelessWidget {
       child: Container(
         height: 60,
         decoration: BoxDecoration(
-          color: Theme.of(ctx).colorScheme.onSurface,
+          color: Theme.of(context).colorScheme.onSurface,
           boxShadow: [
             BoxShadow(blurRadius: 10, color: color.withValues(alpha: 0.8)),
           ],
@@ -260,7 +263,7 @@ class Account extends StatelessWidget {
               sharedPreferencesCache.remove('userId');
               sharedPreferencesCache.remove('userLocation');
             }
-            Navigator.of(ctx).push(
+            Navigator.of(context).push(
               MobileFadeInRoute(
                 page: const Authentication(),
                 routeName: Routes.authentication,
@@ -273,7 +276,7 @@ class Account extends StatelessWidget {
               children: [
                 Text(
                   text,
-                  style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: color.withValues(alpha: 0.8),
                   ),
                 ),

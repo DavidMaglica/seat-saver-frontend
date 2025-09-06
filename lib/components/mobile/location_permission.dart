@@ -53,7 +53,7 @@ class LocationPermissionPopUp extends StatelessWidget {
     );
   }
 
-  Widget _buildSubTitle(BuildContext ctx) {
+  Widget _buildSubTitle(BuildContext context) {
     return Align(
       alignment: const AlignmentDirectional(0, 0),
       child: Padding(
@@ -61,13 +61,13 @@ class LocationPermissionPopUp extends StatelessWidget {
         child: Text(
           'Find your favourite spots! Activate location services to easily locate venues near you!',
           textAlign: TextAlign.center,
-          style: Theme.of(ctx).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       ),
     );
   }
 
-  Widget _buildTitle(BuildContext ctx) {
+  Widget _buildTitle(BuildContext context) {
     return Align(
       alignment: const AlignmentDirectional(0, 0),
       child: Padding(
@@ -75,7 +75,7 @@ class LocationPermissionPopUp extends StatelessWidget {
         child: Text(
           'Our app works best with location enabled',
           textAlign: TextAlign.center,
-          style: Theme.of(ctx).textTheme.titleLarge,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
     );
@@ -92,10 +92,10 @@ class LocationPermissionPopUp extends StatelessWidget {
     );
   }
 
-  Widget _buildDenyButton(BuildContext ctx) {
+  Widget _buildDenyButton(BuildContext context) {
     return FFButtonWidget(
       onPressed: () {
-        Navigator.of(ctx).push(
+        Navigator.of(context).push(
           MobileFadeInRoute(page: const Homepage(), routeName: Routes.homepage),
         );
       },
@@ -104,14 +104,14 @@ class LocationPermissionPopUp extends StatelessWidget {
         width: 270,
         height: 40,
         padding: const EdgeInsets.symmetric(horizontal: 24),
-        color: Theme.of(ctx).colorScheme.onSurface,
+        color: Theme.of(context).colorScheme.onSurface,
         textStyle: TextStyle(
-          color: Theme.of(ctx).colorScheme.onPrimary,
+          color: Theme.of(context).colorScheme.onPrimary,
           fontSize: 16,
         ),
         elevation: 3,
         borderSide: BorderSide(
-          color: Theme.of(ctx).colorScheme.onPrimary,
+          color: Theme.of(context).colorScheme.onPrimary,
           width: 2,
         ),
         borderRadius: BorderRadius.circular(8),
@@ -119,8 +119,7 @@ class LocationPermissionPopUp extends StatelessWidget {
     );
   }
 
-  Widget _buildEnableButton(
-    BuildContext ctx,
+  Widget _buildEnableButton(BuildContext context,
     LocationPermissionPopUpModel model,
   ) {
     return FFButtonWidget(
@@ -130,9 +129,9 @@ class LocationPermissionPopUp extends StatelessWidget {
         width: 270,
         height: 40,
         padding: const EdgeInsets.symmetric(horizontal: 24),
-        color: Theme.of(ctx).colorScheme.primary,
+        color: Theme.of(context).colorScheme.primary,
         textStyle: TextStyle(
-          color: Theme.of(ctx).colorScheme.onSurface,
+          color: Theme.of(context).colorScheme.onSurface,
           fontSize: 16,
         ),
         elevation: 3,

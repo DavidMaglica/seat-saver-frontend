@@ -38,7 +38,7 @@ class CarouselItem extends StatelessWidget {
     );
   }
 
-  Widget _buildImage(BuildContext ctx, String? imageUri) {
+  Widget _buildImage(BuildContext context, String? imageUri) {
     return ClipRRect(
       borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(8),
@@ -60,11 +60,11 @@ class CarouselItem extends StatelessWidget {
                 );
               },
             )
-          : _buildFallbackImage(ctx),
+          : _buildFallbackImage(context),
     );
   }
 
-  Widget _buildText(BuildContext ctx) {
+  Widget _buildText(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 12),
       child: Column(
@@ -90,7 +90,7 @@ class CarouselItem extends StatelessWidget {
               padding: const EdgeInsets.only(left: 12),
               child: Text(
                 'Discover new restaurants in $currentCity!',
-                style: Theme.of(ctx).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
           ),
@@ -99,7 +99,7 @@ class CarouselItem extends StatelessWidget {
     );
   }
 
-  Widget _buildFallbackImage(BuildContext ctx) {
+  Widget _buildFallbackImage(BuildContext context) {
     return Container(
       width: double.infinity,
       height: 128,
@@ -107,7 +107,7 @@ class CarouselItem extends StatelessWidget {
       decoration: BoxDecoration(gradient: fallbackImageGradientReverted()),
       child: Text(
         currentCity.toUpperCase(),
-        style: Theme.of(ctx).textTheme.titleMedium,
+        style: Theme.of(context).textTheme.titleMedium,
         textAlign: TextAlign.center,
       ),
     );

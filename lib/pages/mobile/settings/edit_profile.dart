@@ -60,18 +60,18 @@ class EditProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildChangeDetailGroup(BuildContext ctx, EditProfileModel model) {
+  Widget _buildChangeDetailGroup(BuildContext context, EditProfileModel model) {
     return Padding(
       padding: const EdgeInsetsDirectional.all(16),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Theme.of(ctx).colorScheme.onSurface,
+          color: Theme.of(context).colorScheme.onSurface,
           boxShadow: [
             BoxShadow(
               blurRadius: 2,
               spreadRadius: 2,
-              color: Theme.of(ctx).colorScheme.outline,
+              color: Theme.of(context).colorScheme.outline,
               offset: const Offset(0, 1),
             ),
           ],
@@ -83,11 +83,11 @@ class EditProfile extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              _buildChangeUsername(ctx, model),
-              _buildDivider(ctx),
-              _buildChangeEmail(ctx, model),
-              _buildDivider(ctx),
-              _buildChangePassword(ctx, model),
+              _buildChangeUsername(context, model),
+              _buildDivider(context),
+              _buildChangeEmail(context, model),
+              _buildDivider(context),
+              _buildChangePassword(context, model),
             ],
           ),
         ),
@@ -95,39 +95,42 @@ class EditProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildDivider(BuildContext ctx) {
+  Widget _buildDivider(BuildContext context) {
     return Divider(
-      color: Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.5),
+      color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.5),
       thickness: .5,
     );
   }
 
-  Widget _buildChangeUsername(BuildContext ctx, EditProfileModel model) {
+  Widget _buildChangeUsername(BuildContext context, EditProfileModel model) {
     return Padding(
       padding: const EdgeInsetsDirectional.all(12),
       child: InkWell(
         key: const Key('changeUsernameButton'),
-        onTap: () => _openChangeUsernameBottomSheet(ctx, model),
+        onTap: () => _openChangeUsernameBottomSheet(context, model),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Change Username', style: Theme.of(ctx).textTheme.titleMedium),
+            Text(
+              'Change Username',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             Row(
               children: [
                 Padding(
                   padding: const EdgeInsetsDirectional.only(end: 8),
                   child: Text(
                     model.updatedUsername ?? model.currentUser!.username,
-                    style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(
-                        ctx,
+                        context,
                       ).colorScheme.onPrimary.withValues(alpha: 0.6),
                     ),
                   ),
                 ),
                 Icon(
                   CupertinoIcons.chevron_right,
-                  color: Theme.of(ctx).colorScheme.onPrimary,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   size: 14,
                 ),
               ],
@@ -138,32 +141,35 @@ class EditProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildChangeEmail(BuildContext ctx, EditProfileModel model) {
+  Widget _buildChangeEmail(BuildContext context, EditProfileModel model) {
     return Padding(
       padding: const EdgeInsetsDirectional.all(12),
       child: InkWell(
         key: const Key('changeEmailButton'),
-        onTap: () => _openChangeEmailBottomSheet(ctx, model),
+        onTap: () => _openChangeEmailBottomSheet(context, model),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Change Email', style: Theme.of(ctx).textTheme.titleMedium),
+            Text(
+              'Change Email',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             Row(
               children: [
                 Padding(
                   padding: const EdgeInsetsDirectional.only(end: 8),
                   child: Text(
                     model.updatedEmail ?? model.currentUser!.email,
-                    style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(
-                        ctx,
+                        context,
                       ).colorScheme.onPrimary.withValues(alpha: 0.6),
                     ),
                   ),
                 ),
                 Icon(
                   CupertinoIcons.chevron_right,
-                  color: Theme.of(ctx).colorScheme.onPrimary,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   size: 14,
                 ),
               ],
@@ -174,19 +180,22 @@ class EditProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildChangePassword(BuildContext ctx, EditProfileModel model) {
+  Widget _buildChangePassword(BuildContext context, EditProfileModel model) {
     return Padding(
       padding: const EdgeInsetsDirectional.all(12),
       child: InkWell(
         key: const Key('changePasswordButton'),
-        onTap: () => _openChangePasswordBottomSheet(ctx, model),
+        onTap: () => _openChangePasswordBottomSheet(context, model),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Change Password', style: Theme.of(ctx).textTheme.titleMedium),
+            Text(
+              'Change Password',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             Icon(
               CupertinoIcons.chevron_right,
-              color: Theme.of(ctx).colorScheme.onPrimary,
+              color: Theme.of(context).colorScheme.onPrimary,
               size: 14,
             ),
           ],
@@ -195,12 +204,11 @@ class EditProfile extends StatelessWidget {
     );
   }
 
-  void _openChangeUsernameBottomSheet(
-    BuildContext ctx,
+  void _openChangeUsernameBottomSheet(BuildContext context,
     EditProfileModel model,
   ) {
     showModalBottomSheet(
-      context: ctx,
+      context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -220,7 +228,7 @@ class EditProfile extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               _buildInputField(
-                ctx,
+                context,
                 'newUsernameField',
                 'New Username',
                 'Enter a new username',
@@ -255,9 +263,12 @@ class EditProfile extends StatelessWidget {
     );
   }
 
-  void _openChangeEmailBottomSheet(BuildContext ctx, EditProfileModel model) {
+  void _openChangeEmailBottomSheet(
+    BuildContext context,
+    EditProfileModel model,
+  ) {
     showModalBottomSheet(
-      context: ctx,
+      context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -272,7 +283,7 @@ class EditProfile extends StatelessWidget {
               buildModalTitle(context, 'changeEmailModalTitle', 'Change Email'),
               const SizedBox(height: 16),
               _buildInputField(
-                ctx,
+                context,
                 'newEmailField',
                 'New Email',
                 'Enter your new email',
@@ -306,12 +317,11 @@ class EditProfile extends StatelessWidget {
     );
   }
 
-  void _openChangePasswordBottomSheet(
-    BuildContext ctx,
+  void _openChangePasswordBottomSheet(BuildContext context,
     EditProfileModel model,
   ) {
     showModalBottomSheet(
-      context: ctx,
+      context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -332,7 +342,7 @@ class EditProfile extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   _buildPasswordInputField(
-                    ctx,
+                    context,
                     'newPasswordField',
                     'New Password',
                     'Enter a new password',
@@ -348,7 +358,7 @@ class EditProfile extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   _buildPasswordInputField(
-                    ctx,
+                    context,
                     'confirmNewPasswordField',
                     'Confirm New Password',
                     'Confirm your password',
@@ -390,8 +400,7 @@ class EditProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildInputField(
-    BuildContext ctx,
+  Widget _buildInputField(BuildContext context,
     String key,
     String labelText,
     String hint,
@@ -409,15 +418,14 @@ class EditProfile extends StatelessWidget {
         decoration: InputDecoration(
           labelText: labelText,
           hintText: hint,
-          labelStyle: Theme.of(ctx).textTheme.bodyMedium,
+          labelStyle: Theme.of(context).textTheme.bodyMedium,
         ),
-        style: Theme.of(ctx).textTheme.bodyLarge,
+        style: Theme.of(context).textTheme.bodyLarge,
       ),
     );
   }
 
-  Widget _buildPasswordInputField(
-    BuildContext ctx,
+  Widget _buildPasswordInputField(BuildContext context,
     String key,
     String labelText,
     String hint,
@@ -433,10 +441,10 @@ class EditProfile extends StatelessWidget {
         controller: controller,
         focusNode: focusNode,
         obscureText: !isVisible,
-        style: Theme.of(ctx).textTheme.bodyLarge,
+        style: Theme.of(context).textTheme.bodyLarge,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: Theme.of(ctx).textTheme.bodyMedium,
+          labelStyle: Theme.of(context).textTheme.bodyMedium,
           hintText: hint,
           suffixIcon: IconButton(
             icon: Icon(

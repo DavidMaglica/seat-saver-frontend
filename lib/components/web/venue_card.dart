@@ -118,7 +118,7 @@ class _WebVenueCardState extends State<WebVenueCard> {
     );
   }
 
-  Widget _buildFallbackImage(BuildContext ctx) {
+  Widget _buildFallbackImage(BuildContext context) {
     return Expanded(
       child: Container(
         width: double.infinity,
@@ -131,7 +131,7 @@ class _WebVenueCardState extends State<WebVenueCard> {
         child: Text(
           widget.venue.name,
           style: Theme.of(
-            ctx,
+            context,
           ).textTheme.titleLarge?.copyWith(color: WebTheme.offWhite),
         ),
       ),

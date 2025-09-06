@@ -23,29 +23,27 @@ class Search extends StatelessWidget {
     this.modelOverride,
   });
 
-  void _clear(BuildContext ctx, SearchModel model) {
-    Navigator.pop(ctx);
+  void _clear(BuildContext context, SearchModel model) {
+    Navigator.pop(context);
     model.clearFilters();
   }
 
-  void _applyFilters(
-    BuildContext ctx,
+  void _applyFilters(BuildContext context,
     SearchModel model,
     List<String> tempSelected,
   ) {
-    Navigator.pop(ctx);
+    Navigator.pop(context);
     model.filterVenues(tempSelected);
   }
 
-  void _cancel(BuildContext ctx) {
-    Navigator.pop(ctx);
+  void _cancel(BuildContext context) {
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) =>
-      modelOverride ?? SearchModel()
+      create: (_) => modelOverride ?? SearchModel()
         ..init(locationQuery),
       child: Consumer<SearchModel>(
         builder: (context, model, _) {
@@ -132,7 +130,12 @@ class Search extends StatelessWidget {
                 return Column(
                   children: [
                     _buildListTitle(
-                        context, model, 'venueListTile', venue, venueType),
+                      context,
+                      model,
+                      'venueListTile',
+                      venue,
+                      venueType,
+                    ),
                     if (index < model.paginatedVenues.length - 1)
                       _buildDivider(context),
                   ],
@@ -148,7 +151,7 @@ class Search extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchBar(BuildContext ctx, SearchModel model) {
+  Widget _buildSearchBar(BuildContext context, SearchModel model) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -161,26 +164,26 @@ class Search extends StatelessWidget {
               controller: model.searchBarController,
               decoration: InputDecoration(
                 hintText: 'Type to search for venues (by name or city)',
-                hintStyle: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(
-                    ctx,
+                    context,
                   ).colorScheme.onPrimary.withValues(alpha: 0.5),
                 ),
                 prefixIcon: Icon(
                   CupertinoIcons.search,
-                  color: Theme.of(ctx).colorScheme.onPrimary,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
-                    color: Theme.of(ctx).colorScheme.onPrimary,
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
                 ),
                 focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: MobileTheme.accent1),
                 ),
               ),
-              cursorColor: Theme.of(ctx).colorScheme.onPrimary,
-              style: Theme.of(ctx).textTheme.bodyLarge,
+              cursorColor: Theme.of(context).colorScheme.onPrimary,
+              style: Theme.of(context).textTheme.bodyLarge,
               onChanged: (value) => model.search(value),
             ),
           ),
@@ -189,10 +192,9 @@ class Search extends StatelessWidget {
     );
   }
 
-  Widget _buildListTitle(
-    BuildContext ctx,
+  Widget _buildListTitle(BuildContext context,
     SearchModel model,
-      String key,
+    String key,
     Venue venue,
     String? venueType,
   ) {
@@ -203,17 +205,19 @@ class Search extends StatelessWidget {
       ),
       child: ListTile(
         key: Key(key),
-        onTap: model.goToVenuePage(ctx, venue),
-        title: Text(venue.name, style: Theme.of(ctx).textTheme.titleMedium),
+        onTap: model.goToVenuePage(context, venue),
+        title: Text(venue.name, style: Theme.of(context).textTheme.titleMedium),
         subtitle: Text(
           venueType != null ? venueType.toTitleCase() : 'Loading...',
-          style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.6),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Theme.of(
+              context,
+            ).colorScheme.onPrimary.withValues(alpha: 0.6),
           ),
         ),
         trailing: Icon(
           Icons.arrow_forward_ios,
-          color: Theme.of(ctx).colorScheme.onPrimary,
+          color: Theme.of(context).colorScheme.onPrimary,
           size: 14,
         ),
         dense: true,
@@ -222,30 +226,33 @@ class Search extends StatelessWidget {
     );
   }
 
-  Widget _buildDivider(BuildContext ctx) {
+  Widget _buildDivider(BuildContext context) {
     return Divider(
       indent: 36,
       endIndent: 36,
       thickness: .5,
-      color: Theme.of(ctx).colorScheme.onPrimary,
+      color: Theme.of(context).colorScheme.onPrimary,
     );
   }
 
-  Widget _buildFilterDropdown(BuildContext ctx, SearchModel model) {
+  Widget _buildFilterDropdown(BuildContext context, SearchModel model) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: GestureDetector(
         key: const Key('filterDropdown'),
-        onTap: () => _showTypeFilter(ctx, model),
+        onTap: () => _showTypeFilter(context, model),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           decoration: BoxDecoration(
-            color: Theme.of(ctx).colorScheme.surfaceDim,
+            color: Theme.of(context).colorScheme.surfaceDim,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [_buildDropdownText(ctx, model), _buildDropdownIcon()],
+            children: [
+              _buildDropdownText(context, model),
+              _buildDropdownIcon(),
+            ],
           ),
         ),
       ),
@@ -256,7 +263,7 @@ class Search extends StatelessWidget {
     return const Icon(CupertinoIcons.chevron_down, size: 16);
   }
 
-  Widget _buildDropdownText(BuildContext ctx, SearchModel model) {
+  Widget _buildDropdownText(BuildContext context, SearchModel model) {
     return Expanded(
       child: Text(
         model.selectedTypes.isEmpty
@@ -264,8 +271,8 @@ class Search extends StatelessWidget {
             : model.selectedTypes.join(', '),
         style: TextStyle(
           color: model.selectedTypes.isEmpty
-              ? Theme.of(ctx).colorScheme.onSecondary
-              : Theme.of(ctx).colorScheme.onPrimary,
+              ? Theme.of(context).colorScheme.onSecondary
+              : Theme.of(context).colorScheme.onPrimary,
           fontWeight: model.selectedTypes.isEmpty
               ? FontWeight.w200
               : FontWeight.w400,
@@ -276,9 +283,9 @@ class Search extends StatelessWidget {
     );
   }
 
-  void _showTypeFilter(BuildContext ctx, SearchModel model) {
+  void _showTypeFilter(BuildContext context, SearchModel model) {
     showCupertinoModalPopup(
-      context: ctx,
+      context: context,
       builder: (context) {
         List<String> tempSelected = [...model.selectedTypes];
 
@@ -366,8 +373,7 @@ class Search extends StatelessWidget {
     );
   }
 
-  Widget _buildDropdownItem(
-    BuildContext ctx,
+  Widget _buildDropdownItem(BuildContext context,
     String type,
     bool isSelected,
     StateSetter setModalState,
@@ -383,7 +389,7 @@ class Search extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 14,
-              color: Theme.of(ctx).colorScheme.onPrimary,
+              color: Theme.of(context).colorScheme.onPrimary,
               decoration: TextDecoration.none,
             ),
           ),

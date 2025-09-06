@@ -77,7 +77,7 @@ class VenueCardByType extends StatelessWidget {
     );
   }
 
-  Widget _buildImage(BuildContext ctx, VenueCardByTypeModel model) {
+  Widget _buildImage(BuildContext context, VenueCardByTypeModel model) {
     return Hero(
       tag: 'venueHeadingImage${venue.id}',
       transitionOnUserGestures: true,
@@ -90,10 +90,10 @@ class VenueCardByType extends StatelessWidget {
                 height: 80,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return _buildFallbackImage(ctx);
+                  return _buildFallbackImage(context);
                 },
               )
-            : _buildFallbackImage(ctx),
+            : _buildFallbackImage(context),
       ),
     );
   }
@@ -142,7 +142,7 @@ class VenueCardByType extends StatelessWidget {
     );
   }
 
-  Widget _buildFallbackImage(BuildContext ctx) {
+  Widget _buildFallbackImage(BuildContext context) {
     return Container(
       width: 80,
       height: 80,
@@ -155,7 +155,7 @@ class VenueCardByType extends StatelessWidget {
             venue.name,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(
-              ctx,
+              context,
             ).textTheme.titleSmall?.copyWith(color: Colors.white, fontSize: 10),
           ),
         ),
