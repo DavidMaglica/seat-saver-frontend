@@ -14,16 +14,18 @@ import 'package:table_reserver/models/web/views/account_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
 class WebAccount extends StatefulWidget {
-  const WebAccount({super.key});
+  final AccountModel? modelOverride;
+
+  const WebAccount({super.key, this.modelOverride});
 
   @override
   State<WebAccount> createState() => _WebAccountState();
 }
 
 class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
-  final int ownerId = sharedPreferencesCache.getInt('userId')!;
-  String userName = sharedPreferencesCache.getString('userName')!;
-  String userEmail = sharedPreferencesCache.getString('userEmail')!;
+  final int ownerId = sharedPreferencesCache.getInt('ownerId')!;
+  String userName = sharedPreferencesCache.getString('ownerName')!;
+  String userEmail = sharedPreferencesCache.getString('ownerEmail')!;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -34,8 +36,8 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
 
   void _refreshUserData() {
     setState(() {
-      userName = sharedPreferencesCache.getString('userName')!;
-      userEmail = sharedPreferencesCache.getString('userEmail')!;
+      userName = sharedPreferencesCache.getString('ownerName')!;
+      userEmail = sharedPreferencesCache.getString('ownerEmail')!;
     });
     Provider.of<SideNavModel>(context, listen: false).getUserFromCache();
   }
@@ -43,7 +45,8 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AccountModel()..init(),
+      create: (_) => widget.modelOverride ?? AccountModel()
+        ..init(),
       child: Consumer<AccountModel>(
         builder: (context, model, _) {
           return Scaffold(
@@ -146,12 +149,14 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
               children: [
                 _buildVenuesDetails(
                   context,
+                  Key('reservationsIcon'),
                   Icons.rsvp_outlined,
                   'Reservations received',
                   model.numberOfReservations,
                 ),
                 _buildVenuesDetails(
                   context,
+                  Key('venuesIcon'),
                   Icons.table_restaurant_outlined,
                   'Venues owned',
                   model.venuesOwned,
@@ -169,6 +174,7 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
+        key: Key('userDetails'),
         mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
@@ -194,6 +200,7 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
 
   Widget _buildVenuesDetails(
     BuildContext context,
+    Key iconKey,
     IconData icon,
     String label,
     int? data,
@@ -203,7 +210,7 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: WebTheme.accent1, size: 44),
+          Icon(key: iconKey, icon, color: WebTheme.accent1, size: 44),
           const SizedBox(height: 8),
           Text(
             '$data',
@@ -241,6 +248,7 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
             _buildTitle(context, 'My Account Information'),
             _buildModalButton(
               context,
+              const Key('changeEmailButton'),
               'Change Email',
               const ChangeEmailModal(),
               onClosed: _refreshUserData,
@@ -248,6 +256,7 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
             _buildDivider(context),
             _buildModalButton(
               context,
+              const Key('changeUsernameButton'),
               'Change Username',
               const ChangeUsernameModal(),
               onClosed: _refreshUserData,
@@ -255,6 +264,7 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
             _buildDivider(context),
             _buildModalButton(
               context,
+              const Key('changePasswordButton'),
               'Change Password',
               const ChangePasswordModal(),
             ),
@@ -284,12 +294,14 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
             _buildTitle(context, 'Support'),
             _buildModalButton(
               context,
+              const Key('submitBugButton'),
               'Submit a Bug',
               const SupportModal(modalType: SupportModalType.bugReport),
             ),
             _buildDivider(context),
             _buildModalButton(
               context,
+              const Key('requestFeatureButton'),
               'Request a feature',
               const SupportModal(modalType: SupportModalType.featureRequest),
             ),
@@ -302,11 +314,13 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
 
   Widget _buildModalButton(
     BuildContext context,
+    Key buttonKey,
     String label,
     Widget modal, {
     VoidCallback? onClosed,
   }) {
     return InkWell(
+      key: buttonKey,
       splashColor: Colors.transparent,
       focusColor: Colors.transparent,
       hoverColor: Colors.transparent,
@@ -381,6 +395,7 @@ class _WebAccountState extends State<WebAccount> with TickerProviderStateMixin {
 
   Widget _buildLogOut(BuildContext context, AccountModel model) {
     return FFButtonWidget(
+      key: const Key('logOutButton'),
       onPressed: () => model.logOut(context),
       text: 'Log Out',
       options: FFButtonOptions(

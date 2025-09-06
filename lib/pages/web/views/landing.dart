@@ -81,6 +81,7 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
           child: Image.asset(
+            key: const Key('appLogo'),
             'assets/icons/appIcon.png',
             width: 100,
             height: 100,
@@ -93,6 +94,7 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
 
   Widget _buildTitle(BuildContext context) {
     return Text(
+      key: const Key('landingTitle'),
       'Welcome to your TableReserver Admin Dashboard!',
       textAlign: TextAlign.center,
       style: Theme.of(context).textTheme.titleLarge,
@@ -109,6 +111,7 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
             child: Align(
               alignment: const AlignmentDirectional(0, 0),
               child: FFButtonWidget(
+                key: const Key('getStartedButton'),
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
                     FadeInRoute(
