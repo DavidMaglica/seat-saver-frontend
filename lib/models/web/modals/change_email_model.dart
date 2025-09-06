@@ -52,7 +52,7 @@ class ChangeEmailModel extends FlutterFlowModel<ChangeEmailModal>
     if (response.success) {
       if (!context.mounted) return;
 
-      sharedPreferencesCache.setString('userEmail', newEmail);
+      sharedPreferencesCache.setString('ownerEmail', newEmail);
 
       emailTextController.clear();
       WebToaster.displaySuccess(context, response.message);

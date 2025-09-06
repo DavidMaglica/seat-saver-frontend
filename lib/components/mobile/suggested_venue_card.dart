@@ -98,6 +98,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
         children: [
           Flexible(
             child: InkWell(
+              key: const Key('venueSuggestedCard'),
               splashColor: Colors.transparent,
               focusColor: Colors.transparent,
               hoverColor: Colors.transparent,

@@ -19,17 +19,22 @@ import 'package:table_reserver/utils/routing_utils.dart';
 class Homepage extends StatelessWidget {
   final int? userId;
   final Position? userLocation;
+  final HomepageModel? modelOverride;
 
-  const Homepage({super.key, this.userId, this.userLocation});
+  const Homepage({
+    super.key,
+    this.userId,
+    this.userLocation,
+    this.modelOverride,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => HomepageModel(
-        context: context,
-        userId: userId,
-        userLocation: userLocation,
-      )..init(),
+      create: (_) =>
+          modelOverride ??
+                HomepageModel(userId: userId, userLocation: userLocation)
+            ..init(context),
       child: Consumer<HomepageModel>(
         builder: (context, model, _) {
           var brightness = Theme.of(context).brightness;
@@ -50,7 +55,7 @@ class Homepage extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 16),
                       child: RefreshIndicator(
                         onRefresh: () async {
-                          await model.init();
+                          await model.init(context);
                         },
                         elevation: 3,
                         child: SingleChildScrollView(
@@ -63,21 +68,21 @@ class Homepage extends StatelessWidget {
                               _buildVenues(
                                 context,
                                 'Nearby Venues',
-                                model.openNearbyVenues,
+                                () => model.openNearbyVenues(context),
                                 model.nearbyVenues ?? [],
                               ),
                               const SizedBox(height: 24),
                               _buildVenues(
                                 context,
                                 'New Venues',
-                                model.openNewVenues,
+                                () => model.openNewVenues(context),
                                 model.newVenues ?? [],
                               ),
                               const SizedBox(height: 24),
                               _buildVenues(
                                 context,
                                 'Trending Venues',
-                                model.openTrendingVenues,
+                                () => model.openTrendingVenues(context),
                                 model.trendingVenues ?? [],
                               ),
                               const SizedBox(height: 24),
@@ -85,7 +90,7 @@ class Homepage extends StatelessWidget {
                                   model.suggestedVenues!.isNotEmpty)
                                 _buildSuggestedVenues(
                                   context,
-                                  model.openSuggestedVenues,
+                                  () => model.openSuggestedVenues(context),
                                   model.suggestedVenues!,
                                 )
                               else
@@ -111,7 +116,7 @@ class Homepage extends StatelessWidget {
     );
   }
 
-  Widget _buildCarouselComponent(BuildContext ctx, HomepageModel model) {
+  Widget _buildCarouselComponent(BuildContext context, HomepageModel model) {
     if (model.nearbyCities.isEmpty) {
       return const SizedBox.shrink();
     } else {
@@ -129,6 +134,7 @@ class Homepage extends StatelessWidget {
             width: double.infinity,
             height: 212,
             child: CarouselSlider(
+              key: const Key('carouselSlider'),
               items: model.nearbyCities
                   .mapIndexed(
                     (index, city) => Padding(
@@ -136,8 +142,9 @@ class Homepage extends StatelessWidget {
                         vertical: 12,
                       ),
                       child: InkWell(
+                        key: Key('carouselItem'),
                         onTap: () {
-                          Navigator.of(ctx).push(
+                          Navigator.of(context).push(
                             MobileFadeInRoute(
                               page: Search(locationQuery: city),
                               routeName: Routes.search,
@@ -152,9 +159,9 @@ class Homepage extends StatelessWidget {
                   .toList(),
               carouselController: model.carouselController,
               options: CarouselOptions(
-                initialPage: 1,
+                initialPage: 0,
                 viewportFraction: .75,
-                disableCenter: true,
+                disableCenter: false,
                 enlargeCenterPage: true,
                 enlargeFactor: .25,
                 enableInfiniteScroll: true,
@@ -173,8 +180,7 @@ class Homepage extends StatelessWidget {
     );
   }
 
-  Widget _buildVenues(
-    BuildContext ctx,
+  Widget _buildVenues(BuildContext context,
     String title,
     Function() seeAllFunction,
     List<Venue> venues,
@@ -193,8 +199,8 @@ class Homepage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildTitle(ctx, title),
-                  _buildSeeAllButton(ctx, seeAllFunction),
+                  _buildTitle(context, title),
+                  _buildSeeAllButton(context, seeAllFunction),
                 ],
               ),
               const SizedBox(height: 12),
@@ -206,8 +212,7 @@ class Homepage extends StatelessWidget {
     );
   }
 
-  Widget _buildSuggestedVenues(
-    BuildContext ctx,
+  Widget _buildSuggestedVenues(BuildContext context,
     Function() seeAllFunction,
     List<Venue> venues,
   ) {
@@ -237,8 +242,8 @@ class Homepage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildTitle(ctx, 'We suggest'),
-                        _buildSeeAllButton(ctx, seeAllFunction),
+                        _buildTitle(context, 'We suggest'),
+                        _buildSeeAllButton(context, seeAllFunction),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -257,6 +262,7 @@ class Homepage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 4),
       child: SingleChildScrollView(
+        key: const Key('venueCardsScrollView'),
         scrollDirection: Axis.horizontal,
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -281,6 +287,7 @@ class Homepage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 4),
       child: SingleChildScrollView(
+        key: const Key('venueSuggestedCardsScrollView'),
         scrollDirection: Axis.horizontal,
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -300,29 +307,30 @@ class Homepage extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(BuildContext ctx, String title) {
+  Widget _buildTitle(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.only(left: 12),
       child: Text(
         title,
-        style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
-          color: Theme.of(ctx).colorScheme.onPrimary,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          color: Theme.of(context).colorScheme.onPrimary,
         ),
       ),
     );
   }
 
-  Widget _buildSeeAllButton(BuildContext ctx, Function() onPressed) {
+  Widget _buildSeeAllButton(BuildContext context, Function() onPressed) {
     return Padding(
       padding: const EdgeInsets.only(right: 12),
       child: FFButtonWidget(
+        key: const Key('seeAllButton'),
         showLoadingIndicator: true,
         onPressed: onPressed,
         text: 'See all',
         options: FFButtonOptions(
           width: 80,
           height: 24,
-          color: Theme.of(ctx).colorScheme.onSurface,
+          color: Theme.of(context).colorScheme.onSurface,
           textStyle: const TextStyle(
             color: MobileTheme.accent1,
             fontSize: 12,
@@ -336,7 +344,7 @@ class Homepage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext ctx, HomepageModel model) {
+  Widget _buildHeader(BuildContext context, HomepageModel model) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -352,10 +360,11 @@ class Homepage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 12),
                   child: Text(
+                    key: const Key('welcomeText'),
                     model.loggedInUser != null
-                        ? 'Welcome, ${model.loggedInUser!.username}'
+                        ? 'Welcome back, ${model.loggedInUser!.username}!'
                         : 'Welcome',
-                    style: Theme.of(ctx).textTheme.titleLarge,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
               ],

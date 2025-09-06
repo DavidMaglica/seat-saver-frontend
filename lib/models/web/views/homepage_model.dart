@@ -102,8 +102,8 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
     UserResponse? response = await accountApi.getUser(ownerId);
     if (response != null && response.success && response.user != null) {
       User user = response.user!;
-      await sharedPreferencesCache.setString('userEmail', user.email);
-      await sharedPreferencesCache.setString('userName', user.username);
+      await sharedPreferencesCache.setString('ownerEmail', user.email);
+      await sharedPreferencesCache.setString('ownerName', user.username);
       Provider.of<SideNavModel>(context, listen: false).getUserFromCache();
     } else {
       if (!context.mounted) return;

@@ -93,8 +93,8 @@ Future<void> initialiseSharedPreferences() async {
         'userId',
         'lastKnownLocation',
         'ownerId',
-        'userName',
-        'userEmail',
+        'ownerName',
+        'ownerEmail',
       },
     ),
   );

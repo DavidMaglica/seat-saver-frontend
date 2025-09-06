@@ -13,6 +13,8 @@ MockSharedPreferences setupSharedPrefsMock({
   when(() => mockPrefs.getInt(any())).thenReturn(null);
   when(() => mockPrefs.getString(any())).thenReturn(null);
   when(() => mockPrefs.remove(any())).thenAnswer((_) async => true);
+  when(() => mockPrefs.setInt(any(), any())).thenAnswer((_) async => true);
+  when(() => mockPrefs.setString(any(), any())).thenAnswer((_) async => true);
 
   initialValues?.forEach((key, value) {
     if (value is int) {

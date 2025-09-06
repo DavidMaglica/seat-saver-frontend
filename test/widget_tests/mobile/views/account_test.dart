@@ -16,20 +16,17 @@ import 'package:table_reserver/utils/routes.dart';
 import '../../../test_utils/shared_preferences_mock.dart';
 
 void main() {
-  late AccountModel mockedUserModel;
+  late AccountModel model;
   late AccountModel nullUserModel;
 
-  const mockUserId = 1;
-  const mockUsername = 'mockUser';
-  const mockEmail = 'test@mail.com';
+  const userId = 1;
+  const username = 'user';
+  const email = 'test@mail.com';
 
   setUp(() {
-    setupSharedPrefsMock(initialValues: {});
+    setupSharedPrefsMock();
 
-    mockedUserModel = AccountModel(
-      userId: mockUserId,
-      accountApi: FakeAccountApi(),
-    );
+    model = AccountModel(userId: userId, accountApi: FakeAccountApi());
 
     nullUserModel = AccountModel(userId: null, accountApi: FakeAccountApi());
   });
@@ -58,8 +55,8 @@ void main() {
 
     expect(usernameText, findsOneWidget);
     expect(emailText, findsOneWidget);
-    expect(find.text(mockUsername), findsNothing);
-    expect(find.text(mockEmail), findsNothing);
+    expect(find.text(username), findsNothing);
+    expect(find.text(email), findsNothing);
     expect(reservationHistoryTitle, findsOneWidget);
     expect(reservationHistoryButton, findsOneWidget);
     expect(accountSettingsTitle, findsOneWidget);
@@ -76,18 +73,18 @@ void main() {
     final logoutButton = find.byKey(const Key('logoutButton'));
     final loginButton = find.byKey(const Key('loginButton'));
 
-    await mockedUserModel.init();
+    await model.init();
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Account(userId: mockUserId, modelOverride: mockedUserModel),
+        home: Account(userId: userId, modelOverride: model),
       ),
     );
 
     await tester.pumpAndSettle();
 
-    expect(find.text(mockUsername), findsOneWidget);
-    expect(find.text(mockEmail), findsOneWidget);
+    expect(find.text(username), findsOneWidget);
+    expect(find.text(email), findsOneWidget);
     expect(logoutButton, findsOneWidget);
     expect(loginButton, findsNothing);
   });
@@ -99,15 +96,15 @@ void main() {
       const Key('reservationHistoryButton'),
     );
 
-    await mockedUserModel.init();
-    setupSharedPrefsMock(initialValues: {'userId': mockUserId});
+    await model.init();
+    setupSharedPrefsMock(initialValues: {'userId': userId});
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Account(userId: mockUserId, modelOverride: mockedUserModel),
+        home: Account(userId: userId, modelOverride: model),
         routes: {
           Routes.reservationHistory: (context) =>
-              const ReservationHistory(userId: mockUserId),
+              const ReservationHistory(userId: userId),
         },
       ),
     );
@@ -155,15 +152,14 @@ void main() {
   testWidgets('should open edit profile when user logged in', (tester) async {
     final editProfileButton = find.byKey(const Key('editProfileButton'));
 
-    await mockedUserModel.init();
-    setupSharedPrefsMock(initialValues: {'userId': mockUserId});
+    await model.init();
+    setupSharedPrefsMock(initialValues: {'userId': userId});
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Account(userId: mockUserId, modelOverride: mockedUserModel),
+        home: Account(userId: userId, modelOverride: model),
         routes: {
-          Routes.editProfile: (context) =>
-              const EditProfile(userId: mockUserId),
+          Routes.editProfile: (context) => const EditProfile(userId: userId),
         },
       ),
     );
@@ -211,15 +207,15 @@ void main() {
       const Key('notificationSettingsButton'),
     );
 
-    await mockedUserModel.init();
-    setupSharedPrefsMock(initialValues: {'userId': mockUserId});
+    await model.init();
+    setupSharedPrefsMock(initialValues: {'userId': userId});
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Account(userId: mockUserId, modelOverride: mockedUserModel),
+        home: Account(userId: userId, modelOverride: model),
         routes: {
           Routes.notificationSettings: (context) =>
-              const NotificationSettings(userId: mockUserId),
+              const NotificationSettings(userId: userId),
         },
       ),
     );
@@ -267,15 +263,13 @@ void main() {
   testWidgets('should open support when user logged in', (tester) async {
     final supportButton = find.byKey(const Key('supportButton'));
 
-    await mockedUserModel.init();
-    setupSharedPrefsMock(initialValues: {'userId': mockUserId});
+    await model.init();
+    setupSharedPrefsMock(initialValues: {'userId': userId});
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Account(userId: mockUserId, modelOverride: mockedUserModel),
-        routes: {
-          Routes.support: (context) => const Support(userId: mockUserId),
-        },
+        home: Account(userId: userId, modelOverride: model),
+        routes: {Routes.support: (context) => const Support(userId: userId)},
       ),
     );
 
@@ -317,11 +311,11 @@ void main() {
   testWidgets('should open terms of service', (tester) async {
     final termsOfServiceButton = find.byKey(const Key('termsOfServiceButton'));
 
-    await mockedUserModel.init();
+    await model.init();
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Account(userId: mockUserId, modelOverride: mockedUserModel),
+        home: Account(userId: userId, modelOverride: model),
         routes: {Routes.termsOfService: (context) => const TermsOfService()},
       ),
     );
@@ -345,12 +339,12 @@ void main() {
   ) async {
     final logoutButton = find.byKey(const Key('logoutButton'));
 
-    await mockedUserModel.init();
-    setupSharedPrefsMock(initialValues: {'userId': mockUserId});
+    await model.init();
+    setupSharedPrefsMock(initialValues: {'userId': userId});
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Account(userId: mockUserId, modelOverride: mockedUserModel),
+        home: Account(userId: userId, modelOverride: model),
         routes: {Routes.authentication: (context) => const Authentication()},
       ),
     );
@@ -406,7 +400,7 @@ class FakeAccountApi extends Fake implements AccountApi {
     return UserResponse(
       success: true,
       message: 'User found',
-      user: User(id: userId, username: 'mockUser', email: 'test@mail.com'),
+      user: User(id: userId, username: 'user', email: 'test@mail.com'),
     );
   }
 }
