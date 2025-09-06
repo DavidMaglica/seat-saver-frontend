@@ -12,6 +12,7 @@ import 'package:table_reserver/pages/mobile/views/successful_reservation.dart';
 import 'package:table_reserver/pages/mobile/views/venue_page.dart';
 
 import '../../../test_utils/shared_preferences_mock.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late VenuePageModel loggedOutModel;
@@ -36,16 +37,6 @@ void main() {
       reservationsApi: FakeReservationsApi(),
     );
   });
-
-  void ignoreOverflowErrors() {
-    final originalOnError = FlutterError.onError;
-    FlutterError.onError = (details) {
-      if (details.exceptionAsString().contains('A RenderFlex overflowed')) {
-        return;
-      }
-      originalOnError?.call(details);
-    };
-  }
 
   testWidgets('should display widget correctly', (tester) async {
     ignoreOverflowErrors();
