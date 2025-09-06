@@ -27,23 +27,4 @@ void main() {
     expect(landingTitle, findsOneWidget);
     expect(getStartedButton, findsOneWidget);
   });
-
-  // testWidgets('should navigate to Authentication', (tester) async {
-  //   final getStartedButton = find.byKey(const Key('getStartedButton'));
-  //
-  //   await tester.pumpWidget(
-  //     MaterialApp(
-  //       home: WebLanding(),
-  //       routes: {Routes.authentication: (context) => const WebAuthentication()},
-  //     ),
-  //   );
-  //   await tester.pumpAndSettle();
-  //
-  //   expect(getStartedButton, findsOneWidget);
-  //
-  //   await tester.tap(getStartedButton);
-  //   await tester.pumpAndSettle();
-  //
-  //   expect(find.byType(WebAuthentication), findsOneWidget);
-  // });
 }
