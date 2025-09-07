@@ -45,7 +45,7 @@ class WebSupportModel extends FlutterFlowModel<SupportModal>
       return;
     }
 
-    final String userEmail = sharedPreferencesCache.getString('userEmail')!;
+    final String userEmail = sharedPreferencesCache.getString('ownerEmail')!;
 
     final BasicResponse response = await accountApi.sendEmail(
       userEmail,
@@ -79,7 +79,7 @@ class WebSupportModel extends FlutterFlowModel<SupportModal>
       return;
     }
 
-    final String userEmail = sharedPreferencesCache.getString('userEmail')!;
+    final String userEmail = sharedPreferencesCache.getString('ownerEmail')!;
     final BasicResponse response = await accountApi.sendEmail(
       userEmail,
       'Feature Request - $title',

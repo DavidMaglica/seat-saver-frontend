@@ -9,8 +9,8 @@ import 'package:table_reserver/utils/theme_provider.dart';
 class SideNavModel extends FlutterFlowModel<SideNav> with ChangeNotifier {
   final int ownerId = sharedPreferencesCache.getInt('ownerId')!;
 
-  String userEmail = '';
-  String userName = '';
+  String ownerEmail = '';
+  String ownerName = '';
 
   @override
   void initState(BuildContext context) {}
@@ -20,8 +20,8 @@ class SideNavModel extends FlutterFlowModel<SideNav> with ChangeNotifier {
   }
 
   Future<void> getUserFromCache() async {
-    userEmail = sharedPreferencesCache.getString('userEmail')!;
-    userName = sharedPreferencesCache.getString('userName')!;
+    ownerEmail = sharedPreferencesCache.getString('ownerEmail')!;
+    ownerName = sharedPreferencesCache.getString('ownerName')!;
     notifyListeners();
   }
 

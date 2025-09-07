@@ -5,7 +5,11 @@ class StatCard extends StatelessWidget {
   final String title;
   final int value;
 
-  const StatCard({super.key, required this.title, required this.value});
+  const StatCard({
+    super.key,
+    required this.title,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +29,7 @@ class StatCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
+              key: key,
               mainAxisSize: MainAxisSize.max,
               children: [_buildIcon(), _buildStat(context)],
             ),

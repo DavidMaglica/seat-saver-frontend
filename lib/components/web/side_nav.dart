@@ -108,13 +108,13 @@ class _SideNavState extends State<SideNav> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                model.userEmail,
+                model.ownerEmail,
                 style: Theme.of(
                   context,
                 ).textTheme.titleMedium?.copyWith(fontStyle: FontStyle.italic),
               ),
               Text(
-                model.userName,
+                model.ownerName,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],

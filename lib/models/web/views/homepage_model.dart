@@ -24,12 +24,18 @@ import 'package:table_reserver/utils/web_toaster.dart';
 
 class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
   final int ownerId;
+  final AccountApi accountApi;
+  final ReservationsApi reservationsApi;
+  final VenuesApi venuesApi;
 
-  HomepageModel({required this.ownerId});
-
-  final AccountApi accountApi = AccountApi();
-  final ReservationsApi reservationsApi = ReservationsApi();
-  final VenuesApi venuesApi = VenuesApi();
+  HomepageModel({
+    required this.ownerId,
+    AccountApi? accountApi,
+    ReservationsApi? reservationsApi,
+    VenuesApi? venuesApi,
+  }) : accountApi = accountApi ?? AccountApi(),
+       reservationsApi = reservationsApi ?? ReservationsApi(),
+       venuesApi = venuesApi ?? VenuesApi();
 
   final Map<String, AnimationInfo> animationsMap =
       Animations.homepageAnimations;
