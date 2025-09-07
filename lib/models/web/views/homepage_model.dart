@@ -56,7 +56,7 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
   Venue? bestPerformingVenue;
   Venue? worstPerformingVenue;
 
-  int? selectedInterval = 30;
+  int? selectedInterval = null;
   Timer? _refreshTimer;
 
   @override

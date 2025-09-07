@@ -17,7 +17,7 @@ class ReservationsGraphsPageModel extends ChangeNotifier {
   final VenuesApi venuesApi = VenuesApi();
   final ReservationsApi reservationsApi = ReservationsApi();
 
-  int? selectedInterval = 30;
+  int? selectedInterval = null;
   Timer? _refreshTimer;
 
   final Map<String, AnimationInfo> animationsMap =

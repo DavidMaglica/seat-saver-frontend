@@ -17,21 +17,28 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
     with ChangeNotifier {
   int? venueId;
 
-  ReservationsModel({this.venueId});
+  final ReservationsApi reservationsApi;
+  final AccountApi accountApi;
+  final VenuesApi venuesApi;
 
-  final ReservationsApi reservationsApi = ReservationsApi();
-  final AccountApi accountApi = AccountApi();
-  final VenuesApi venuesApi = VenuesApi();
+  ReservationsModel({
+    this.venueId,
+    ReservationsApi? reservationsApi,
+    AccountApi? accountApi,
+    VenuesApi? venuesApi,
+  }) : reservationsApi = reservationsApi ?? ReservationsApi(),
+       accountApi = accountApi ?? AccountApi(),
+       venuesApi = venuesApi ?? VenuesApi();
 
   final Map<String, AnimationInfo> animationsMap =
       Animations.reservationsAnimations;
 
-  int? selectedInterval = 30;
+  int? selectedInterval = null;
   Timer? _refreshTimer;
 
   final List<String> tableHeaders = [
     'Venue Name',
-    'Username - User email',
+    'User email',
     'Number of Guests',
     'Reservation Date',
   ];
@@ -39,21 +46,21 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
   final List<ReservationDetails> reservations = [];
 
   final Map<int, String> venueNamesById = {};
-  final Map<int, String> userNamesById = {};
+  final Map<int, String> userEmailsById = {};
 
   @override
   void initState(BuildContext context) {}
 
-  void init(int? venueId) {
+  Future<void> init(int? venueId) async {
     if (venueId != null) {
-      fetchVenue(venueId);
-      fetchVenueReservations(venueId);
+      await fetchVenue(venueId);
+      await fetchVenueReservations(venueId);
     } else {
-      fetchOwnedVenues();
-      fetchReservations();
+      await fetchOwnedVenues();
+      await fetchReservations();
     }
 
-    startTimer();
+    if (selectedInterval != null) startTimer();
   }
 
   void startTimer() {
@@ -80,7 +87,7 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
     isLoadingTable.dispose();
     reservations.clear();
     venueNamesById.clear();
-    userNamesById.clear();
+    userEmailsById.clear();
     super.dispose();
   }
 
@@ -166,9 +173,9 @@ class ReservationsModel extends FlutterFlowModel<WebReservations>
   Future<void> fetchUserNames(List<int> userIds) async {
     List<User> fetchedReservations = await accountApi.getUsersByIds(userIds);
 
-    userNamesById
+    userEmailsById
       ..clear()
-      ..addEntries(fetchedReservations.map((r) => MapEntry(r.id, r.username)));
+      ..addEntries(fetchedReservations.map((r) => MapEntry(r.id, r.email)));
 
     notifyListeners();
   }

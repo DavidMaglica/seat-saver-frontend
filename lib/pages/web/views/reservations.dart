@@ -20,8 +20,9 @@ import 'package:table_reserver/utils/routes.dart';
 
 class WebReservations extends StatefulWidget {
   final int? venueId;
+  final ReservationsModel? modelOverride;
 
-  const WebReservations({super.key, this.venueId});
+  const WebReservations({super.key, this.venueId, this.modelOverride});
 
   @override
   State<WebReservations> createState() => _WebReservationsState();
@@ -42,7 +43,8 @@ class _WebReservationsState extends State<WebReservations>
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) =>
-          ReservationsModel(venueId: widget.venueId)..init(widget.venueId),
+          widget.modelOverride ?? ReservationsModel(venueId: widget.venueId)
+            ..init(widget.venueId),
       child: Consumer<ReservationsModel>(
         builder: (context, model, _) {
           return GestureDetector(
@@ -121,6 +123,7 @@ class _WebReservationsState extends State<WebReservations>
         ),
         widget.venueId != null
             ? FFButtonWidget(
+                key: const Key('viewAllReservationsButton'),
                 text: 'View all reservations',
                 onPressed: () {
                   Navigator.of(context).push(
@@ -146,6 +149,7 @@ class _WebReservationsState extends State<WebReservations>
             ? const SizedBox(width: 16)
             : const SizedBox.shrink(),
         TimerDropdown(
+          key: const Key('timerDropdown'),
           selectedInterval: model.selectedInterval,
           onChanged: (value) {
             setState(() {
@@ -156,6 +160,7 @@ class _WebReservationsState extends State<WebReservations>
         ),
         const SizedBox(width: 8),
         FFButtonWidget(
+          key: const Key('refreshButton'),
           onPressed: () {
             if (widget.venueId != null) {
               model.fetchVenueReservations(widget.venueId!);
@@ -176,6 +181,7 @@ class _WebReservationsState extends State<WebReservations>
         ),
         const SizedBox(width: 8),
         FFButtonWidget(
+          key: const Key('createReservationButton'),
           onPressed: () async {
             final shouldRefresh = await showDialog(
               context: context,
@@ -231,6 +237,7 @@ class _WebReservationsState extends State<WebReservations>
     if (model.reservations.isEmpty && !model.isLoadingTable.value) {
       return Center(
         child: Text(
+          key: const Key('noReservationsText'),
           'No reservations found.',
           style: Theme.of(context).textTheme.titleLarge,
         ),
@@ -238,6 +245,7 @@ class _WebReservationsState extends State<WebReservations>
     }
 
     return AdvancedTableWidget(
+      key: const Key('table'),
       headerBuilder: (context, header) {
         return _buildHeader(context, header);
       },
@@ -263,7 +271,7 @@ class _WebReservationsState extends State<WebReservations>
         final venueName =
             model.venueNamesById[reservation.venueId] ?? 'Unknown Venue';
         final userName =
-            model.userNamesById[reservation.userId] ?? 'Unknown User';
+            model.userEmailsById[reservation.userId] ?? 'Unknown User';
 
         return _buildActions(
           context,
@@ -294,6 +302,7 @@ class _WebReservationsState extends State<WebReservations>
     return Row(
       children: [
         IconButton(
+          key: const Key('editReservationButton'),
           icon: Icon(
             Icons.edit_outlined,
             color: Theme.of(context).colorScheme.onPrimary,
@@ -328,6 +337,7 @@ class _WebReservationsState extends State<WebReservations>
           },
         ),
         IconButton(
+          key: const Key('deleteReservationButton'),
           icon: Icon(
             CupertinoIcons.trash,
             color: Theme.of(context).colorScheme.onPrimary,
@@ -385,7 +395,8 @@ class _WebReservationsState extends State<WebReservations>
     final reservation = reservations[rowParams.index];
     final venueName =
         model.venueNamesById[reservation.venueId] ?? 'Unknown Venue';
-    final userName = model.userNamesById[reservation.userId] ?? 'Unknown User';
+    final userEmail =
+        model.userEmailsById[reservation.userId] ?? 'Unknown User';
     return [
       SizedBox(
         width: rowParams.defualtWidth,
@@ -396,7 +407,11 @@ class _WebReservationsState extends State<WebReservations>
       SizedBox(
         width: rowParams.defualtWidth,
         child: Center(
-          child: Text(userName, style: Theme.of(context).textTheme.bodyLarge),
+          child: Text(
+            userEmail,
+            style: Theme.of(context).textTheme.bodyLarge,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ),
       SizedBox(

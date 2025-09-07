@@ -15,7 +15,7 @@ class WebRatingsPageModel extends ChangeNotifier {
   final Map<String, AnimationInfo> animationsMap =
       Animations.utilityPagesAnimations;
 
-  int? selectedInterval = 30;
+  int? selectedInterval = null;
   Timer? _refreshTimer;
 
   Map<int, Map<int, int>> ratingsByVenueId = {};
