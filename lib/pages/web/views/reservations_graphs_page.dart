@@ -16,8 +16,13 @@ import 'package:table_reserver/utils/routes.dart';
 
 class ReservationsGraphsPage extends StatefulWidget {
   final int ownerId;
+  final ReservationsGraphsPageModel? modelOverride;
 
-  const ReservationsGraphsPage({super.key, required this.ownerId});
+  const ReservationsGraphsPage({
+    super.key,
+    required this.ownerId,
+    this.modelOverride,
+  });
 
   @override
   State<ReservationsGraphsPage> createState() => _ReservationsGraphsPageState();
@@ -28,7 +33,9 @@ class _ReservationsGraphsPageState extends State<ReservationsGraphsPage> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) =>
-          ReservationsGraphsPageModel(ownerId: widget.ownerId)..init(),
+          widget.modelOverride ??
+                ReservationsGraphsPageModel(ownerId: widget.ownerId)
+            ..init(),
       child: Consumer<ReservationsGraphsPageModel>(
         builder: (context, model, _) {
           return Scaffold(
@@ -111,6 +118,7 @@ class _ReservationsGraphsPageState extends State<ReservationsGraphsPage> {
           _buildToggleContainer(context, model),
           const SizedBox(width: 24),
           TimerDropdown(
+            key: const Key('timerDropdown'),
             selectedInterval: model.selectedInterval,
             onChanged: (value) {
               setState(() {
@@ -121,6 +129,7 @@ class _ReservationsGraphsPageState extends State<ReservationsGraphsPage> {
           ),
           const SizedBox(width: 8),
           FFButtonWidget(
+            key: const Key('refreshButton'),
             onPressed: () {
               model.init();
             },
@@ -163,6 +172,7 @@ class _ReservationsGraphsPageState extends State<ReservationsGraphsPage> {
             _buildOption(
               context,
               model,
+              const Key('dailyOption'),
               label: "Daily",
               icon: Icons.calendar_today,
               selected: !model.isWeekly,
@@ -173,6 +183,7 @@ class _ReservationsGraphsPageState extends State<ReservationsGraphsPage> {
             _buildOption(
               context,
               model,
+              const Key('weeklyOption'),
               label: "Weekly",
               icon: Icons.calendar_month,
               selected: model.isWeekly,
@@ -188,13 +199,15 @@ class _ReservationsGraphsPageState extends State<ReservationsGraphsPage> {
 
   Widget _buildOption(
     BuildContext context,
-    ReservationsGraphsPageModel model, {
+    ReservationsGraphsPageModel model,
+    Key key, {
     required String label,
     required IconData icon,
     required bool selected,
     required Function onTap,
   }) {
     return GestureDetector(
+      key: key,
       onTap: () => onTap(),
       child: AnimatedContainer(
         height: 40,
@@ -239,6 +252,7 @@ class _ReservationsGraphsPageState extends State<ReservationsGraphsPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: MasonryGridView.builder(
+        key: const Key('graphsMasonryGrid'),
         gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
         ),

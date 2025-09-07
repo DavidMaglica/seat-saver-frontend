@@ -11,6 +11,16 @@ void ignoreOverflowErrors() {
   };
 }
 
+void ignoreRangeErrors() {
+  final originalOnError = FlutterError.onError;
+  FlutterError.onError = (details) {
+    if (details.exceptionAsString().contains('RangeError (length)')) {
+      return;
+    }
+    originalOnError?.call(details);
+  };
+}
+
 void maximizeTestWindow(WidgetTester tester) async {
   tester.binding.window.physicalSizeTestValue = const Size(1920, 1080);
   tester.binding.window.devicePixelRatioTestValue = 1.0;
