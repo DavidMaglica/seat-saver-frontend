@@ -46,11 +46,13 @@ class ImagesTab extends StatelessWidget {
         children: [
           _buildButton(
             context,
+            const Key('addVenueImagesButton'),
             'Add Venue Images',
             () => model.addVenueImage(context),
           ),
           _buildButton(
             context,
+            const Key('addMenuImagesButton'),
             'Add Menu Images',
             () => model.addMenuImages(context),
           ),
@@ -67,6 +69,7 @@ class ImagesTab extends StatelessWidget {
         child: Stack(
           children: [
             PageView(
+              key: const Key('pageView'),
               controller: model.pageViewController,
               scrollDirection: Axis.horizontal,
               children: [
@@ -191,6 +194,7 @@ class ImagesTab extends StatelessWidget {
     return Align(
       alignment: const AlignmentDirectional(0, -1),
       child: SmoothPageIndicator(
+        key: const Key('pageIndicator'),
         controller: model.pageViewController,
         count: 2,
         axisDirection: Axis.horizontal,
@@ -216,10 +220,12 @@ class ImagesTab extends StatelessWidget {
 
   Widget _buildButton(
     BuildContext context,
+    Key key,
     String label,
     Function() onPressed,
   ) {
     return FFButtonWidget(
+      key: key,
       onPressed: onPressed,
       text: label,
       options: FFButtonOptions(

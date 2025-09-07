@@ -20,6 +20,7 @@ class WebVenuePage extends StatefulWidget {
   final bool shouldReturnToHomepage;
   final bool shouldOpenReviewsTab;
   final bool shouldOpenImagesTab;
+  final VenuePageModel? modelOverride;
 
   const WebVenuePage({
     super.key,
@@ -27,6 +28,7 @@ class WebVenuePage extends StatefulWidget {
     required this.shouldReturnToHomepage,
     this.shouldOpenReviewsTab = false,
     this.shouldOpenImagesTab = false,
+    this.modelOverride,
   });
 
   @override
@@ -47,11 +49,14 @@ class _WebVenuePageState extends State<WebVenuePage>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => VenuePageModel(
-        venueId: widget.venueId,
-        shouldOpenReviewsTab: widget.shouldOpenReviewsTab,
-        shouldOpenImagesTab: widget.shouldOpenImagesTab,
-      )..init(context, this),
+      create: (_) =>
+          widget.modelOverride ??
+                VenuePageModel(
+                  venueId: widget.venueId,
+                  shouldOpenReviewsTab: widget.shouldOpenReviewsTab,
+                  shouldOpenImagesTab: widget.shouldOpenImagesTab,
+                )
+            ..init(context, this),
       child: Consumer<VenuePageModel>(
         builder: (context, model, _) {
           return GestureDetector(
@@ -143,6 +148,7 @@ class _WebVenuePageState extends State<WebVenuePage>
 
   Widget _buildHeaderImage(BuildContext context, VenuePageModel model) {
     return InkWell(
+      key: const Key('headerImage'),
       onTap: () {
         if (model.headerImage == null) return;
 
@@ -200,6 +206,7 @@ class _WebVenuePageState extends State<WebVenuePage>
             style: Theme.of(context).textTheme.titleLarge,
           ),
           FFButtonWidget(
+            key: const Key('editVenueDetailsButton'),
             onPressed: () async {
               bool? shouldRefresh = await showDialog(
                 context: context,
@@ -247,6 +254,7 @@ class _WebVenuePageState extends State<WebVenuePage>
     return Align(
       alignment: const Alignment(0, 0),
       child: TabBar(
+        key: const Key('tabBar'),
         labelColor: WebTheme.accent1,
         unselectedLabelColor: Theme.of(context).colorScheme.onPrimary,
         labelPadding: const EdgeInsets.only(top: 16),
@@ -256,9 +264,9 @@ class _WebVenuePageState extends State<WebVenuePage>
         indicatorSize: TabBarIndicatorSize.tab,
         indicatorPadding: const EdgeInsets.symmetric(horizontal: 16),
         tabs: const [
-          Tab(text: 'Venue Details'),
-          Tab(text: 'Reviews'),
-          Tab(text: 'Images'),
+          Tab(key: Key('venueDetailsTab'), text: 'Venue Details'),
+          Tab(key: Key('reviewsTab'), text: 'Reviews'),
+          Tab(key: Key('imagesTab'), text: 'Images'),
         ],
         controller: model.tabBarController,
         onTap: (i) async {

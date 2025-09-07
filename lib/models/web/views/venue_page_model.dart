@@ -19,11 +19,17 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
   final bool? shouldOpenReviewsTab;
   final bool? shouldOpenImagesTab;
 
+  final VenuesApi venuesApi;
+  final ReservationsApi reservationsApi;
+
   VenuePageModel({
     required this.venueId,
     this.shouldOpenReviewsTab,
     this.shouldOpenImagesTab,
-  });
+    VenuesApi? venuesApi,
+    ReservationsApi? reservationsApi,
+  }) : venuesApi = venuesApi ?? VenuesApi(),
+       reservationsApi = reservationsApi ?? ReservationsApi();
 
   TabController? tabBarController;
 
@@ -43,9 +49,6 @@ class VenuePageModel extends FlutterFlowModel<WebVenuePage>
       pageViewController.hasClients && pageViewController.page != null
       ? pageViewController.page!.round()
       : 0;
-
-  final VenuesApi venuesApi = VenuesApi();
-  final ReservationsApi reservationsApi = ReservationsApi();
 
   final Map<String, AnimationInfo> animationsMap =
       Animations.venuePageAnimations;
