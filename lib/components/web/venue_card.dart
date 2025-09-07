@@ -30,6 +30,7 @@ class _WebVenueCardState extends State<WebVenueCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      key: Key('venueCard'),
       splashColor: Colors.transparent,
       focusColor: Colors.transparent,
       hoverColor: Colors.transparent,

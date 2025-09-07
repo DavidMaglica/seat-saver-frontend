@@ -8,7 +8,9 @@ import 'package:table_reserver/models/web/views/venues_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
 class WebVenuesPage extends StatefulWidget {
-  const WebVenuesPage({super.key});
+  final VenuesModel? modelOverride;
+
+  const WebVenuesPage({super.key, this.modelOverride});
 
   @override
   State<WebVenuesPage> createState() => _WebVenuesPageState();
@@ -26,7 +28,8 @@ class _WebVenuesPageState extends State<WebVenuesPage>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => VenuesModel()..loadData(),
+      create: (_) => widget.modelOverride ?? VenuesModel()
+        ..loadData(),
       child: Consumer<VenuesModel>(
         builder: (context, model, _) {
           return GestureDetector(
