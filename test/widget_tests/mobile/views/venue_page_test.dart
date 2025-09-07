@@ -232,11 +232,11 @@ void main() {
       // because the date picker defaults to the current time
       await tester.tap(timeButton);
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(Key('8')));
+      await tester.tap(find.byKey(Key('44')));
       await tester.pumpAndSettle();
       await tester.tap(timeButton);
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(Key('8')));
+      await tester.tap(find.byKey(Key('3')));
       await tester.pumpAndSettle();
 
       await tester.tap(reserveSpotButton);
