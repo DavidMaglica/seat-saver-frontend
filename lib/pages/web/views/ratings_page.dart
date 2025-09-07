@@ -16,8 +16,9 @@ import 'package:table_reserver/utils/routes.dart';
 
 class WebRatingsPage extends StatefulWidget {
   final int ownerId;
+  final WebRatingsPageModel? modelOverride;
 
-  const WebRatingsPage({super.key, required this.ownerId});
+  const WebRatingsPage({super.key, required this.ownerId, this.modelOverride});
 
   @override
   State<WebRatingsPage> createState() => _WebRatingsPageState();
@@ -27,7 +28,9 @@ class _WebRatingsPageState extends State<WebRatingsPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => WebRatingsPageModel(ownerId: widget.ownerId)..init(),
+      create: (_) =>
+          widget.modelOverride ?? WebRatingsPageModel(ownerId: widget.ownerId)
+            ..init(),
       child: Consumer<WebRatingsPageModel>(
         builder: (context, model, _) {
           return Scaffold(
@@ -64,10 +67,9 @@ class _WebRatingsPageState extends State<WebRatingsPage> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildRefreshButton(context, model)
-                              ..animateOnPageLoad(
-                                model.animationsMap['titleRowOnLoad']!,
-                              ),
+                            _buildHeaderRow(context, model)..animateOnPageLoad(
+                              model.animationsMap['titleRowOnLoad']!,
+                            ),
                             const SizedBox(height: 16),
                             !model.isLoading
                                 ? _buildMasonryGrid(
@@ -100,7 +102,7 @@ class _WebRatingsPageState extends State<WebRatingsPage> {
     );
   }
 
-  Widget _buildRefreshButton(BuildContext context, WebRatingsPageModel model) {
+  Widget _buildHeaderRow(BuildContext context, WebRatingsPageModel model) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -109,6 +111,7 @@ class _WebRatingsPageState extends State<WebRatingsPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           TimerDropdown(
+            key: const Key('timerDropdown'),
             selectedInterval: model.selectedInterval,
             onChanged: (value) {
               setState(() {
@@ -119,6 +122,7 @@ class _WebRatingsPageState extends State<WebRatingsPage> {
           ),
           const SizedBox(width: 8),
           FFButtonWidget(
+            key: const Key('refreshButton'),
             onPressed: () {
               model.fetchData(widget.ownerId);
             },
@@ -147,6 +151,7 @@ class _WebRatingsPageState extends State<WebRatingsPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: MasonryGridView.builder(
+        key: const Key('ratingsMasonryGrid'),
         gridDelegate: const SliverSimpleGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 450,
         ),
@@ -208,6 +213,7 @@ class _WebRatingsPageState extends State<WebRatingsPage> {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   FFButtonWidget(
+                    key: Key('viewRatingsButton'),
                     onPressed: () {
                       Navigator.of(context).push(
                         FadeInRoute(

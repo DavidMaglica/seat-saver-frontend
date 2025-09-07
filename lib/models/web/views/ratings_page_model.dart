@@ -7,10 +7,10 @@ import 'package:table_reserver/utils/animations.dart';
 
 class WebRatingsPageModel extends ChangeNotifier {
   final int ownerId;
+  final VenuesApi venuesApi;
 
-  WebRatingsPageModel({required this.ownerId});
-
-  final VenuesApi venuesApi = VenuesApi();
+  WebRatingsPageModel({required this.ownerId, VenuesApi? venuesApi})
+    : venuesApi = venuesApi ?? VenuesApi();
 
   final Map<String, AnimationInfo> animationsMap =
       Animations.utilityPagesAnimations;
