@@ -86,6 +86,7 @@ class _SignUpTabState extends State<SignUpTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
+        key: const Key('signUpEmailField'),
         controller: widget.model.signUpEmailTextController,
         focusNode: widget.model.signUpEmailFocusNode,
         autofocus: false,
@@ -130,6 +131,7 @@ class _SignUpTabState extends State<SignUpTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
+        key: const Key('signUpUsernameField'),
         controller: widget.model.signUpUsernameTextController,
         focusNode: widget.model.signUpUsernameFocusNode,
         autofocus: false,
@@ -174,6 +176,7 @@ class _SignUpTabState extends State<SignUpTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
+        key: const Key('signUpPasswordField'),
         controller: widget.model.signUpPasswordTextController,
         focusNode: widget.model.signUpPasswordFocusNode,
         autofocus: false,
@@ -234,6 +237,7 @@ class _SignUpTabState extends State<SignUpTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
+        key: const Key('signUpConfirmPasswordField'),
         controller: widget.model.signUpPasswordConfirmTextController,
         focusNode: widget.model.signUpPasswordConfirmFocusNode,
         autofocus: false,
@@ -292,6 +296,7 @@ class _SignUpTabState extends State<SignUpTab> {
     return Align(
       alignment: const AlignmentDirectional(0, 0),
       child: FFButtonWidget(
+        key: const Key('signUpButton'),
         onPressed: () {
           model.signUp(
             context: context,

@@ -20,7 +20,7 @@ class StatCard extends StatelessWidget {
         elevation: 3,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Container(
-          height: 96,
+          height: 90,
           constraints: const BoxConstraints(maxWidth: 316),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onSurface,

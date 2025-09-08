@@ -132,8 +132,8 @@ class _WebAuthenticationState extends State<WebAuthentication>
       indicatorWeight: 3,
       dividerColor: Colors.transparent,
       tabs: const [
-        Tab(text: 'Sign Up'),
-        Tab(text: 'Log In'),
+        Tab(key: Key('signUpTab'), text: 'Sign Up'),
+        Tab(key: Key('logInTab'), text: 'Log In'),
       ],
       controller: _model.tabBarController,
       onTap: (i) async {

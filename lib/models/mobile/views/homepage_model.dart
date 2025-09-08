@@ -74,9 +74,15 @@ class HomepageModel extends ChangeNotifier {
         userId!,
       );
       if (options != null && options.isLocationServicesEnabled) {
-        userLocation = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best,
-        );
+        const bool useFakePermissions = bool.fromEnvironment(
+            'FAKE_PERMISSIONS');
+        if (useFakePermissions) {
+          userLocation = await getTestPosition();
+        } else {
+          userLocation = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best,
+          );
+        }
         if (userLocation != null) {
           await sharedPreferencesCache.setString(
             'lastKnownLocation',

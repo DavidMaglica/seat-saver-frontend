@@ -37,7 +37,8 @@ class LogInTabModel extends FlutterFlowModel<LogInTab> with ChangeNotifier {
   void init(BuildContext context) {
     final int? ownerId = sharedPreferencesCache.getInt('ownerId');
     authListener(context);
-    if (isActive) {
+    const bool isFakeAuth = bool.fromEnvironment('FAKE_AUTH');
+    if (isActive && !isFakeAuth) {
       if (ownerId != null) return;
       googleSignIn.attemptLightweightAuthentication()?.then((value) {
         if (value != null) {

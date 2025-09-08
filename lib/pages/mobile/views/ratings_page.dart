@@ -202,6 +202,7 @@ class RatingsPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
+                            key: Key('ratingVenueName'),
                             model.venue.name,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),

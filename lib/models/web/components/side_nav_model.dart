@@ -20,8 +20,8 @@ class SideNavModel extends FlutterFlowModel<SideNav> with ChangeNotifier {
   }
 
   Future<void> getUserFromCache() async {
-    ownerEmail = sharedPreferencesCache.getString('ownerEmail')!;
-    ownerName = sharedPreferencesCache.getString('ownerName')!;
+    ownerEmail = sharedPreferencesCache.getString('ownerEmail') ?? '';
+    ownerName = sharedPreferencesCache.getString('ownerName') ?? '';
     notifyListeners();
   }
 

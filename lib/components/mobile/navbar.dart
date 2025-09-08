@@ -21,18 +21,22 @@ class NavBar extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
+            key: Key('navHome'),
             icon: Icon(CupertinoIcons.house_fill),
             label: 'Home',
           ),
           BottomNavigationBarItem(
+            key: Key('navSearch'),
             icon: Icon(CupertinoIcons.search),
             label: 'Search',
           ),
           BottomNavigationBarItem(
+            key: Key('navNearby'),
             icon: Icon(CupertinoIcons.location_solid),
             label: 'Nearby',
           ),
           BottomNavigationBarItem(
+            key: Key('navInfo'),
             icon: Icon(CupertinoIcons.info_circle_fill),
             label: 'Info',
           ),

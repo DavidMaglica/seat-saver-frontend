@@ -72,6 +72,7 @@ class _LogInTabState extends State<LogInTab> {
 
   Widget _buildTitle(BuildContext context) {
     return Text(
+      key: const Key('logInTitle'),
       'Log In',
       textAlign: TextAlign.start,
       style: Theme.of(context).textTheme.titleLarge,
@@ -82,6 +83,7 @@ class _LogInTabState extends State<LogInTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
+        key: const Key('logInEmailField'),
         controller: widget.model.loginEmailTextController,
         focusNode: widget.model.loginEmailFocusNode,
         autofocus: false,
@@ -126,6 +128,7 @@ class _LogInTabState extends State<LogInTab> {
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
+        key: const Key('logInPasswordField'),
         controller: widget.model.loginPasswordTextController,
         focusNode: widget.model.loginPasswordFocusNode,
         autofocus: false,
@@ -184,6 +187,7 @@ class _LogInTabState extends State<LogInTab> {
     return Align(
       alignment: const AlignmentDirectional(0, 0),
       child: FFButtonWidget(
+        key: const Key('logInButton'),
         onPressed: () {
           model.logIn(
             context,
