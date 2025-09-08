@@ -14,6 +14,7 @@ Widget buildButtons(BuildContext context, VoidCallback onSubmit, String label) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         FFButtonWidget(
+          key: const Key('cancelButton'),
           onPressed: () => Navigator.of(context).pop(),
           text: 'Cancel',
           options: FFButtonOptions(
@@ -30,6 +31,7 @@ Widget buildButtons(BuildContext context, VoidCallback onSubmit, String label) {
           ),
         ),
         FFButtonWidget(
+          key: const Key('submitButton'),
           onPressed: () => onSubmit(),
           text: label,
           options: FFButtonOptions(
