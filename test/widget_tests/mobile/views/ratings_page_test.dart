@@ -160,7 +160,7 @@ class FakeVenuesApi extends Fake implements VenuesApi {
   Future<Venue?> getVenue(int venueId) async {
     return Venue(
       id: 1,
-      name: 'Firs Venue',
+      name: 'First Venue',
       location: 'Porec',
       workingDays: [0, 1, 2, 3],
       workingHours: '08:00 - 17:00',
