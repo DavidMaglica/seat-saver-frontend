@@ -252,7 +252,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
           margin: const EdgeInsets.symmetric(horizontal: 12),
           hidesUnderline: true,
           isOverButton: false,
-          isSearchable: false,
+          isSearchable: true,
           isMultiSelect: false,
         ),
         if (widget.model.dropDownErrorText != null)

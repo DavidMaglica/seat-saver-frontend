@@ -13,7 +13,7 @@ void main() {
   const email = 'owner@mail.com';
   const password = 'password';
 
-  testWidgets('should be able to login with existing account', (tester) async {
+  testWidgets('should be able to create new venue', (tester) async {
     setupWebIntegrationTestErrorFilters();
     final getStartedButton = find.byKey(const Key('getStartedButton'));
     final logInEmailField = find.byKey(const Key('logInEmailField'));
@@ -32,6 +32,10 @@ void main() {
     final dayChipMonday = find.byKey(const Key('dayChip_Monday'));
     final dayChipTuesday = find.byKey(const Key('dayChip_Tuesday'));
     final dayChipWednesday = find.byKey(const Key('dayChip_Wednesday'));
+    final dayChipThursday = find.byKey(const Key('dayChip_Thursday'));
+    final dayChipFriday = find.byKey(const Key('dayChip_Friday'));
+    final dayChipSaturday = find.byKey(const Key('dayChip_Saturday'));
+    final dayChipSunday = find.byKey(const Key('dayChip_Sunday'));
     final submitButton = find.byKey(const Key('submitButton'));
 
     app.main();
@@ -75,15 +79,23 @@ void main() {
     expect(dayChipMonday, findsOneWidget);
     expect(dayChipTuesday, findsOneWidget);
     expect(dayChipWednesday, findsOneWidget);
+    expect(dayChipThursday, findsOneWidget);
+    expect(dayChipFriday, findsOneWidget);
+    expect(dayChipSaturday, findsOneWidget);
+    expect(dayChipSunday, findsOneWidget);
     expect(submitButton, findsOneWidget);
 
     await tester.enterText(venueNameField, 'Test Venue');
     await tester.enterText(venueLocationField, 'Poreč, Croatia');
     await tester.enterText(maxCapacityField, '50');
-    await tester.enterText(workingHoursField, '08:00 - 22:00');
+    await tester.enterText(workingHoursField, '00:01 - 23:59');
     await tester.tap(dayChipMonday);
     await tester.tap(dayChipTuesday);
     await tester.tap(dayChipWednesday);
+    await tester.tap(dayChipThursday);
+    await tester.tap(dayChipFriday);
+    await tester.tap(dayChipSaturday);
+    await tester.tap(dayChipSunday);
     await tester.enterText(venueDescriptionField, 'Test venue.');
     await tester.tap(venueTypeDropdown);
     await tester.pump();

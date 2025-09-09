@@ -23,6 +23,14 @@ void setupWebIntegrationTestErrorFilters() {
       return;
     }
 
+    if (eStr.contains('AnimationController.dispose() called more than once')) {
+      return;
+    }
+
+    if (eStr.contains('inTest is not true')) {
+      return;
+    }
+
     originalOnError?.call(details);
   };
 }

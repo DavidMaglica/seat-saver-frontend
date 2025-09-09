@@ -284,6 +284,7 @@ class _SideNavState extends State<SideNav> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: InkWell(
+        key: const Key('reservationsNavButton'),
         splashColor: Colors.transparent,
         focusColor: Colors.transparent,
         hoverColor: Colors.transparent,
