@@ -93,6 +93,7 @@ class ChartCard extends StatelessWidget {
       children: [
         Text(venue.name, style: Theme.of(context).textTheme.titleMedium),
         FFButtonWidget(
+          key: Key('viewReservationsButton'),
           text: 'View reservations',
           onPressed: () {
             Navigator.of(context).push(

@@ -122,3 +122,18 @@ bool isWithinWorkingHours(DateTime reservationDate, String workingHours) {
   return reservationDate.isAfter(startTime) &&
       reservationDate.isBefore(endTime);
 }
+
+Future<Position> getTestPosition() async {
+  return Position(
+    latitude: 45.23,
+    longitude: 13.61,
+    timestamp: DateTime.now(),
+    accuracy: 1,
+    altitude: 0,
+    heading: 0,
+    speed: 0,
+    speedAccuracy: 1,
+    altitudeAccuracy: 0,
+    headingAccuracy: 0,
+  );
+}

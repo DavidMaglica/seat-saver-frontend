@@ -38,29 +38,29 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child:
-                  Container(
-                    width: double.infinity,
-                    height: 500,
-                    decoration: webBackgroundGradient(context),
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      decoration: webBackgroundAuxiliaryGradient(context),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildLogo().animateOnPageLoad(
-                            animationsMap['logoOnLoad']!,
-                          ),
-                          _buildTitle(context).animateOnPageLoad(
-                            animationsMap['textOnLoad']!,
-                          ),
-                        ],
+              child: Container(
+                width: double.infinity,
+                height: 500,
+                decoration: webBackgroundGradient(context),
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: webBackgroundAuxiliaryGradient(context),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildLogo().animateOnPageLoad(
+                        animationsMap['logoOnLoad']!,
                       ),
-                    ),
-                  )
+                      const SizedBox(height: 44),
+                      _buildTitle(
+                        context,
+                      ).animateOnPageLoad(animationsMap['textOnLoad']!),
+                    ],
+                  ),
+                ),
+              ),
             ),
             _buildButton(
               context,
@@ -81,6 +81,7 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
           child: Image.asset(
+            key: const Key('appLogo'),
             'assets/icons/appIcon.png',
             width: 100,
             height: 100,
@@ -92,13 +93,11 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
   }
 
   Widget _buildTitle(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 44, 0, 0),
-      child: Text(
-        'Welcome to your TableReserver Admin Dashboard!',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
+    return Text(
+      key: const Key('landingTitle'),
+      'Welcome to your TableReserver Admin Dashboard!',
+      textAlign: TextAlign.center,
+      style: Theme.of(context).textTheme.titleLarge,
     );
   }
 
@@ -112,6 +111,7 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
             child: Align(
               alignment: const AlignmentDirectional(0, 0),
               child: FFButtonWidget(
+                key: const Key('getStartedButton'),
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
                     FadeInRoute(

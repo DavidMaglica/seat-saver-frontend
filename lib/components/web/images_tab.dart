@@ -38,7 +38,7 @@ class ImagesTab extends StatelessWidget {
 
   Widget _buildButtons(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(48, 16, 48, 16),
+      padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -46,11 +46,13 @@ class ImagesTab extends StatelessWidget {
         children: [
           _buildButton(
             context,
+            const Key('addVenueImagesButton'),
             'Add Venue Images',
             () => model.addVenueImage(context),
           ),
           _buildButton(
             context,
+            const Key('addMenuImagesButton'),
             'Add Menu Images',
             () => model.addMenuImages(context),
           ),
@@ -67,6 +69,7 @@ class ImagesTab extends StatelessWidget {
         child: Stack(
           children: [
             PageView(
+              key: const Key('pageView'),
               controller: model.pageViewController,
               scrollDirection: Axis.horizontal,
               children: [
@@ -109,53 +112,50 @@ class ImagesTab extends StatelessWidget {
                     horizontal: 16,
                     vertical: 16,
                   ),
-                  child:
-                      GridView(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                              childAspectRatio: 1,
-                            ),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        children: images.map((imageBytes) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => FullScreenImageView(
-                                    imageBytes: imageBytes,
-                                    heroTag:
-                                        'imageTag_${images.indexOf(imageBytes)}',
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Material(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.memory(
-                                    imageBytes,
-                                    width: double.infinity,
-                                    height: 200,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                  child: GridView(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 1,
+                        ),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    children: images.map((imageBytes) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => FullScreenImageView(
+                                imageBytes: imageBytes,
+                                heroTag:
+                                    'imageTag_${images.indexOf(imageBytes)}',
                               ),
                             ),
                           );
-                        }).toList(),
-                      ).animateOnPageLoad(
-                        model.animationsMap['fadeInOnLoad']!,
-                      ),
+                        },
+                        child: Material(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.memory(
+                                imageBytes,
+                                width: double.infinity,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ).animateOnPageLoad(model.animationsMap['fadeInOnLoad']!),
                 )
               : isLoading
               ? Align(
@@ -194,6 +194,7 @@ class ImagesTab extends StatelessWidget {
     return Align(
       alignment: const AlignmentDirectional(0, -1),
       child: SmoothPageIndicator(
+        key: const Key('pageIndicator'),
         controller: model.pageViewController,
         count: 2,
         axisDirection: Axis.horizontal,
@@ -219,10 +220,12 @@ class ImagesTab extends StatelessWidget {
 
   Widget _buildButton(
     BuildContext context,
+    Key key,
     String label,
     Function() onPressed,
   ) {
     return FFButtonWidget(
+      key: key,
       onPressed: onPressed,
       text: label,
       options: FFButtonOptions(

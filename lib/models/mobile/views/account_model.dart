@@ -11,7 +11,6 @@ import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/toaster.dart';
 
 class AccountModel extends ChangeNotifier {
-  final BuildContext context;
   final int? userId;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -19,9 +18,10 @@ class AccountModel extends ChangeNotifier {
   final int pageIndex = 3;
 
   User? currentUser;
-  final AccountApi accountApi = AccountApi();
+  final AccountApi accountApi;
 
-  AccountModel({required this.context, this.userId});
+  AccountModel({this.userId, AccountApi? accountApi})
+      : accountApi = accountApi ?? AccountApi();
 
   Future<void> init() async {
     if (userId != null) {
@@ -44,7 +44,7 @@ class AccountModel extends ChangeNotifier {
     }
   }
 
-  void openSettingsItem(String route, String? action) {
+  void openSettingsItem(BuildContext context, String route, String? action) {
     switch (route) {
       case Routes.termsOfService:
         Navigator.of(context).push(
@@ -98,7 +98,7 @@ class AccountModel extends ChangeNotifier {
         if (currentUser == null) {
           Toaster.displayInfo(
             context,
-            'Please log in to view your reservation history.',
+            'Please log in to $action.',
           );
           return;
         } else {

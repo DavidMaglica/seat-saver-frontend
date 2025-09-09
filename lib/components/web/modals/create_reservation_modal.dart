@@ -56,9 +56,7 @@ class _CreateReservationModalState extends State<CreateReservationModal>
                 ),
               ].divide(const SizedBox(height: 16)),
             ),
-          ).animateOnPageLoad(
-            widget.model.animationsMap['modalOnLoad']!,
-          ),
+          ).animateOnPageLoad(widget.model.animationsMap['modalOnLoad']!),
         ],
       ),
     );
@@ -76,6 +74,7 @@ class _CreateReservationModalState extends State<CreateReservationModal>
             children: [
               _buildDropdown(context, model),
               _buildInputField(
+                key: const Key('userEmailField'),
                 context: context,
                 label: 'User Email *',
                 controller: model.emailTextController,
@@ -88,6 +87,7 @@ class _CreateReservationModalState extends State<CreateReservationModal>
             mainAxisSize: MainAxisSize.max,
             children: [
               _buildInputField(
+                key: const Key('numberOfGuestsField'),
                 context: context,
                 label: 'Number of Guests *',
                 controller: model.guestsTextController,
@@ -118,6 +118,7 @@ class _CreateReservationModalState extends State<CreateReservationModal>
     required String label,
     required TextEditingController controller,
     required FocusNode focusNode,
+    required Key key,
     String? errorText,
     TextInputType? keyboardType,
     List<TextInputFormatter>? inputFormatters,
@@ -126,6 +127,7 @@ class _CreateReservationModalState extends State<CreateReservationModal>
     double? fixedWidth,
   }) {
     final inputField = TextFormField(
+      key: key,
       controller: controller,
       focusNode: focusNode,
       keyboardType: keyboardType,
@@ -174,15 +176,13 @@ class _CreateReservationModalState extends State<CreateReservationModal>
     return isExpanded ? Expanded(child: inputField) : inputField;
   }
 
-  Widget _buildDropdown(
-    BuildContext context,
-    CreateReservationModel model,
-  ) {
+  Widget _buildDropdown(BuildContext context, CreateReservationModel model) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         FlutterFlowDropDown<String>(
+          key: const Key('venueDropdown'),
           controller: model.dropDownValueController,
           options: model.venuesById.keys
               .map((venueId) => venueId.toString())
@@ -237,6 +237,7 @@ class _CreateReservationModalState extends State<CreateReservationModal>
   ) {
     return Expanded(
       child: TextFormField(
+        key: const Key('reservationDateField'),
         controller: model.reservationDateTextController,
         focusNode: model.reservationDateFocusNode,
         readOnly: true,

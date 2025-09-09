@@ -10,7 +10,6 @@ import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 
 class SearchModel extends ChangeNotifier {
-  final BuildContext context;
   final int? selectedVenueType;
 
   final FocusNode unfocusNode = FocusNode();
@@ -31,14 +30,15 @@ class SearchModel extends ChangeNotifier {
 
   final ScrollController scrollController = ScrollController();
 
-  final VenuesApi venuesApi = VenuesApi();
+  final VenuesApi venuesApi;
 
   List<String> venueTypeOptions = [];
   List<String> selectedTypes = [];
 
   Map<int, String> venueTypeMap = {};
 
-  SearchModel({required this.context, this.selectedVenueType});
+  SearchModel({this.selectedVenueType, VenuesApi? venuesApi})
+    : venuesApi = venuesApi ?? VenuesApi();
 
   @override
   void dispose() {
@@ -133,7 +133,7 @@ class SearchModel extends ChangeNotifier {
     _fetchNextPage(null);
   }
 
-  Function() goToVenuePage(Venue venue) {
+  Function() goToVenuePage(BuildContext context, Venue venue) {
     return () {
       Navigator.of(context).push(
         MobileFadeInRoute(

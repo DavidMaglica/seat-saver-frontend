@@ -11,8 +11,7 @@ import 'package:table_reserver/utils/routes.dart';
 class LocationPermissionPopUp extends StatelessWidget {
   final int userId;
 
-  const LocationPermissionPopUp({Key? key, required this.userId})
-    : super(key: key);
+  const LocationPermissionPopUp({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -32,20 +31,20 @@ class LocationPermissionPopUp extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 12),
                 _buildIcon(),
+                const SizedBox(height: 24),
                 _buildTitle(context),
+                const SizedBox(height: 12),
                 _buildSubTitle(context),
+                const SizedBox(height: 120),
                 Align(
                   alignment: const AlignmentDirectional(0, 1),
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                    child: _buildEnableButton(context, model),
-                  ),
+                  child: _buildEnableButton(context, model),
                 ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 24),
-                  child: _buildDenyButton(context),
-                ),
+                const SizedBox(height: 12),
+                _buildDenyButton(context),
+                const SizedBox(height: 24),
               ],
             ),
           ),
@@ -54,29 +53,29 @@ class LocationPermissionPopUp extends StatelessWidget {
     );
   }
 
-  Widget _buildSubTitle(BuildContext ctx) {
+  Widget _buildSubTitle(BuildContext context) {
     return Align(
       alignment: const AlignmentDirectional(0, 0),
       child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 96),
+        padding: const EdgeInsets.symmetric(horizontal: 36),
         child: Text(
           'Find your favourite spots! Activate location services to easily locate venues near you!',
           textAlign: TextAlign.center,
-          style: Theme.of(ctx).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       ),
     );
   }
 
-  Widget _buildTitle(BuildContext ctx) {
+  Widget _buildTitle(BuildContext context) {
     return Align(
       alignment: const AlignmentDirectional(0, 0),
       child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 12),
+        padding: const EdgeInsets.symmetric(horizontal: 36),
         child: Text(
           'Our app works best with location enabled',
           textAlign: TextAlign.center,
-          style: Theme.of(ctx).textTheme.titleLarge,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
     );
@@ -85,21 +84,18 @@ class LocationPermissionPopUp extends StatelessWidget {
   Widget _buildIcon() {
     return const Align(
       alignment: AlignmentDirectional(0, -1),
-      child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 24),
-        child: Icon(
-          CupertinoIcons.location_solid,
-          color: MobileTheme.accent1,
-          size: 64,
-        ),
+      child: Icon(
+        CupertinoIcons.location_solid,
+        color: MobileTheme.accent1,
+        size: 64,
       ),
     );
   }
 
-  Widget _buildDenyButton(BuildContext ctx) {
+  Widget _buildDenyButton(BuildContext context) {
     return FFButtonWidget(
       onPressed: () {
-        Navigator.of(ctx).push(
+        Navigator.of(context).push(
           MobileFadeInRoute(page: const Homepage(), routeName: Routes.homepage),
         );
       },
@@ -107,16 +103,15 @@ class LocationPermissionPopUp extends StatelessWidget {
       options: FFButtonOptions(
         width: 270,
         height: 40,
-        padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-        iconPadding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-        color: Theme.of(ctx).colorScheme.onSurface,
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        color: Theme.of(context).colorScheme.onSurface,
         textStyle: TextStyle(
-          color: Theme.of(ctx).colorScheme.onPrimary,
+          color: Theme.of(context).colorScheme.onPrimary,
           fontSize: 16,
         ),
         elevation: 3,
         borderSide: BorderSide(
-          color: Theme.of(ctx).colorScheme.onPrimary,
+          color: Theme.of(context).colorScheme.onPrimary,
           width: 2,
         ),
         borderRadius: BorderRadius.circular(8),
@@ -124,8 +119,7 @@ class LocationPermissionPopUp extends StatelessWidget {
     );
   }
 
-  Widget _buildEnableButton(
-    BuildContext ctx,
+  Widget _buildEnableButton(BuildContext context,
     LocationPermissionPopUpModel model,
   ) {
     return FFButtonWidget(
@@ -134,11 +128,10 @@ class LocationPermissionPopUp extends StatelessWidget {
       options: FFButtonOptions(
         width: 270,
         height: 40,
-        padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-        iconPadding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-        color: Theme.of(ctx).colorScheme.primary,
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        color: Theme.of(context).colorScheme.primary,
         textStyle: TextStyle(
-          color: Theme.of(ctx).colorScheme.onSurface,
+          color: Theme.of(context).colorScheme.onSurface,
           fontSize: 16,
         ),
         elevation: 3,

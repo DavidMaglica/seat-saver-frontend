@@ -1,5 +1,1 @@
-enum AuthenticationMethod {
-  google,
-  custom,
-  none,
-}
+enum AuthenticationMethod { google, custom, none }

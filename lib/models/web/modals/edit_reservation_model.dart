@@ -38,8 +38,12 @@ class EditReservationModel extends FlutterFlowModel<EditReservationModal>
   @override
   void initState(BuildContext context) {}
 
-  void init(BuildContext context, int reservationId, String venueName,
-      String userName) async {
+  void init(
+    BuildContext context,
+    int reservationId,
+    String venueName,
+    String userName,
+  ) async {
     DateFormat dateFormat = DateFormat('dd MMMM, yyyy - HH:mm');
     await _fetchReservationDetails(context, reservationId, venueName, userName);
     await _fetchVenue();
@@ -150,11 +154,11 @@ class EditReservationModel extends FlutterFlowModel<EditReservationModal>
       isValid = false;
     } else if (!isWorkingDay) {
       reservationDateErrorText =
-      'The selected date is not a working day for the venue.';
+          'The selected date is not a working day for the venue.';
       isValid = false;
     } else if (!isWorkingHour) {
       reservationDateErrorText =
-      'The selected time is outside the venue\'s working hours.';
+          'The selected time is outside the venue\'s working hours.';
       isValid = false;
     } else {
       reservationDateErrorText = null;

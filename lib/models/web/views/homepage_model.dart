@@ -24,12 +24,18 @@ import 'package:table_reserver/utils/web_toaster.dart';
 
 class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
   final int ownerId;
+  final AccountApi accountApi;
+  final ReservationsApi reservationsApi;
+  final VenuesApi venuesApi;
 
-  HomepageModel({required this.ownerId});
-
-  final AccountApi accountApi = AccountApi();
-  final ReservationsApi reservationsApi = ReservationsApi();
-  final VenuesApi venuesApi = VenuesApi();
+  HomepageModel({
+    required this.ownerId,
+    AccountApi? accountApi,
+    ReservationsApi? reservationsApi,
+    VenuesApi? venuesApi,
+  }) : accountApi = accountApi ?? AccountApi(),
+       reservationsApi = reservationsApi ?? ReservationsApi(),
+       venuesApi = venuesApi ?? VenuesApi();
 
   final Map<String, AnimationInfo> animationsMap =
       Animations.homepageAnimations;
@@ -56,7 +62,7 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
   Venue? bestPerformingVenue;
   Venue? worstPerformingVenue;
 
-  int? selectedInterval = 30;
+  int? selectedInterval = null;
   Timer? _refreshTimer;
 
   @override
@@ -102,8 +108,8 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
     UserResponse? response = await accountApi.getUser(ownerId);
     if (response != null && response.success && response.user != null) {
       User user = response.user!;
-      await sharedPreferencesCache.setString('userEmail', user.email);
-      await sharedPreferencesCache.setString('userName', user.username);
+      await sharedPreferencesCache.setString('ownerEmail', user.email);
+      await sharedPreferencesCache.setString('ownerName', user.username);
       Provider.of<SideNavModel>(context, listen: false).getUserFromCache();
     } else {
       if (!context.mounted) return;

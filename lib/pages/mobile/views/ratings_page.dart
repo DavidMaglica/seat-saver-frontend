@@ -16,18 +16,21 @@ class RatingsPage extends StatelessWidget {
   final int venueId;
   final int? userId;
   final Position? userLocation;
+  final RatingsPageModel? modelOverride;
 
   const RatingsPage({
-    Key? key,
+    super.key,
     required this.venueId,
     this.userId,
     this.userLocation,
-  }) : super(key: key);
+    this.modelOverride,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => RatingsPageModel(ctx: context, venueId: venueId)..init(),
+      create: (_) => modelOverride ?? RatingsPageModel(venueId: venueId)
+        ..init(context),
       child: Consumer<RatingsPageModel>(
         builder: (context, model, _) {
           bool isAtBottom = false;
@@ -101,7 +104,7 @@ class RatingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildRatingSummary(BuildContext ctx, RatingsPageModel model) {
+  Widget _buildRatingSummary(BuildContext context, RatingsPageModel model) {
     int fiveStars =
         model.ratings?.where((element) => element.rating == 5.0).length ?? 0;
     int fourStars =
@@ -116,11 +119,11 @@ class RatingsPage extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Theme.of(ctx).colorScheme.onSurface,
+        color: Theme.of(context).colorScheme.onSurface,
         boxShadow: [
           BoxShadow(
             blurRadius: 3,
-            color: Theme.of(ctx).colorScheme.outline,
+            color: Theme.of(context).colorScheme.outline,
             offset: const Offset(0, 5),
           ),
         ],
@@ -132,6 +135,7 @@ class RatingsPage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: RatingSummary(
+          key: const Key('ratingSummary'),
           counter: model.ratings?.length ?? 0,
           showAverage: false,
           counterFiveStars: fiveStars,
@@ -142,41 +146,42 @@ class RatingsPage extends StatelessWidget {
           color: MobileTheme.accent1,
           labelCounterOneStars: Text(
             '1',
-            style: Theme.of(ctx).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           labelCounterTwoStars: Text(
             '2',
-            style: Theme.of(ctx).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           labelCounterThreeStars: Text(
             '3',
-            style: Theme.of(ctx).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           labelCounterFourStars: Text(
             '4',
-            style: Theme.of(ctx).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           labelCounterFiveStars: Text(
             '5',
-            style: Theme.of(ctx).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
       ),
     );
   }
 
-  List<Widget> _buildRatings(BuildContext ctx, RatingsPageModel model) {
+  List<Widget> _buildRatings(BuildContext context, RatingsPageModel model) {
     return model.ratings!.map((rating) {
       return Padding(
         padding: const EdgeInsets.only(top: 12),
         child: Container(
+          key: const Key('ratingEntryContainer'),
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Theme.of(ctx).colorScheme.onSurface,
+            color: Theme.of(context).colorScheme.onSurface,
             boxShadow: [
               BoxShadow(
                 blurRadius: 3,
-                color: Theme.of(ctx).colorScheme.outline,
+                color: Theme.of(context).colorScheme.outline,
                 offset: const Offset(0, 3),
               ),
             ],
@@ -187,8 +192,9 @@ class RatingsPage extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                const SizedBox(height: 12),
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -196,8 +202,9 @@ class RatingsPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
+                            key: Key('ratingVenueName'),
                             model.venue.name,
-                            style: Theme.of(ctx).textTheme.titleMedium,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4),
@@ -219,7 +226,7 @@ class RatingsPage extends StatelessWidget {
                       ),
                       Card(
                         clipBehavior: Clip.antiAliasWithSaveLayer,
-                        color: Theme.of(ctx).colorScheme.surface,
+                        color: Theme.of(context).colorScheme.surface,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
                         ),
@@ -227,7 +234,7 @@ class RatingsPage extends StatelessWidget {
                           padding: const EdgeInsets.all(6),
                           child: Text(
                             rating.username,
-                            style: Theme.of(ctx).textTheme.bodyMedium,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ),
                       ),
@@ -235,21 +242,18 @@ class RatingsPage extends StatelessWidget {
                   ),
                 ),
                 if (rating.comment.isNotEmpty == true)
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(
-                      16,
-                      4,
-                      16,
-                      12,
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        rating.comment,
-                        style: Theme.of(ctx).textTheme.bodyMedium,
-                      ),
+                  const SizedBox(height: 4),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      rating.comment,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
+                ),
+                const SizedBox(height: 12),
               ],
             ),
           ),
@@ -258,11 +262,12 @@ class RatingsPage extends StatelessWidget {
     }).toList();
   }
 
-  Widget _buildLeaveReviewButton(BuildContext ctx, RatingsPageModel model) {
+  Widget _buildLeaveReviewButton(BuildContext context, RatingsPageModel model) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 36),
       child: FFButtonWidget(
-        onPressed: () => _buildRatingModal(ctx, model),
+        key: const Key('leaveReviewButton'),
+        onPressed: () => _buildRatingModal(context, model),
         text: 'Rate this venue',
         showLoadingIndicator: false,
         options: FFButtonOptions(
@@ -270,9 +275,9 @@ class RatingsPage extends StatelessWidget {
           height: 60,
           padding: const EdgeInsetsDirectional.all(0),
           color: MobileTheme.successColor,
-          splashColor: Theme.of(ctx).colorScheme.surfaceDim,
+          splashColor: Theme.of(context).colorScheme.surfaceDim,
           textStyle: TextStyle(
-            color: Theme.of(ctx).colorScheme.onSurface,
+            color: Theme.of(context).colorScheme.onSurface,
             fontSize: 16,
           ),
           elevation: 3,
@@ -282,16 +287,22 @@ class RatingsPage extends StatelessWidget {
     );
   }
 
-  Future<dynamic>? _buildRatingModal(BuildContext ctx, RatingsPageModel model) {
+  Future<dynamic>? _buildRatingModal(
+    BuildContext context,
+    RatingsPageModel model,
+  ) {
     double rating = 0;
 
     if (userId == null) {
-      Toaster.displayError(ctx, 'Please log in to rate ${model.venue.name}');
+      Toaster.displayError(
+        context,
+        'Please log in to rate ${model.venue.name}',
+      );
       return null;
     }
 
     return showCupertinoModalPopup(
-      context: ctx,
+      context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
@@ -300,10 +311,11 @@ class RatingsPage extends StatelessWidget {
               child: SafeArea(
                 child: Padding(
                   padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(ctx).viewInsets.bottom,
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
                   child: Center(
                     child: Container(
+                      key: const Key('ratingModal'),
                       height: 216,
                       width: MediaQuery.sizeOf(context).width * 0.9,
                       decoration: BoxDecoration(
@@ -328,6 +340,7 @@ class RatingsPage extends StatelessWidget {
                                   });
                                 },
                                 itemBuilder: (context, index) => Icon(
+                                  key: Key('ratingStar_$index'),
                                   CupertinoIcons.star_fill,
                                   color: Theme.of(
                                     context,
@@ -373,10 +386,10 @@ class RatingsPage extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        buildModalButton('Cancel', () {
+        buildModalButton('cancelModalButton', 'Cancel', () {
           Navigator.of(context).pop();
         }, Theme.of(context).colorScheme.onPrimary),
-        buildModalButton('Rate', () {
+        buildModalButton('rateModalButton', 'Rate', () {
           if (rating == 0) {
             Toaster.displayError(
               context,
@@ -385,7 +398,12 @@ class RatingsPage extends StatelessWidget {
             return;
           }
 
-          model.rateVenue(userId!, rating, model.commentTextController.text);
+          model.rateVenue(
+            context,
+            userId!,
+            rating,
+            model.commentTextController.text,
+          );
           Navigator.of(context).pop();
         }, MobileTheme.successColor),
       ],
@@ -394,6 +412,7 @@ class RatingsPage extends StatelessWidget {
 
   Widget _buildCommentTextField(BuildContext context, RatingsPageModel model) {
     return TextFormField(
+      key: const Key('commentField'),
       controller: model.commentTextController,
       focusNode: model.commentFocusNode,
       autofocus: false,
@@ -425,17 +444,17 @@ class RatingsPage extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(8),
         ),
-        contentPadding: const EdgeInsetsDirectional.fromSTEB(24, 24, 0, 24),
+        contentPadding: const EdgeInsets.all(24),
       ),
       style: Theme.of(context).textTheme.bodyMedium,
       cursorColor: Theme.of(context).colorScheme.onPrimary,
     );
   }
 
-  Widget _buildContainer(BuildContext ctx, RatingsPageModel model) {
+  Widget _buildContainer(BuildContext context, RatingsPageModel model) {
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(color: Theme.of(ctx).colorScheme.onSurface),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface),
       child: Padding(
         padding: const EdgeInsets.only(
           left: 12,
@@ -452,11 +471,15 @@ class RatingsPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
+                  key: const Key('numberOfRatingsText'),
                   '${model.ratings?.length}',
-                  style: Theme.of(ctx).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 14),
-                Text('# of Ratings', style: Theme.of(ctx).textTheme.bodyMedium),
+                Text(
+                  '# of Ratings',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ],
             ),
             Column(
@@ -470,13 +493,15 @@ class RatingsPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
+                      key: const Key('averageRatingText'),
                       model.venue.rating.toStringAsFixed(2),
-                      style: Theme.of(ctx).textTheme.titleMedium,
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(width: 8),
                     const Padding(
                       padding: EdgeInsets.only(bottom: 2),
                       child: Icon(
+                        key: Key('averageRatingIcon'),
                         CupertinoIcons.star_fill,
                         color: MobileTheme.accent1,
                         size: 24,

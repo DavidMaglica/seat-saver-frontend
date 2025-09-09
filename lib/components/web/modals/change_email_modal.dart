@@ -59,9 +59,7 @@ class _ChangeEmailModalState extends State<ChangeEmailModal>
                       ),
                     ],
                   ),
-                ).animateOnPageLoad(
-                  model.animationsMap['modalOnLoad']!,
-                ),
+                ).animateOnPageLoad(model.animationsMap['modalOnLoad']!),
               ],
             ),
           );
@@ -119,7 +117,7 @@ class _ChangeEmailModalState extends State<ChangeEmailModal>
             style: Theme.of(context).textTheme.bodyLarge,
             maxLines: 1,
             minLines: 1,
-            keyboardType: TextInputType.emailAddress,
+            keyboardType: TextInputType.text,
             cursorColor: Theme.of(context).colorScheme.onPrimary,
           ),
         ),

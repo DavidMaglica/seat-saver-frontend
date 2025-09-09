@@ -12,12 +12,17 @@ import 'package:table_reserver/utils/animations.dart';
 class ReservationsGraphsPageModel extends ChangeNotifier {
   final int ownerId;
 
-  ReservationsGraphsPageModel({required this.ownerId});
+  final VenuesApi venuesApi;
+  final ReservationsApi reservationsApi;
 
-  final VenuesApi venuesApi = VenuesApi();
-  final ReservationsApi reservationsApi = ReservationsApi();
+  ReservationsGraphsPageModel({
+    required this.ownerId,
+    VenuesApi? venuesApi,
+    ReservationsApi? reservationsApi,
+  }) : venuesApi = venuesApi ?? VenuesApi(),
+       reservationsApi = reservationsApi ?? ReservationsApi();
 
-  int? selectedInterval = 30;
+  int? selectedInterval = null;
   Timer? _refreshTimer;
 
   final Map<String, AnimationInfo> animationsMap =

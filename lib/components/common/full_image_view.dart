@@ -8,10 +8,10 @@ class FullScreenImageView extends StatelessWidget {
   final String heroTag;
 
   const FullScreenImageView({
-    Key? key,
+    super.key,
     required this.imageBytes,
     required this.heroTag,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -21,6 +21,7 @@ class FullScreenImageView extends StatelessWidget {
       elevation: 0,
       leading: IconButton(
         icon: Icon(
+          key: const Key('fullImageViewCloseButton'),
           CupertinoIcons.xmark_circle_fill,
           color: Theme.of(context).colorScheme.onPrimary,
         ),

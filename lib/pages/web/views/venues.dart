@@ -8,7 +8,9 @@ import 'package:table_reserver/models/web/views/venues_model.dart';
 import 'package:table_reserver/themes/web_theme.dart';
 
 class WebVenuesPage extends StatefulWidget {
-  const WebVenuesPage({super.key});
+  final VenuesModel? modelOverride;
+
+  const WebVenuesPage({super.key, this.modelOverride});
 
   @override
   State<WebVenuesPage> createState() => _WebVenuesPageState();
@@ -26,7 +28,8 @@ class _WebVenuesPageState extends State<WebVenuesPage>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => VenuesModel()..loadData(),
+      create: (_) => widget.modelOverride ?? VenuesModel()
+        ..loadData(),
       child: Consumer<VenuesModel>(
         builder: (context, model, _) {
           return GestureDetector(
@@ -43,7 +46,10 @@ class _WebVenuesPageState extends State<WebVenuesPage>
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     const SideNav(),
-                    _buildPaginatedVenues(context, model).animateOnPageLoad(model.animationsMap['gridOnLoad']!),
+                    _buildPaginatedVenues(
+                      context,
+                      model,
+                    ).animateOnPageLoad(model.animationsMap['gridOnLoad']!),
                   ],
                 ),
               ),
@@ -54,13 +60,16 @@ class _WebVenuesPageState extends State<WebVenuesPage>
     );
   }
 
-  Expanded _buildPaginatedVenues(BuildContext context, VenuesModel model) {
+  Widget _buildPaginatedVenues(BuildContext context, VenuesModel model) {
     if (model.paginatedVenues.isEmpty) {
-      return  Expanded(
+      return Expanded(
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Text('No venues available', style: Theme.of(context).textTheme.titleLarge),
+            child: Text(
+              'No venues available',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
           ),
         ),
       );

@@ -5,9 +5,11 @@ import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/reservation_details.dart';
 import 'package:table_reserver/utils/logger.dart';
 
-final dio = setupDio();
-
 class ReservationsApi {
+  final Dio dio;
+
+  ReservationsApi({Dio? dio}) : dio = dio ?? setupDio();
+
   Future<List<ReservationDetails>> getUserReservations(int userId) async {
     try {
       Response response = await dio.get(ApiRoutes.userReservations(userId));

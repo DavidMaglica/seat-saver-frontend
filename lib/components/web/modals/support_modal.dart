@@ -70,9 +70,7 @@ class _SupportModalState extends State<SupportModal>
                       ),
                     ],
                   ),
-                ).animateOnPageLoad(
-                  model.animationsMap['modalOnLoad']!,
-                ),
+                ).animateOnPageLoad(model.animationsMap['modalOnLoad']!),
               ],
             ),
           );
@@ -116,7 +114,7 @@ class _SupportModalState extends State<SupportModal>
     );
   }
 
-  Padding _buildInputField(
+  Widget _buildInputField(
     BuildContext context,
     WebSupportModel model,
     TextEditingController controller,

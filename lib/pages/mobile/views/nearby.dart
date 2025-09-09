@@ -11,7 +11,7 @@ class Nearby extends StatefulWidget {
   final int? userId;
   final Position? userLocation;
 
-  const Nearby({Key? key, this.userId, this.userLocation}) : super(key: key);
+  const Nearby({super.key, this.userId, this.userLocation});
 
   @override
   State<Nearby> createState() => _NearbyState();

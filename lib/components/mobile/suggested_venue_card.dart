@@ -18,11 +18,11 @@ class VenueSuggestedCard extends StatefulWidget {
   final Position? userLocation;
 
   const VenueSuggestedCard({
-    Key? key,
+    super.key,
     required this.venue,
     this.userId,
     this.userLocation,
-  }) : super(key: key);
+  });
 
   @override
   State<VenueSuggestedCard> createState() => _VenueSuggestedCardState();
@@ -98,6 +98,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
         children: [
           Flexible(
             child: InkWell(
+              key: const Key('venueSuggestedCard'),
               splashColor: Colors.transparent,
               focusColor: Colors.transparent,
               hoverColor: Colors.transparent,
@@ -108,8 +109,11 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
               child: Column(
                 children: [
                   _buildImage(),
+                  const SizedBox(height: 8),
                   _buildNameAndType(widget.venue.name, _venueType),
+                  const SizedBox(height: 8),
                   _buildLocationAndAvailability(),
+                  const SizedBox(height: 8),
                   _buildRatingBarAndWorkingHours(widget.venue.rating),
                 ],
               ),
@@ -144,7 +148,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
     );
   }
 
-  Widget _buildFallbackImage(BuildContext ctx) {
+  Widget _buildFallbackImage(BuildContext context) {
     return Container(
       width: double.infinity,
       height: 110,
@@ -153,7 +157,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
       child: Text(
         widget.venue.name,
         style: Theme.of(
-          ctx,
+          context,
         ).textTheme.titleMedium?.copyWith(color: Colors.white),
         textAlign: TextAlign.center,
       ),
@@ -162,7 +166,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   Widget _buildNameAndType(String name, String type) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -194,7 +198,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
     );
 
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -236,7 +240,7 @@ class _VenueSuggestedCardState extends State<VenueSuggestedCard> {
 
   Widget _buildRatingBarAndWorkingHours(double rating) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,

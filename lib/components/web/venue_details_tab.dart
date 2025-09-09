@@ -100,35 +100,39 @@ class VenueDetailsTab extends StatelessWidget {
         _buildIconDetail(
           context,
           Icons.table_restaurant_outlined,
+          const Key('maxCapacityIcon'),
           'Maximum Capacity',
           model.loadedVenue.maximumCapacity.toString(),
         ),
         _buildIconDetail(
           context,
           Icons.event_available_outlined,
+          const Key('availableCapacityIcon'),
           'Available Capacity',
           model.loadedVenue.availableCapacity.toString(),
         ),
         _buildIconDetail(
           context,
           Icons.rsvp_outlined,
-          'Lifetime reservations',
+          const Key('lifetimeReservationsIcon'),
+          'Lifetime Reservations',
           model.lifetimeReservations.toString(),
         ),
       ],
     );
   }
 
-  Column _buildIconDetail(
+  Widget _buildIconDetail(
     BuildContext context,
     IconData icon,
+    Key iconKey,
     String label,
     String value,
   ) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        Icon(icon, color: WebTheme.accent1, size: 32),
+        Icon(key: iconKey, icon, color: WebTheme.accent1, size: 32),
         const SizedBox(height: 4),
         Text(value, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 4),

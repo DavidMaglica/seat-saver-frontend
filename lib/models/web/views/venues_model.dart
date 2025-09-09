@@ -8,11 +8,13 @@ import 'package:table_reserver/pages/web/views/venues.dart';
 import 'package:table_reserver/utils/animations.dart';
 
 class VenuesModel extends FlutterFlowModel<WebVenuesPage> with ChangeNotifier {
+  final VenuesApi venuesApi;
+
+  VenuesModel({VenuesApi? venuesApi}) : venuesApi = venuesApi ?? VenuesApi();
+
   final Map<String, AnimationInfo> animationsMap = Animations.venuesAnimations;
 
   final ScrollController scrollController = ScrollController();
-
-  final VenuesApi venuesApi = VenuesApi();
 
   int _currentPage = 0;
   final int _pageSize = 20;

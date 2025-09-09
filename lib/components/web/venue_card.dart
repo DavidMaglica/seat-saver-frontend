@@ -30,6 +30,7 @@ class _WebVenueCardState extends State<WebVenueCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      key: Key('venueCard'),
       splashColor: Colors.transparent,
       focusColor: Colors.transparent,
       hoverColor: Colors.transparent,
@@ -118,7 +119,7 @@ class _WebVenueCardState extends State<WebVenueCard> {
     );
   }
 
-  Widget _buildFallbackImage(BuildContext ctx) {
+  Widget _buildFallbackImage(BuildContext context) {
     return Expanded(
       child: Container(
         width: double.infinity,
@@ -131,7 +132,7 @@ class _WebVenueCardState extends State<WebVenueCard> {
         child: Text(
           widget.venue.name,
           style: Theme.of(
-            ctx,
+            context,
           ).textTheme.titleLarge?.copyWith(color: WebTheme.offWhite),
         ),
       ),

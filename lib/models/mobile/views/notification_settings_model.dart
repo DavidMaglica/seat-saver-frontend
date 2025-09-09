@@ -5,18 +5,18 @@ import 'package:table_reserver/api/data/notification_settings.dart';
 import 'package:table_reserver/themes/mobile_theme.dart';
 
 class NotificationSettingsModel extends ChangeNotifier {
-  final BuildContext context;
   final int userId;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final AccountApi accountApi = AccountApi();
+  final AccountApi accountApi;
 
   bool isActivePushNotifications = false;
   bool isActiveEmailNotifications = false;
   bool isActiveLocationServices = false;
 
-  NotificationSettingsModel({required this.context, required this.userId});
+  NotificationSettingsModel({required this.userId, AccountApi? accountApi})
+    : accountApi = accountApi ?? AccountApi();
 
   Future<void> loadNotificationSettings() async {
     NotificationOptions? response = await accountApi.getNotificationOptions(
@@ -46,7 +46,7 @@ class NotificationSettingsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveChanges() async {
+  Future<void> saveChanges(BuildContext context) async {
     BasicResponse response = await accountApi.updateUserNotificationOptions(
       userId,
       isActivePushNotifications,

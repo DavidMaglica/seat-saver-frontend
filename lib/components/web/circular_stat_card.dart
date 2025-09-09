@@ -11,12 +11,14 @@ class CircularStatCard extends StatelessWidget {
   final int? ratingCount;
   final double? utilisationRatio;
   final String? hint;
+  final Key? buttonKey;
 
   const CircularStatCard({
     super.key,
     required this.title,
     required this.description,
     required this.onPressed,
+    required this.buttonKey,
     this.rating,
     this.ratingCount,
     this.utilisationRatio,
@@ -84,6 +86,7 @@ class CircularStatCard extends StatelessWidget {
                   children: [
                     Text(title, style: Theme.of(context).textTheme.titleLarge),
                     FFButtonWidget(
+                      key: buttonKey,
                       text: 'View details',
                       onPressed: onPressed,
                       options: FFButtonOptions(

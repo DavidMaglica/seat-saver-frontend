@@ -48,15 +48,15 @@ class AuthenticationModel extends FlutterFlowModel<WebAuthentication> {
 
     if (ownerId != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-      currentAuthMethod = AuthenticationMethod.custom;
-      Navigator.push(
-        context,
-        FadeInRoute(
-          page: WebHomepage(ownerId: ownerId),
-          routeName: Routes.webHomepage,
-        ),
-      );
-    });
+        currentAuthMethod = AuthenticationMethod.custom;
+        Navigator.push(
+          context,
+          FadeInRoute(
+            page: WebHomepage(ownerId: ownerId),
+            routeName: Routes.webHomepage,
+          ),
+        );
+      });
     }
   }
 

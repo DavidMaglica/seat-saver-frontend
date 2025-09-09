@@ -1,11 +1,14 @@
+import 'package:dio/dio.dart';
 import 'package:table_reserver/api/common/api_routes.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/common/dio_setup.dart';
+import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/utils/logger.dart';
 
-final dio = setupDio();
-
 class SupportApi {
+  final Dio dio;
+
+  SupportApi({Dio? dio}) : dio = dio ?? setupDio();
+
   Future<BasicResponse> sendEmail(
     String userEmail,
     String subject,
@@ -24,10 +27,7 @@ class SupportApi {
       return BasicResponse.fromJson(response.data, (json) => json);
     } catch (e) {
       logger.e('Error sending email: $e');
-      return BasicResponse(
-        success: false,
-        message: 'Error sending email: $e',
-      );
+      return BasicResponse(success: false, message: 'Error sending email: $e');
     }
   }
 }

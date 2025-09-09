@@ -13,8 +13,8 @@ class PagedResponse<T> {
     required this.totalPages,
   });
 
-  factory PagedResponse.fromJson(
-      Map<String, dynamic> json, T Function(dynamic) fromJsonT) {
+  factory PagedResponse.fromJson(Map<String, dynamic> json,
+      T Function(dynamic) fromJsonT,) {
     return PagedResponse<T>(
       content: (json['content'] as List).map(fromJsonT).toList(),
       page: json['page'],

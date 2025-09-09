@@ -73,17 +73,17 @@ class _DeleteModalState extends State<DeleteModal>
                         context,
                         widget.modalType == DeleteModalType.venue
                             ? () => model.deleteVenue(context, widget.venueId!)
-                            : () =>
-                                  model.deleteReservation(context, widget.reservationId!),
+                            : () => model.deleteReservation(
+                                context,
+                                widget.reservationId!,
+                              ),
                         widget.modalType == DeleteModalType.venue
                             ? 'Delete Venue'
                             : 'Delete Reservation',
                       ),
                     ].divide(const SizedBox(height: 16)),
                   ),
-                ).animateOnPageLoad(
-                  model.animationsMap['modalOnLoad']!,
-                ),
+                ).animateOnPageLoad(model.animationsMap['modalOnLoad']!),
               ],
             ),
           );
@@ -94,7 +94,7 @@ class _DeleteModalState extends State<DeleteModal>
 
   Padding _buildBody(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
+      padding: const EdgeInsets.only(left: 24),
       child: widget.modalType == DeleteModalType.venue
           ? Text(
               'Are you sure you want to delete venue ${widget.venueName}?',

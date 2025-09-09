@@ -72,6 +72,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
             mainAxisSize: MainAxisSize.max,
             children: [
               _buildInputField(
+                key: const Key('venueNameField'),
                 context: context,
                 label: 'Venue Name *',
                 controller: widget.model.nameTextController,
@@ -79,6 +80,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
                 errorText: widget.model.nameErrorText,
               ),
               _buildInputField(
+                key: const Key('venueLocationField'),
                 context: context,
                 label: 'Venue Location (City, Street) *',
                 controller: widget.model.locationTextController,
@@ -91,6 +93,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
             mainAxisSize: MainAxisSize.max,
             children: [
               _buildInputField(
+                key: const Key('maxCapacityField'),
                 context: context,
                 label: 'Maximum Capacity *',
                 controller: widget.model.maxCapacityTextController,
@@ -124,6 +127,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
             mainAxisSize: MainAxisSize.max,
             children: [
               _buildInputField(
+                key: const Key('venueDescriptionField'),
                 context: context,
                 label: 'Venue Description',
                 controller: widget.model.descriptionTextController,
@@ -152,6 +156,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
     required String label,
     required TextEditingController controller,
     required FocusNode focusNode,
+    required Key key,
     String? errorText,
     TextInputType? keyboardType,
     List<TextInputFormatter>? inputFormatters,
@@ -160,6 +165,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
     double? fixedWidth,
   }) {
     final inputField = TextFormField(
+      key: key,
       controller: controller,
       focusNode: focusNode,
       keyboardType: keyboardType,
@@ -214,6 +220,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         FlutterFlowDropDown<String>(
+          key: const Key('venueTypeDropdown'),
           controller: widget.model.dropDownValueController,
           options: widget.model.venueTypeMap.keys
               .map((id) => id.toString())
@@ -270,6 +277,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
     return SizedBox(
       width: 470,
       child: TextFormField(
+        key: const Key('workingHoursField'),
         controller: model.workingHoursTextController,
         focusNode: model.workingHoursFocusNode,
         decoration: InputDecoration(
@@ -323,6 +331,7 @@ class _CreateVenueModalState extends State<CreateVenueModal>
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: FilterChip(
+                key: Key('dayChip_$day'),
                 selectedColor: WebTheme.successColor,
                 backgroundColor: Theme.of(context).colorScheme.outline,
                 labelStyle: isSelected

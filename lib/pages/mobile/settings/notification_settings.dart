@@ -9,19 +9,19 @@ import 'package:table_reserver/utils/routes.dart';
 
 class NotificationSettings extends StatelessWidget {
   final int userId;
+  final NotificationSettingsModel? modelOverride;
 
   const NotificationSettings({
-    Key? key,
+    super.key,
     required this.userId,
-  }) : super(key: key);
+    this.modelOverride,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<NotificationSettingsModel>(
-      create: (_) => NotificationSettingsModel(
-        context: context,
-        userId: userId,
-      )..loadNotificationSettings(),
+      create: (_) => modelOverride ?? NotificationSettingsModel(userId: userId)
+        ..loadNotificationSettings(),
       builder: (context, _) {
         final model = context.watch<NotificationSettingsModel>();
 
@@ -33,7 +33,9 @@ class NotificationSettings extends StatelessWidget {
             onBack: () {
               Navigator.of(context).push(
                 MobileFadeInRoute(
-                    page: const Account(), routeName: Routes.account),
+                  page: const Account(),
+                  routeName: Routes.account,
+                ),
               );
             },
           ),
@@ -42,10 +44,12 @@ class NotificationSettings extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
+                  const SizedBox(height: 24),
                   _buildDescriptionText(context),
                   const SizedBox(height: 12),
                   _buildSwitchTile(
                     context: context,
+                    key: 'pushNotificationsSwitch',
                     title: 'Push Notifications',
                     subtitle: 'Receive app updates via push notifications.',
                     value: model.isActivePushNotifications,
@@ -54,6 +58,7 @@ class NotificationSettings extends StatelessWidget {
                   _buildDivider(context),
                   _buildSwitchTile(
                     context: context,
+                    key: 'emailNotificationsSwitch',
                     title: 'Email Notifications',
                     subtitle: 'Get email updates from our marketing team.',
                     value: model.isActiveEmailNotifications,
@@ -62,15 +67,18 @@ class NotificationSettings extends StatelessWidget {
                   _buildDivider(context),
                   _buildSwitchTile(
                     context: context,
+                    key: 'locationServicesSwitch',
                     title: 'Location Services',
                     subtitle:
                         'Allow us to track your location for better services.',
                     value: model.isActiveLocationServices,
                     onChanged: model.toggleLocationServices,
                   ),
+                  const SizedBox(height: 24),
                   ActionButton(
+                    keyName: 'saveChangesButton',
                     title: 'Save Changes',
-                    onPressed: model.saveChanges,
+                    onPressed: () => model.saveChanges(context),
                   ),
                 ],
               ),
@@ -81,15 +89,16 @@ class NotificationSettings extends StatelessWidget {
     );
   }
 
-  Widget _buildDescriptionText(BuildContext ctx) {
+  Widget _buildDescriptionText(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 12, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
           Expanded(
             child: Text(
+              key: const Key('descriptionText'),
               'Choose what notifications you want to receive below and we will update the settings.',
-              style: Theme.of(ctx).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
         ],
@@ -97,11 +106,11 @@ class NotificationSettings extends StatelessWidget {
     );
   }
 
-  Widget _buildDivider(BuildContext ctx) {
+  Widget _buildDivider(BuildContext context) {
     return Divider(
       height: 1,
       thickness: 1,
-      color: Theme.of(ctx).colorScheme.onPrimary,
+      color: Theme.of(context).colorScheme.onPrimary,
       indent: 12,
       endIndent: 12,
     );
@@ -109,12 +118,14 @@ class NotificationSettings extends StatelessWidget {
 
   Widget _buildSwitchTile({
     required BuildContext context,
+    required String key,
     required String title,
     required String subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
     return SwitchListTile.adaptive(
+      key: Key(key),
       value: value,
       onChanged: onChanged,
       title: Text(title, style: Theme.of(context).textTheme.titleMedium),

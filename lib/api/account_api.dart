@@ -9,9 +9,11 @@ import 'package:table_reserver/api/data/user_location.dart';
 import 'package:table_reserver/api/data/user_response.dart';
 import 'package:table_reserver/utils/logger.dart';
 
-final dio = setupDio();
-
 class AccountApi {
+  final Dio dio;
+
+  AccountApi({Dio? dio}) : dio = dio ?? setupDio();
+
   Future<UserResponse?> getUser(int userId) async {
     try {
       Response response = await dio.get(ApiRoutes.userById(userId));
@@ -77,7 +79,7 @@ class AccountApi {
       if (userId == null) {
         return BasicResponse(
           success: false,
-          message: 'Sign up failed. Please try again.',
+          message: response.data['message'],
         );
       }
 

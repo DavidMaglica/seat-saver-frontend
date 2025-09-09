@@ -24,22 +24,20 @@ class ReviewsTab extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                _buildOverall(context).animateOnPageLoad(
-                  model.animationsMap['fadeInOnLoad']!,
-                ),
+                _buildOverall(
+                  context,
+                ).animateOnPageLoad(model.animationsMap['fadeInOnLoad']!),
                 const SizedBox(height: 8),
                 Divider(
                   thickness: 1,
                   indent: 16,
                   endIndent: 16,
                   color: Theme.of(context).colorScheme.onPrimary,
-                ).animateOnPageLoad(
-                  model.animationsMap['fadeInOnLoad']!,
-                ),
+                ).animateOnPageLoad(model.animationsMap['fadeInOnLoad']!),
                 const SizedBox(height: 8),
-                _buildReviews(context).animateOnPageLoad(
-                  model.animationsMap['fadeMoveUpOnLoad']!,
-                ),
+                _buildReviews(
+                  context,
+                ).animateOnPageLoad(model.animationsMap['fadeMoveUpOnLoad']!),
               ],
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:table_reserver/themes/mobile_theme.dart';
 
 /// A utility class for displaying toast-style messages using Flutter's [SnackBar].
 ///
@@ -23,14 +24,14 @@ class Toaster {
   /// This method ensures any currently visible snack bar is hidden
   /// before showing a new one.
   ///
-  /// - [ctx]: The current [BuildContext].
+  /// - [context]: The current [BuildContext].
   /// - [text]: The message to display.
   /// - [colour]: The background color of the [SnackBar].
-  static void display(BuildContext ctx, String text, Color colour) {
-    ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
-    ScaffoldMessenger.of(ctx).showSnackBar(
+  static void display(BuildContext context, String text, Color colour) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(text),
+        content: Text(text, style: TextStyle(color: MobileTheme.offWhite)),
         elevation: 3,
         backgroundColor: colour,
         duration: const Duration(seconds: 2),
@@ -39,22 +40,22 @@ class Toaster {
   }
 
   /// Displays a success message using [successColor].
-  static void displaySuccess(BuildContext ctx, String text) {
-    display(ctx, text, successColor);
+  static void displaySuccess(BuildContext context, String text) {
+    display(context, text, successColor);
   }
 
   /// Displays an informational message using [infoColor].
-  static void displayInfo(BuildContext ctx, String text) {
-    display(ctx, text, infoColor);
+  static void displayInfo(BuildContext context, String text) {
+    display(context, text, infoColor);
   }
 
   /// Displays a warning message using [warningColor].
-  static void displayWarning(BuildContext ctx, String text) {
-    display(ctx, text, warningColor);
+  static void displayWarning(BuildContext context, String text) {
+    display(context, text, warningColor);
   }
 
   /// Displays an error message using [errorColor].
-  static void displayError(BuildContext ctx, String text) {
-    display(ctx, text, errorColor);
+  static void displayError(BuildContext context, String text) {
+    display(context, text, errorColor);
   }
 }

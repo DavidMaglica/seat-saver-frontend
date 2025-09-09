@@ -59,9 +59,7 @@ class _ChangeUsernameModalState extends State<ChangeUsernameModal>
                       ),
                     ],
                   ),
-                ).animateOnPageLoad(
-                  model.animationsMap['modalOnLoad']!,
-                ),
+                ).animateOnPageLoad(model.animationsMap['modalOnLoad']!),
               ],
             ),
           );

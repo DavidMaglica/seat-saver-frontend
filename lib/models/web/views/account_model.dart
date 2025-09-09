@@ -17,8 +17,12 @@ class AccountModel extends FlutterFlowModel<WebAccount> with ChangeNotifier {
 
   int get ownerId => sharedPreferencesCache.getInt('ownerId')!;
 
-  ReservationsApi reservationsApi = ReservationsApi();
-  VenuesApi venuesApi = VenuesApi();
+  ReservationsApi reservationsApi;
+  VenuesApi venuesApi;
+
+  AccountModel({ReservationsApi? reservationsApi, VenuesApi? venuesApi})
+    : reservationsApi = reservationsApi ?? ReservationsApi(),
+      venuesApi = venuesApi ?? VenuesApi();
 
   final Map<String, AnimationInfo> animationsMap = Animations.accountAnimations;
 

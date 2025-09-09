@@ -5,23 +5,28 @@ import 'package:table_reserver/api/venue_api.dart';
 import 'package:table_reserver/utils/toaster.dart';
 
 class ReservationHistoryModel extends ChangeNotifier {
-  final BuildContext context;
   final int userId;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final ReservationsApi reservationsApi = ReservationsApi();
-  final VenuesApi venuesApi = VenuesApi();
+  final ReservationsApi reservationsApi;
+  final VenuesApi venuesApi;
 
   List<ReservationDetails>? reservations;
   final Map<int, String> _venueNameCache = {};
 
-  ReservationHistoryModel({required this.context, required this.userId});
+  ReservationHistoryModel({
+    required this.userId,
+    ReservationsApi? reservationsApi,
+    VenuesApi? venuesApi,
+  })
+      : reservationsApi = reservationsApi ?? ReservationsApi(),
+        venuesApi = venuesApi ?? VenuesApi();
 
-  void init() {
-    _loadReservationsFromApi();
+  void init(BuildContext context,) {
+    _loadReservationsFromApi(context);
   }
 
-  Future<void> _loadReservationsFromApi() async {
+  Future<void> _loadReservationsFromApi(BuildContext context,) async {
     List<ReservationDetails> response = await reservationsApi
         .getUserReservations(userId);
 
@@ -29,7 +34,7 @@ class ReservationHistoryModel extends ChangeNotifier {
       reservations = response;
 
       for (var reservation in reservations!) {
-        _fetchVenueName(reservation.venueId);
+        _fetchVenueName(context, reservation.venueId);
       }
     } else {
       reservations = [];
@@ -38,7 +43,8 @@ class ReservationHistoryModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteReservation(int reservationId) async {
+  Future<void> deleteReservation(BuildContext context,
+      int reservationId,) async {
     final response = await reservationsApi.deleteReservation(reservationId);
 
     if (response.success) {
@@ -59,7 +65,7 @@ class ReservationHistoryModel extends ChangeNotifier {
     return _venueNameCache[venueId] ?? 'Loading...';
   }
 
-  Future<void> _fetchVenueName(int venueId) async {
+  Future<void> _fetchVenueName(BuildContext context, int venueId) async {
     if (_venueNameCache.containsKey(venueId)) return;
 
     final venue = await venuesApi.getVenue(venueId);

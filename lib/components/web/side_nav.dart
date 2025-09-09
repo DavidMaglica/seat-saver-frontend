@@ -108,13 +108,13 @@ class _SideNavState extends State<SideNav> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                model.userEmail,
+                model.ownerEmail,
                 style: Theme.of(
                   context,
                 ).textTheme.titleMedium?.copyWith(fontStyle: FontStyle.italic),
               ),
               Text(
-                model.userName,
+                model.ownerName,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
@@ -143,7 +143,7 @@ class _SideNavState extends State<SideNav> {
           _buildVenuesButton(context, route, model),
           _buildReservationsButton(context, route, model),
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
+            padding: const EdgeInsets.only(left: 16, top: 12),
             child: Text(
               'Settings',
               style: Theme.of(context).textTheme.titleMedium,
@@ -187,7 +187,7 @@ class _SideNavState extends State<SideNav> {
               shape: BoxShape.rectangle,
             ),
             child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 6, 0),
+              padding: const EdgeInsets.only(left: 8, right: 6),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -217,13 +217,13 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Padding _buildVenuesButton(
+  Widget _buildVenuesButton(
     BuildContext context,
     String? route,
     SideNavModel model,
   ) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: InkWell(
         splashColor: Colors.transparent,
         focusColor: Colors.transparent,
@@ -276,14 +276,15 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Padding _buildReservationsButton(
+  Widget _buildReservationsButton(
     BuildContext context,
     String? route,
     SideNavModel model,
   ) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: InkWell(
+        key: const Key('reservationsNavButton'),
         splashColor: Colors.transparent,
         focusColor: Colors.transparent,
         hoverColor: Colors.transparent,
@@ -338,13 +339,13 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Padding _buildAccountButton(
+  Widget _buildAccountButton(
     BuildContext context,
     String? route,
     SideNavModel model,
   ) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: InkWell(
         splashColor: Colors.transparent,
         focusColor: Colors.transparent,
@@ -399,36 +400,33 @@ class _SideNavState extends State<SideNav> {
   Widget _buildModeToggles(BuildContext context, SideNavModel model) {
     return Align(
       alignment: const AlignmentDirectional(0, -1),
-      child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 16),
-        child: Container(
-          width: 250,
-          height: 50,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.outline,
-              width: 1,
-            ),
+      child: Container(
+        width: 250,
+        height: 50,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.outline,
+            width: 1,
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(4),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                _buildLightModeButton(context, model),
-                _buildDarkModeButton(context, model),
-              ],
-            ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              _buildLightModeButton(context, model),
+              _buildDarkModeButton(context, model),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Expanded _buildLightModeButton(BuildContext context, SideNavModel model) {
+  Widget _buildLightModeButton(BuildContext context, SideNavModel model) {
     return Expanded(
       child: InkWell(
         splashColor: Colors.transparent,
@@ -475,7 +473,7 @@ class _SideNavState extends State<SideNav> {
     );
   }
 
-  Expanded _buildDarkModeButton(BuildContext context, SideNavModel model) {
+  Widget _buildDarkModeButton(BuildContext context, SideNavModel model) {
     return Expanded(
       child: InkWell(
         splashColor: Colors.transparent,

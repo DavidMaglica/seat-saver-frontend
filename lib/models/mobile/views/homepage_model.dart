@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'
-    show ScaffoldState, ScaffoldMessenger, Colors, Theme, showModalBottomSheet;
+    show ScaffoldState, Colors, Theme, showModalBottomSheet;
 import 'package:flutter/scheduler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/api/account_api.dart';
@@ -20,13 +20,29 @@ import 'package:table_reserver/components/mobile/location_permission.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/pages/mobile/views/venues_by_type.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
+import 'package:table_reserver/utils/logger.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/utils.dart';
 
 class HomepageModel extends ChangeNotifier {
-  final BuildContext context;
   final int? userId;
   Position? userLocation;
+
+  final AccountApi accountApi;
+  final GeolocationApi geolocationApi;
+  final VenuesApi venuesApi;
+  final GoogleApi googleApi = GoogleApi();
+
+  HomepageModel({
+    this.userId,
+    this.userLocation,
+    AccountApi? accountApi,
+    GeolocationApi? geolocationApi,
+    VenuesApi? venuesApi,
+    GoogleApi? googleApi,
+  }) : accountApi = accountApi ?? AccountApi(),
+       geolocationApi = geolocationApi ?? GeolocationApi(),
+       venuesApi = venuesApi ?? VenuesApi();
 
   final unfocusNode = FocusNode();
 
@@ -46,18 +62,11 @@ class HomepageModel extends ChangeNotifier {
   Position? currentUserLocation;
   User? loggedInUser;
 
-  final AccountApi accountApi = AccountApi();
-  final GeolocationApi geolocationApi = GeolocationApi();
-  final VenuesApi venuesApi = VenuesApi();
-  final GoogleApi googleApi = GoogleApi();
-
-  HomepageModel({required this.context, this.userId, this.userLocation});
-
-  Future<void> init() async {
+  Future<void> init(BuildContext context) async {
     await checkLogIn();
 
     if (locationPopUpCounter < 1) {
-      await displayLocationPermissionPopUp();
+      await displayLocationPermissionPopUp(context);
     }
 
     if (userId != null) {
@@ -65,9 +74,15 @@ class HomepageModel extends ChangeNotifier {
         userId!,
       );
       if (options != null && options.isLocationServicesEnabled) {
-        userLocation = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best,
-        );
+        const bool useFakePermissions = bool.fromEnvironment(
+            'FAKE_PERMISSIONS');
+        if (useFakePermissions) {
+          userLocation = await getTestPosition();
+        } else {
+          userLocation = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best,
+          );
+        }
         if (userLocation != null) {
           await sharedPreferencesCache.setString(
             'lastKnownLocation',
@@ -93,7 +108,6 @@ class HomepageModel extends ChangeNotifier {
   @override
   void dispose() {
     unfocusNode.dispose();
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     super.dispose();
   }
 
@@ -133,7 +147,7 @@ class HomepageModel extends ChangeNotifier {
         loggedInUser!.notificationOptions!.isLocationServicesEnabled == true;
   }
 
-  Future<void> displayLocationPermissionPopUp() async {
+  Future<void> displayLocationPermissionPopUp(BuildContext context) async {
     if (userId != null) {
       locationPopUpCounter++;
       bool isLocationServicesTurnedOn = false;
@@ -146,10 +160,10 @@ class HomepageModel extends ChangeNotifier {
       }
 
       if (!isLocationServicesTurnedOn) {
-        _openPopUp(userId!);
+        _openPopUp(context, userId!);
       } else {
         if (userLocation == null) {
-          _openPopUp(userId!);
+          _openPopUp(context, userId!);
         }
       }
     }
@@ -193,7 +207,8 @@ class HomepageModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void openNearbyVenues() {
+  void openNearbyVenues(BuildContext context) {
+    logger.i('Opening nearby venues');
     Navigator.of(context).push(
       MobileFadeInRoute(
         page: const VenuesByType(type: 'nearby'),
@@ -205,7 +220,8 @@ class HomepageModel extends ChangeNotifier {
     return;
   }
 
-  void openNewVenues() {
+  void openNewVenues(BuildContext context) {
+    logger.i('Opening nearby venues');
     Navigator.of(context).push(
       MobileFadeInRoute(
         page: const VenuesByType(type: 'new'),
@@ -217,7 +233,8 @@ class HomepageModel extends ChangeNotifier {
     return;
   }
 
-  void openTrendingVenues() {
+  void openTrendingVenues(BuildContext context) {
+    logger.i('Opening nearby venues');
     Navigator.of(context).push(
       MobileFadeInRoute(
         page: const VenuesByType(type: 'trending'),
@@ -229,7 +246,8 @@ class HomepageModel extends ChangeNotifier {
     return;
   }
 
-  void openSuggestedVenues() {
+  void openSuggestedVenues(BuildContext context) {
+    logger.i('Opening nearby venues');
     Navigator.of(context).push(
       MobileFadeInRoute(
         page: const VenuesByType(type: 'suggested'),
@@ -241,7 +259,7 @@ class HomepageModel extends ChangeNotifier {
     return;
   }
 
-  void _openPopUp(int userId) {
+  void _openPopUp(BuildContext context, int userId) {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await showModalBottomSheet(
         isScrollControlled: true,

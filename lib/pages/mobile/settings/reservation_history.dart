@@ -13,14 +13,19 @@ import 'package:table_reserver/utils/routes.dart';
 
 class ReservationHistory extends StatelessWidget {
   final int userId;
+  final ReservationHistoryModel? modelOverride;
 
-  const ReservationHistory({Key? key, required this.userId}) : super(key: key);
+  const ReservationHistory({
+    super.key,
+    required this.userId,
+    this.modelOverride,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) =>
-          ReservationHistoryModel(context: context, userId: userId)..init(),
+      create: (_) => modelOverride ?? ReservationHistoryModel(userId: userId)
+        ..init(context),
       child: Builder(
         builder: (context) {
           final model = context.watch<ReservationHistoryModel>();
@@ -73,8 +78,7 @@ class ReservationHistory extends StatelessWidget {
     );
   }
 
-  Padding _buildReservationHistory(
-    BuildContext ctx,
+  Widget _buildReservationHistory(BuildContext context,
     ReservationHistoryModel model,
   ) {
     return Padding(
@@ -84,14 +88,17 @@ class ReservationHistory extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: Text(
                 'No Reservation History',
-                style: Theme.of(ctx).textTheme.titleMedium,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
             )
-          : _buildReservation(ctx, model),
+          : _buildReservation(context, model),
     );
   }
 
-  Widget _buildReservation(BuildContext ctx, ReservationHistoryModel model) {
+  Widget _buildReservation(
+    BuildContext context,
+    ReservationHistoryModel model,
+  ) {
     return Column(
       children: model.reservations!.asMap().entries.map((entry) {
         int index = entry.key;
@@ -100,8 +107,12 @@ class ReservationHistory extends StatelessWidget {
         return Column(
           children: [
             InkWell(
-              onTap: () =>
-                  _openReservationDetailsBottomSheet(ctx, model, reservation),
+              key: const Key('reservationEntryButton'),
+              onTap: () => _openReservationDetailsBottomSheet(
+                context,
+                model,
+                reservation,
+              ),
               child: Padding(
                 padding: const EdgeInsetsDirectional.all(12),
                 child: Row(
@@ -109,24 +120,25 @@ class ReservationHistory extends StatelessWidget {
                   children: [
                     Text(
                       model.getVenueName(reservation.venueId),
-                      style: Theme.of(ctx).textTheme.titleMedium,
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                     Row(
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 8),
                           child: Text(
+                            key: const Key('viewDetailsText'),
                             'view details',
-                            style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(
-                                ctx,
-                              ).colorScheme.onPrimary.withValues(alpha: 0.6),
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.onPrimary
+                                      .withValues(alpha: 0.6),
+                                ),
                           ),
                         ),
                         Icon(
                           CupertinoIcons.chevron_right,
-                          color: Theme.of(ctx).colorScheme.onPrimary,
+                          color: Theme.of(context).colorScheme.onPrimary,
                           size: 14,
                         ),
                       ],
@@ -135,41 +147,45 @@ class ReservationHistory extends StatelessWidget {
                 ),
               ),
             ),
-            if (index < model.reservations!.length - 1) _buildDivider(ctx),
+            if (index < model.reservations!.length - 1) _buildDivider(context),
           ],
         );
       }).toList(),
     );
   }
 
-  Widget _buildDivider(BuildContext ctx) {
+  Widget _buildDivider(BuildContext context) {
     return Divider(
       height: 1,
       thickness: 0.5,
-      color: Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.5),
+      color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.5),
     );
   }
 
-  void _openReservationDetailsBottomSheet(
-    BuildContext ctx,
+  void _openReservationDetailsBottomSheet(BuildContext context,
     ReservationHistoryModel model,
     ReservationDetails reservation,
   ) {
     final String venueName = model.getVenueName(reservation.venueId);
 
     showModalBottomSheet(
-      context: ctx,
+      context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (context) {
         return Padding(
+          key: const Key('reservationDetailModal'),
           padding: modalPadding(context),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              buildModalTitle(context, 'Reservation Detail'),
+              buildModalTitle(
+                context,
+                'reservationDetailModalTitle',
+                'Reservation Detail',
+              ),
               const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -209,13 +225,15 @@ class ReservationHistory extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   buildModalButton(
+                    'cancelModalButton',
                     'Cancel',
                     () => Navigator.pop(context),
                     Theme.of(context).colorScheme.onPrimary,
                   ),
                   buildModalButton(
+                    'deleteModalButton',
                     'Delete',
-                    () => model.deleteReservation(reservation.id),
+                    () => model.deleteReservation(context, reservation.id),
                     MobileTheme.errorColor,
                   ),
                 ],
@@ -228,14 +246,22 @@ class ReservationHistory extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(BuildContext ctx, String label, String value) {
+  Widget _buildDetailRow(BuildContext context, String label, String value) {
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: Theme.of(ctx).textTheme.titleSmall),
-          Text(value, style: Theme.of(ctx).textTheme.bodyMedium),
+          Text(label, style: Theme.of(context).textTheme.titleSmall),
+          Expanded(
+            child: Text(
+              value,
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.end,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+            ),
+          ),
         ],
       ),
     );

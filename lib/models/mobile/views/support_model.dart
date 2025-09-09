@@ -8,13 +8,12 @@ import 'package:table_reserver/utils/toaster.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SupportModel extends ChangeNotifier {
-  final BuildContext context;
   final int userId;
   final Position? position;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final SupportApi emailSender = SupportApi();
-  final AccountApi accountApi = AccountApi();
+  final SupportApi supportApi;
+  final AccountApi accountApi;
 
   final FocusNode unfocusNode = FocusNode();
   final FocusNode ticketTitleFocusNode = FocusNode();
@@ -26,13 +25,19 @@ class SupportModel extends ChangeNotifier {
 
   late User loggedInUser;
 
-  SupportModel({required this.context, required this.userId, this.position});
+  SupportModel({
+    required this.userId,
+    this.position,
+    SupportApi? supportApi,
+    AccountApi? accountApi,
+  }) : supportApi = supportApi ?? SupportApi(),
+       accountApi = accountApi ?? AccountApi();
 
-  void init() {
-    _getUser();
+  void init(BuildContext context) {
+    _getUser(context);
   }
 
-  Future<void> _getUser() async {
+  Future<void> _getUser(BuildContext context) async {
     final response = await accountApi.getUser(userId);
     if (response != null && response.success && response.user != null) {
       loggedInUser = response.user!;
@@ -54,7 +59,7 @@ class SupportModel extends ChangeNotifier {
     super.dispose();
   }
 
-  Future<void> openFAQs() async {
+  Future<void> openFAQs(BuildContext context) async {
     final Uri url = Uri.parse('https://flutter.dev');
     try {
       if (!await canLaunchUrl(url)) {
@@ -74,7 +79,7 @@ class SupportModel extends ChangeNotifier {
     }
   }
 
-  Future<void> submitTicket() async {
+  Future<void> submitTicket(BuildContext context) async {
     final subject = ticketTitleController.text;
     final body = ticketDescriptionController.text;
 
@@ -83,7 +88,7 @@ class SupportModel extends ChangeNotifier {
       return;
     }
 
-    BasicResponse response = await emailSender.sendEmail(
+    BasicResponse response = await supportApi.sendEmail(
       loggedInUser.email,
       subject,
       body,
@@ -93,6 +98,9 @@ class SupportModel extends ChangeNotifier {
       if (!context.mounted) return;
       Toaster.displayError(context, response.message);
       return;
+    } else {
+      if (!context.mounted) return;
+      Toaster.displaySuccess(context, 'Support ticket submitted successfully.');
     }
 
     ticketTitleController.clear();

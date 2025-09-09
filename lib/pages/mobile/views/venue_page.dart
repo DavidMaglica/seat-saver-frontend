@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:table_reserver/components/common/full_image_view.dart';
@@ -19,14 +18,14 @@ import 'package:table_reserver/utils/utils.dart';
 class VenuePage extends StatelessWidget {
   final int venueId;
   final int? userId;
-  final Position? userLocation;
+  final VenuePageModel? modelOverride;
 
   const VenuePage({
-    Key? key,
+    super.key,
     required this.venueId,
     this.userId,
-    this.userLocation,
-  }) : super(key: key);
+    this.modelOverride,
+  });
 
   Function() goBack(BuildContext context) {
     return () => Navigator.of(context).pop();
@@ -35,12 +34,9 @@ class VenuePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => VenuePageModel(
-        ctx: context,
-        venueId: venueId,
-        userId: userId,
-        userLocation: userLocation,
-      )..init(),
+      create: (_) =>
+          modelOverride ?? VenuePageModel(venueId: venueId, userId: userId)
+            ..init(context),
       child: Consumer<VenuePageModel>(
         builder: (context, model, _) {
           return GestureDetector(
@@ -61,7 +57,7 @@ class VenuePage extends StatelessWidget {
                       children: [
                         RefreshIndicator(
                           onRefresh: () async {
-                            await model.init();
+                            await model.init(context);
                           },
                           elevation: 3,
                           child: SingleChildScrollView(
@@ -95,18 +91,19 @@ class VenuePage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeadingImage(BuildContext ctx, VenuePageModel model) {
+  Widget _buildHeadingImage(BuildContext context, VenuePageModel model) {
     final bool hasImage =
         model.venueHeadingImage != null && model.venueHeadingImage!.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.only(right: 16),
       child: InkWell(
+        key: const Key('headerImage'),
         onTap: () {
           if (!hasImage) return;
 
-          ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
-          Navigator.of(ctx).push(
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => FullScreenImageView(
                 imageBytes: model.venueHeadingImage!,
@@ -132,7 +129,7 @@ class VenuePage extends StatelessWidget {
                   child: Text(
                     model.venue.name,
                     style: Theme.of(
-                      ctx,
+                      context,
                     ).textTheme.titleLarge?.copyWith(color: Colors.white),
                   ),
                 ),
@@ -141,7 +138,7 @@ class VenuePage extends StatelessWidget {
     );
   }
 
-  Widget _buildObjectDetails(BuildContext ctx, VenuePageModel model) {
+  Widget _buildObjectDetails(BuildContext context, VenuePageModel model) {
     return Padding(
       padding: const EdgeInsets.only(left: 24, top: 12),
       child: Column(
@@ -149,32 +146,33 @@ class VenuePage extends StatelessWidget {
         children: [
           Text(
             model.venue.name.toUpperCase(),
-            style: Theme.of(ctx).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 8),
-          _buildVenueType(ctx, model),
+          _buildVenueType(context, model),
           const SizedBox(height: 8),
-          _buildVenueLocation(ctx, model),
+          _buildVenueLocation(context, model),
           const SizedBox(height: 8),
-          _buildAvailability(ctx, model),
+          _buildAvailability(context, model),
           const SizedBox(height: 8),
-          _buildVenueHours(ctx, model),
+          _buildVenueHours(context, model),
           const SizedBox(height: 8),
-          _buildVenueDays(ctx, model),
+          _buildVenueDays(context, model),
           const SizedBox(height: 8),
-          _buildVenueRating(ctx, model),
+          _buildVenueRating(context, model),
           const SizedBox(height: 8),
-          _buildViewRatingsButton(ctx, model),
-          _buildVenueDescription(ctx, model),
+          _buildViewRatingsButton(context, model),
+          _buildVenueDescription(context, model),
         ],
       ),
     );
   }
 
-  Widget _buildViewRatingsButton(BuildContext ctx, VenuePageModel model) {
+  Widget _buildViewRatingsButton(BuildContext context, VenuePageModel model) {
     return FFButtonWidget(
+      key: const Key('viewRatingsButton'),
       onPressed: () {
-        Navigator.of(ctx).push(
+        Navigator.of(context).push(
           MobileFadeInRoute(
             page: RatingsPage(venueId: venueId),
             routeName: Routes.venueRatings,
@@ -187,8 +185,7 @@ class VenuePage extends StatelessWidget {
       options: FFButtonOptions(
         width: 164,
         height: 30,
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-        color: Theme.of(ctx).colorScheme.surface,
+        color: Theme.of(context).colorScheme.surface,
         textStyle: const TextStyle(
           color: MobileTheme.accent1,
           fontSize: 12,
@@ -201,14 +198,14 @@ class VenuePage extends StatelessWidget {
     );
   }
 
-  Widget _buildVenueType(BuildContext ctx, VenuePageModel model) {
+  Widget _buildVenueType(BuildContext context, VenuePageModel model) {
     return Text(
       model.venueType.toFormattedUpperCase(),
-      style: Theme.of(ctx).textTheme.bodyMedium,
+      style: Theme.of(context).textTheme.bodyMedium,
     );
   }
 
-  Widget _buildVenueLocation(BuildContext ctx, VenuePageModel model) {
+  Widget _buildVenueLocation(BuildContext context, VenuePageModel model) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -216,16 +213,19 @@ class VenuePage extends StatelessWidget {
       children: [
         Icon(
           CupertinoIcons.location_solid,
-          color: Theme.of(ctx).colorScheme.onPrimary,
+          color: Theme.of(context).colorScheme.onPrimary,
           size: 16,
         ),
         const SizedBox(width: 8),
-        Text(model.venue.location, style: Theme.of(ctx).textTheme.bodyMedium),
+        Text(
+          model.venue.location,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
       ],
     );
   }
 
-  Widget _buildAvailability(BuildContext ctx, VenuePageModel model) {
+  Widget _buildAvailability(BuildContext context, VenuePageModel model) {
     final availabilityColour = calculateAvailabilityColour(
       model.venue.maximumCapacity,
       model.venue.availableCapacity,
@@ -241,14 +241,14 @@ class VenuePage extends StatelessWidget {
         Text(
           '${model.venue.availableCapacity} / ${model.venue.maximumCapacity} currently available',
           style: Theme.of(
-            ctx,
+            context,
           ).textTheme.bodyMedium?.copyWith(color: availabilityColour),
         ),
       ],
     );
   }
 
-  Widget _buildVenueHours(BuildContext ctx, VenuePageModel model) {
+  Widget _buildVenueHours(BuildContext context, VenuePageModel model) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -256,19 +256,19 @@ class VenuePage extends StatelessWidget {
       children: [
         Icon(
           CupertinoIcons.clock,
-          color: Theme.of(ctx).colorScheme.onPrimary,
+          color: Theme.of(context).colorScheme.onPrimary,
           size: 16,
         ),
         const SizedBox(width: 8),
         Text(
           'Working hours: ${model.venue.workingHours}',
-          style: Theme.of(ctx).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       ],
     );
   }
 
-  Widget _buildVenueDays(BuildContext ctx, VenuePageModel model) {
+  Widget _buildVenueDays(BuildContext context, VenuePageModel model) {
     final List<String> days = [
       'Monday',
       'Tuesday',
@@ -287,14 +287,14 @@ class VenuePage extends StatelessWidget {
       children: [
         Icon(
           CupertinoIcons.calendar,
-          color: Theme.of(ctx).colorScheme.onPrimary,
+          color: Theme.of(context).colorScheme.onPrimary,
           size: 16,
         ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             'Working days: ${workingDays.join(', ')}',
-            style: Theme.of(ctx).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
             softWrap: true,
           ),
         ),
@@ -302,7 +302,7 @@ class VenuePage extends StatelessWidget {
     );
   }
 
-  Widget _buildVenueRating(BuildContext ctx, VenuePageModel model) {
+  Widget _buildVenueRating(BuildContext context, VenuePageModel model) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -324,14 +324,14 @@ class VenuePage extends StatelessWidget {
           padding: const EdgeInsets.only(top: 4, left: 4),
           child: Text(
             ' ${model.venue.rating.toStringAsFixed(1)}',
-            style: Theme.of(ctx).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildVenueDescription(BuildContext ctx, VenuePageModel model) {
+  Widget _buildVenueDescription(BuildContext context, VenuePageModel model) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -342,16 +342,17 @@ class VenuePage extends StatelessWidget {
           child: Text(
             'About this venue',
             style: Theme.of(
-              ctx,
+              context,
             ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 4),
           child: Text(
+            key: const Key('venueDescription'),
             model.venue.description ?? 'No description available',
             style: Theme.of(
-              ctx,
+              context,
             ).textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
           ),
         ),
@@ -359,7 +360,7 @@ class VenuePage extends StatelessWidget {
     );
   }
 
-  Widget _buildMakeReservation(BuildContext ctx, VenuePageModel model) {
+  Widget _buildMakeReservation(BuildContext context, VenuePageModel model) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
@@ -371,18 +372,18 @@ class VenuePage extends StatelessWidget {
               Text(
                 'Make a reservation',
                 style: Theme.of(
-                  ctx,
+                  context,
                 ).textTheme.titleMedium?.copyWith(fontFamily: 'Roboto'),
               ),
               const SizedBox(height: 16),
-              _buildPeopleButton(ctx, model),
+              _buildPeopleButton(context, model),
               const SizedBox(height: 8),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  _buildDatePicker(ctx, model),
+                  _buildDatePicker(context, model),
                   const SizedBox(width: 22),
-                  _buildTimeButton(ctx, model),
+                  _buildTimeButton(context, model),
                 ],
               ),
             ],
@@ -392,10 +393,10 @@ class VenuePage extends StatelessWidget {
     );
   }
 
-  Widget _buildPeopleButton(BuildContext ctx, VenuePageModel model) {
+  Widget _buildPeopleButton(BuildContext context, VenuePageModel model) {
     return OutlinedButton(
       onPressed: () {},
-      style: _reservationButtonsStyle(ctx),
+      style: _reservationButtonsStyle(context),
       child: SizedBox(
         height: 46,
         width: 350,
@@ -406,28 +407,29 @@ class VenuePage extends StatelessWidget {
           children: [
             Icon(
               CupertinoIcons.person_2,
-              color: Theme.of(ctx).colorScheme.onPrimary,
+              color: Theme.of(context).colorScheme.onPrimary,
               size: 28,
             ),
             const SizedBox(width: 12),
-            _buildPeopleDropdown(ctx, model),
+            _buildPeopleDropdown(context, model),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPeopleDropdown(BuildContext ctx, VenuePageModel model) {
+  Widget _buildPeopleDropdown(BuildContext context, VenuePageModel model) {
     return Padding(
       padding: const EdgeInsets.only(top: 4),
       child: DropdownButton<int>(
+        key: const Key('peopleButton'),
         value: model.selectedNumberOfPeople,
         hint: Text(
           'Select no. of people attending',
-          style: Theme.of(ctx).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
-        style: Theme.of(ctx).textTheme.bodyMedium,
-        dropdownColor: Theme.of(ctx).colorScheme.onSurface,
+        style: Theme.of(context).textTheme.bodyMedium,
+        dropdownColor: Theme.of(context).colorScheme.onSurface,
         underline: Container(),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         items: List.generate(12, (i) => i + 1)
@@ -453,14 +455,15 @@ class VenuePage extends StatelessWidget {
     );
   }
 
-  Widget _buildDatePicker(BuildContext ctx, VenuePageModel model) {
+  Widget _buildDatePicker(BuildContext context, VenuePageModel model) {
     DateFormat dateFormat = DateFormat('MMMM d, yyyy');
     var displayDate = model.selectedDate != null
         ? dateFormat.format(model.selectedDate!)
         : 'Select date';
     return OutlinedButton(
-      onPressed: () => model.selectDate(ctx),
-      style: _reservationButtonsStyle(ctx),
+      key: const Key('dateButton'),
+      onPressed: () => model.selectDate(context),
+      style: _reservationButtonsStyle(context),
       child: SizedBox(
         height: 46,
         width: 148,
@@ -471,20 +474,20 @@ class VenuePage extends StatelessWidget {
           children: [
             Icon(
               CupertinoIcons.calendar,
-              color: Theme.of(ctx).colorScheme.onPrimary,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
             const SizedBox(width: 12),
-            Text(displayDate, style: Theme.of(ctx).textTheme.bodyMedium),
+            Text(displayDate, style: Theme.of(context).textTheme.bodyMedium),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTimeButton(BuildContext ctx, VenuePageModel model) {
+  Widget _buildTimeButton(BuildContext context, VenuePageModel model) {
     return OutlinedButton(
       onPressed: () {},
-      style: _reservationButtonsStyle(ctx),
+      style: _reservationButtonsStyle(context),
       child: SizedBox(
         height: 46,
         width: 148,
@@ -495,44 +498,51 @@ class VenuePage extends StatelessWidget {
           children: [
             Icon(
               CupertinoIcons.clock,
-              color: Theme.of(ctx).colorScheme.onPrimary,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
             const SizedBox(width: 12),
-            _buildTimeDropdown(ctx, model),
+            _buildTimeDropdown(context, model),
           ],
         ),
       ),
     );
   }
 
-  DropdownButton<TimeOfDay> _buildTimeDropdown(
-    BuildContext ctx,
+  DropdownButton<TimeOfDay> _buildTimeDropdown(BuildContext context,
     VenuePageModel model,
   ) {
     return DropdownButton<TimeOfDay>(
+      key: const Key('timeButton'),
       value: model.selectedTime,
-      hint: Text('Select time', style: Theme.of(ctx).textTheme.bodyLarge),
-      style: Theme.of(ctx).textTheme.bodyMedium,
-      dropdownColor: Theme.of(ctx).colorScheme.onSurface,
+      hint: Text('Select time', style: Theme.of(context).textTheme.bodyLarge),
+      style: Theme.of(context).textTheme.bodyMedium,
+      dropdownColor: Theme.of(context).colorScheme.onSurface,
       underline: Container(),
       borderRadius: const BorderRadius.all(Radius.circular(10)),
-      items: model.timeOptions.map((time) {
-        final formatted = time.format(ctx);
-        return DropdownMenuItem(value: time, child: Text(formatted));
+      items: model.timeOptions.mapIndexed((index, time) {
+        final formatted = time.format(context);
+        return DropdownMenuItem(
+          key: Key('$index'),
+          value: time,
+          child: Text(formatted),
+        );
       }).toList(),
       onChanged: (value) {
-        model.setTime(value);
+        model.setTime(context, value);
       },
     );
   }
 
-  Widget _buildReserveSpotButton(BuildContext ctx, VenuePageModel model) {
+  Widget _buildReserveSpotButton(BuildContext context, VenuePageModel model) {
     bool isDisabled = model.venue.availableCapacity == 0;
 
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(36, 0, 36, 48),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 36,
+      ).add(EdgeInsets.only(bottom: 48)),
       child: FFButtonWidget(
-        onPressed: () => isDisabled ? null : model.reserve(),
+        key: const Key('reserveSpotButton'),
+        onPressed: () => isDisabled ? null : model.reserve(context),
         text: isDisabled
             ? 'No seats currently available'
             : 'Reserve your spot now',
@@ -543,11 +553,11 @@ class VenuePage extends StatelessWidget {
           color: isDisabled ? Colors.grey : MobileTheme.successColor,
           splashColor: isDisabled
               ? MobileTheme.transparentColour
-              : Theme.of(ctx).colorScheme.surfaceDim,
+              : Theme.of(context).colorScheme.surfaceDim,
           textStyle: TextStyle(
             color: isDisabled
-                ? Theme.of(ctx).colorScheme.onSurface.withValues(alpha: 0.4)
-                : Theme.of(ctx).colorScheme.onSurface,
+                ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)
+                : Theme.of(context).colorScheme.onSurface,
             fontSize: 16,
           ),
           elevation: 3,
@@ -557,21 +567,24 @@ class VenuePage extends StatelessWidget {
     );
   }
 
-  Widget _buildDivider(BuildContext ctx) {
+  Widget _buildDivider(BuildContext context) {
     return Divider(
       thickness: 1,
       indent: 16,
       endIndent: 16,
-      color: Theme.of(ctx).colorScheme.onPrimary.withValues(alpha: 0.4),
+      color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.4),
     );
   }
 
-  ButtonStyle _reservationButtonsStyle(BuildContext ctx) {
+  ButtonStyle _reservationButtonsStyle(BuildContext context) {
     return OutlinedButton.styleFrom(
-      side: BorderSide(color: Theme.of(ctx).colorScheme.onPrimary, width: 1),
+      side: BorderSide(
+        color: Theme.of(context).colorScheme.onPrimary,
+        width: 1,
+      ),
       splashFactory: NoSplash.splashFactory,
       elevation: 3,
-      backgroundColor: Theme.of(ctx).colorScheme.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     );
   }

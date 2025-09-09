@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
 import 'package:table_reserver/api/data/notification_settings.dart';
 import 'package:table_reserver/main.dart';
 import 'package:table_reserver/pages/mobile/views/homepage.dart';
 import 'package:table_reserver/utils/fade_in_route.dart';
 import 'package:table_reserver/utils/routes.dart';
 import 'package:table_reserver/utils/toaster.dart';
+import 'package:table_reserver/utils/utils.dart';
 
 class LocationPermissionPopUpModel extends ChangeNotifier {
   final BuildContext context;
@@ -29,6 +29,11 @@ class LocationPermissionPopUpModel extends ChangeNotifier {
   }
 
   Future<bool> _handleLocationPermission() async {
+    const bool useFakePermissions = bool.fromEnvironment('FAKE_PERMISSIONS');
+    if (useFakePermissions) {
+      await _updateNotificationOptions();
+    }
+
     LocationPermission locationPermission;
 
     if (!await Geolocator.isLocationServiceEnabled()) return false;
@@ -43,19 +48,21 @@ class LocationPermissionPopUpModel extends ChangeNotifier {
 
     if (locationPermission == LocationPermission.deniedForever) return false;
 
-    BasicResponse basicResponse = await _accountApi
-        .updateUserNotificationOptions(
-          userId,
-          notificationOptions!.isPushNotificationsEnabled,
-          notificationOptions!.isEmailNotificationsEnabled,
-          true,
-        );
+    return await _updateNotificationOptions();
+  }
+
+  Future<bool> _updateNotificationOptions() async {
+    final basicResponse = await _accountApi.updateUserNotificationOptions(
+      userId,
+      notificationOptions!.isPushNotificationsEnabled,
+      notificationOptions!.isEmailNotificationsEnabled,
+      true,
+    );
 
     if (!basicResponse.success) {
       if (!context.mounted) return false;
       Toaster.displayError(context, basicResponse.message);
     }
-
     return true;
   }
 
@@ -73,11 +80,17 @@ class LocationPermissionPopUpModel extends ChangeNotifier {
   }
 
   Future<void> getCurrentPosition() async {
+    const bool useFakePermissions = bool.fromEnvironment('FAKE_PERMISSIONS');
     if (!await _handleLocationPermission()) return;
 
-    Position? userLocation = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.best,
-    );
+    Position userLocation;
+    if (useFakePermissions) {
+      userLocation = await getTestPosition();
+    } else {
+      userLocation = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best,
+      );
+    }
 
     String? currentCity = await _getCity(userLocation);
     if (currentCity == null || currentCity.isEmpty) {

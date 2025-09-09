@@ -19,17 +19,22 @@ import 'package:table_reserver/utils/routing_utils.dart';
 class Homepage extends StatelessWidget {
   final int? userId;
   final Position? userLocation;
+  final HomepageModel? modelOverride;
 
-  const Homepage({Key? key, this.userId, this.userLocation}) : super(key: key);
+  const Homepage({
+    super.key,
+    this.userId,
+    this.userLocation,
+    this.modelOverride,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => HomepageModel(
-        context: context,
-        userId: userId,
-        userLocation: userLocation,
-      )..init(),
+      create: (_) =>
+          modelOverride ??
+                HomepageModel(userId: userId, userLocation: userLocation)
+            ..init(context),
       child: Consumer<HomepageModel>(
         builder: (context, model, _) {
           var brightness = Theme.of(context).brightness;
@@ -50,7 +55,7 @@ class Homepage extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 16),
                       child: RefreshIndicator(
                         onRefresh: () async {
-                          await model.init();
+                          await model.init(context);
                         },
                         elevation: 3,
                         child: SingleChildScrollView(
@@ -59,29 +64,33 @@ class Homepage extends StatelessWidget {
                             children: [
                               _buildHeader(context, model),
                               _buildCarouselComponent(context, model),
+                              const SizedBox(height: 24),
                               _buildVenues(
                                 context,
                                 'Nearby Venues',
-                                model.openNearbyVenues,
+                                () => model.openNearbyVenues(context),
                                 model.nearbyVenues ?? [],
                               ),
+                              const SizedBox(height: 24),
                               _buildVenues(
                                 context,
                                 'New Venues',
-                                model.openNewVenues,
+                                () => model.openNewVenues(context),
                                 model.newVenues ?? [],
                               ),
+                              const SizedBox(height: 24),
                               _buildVenues(
                                 context,
                                 'Trending Venues',
-                                model.openTrendingVenues,
+                                () => model.openTrendingVenues(context),
                                 model.trendingVenues ?? [],
                               ),
+                              const SizedBox(height: 24),
                               if (model.suggestedVenues != null &&
                                   model.suggestedVenues!.isNotEmpty)
                                 _buildSuggestedVenues(
                                   context,
-                                  model.openSuggestedVenues,
+                                  () => model.openSuggestedVenues(context),
                                   model.suggestedVenues!,
                                 )
                               else
@@ -107,7 +116,7 @@ class Homepage extends StatelessWidget {
     );
   }
 
-  Widget _buildCarouselComponent(BuildContext ctx, HomepageModel model) {
+  Widget _buildCarouselComponent(BuildContext context, HomepageModel model) {
     if (model.nearbyCities.isEmpty) {
       return const SizedBox.shrink();
     } else {
@@ -121,50 +130,48 @@ class Homepage extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         Expanded(
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-            child: SizedBox(
-              width: double.infinity,
-              height: 212,
-              child: CarouselSlider(
-                items: model.nearbyCities
-                    .mapIndexed(
-                      (index, city) => Padding(
-                        padding: const EdgeInsetsDirectional.symmetric(
-                          vertical: 12,
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.of(ctx).push(
-                              MobileFadeInRoute(
-                                page: Search(locationQuery: city),
-                                routeName: Routes.search,
-                                arguments: {'locationQuery': city},
-                              ),
-                            );
-                          },
-                          child: CarouselItem(city, model.cityImages[city]),
-                        ),
+          child: SizedBox(
+            width: double.infinity,
+            height: 212,
+            child: CarouselSlider(
+              key: const Key('carouselSlider'),
+              items: model.nearbyCities
+                  .mapIndexed(
+                    (index, city) => Padding(
+                      padding: const EdgeInsetsDirectional.symmetric(
+                        vertical: 12,
                       ),
-                    )
-                    .toList(),
-                carouselController: model.carouselController,
-                options: CarouselOptions(
-                  initialPage: 1,
-                  viewportFraction: .75,
-                  disableCenter: true,
-                  enlargeCenterPage: true,
-                  enlargeFactor: .25,
-                  enableInfiniteScroll: true,
-                  scrollDirection: Axis.horizontal,
-                  autoPlay: true,
-                  autoPlayAnimationDuration: const Duration(milliseconds: 1500),
-                  autoPlayInterval: const Duration(seconds: 5),
-                  autoPlayCurve: Curves.linear,
-                  pauseAutoPlayInFiniteScroll: true,
-                  onPageChanged: (index, _) =>
-                      model.carouselCurrentIndex = index,
-                ),
+                      child: InkWell(
+                        key: Key('carouselItem'),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MobileFadeInRoute(
+                              page: Search(locationQuery: city),
+                              routeName: Routes.search,
+                              arguments: {'locationQuery': city},
+                            ),
+                          );
+                        },
+                        child: CarouselItem(city, model.cityImages[city]),
+                      ),
+                    ),
+                  )
+                  .toList(),
+              carouselController: model.carouselController,
+              options: CarouselOptions(
+                initialPage: 0,
+                viewportFraction: .75,
+                disableCenter: false,
+                enlargeCenterPage: true,
+                enlargeFactor: .25,
+                enableInfiniteScroll: true,
+                scrollDirection: Axis.horizontal,
+                autoPlay: true,
+                autoPlayAnimationDuration: const Duration(milliseconds: 1500),
+                autoPlayInterval: const Duration(seconds: 5),
+                autoPlayCurve: Curves.linear,
+                pauseAutoPlayInFiniteScroll: true,
+                onPageChanged: (index, _) => model.carouselCurrentIndex = index,
               ),
             ),
           ),
@@ -173,48 +180,44 @@ class Homepage extends StatelessWidget {
     );
   }
 
-  Widget _buildVenues(
-    BuildContext ctx,
+  Widget _buildVenues(BuildContext context,
     String title,
     Function() seeAllFunction,
     List<Venue> venues,
   ) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildTitle(ctx, title),
-                    _buildSeeAllButton(ctx, seeAllFunction),
-                  ],
-                ),
-                _buildVenueCards(venues),
-              ],
-            ),
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildTitle(context, title),
+                  _buildSeeAllButton(context, seeAllFunction),
+                ],
+              ),
+              const SizedBox(height: 12),
+              _buildVenueCards(venues),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildSuggestedVenues(
-    BuildContext ctx,
+  Widget _buildSuggestedVenues(BuildContext context,
     Function() seeAllFunction,
     List<Venue> venues,
   ) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 0, 0),
+      padding: const EdgeInsets.only(left: 12),
       child: Container(
         decoration: BoxDecoration(
           color: MobileTheme.successColor.withValues(alpha: 0.4),
@@ -224,7 +227,7 @@ class Homepage extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 0, 24),
+          padding: const EdgeInsets.only(left: 12, top: 12, bottom: 24),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -239,10 +242,11 @@ class Homepage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildTitle(ctx, 'We suggest'),
-                        _buildSeeAllButton(ctx, seeAllFunction),
+                        _buildTitle(context, 'We suggest'),
+                        _buildSeeAllButton(context, seeAllFunction),
                       ],
                     ),
+                    const SizedBox(height: 12),
                     _buildVenueSuggestedCards(venues),
                   ],
                 ),
@@ -256,8 +260,9 @@ class Homepage extends StatelessWidget {
 
   Widget _buildVenueCards(List<Venue> venues) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(4, 12, 0, 0),
+      padding: const EdgeInsets.only(left: 4),
       child: SingleChildScrollView(
+        key: const Key('venueCardsScrollView'),
         scrollDirection: Axis.horizontal,
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -280,8 +285,9 @@ class Homepage extends StatelessWidget {
 
   Widget _buildVenueSuggestedCards(List<Venue> venues) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(4, 12, 0, 0),
+      padding: const EdgeInsets.only(left: 4),
       child: SingleChildScrollView(
+        key: const Key('venueSuggestedCardsScrollView'),
         scrollDirection: Axis.horizontal,
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -301,29 +307,30 @@ class Homepage extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(BuildContext ctx, String title) {
+  Widget _buildTitle(BuildContext context, String title) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+      padding: const EdgeInsets.only(left: 12),
       child: Text(
         title,
-        style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
-          color: Theme.of(ctx).colorScheme.onPrimary,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          color: Theme.of(context).colorScheme.onPrimary,
         ),
       ),
     );
   }
 
-  Widget _buildSeeAllButton(BuildContext ctx, Function() onPressed) {
+  Widget _buildSeeAllButton(BuildContext context, Function() onPressed) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+      padding: const EdgeInsets.only(right: 12),
       child: FFButtonWidget(
+        key: const Key('seeAllButton'),
         showLoadingIndicator: true,
         onPressed: onPressed,
         text: 'See all',
         options: FFButtonOptions(
           width: 80,
           height: 24,
-          color: Theme.of(ctx).colorScheme.onSurface,
+          color: Theme.of(context).colorScheme.onSurface,
           textStyle: const TextStyle(
             color: MobileTheme.accent1,
             fontSize: 12,
@@ -337,7 +344,7 @@ class Homepage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext ctx, HomepageModel model) {
+  Widget _buildHeader(BuildContext context, HomepageModel model) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -345,18 +352,19 @@ class Homepage extends StatelessWidget {
       children: [
         Expanded(
           child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+            padding: const EdgeInsets.only(right: 12),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                  padding: const EdgeInsets.only(left: 12),
                   child: Text(
+                    key: const Key('welcomeText'),
                     model.loggedInUser != null
-                        ? 'Welcome, ${model.loggedInUser!.username}'
+                        ? 'Welcome back, ${model.loggedInUser!.username}!'
                         : 'Welcome',
-                    style: Theme.of(ctx).textTheme.titleLarge,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
               ],

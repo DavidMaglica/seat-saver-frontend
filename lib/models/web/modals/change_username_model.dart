@@ -34,7 +34,7 @@ class ChangeUsernameModel extends FlutterFlowModel<ChangeUsernameModal>
   Future<void> updateUsername(BuildContext context) async {
     final String newUsername = usernameTextController.text.trim();
     final String currentUsername = sharedPreferencesCache.getString(
-      'userName',
+      'ownerName',
     )!;
 
     if (!isValidUsername(newUsername, currentUsername)) {
@@ -54,7 +54,7 @@ class ChangeUsernameModel extends FlutterFlowModel<ChangeUsernameModal>
     if (response.success) {
       if (!context.mounted) return;
 
-      sharedPreferencesCache.setString('userName', newUsername);
+      sharedPreferencesCache.setString('ownerName', newUsername);
 
       usernameTextController.clear();
       WebToaster.displaySuccess(context, response.message);

@@ -24,8 +24,9 @@ import 'package:table_reserver/utils/venue_image_cache/venue_image_cache_stub.da
 
 class WebHomepage extends StatefulWidget {
   final int ownerId;
+  final HomepageModel? modelOverride;
 
-  const WebHomepage({super.key, required this.ownerId});
+  const WebHomepage({super.key, required this.ownerId, this.modelOverride});
 
   @override
   State<WebHomepage> createState() => _WebHomepageState();
@@ -43,7 +44,9 @@ class _WebHomepageState extends State<WebHomepage>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => HomepageModel(ownerId: widget.ownerId)..init(context),
+      create: (_) =>
+          widget.modelOverride ?? HomepageModel(ownerId: widget.ownerId)
+            ..init(context),
       child: Consumer<HomepageModel>(
         builder: (context, model, _) {
           return GestureDetector(
@@ -128,6 +131,7 @@ class _WebHomepageState extends State<WebHomepage>
             ),
           ),
           TimerDropdown(
+            key: const Key('timerDropdown'),
             selectedInterval: model.selectedInterval,
             onChanged: (value) {
               setState(() {
@@ -138,6 +142,7 @@ class _WebHomepageState extends State<WebHomepage>
           ),
           const SizedBox(width: 8),
           FFButtonWidget(
+            key: const Key('refreshButton'),
             onPressed: () {
               model.fetchData(context);
             },
@@ -194,6 +199,7 @@ class _WebHomepageState extends State<WebHomepage>
         mainAxisSize: MainAxisSize.max,
         children: [
           CircularStatCard(
+            buttonKey: const Key('ratingCardButton'),
             title: 'Rating',
             description: 'Your average rating across all venues.',
             onPressed: model.goToRatingsPage(context),
@@ -201,6 +207,7 @@ class _WebHomepageState extends State<WebHomepage>
             ratingCount: model.totalReviewsCount,
           ),
           CircularStatCard(
+            buttonKey: const Key('utilisationCardButton'),
             title: 'How Busy You Are',
             description: 'A quick look at how busy your venues are right now.',
             onPressed: model.goToReservationsGraphsPage(context),
@@ -257,6 +264,7 @@ class _WebHomepageState extends State<WebHomepage>
                         ),
                       ),
                       FFButtonWidget(
+                        key: const Key('createVenueButton'),
                         onPressed: () async {
                           await showDialog(
                             context: context,
@@ -326,6 +334,7 @@ class _WebHomepageState extends State<WebHomepage>
     }
 
     return AdvancedTableWidget(
+      key: const Key('venuesTable'),
       headerBuilder: (context, header) {
         return _buildHeader(context, header);
       },
@@ -367,10 +376,11 @@ class _WebHomepageState extends State<WebHomepage>
     );
   }
 
-  Row _buildActions(BuildContext context, HomepageModel model, int venueId) {
+  Widget _buildActions(BuildContext context, HomepageModel model, int venueId) {
     return Row(
       children: [
         IconButton(
+          key: const Key('editVenueButton'),
           icon: Icon(
             Icons.edit_outlined,
             color: Theme.of(context).colorScheme.onPrimary,
@@ -402,6 +412,7 @@ class _WebHomepageState extends State<WebHomepage>
           },
         ),
         IconButton(
+          key: const Key('deleteVenueButton'),
           icon: Icon(
             CupertinoIcons.trash,
             color: Theme.of(context).colorScheme.onPrimary,
@@ -535,6 +546,7 @@ class _WebHomepageState extends State<WebHomepage>
           child: _buildPerformanceCard(
             context,
             model,
+            const Key('bestPerformingVenueCard'),
             'Best Performing Venue',
             model.bestPerformingVenue,
           ),
@@ -543,6 +555,7 @@ class _WebHomepageState extends State<WebHomepage>
           child: _buildPerformanceCard(
             context,
             model,
+            const Key('worstPerformingVenueCard'),
             'Worst Performing Venue',
             model.worstPerformingVenue,
           ),
@@ -551,13 +564,15 @@ class _WebHomepageState extends State<WebHomepage>
     );
   }
 
-  InkWell _buildPerformanceCard(
+  Widget _buildPerformanceCard(
     BuildContext context,
     HomepageModel model,
+    Key key,
     String title,
     Venue? venue,
   ) {
     return InkWell(
+      key: key,
       mouseCursor: venue != null
           ? SystemMouseCursors.click
           : SystemMouseCursors.basic,
@@ -585,26 +600,24 @@ class _WebHomepageState extends State<WebHomepage>
             color: Theme.of(context).colorScheme.onSurface,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 8),
-                _buildPerformanceTitle(context, title),
-                Divider(
-                  height: 1,
-                  thickness: 1,
-                  indent: 16,
-                  endIndent: 16,
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-                _buildPerformanceVenueDetails(context, venue),
-                _buildPerformanceHeaderImage(context, model, venue),
-              ].divide(const SizedBox(height: 8)),
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 8),
+              _buildPerformanceTitle(context, title),
+              Divider(
+                height: 1,
+                thickness: 1,
+                indent: 16,
+                endIndent: 16,
+                color: Theme.of(context).colorScheme.outline,
+              ),
+              _buildPerformanceVenueDetails(context, venue),
+              _buildPerformanceHeaderImage(context, model, venue),
+              const SizedBox(height: 2),
+            ].divide(const SizedBox(height: 8)),
           ),
         ),
       ),

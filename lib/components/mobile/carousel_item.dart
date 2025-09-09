@@ -38,7 +38,7 @@ class CarouselItem extends StatelessWidget {
     );
   }
 
-  Widget _buildImage(BuildContext ctx, String? imageUri) {
+  Widget _buildImage(BuildContext context, String? imageUri) {
     return ClipRRect(
       borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(8),
@@ -60,20 +60,20 @@ class CarouselItem extends StatelessWidget {
                 );
               },
             )
-          : _buildFallbackImage(ctx),
+          : _buildFallbackImage(context),
     );
   }
 
-  Widget _buildText(BuildContext ctx) {
+  Widget _buildText(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
+      padding: const EdgeInsets.only(top: 12),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
           Align(
             alignment: const AlignmentDirectional(-1, 0),
             child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+              padding: const EdgeInsets.only(left: 12),
               child: Text(
                 currentCity,
                 style: const TextStyle(
@@ -87,10 +87,10 @@ class CarouselItem extends StatelessWidget {
           Align(
             alignment: const AlignmentDirectional(-1, 0),
             child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+              padding: const EdgeInsets.only(left: 12),
               child: Text(
                 'Discover new restaurants in $currentCity!',
-                style: Theme.of(ctx).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
           ),
@@ -99,7 +99,7 @@ class CarouselItem extends StatelessWidget {
     );
   }
 
-  Widget _buildFallbackImage(BuildContext ctx) {
+  Widget _buildFallbackImage(BuildContext context) {
     return Container(
       width: double.infinity,
       height: 128,
@@ -107,7 +107,7 @@ class CarouselItem extends StatelessWidget {
       decoration: BoxDecoration(gradient: fallbackImageGradientReverted()),
       child: Text(
         currentCity.toUpperCase(),
-        style: Theme.of(ctx).textTheme.titleMedium,
+        style: Theme.of(context).textTheme.titleMedium,
         textAlign: TextAlign.center,
       ),
     );
