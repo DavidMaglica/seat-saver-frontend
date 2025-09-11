@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:table_reserver/components/mobile/navbar.dart';
-import 'package:table_reserver/utils/routing_utils.dart';
+import 'package:seat_saver/components/mobile/navbar.dart';
+import 'package:seat_saver/utils/routing_utils.dart';
 
 /// Builds Google Map with the user's location. If no location is provided, uses a default location (Zagreb).
 /// Google Map is not used as it queries Google Maps API which is not free.

@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/api/data/paged_response.dart';
-import 'package:table_reserver/api/data/reservation_details.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/reservation_api.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/utils/animations.dart';
+import 'package:seat_saver/api/data/paged_response.dart';
+import 'package:seat_saver/api/data/reservation_details.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/api/reservation_api.dart';
+import 'package:seat_saver/api/venue_api.dart';
+import 'package:seat_saver/utils/animations.dart';
 
 class ReservationsGraphsPageModel extends ChangeNotifier {
   final int ownerId;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/data/notification_settings.dart';
-import 'package:table_reserver/models/mobile/views/notification_settings_model.dart';
-import 'package:table_reserver/pages/mobile/settings/notification_settings.dart';
+import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
+import 'package:seat_saver/api/data/notification_settings.dart';
+import 'package:seat_saver/models/mobile/views/notification_settings_model.dart';
+import 'package:seat_saver/pages/mobile/settings/notification_settings.dart';
 
 import '../../../test_utils/shared_preferences_mock.dart';
 

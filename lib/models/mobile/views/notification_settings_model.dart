@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/data/notification_settings.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
+import 'package:seat_saver/api/data/notification_settings.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
 
 class NotificationSettingsModel extends ChangeNotifier {
   final int userId;

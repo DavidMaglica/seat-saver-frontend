@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:table_reserver/components/mobile/custom_appbar.dart';
-import 'package:table_reserver/pages/mobile/views/account.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:seat_saver/components/mobile/custom_appbar.dart';
+import 'package:seat_saver/pages/mobile/views/account.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
 
 class TermsOfService extends StatefulWidget {
   final int? userId;

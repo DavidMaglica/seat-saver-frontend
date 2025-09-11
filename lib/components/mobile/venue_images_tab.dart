@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:table_reserver/components/common/full_image_view.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:seat_saver/components/common/full_image_view.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
 
 class VenueImagesTab extends StatelessWidget {
   final List<Uint8List>? venueImages;

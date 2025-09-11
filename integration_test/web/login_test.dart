@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:table_reserver/main.dart' as app;
-import 'package:table_reserver/pages/web/views/homepage.dart';
+import 'package:seat_saver/main.dart' as app;
+import 'package:seat_saver/pages/web/views/homepage.dart';
 
 import 'utils.dart';
 

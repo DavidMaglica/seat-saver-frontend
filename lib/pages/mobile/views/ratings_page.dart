@@ -6,11 +6,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:rating_summary/rating_summary.dart';
-import 'package:table_reserver/components/mobile/custom_appbar.dart';
-import 'package:table_reserver/components/mobile/modal_widgets.dart';
-import 'package:table_reserver/models/mobile/views/ratings_model.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/toaster.dart';
+import 'package:seat_saver/components/mobile/custom_appbar.dart';
+import 'package:seat_saver/components/mobile/modal_widgets.dart';
+import 'package:seat_saver/models/mobile/views/ratings_model.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
+import 'package:seat_saver/utils/toaster.dart';
 
 class RatingsPage extends StatelessWidget {
   final int venueId;

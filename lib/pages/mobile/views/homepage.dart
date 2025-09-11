@@ -4,17 +4,17 @@ import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/components/mobile/carousel_item.dart';
-import 'package:table_reserver/components/mobile/homepage_venue_card.dart';
-import 'package:table_reserver/components/mobile/navbar.dart';
-import 'package:table_reserver/components/mobile/suggested_venue_card.dart';
-import 'package:table_reserver/models/mobile/views/homepage_model.dart';
-import 'package:table_reserver/pages/mobile/views/search.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/routing_utils.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/components/mobile/carousel_item.dart';
+import 'package:seat_saver/components/mobile/homepage_venue_card.dart';
+import 'package:seat_saver/components/mobile/navbar.dart';
+import 'package:seat_saver/components/mobile/suggested_venue_card.dart';
+import 'package:seat_saver/models/mobile/views/homepage_model.dart';
+import 'package:seat_saver/pages/mobile/views/search.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
+import 'package:seat_saver/utils/routing_utils.dart';
 
 class Homepage extends StatelessWidget {
   final int? userId;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:table_reserver/api/data/reservation_details.dart';
-import 'package:table_reserver/api/reservation_api.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/utils/toaster.dart';
+import 'package:seat_saver/api/data/reservation_details.dart';
+import 'package:seat_saver/api/reservation_api.dart';
+import 'package:seat_saver/api/venue_api.dart';
+import 'package:seat_saver/utils/toaster.dart';
 
 class ReservationHistoryModel extends ChangeNotifier {
   final int userId;

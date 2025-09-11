@@ -5,24 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:seat_saver/models/web/components/side_nav_model.dart';
+import 'package:seat_saver/pages/mobile/views/homepage.dart';
+import 'package:seat_saver/pages/mobile/views/landing.dart';
+import 'package:seat_saver/pages/web/auth/authentication.dart';
+import 'package:seat_saver/pages/web/views/account.dart';
+import 'package:seat_saver/pages/web/views/homepage.dart';
+import 'package:seat_saver/pages/web/views/landing.dart';
+import 'package:seat_saver/pages/web/views/ratings_page.dart';
+import 'package:seat_saver/pages/web/views/reservations.dart';
+import 'package:seat_saver/pages/web/views/reservations_graphs_page.dart';
+import 'package:seat_saver/pages/web/views/venue_page.dart';
+import 'package:seat_saver/pages/web/views/venues.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
+import 'package:seat_saver/themes/web_theme.dart';
+import 'package:seat_saver/utils/routes.dart';
+import 'package:seat_saver/utils/sign_up_methods.dart';
+import 'package:seat_saver/utils/theme_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:table_reserver/models/web/components/side_nav_model.dart';
-import 'package:table_reserver/pages/mobile/views/homepage.dart';
-import 'package:table_reserver/pages/mobile/views/landing.dart';
-import 'package:table_reserver/pages/web/auth/authentication.dart';
-import 'package:table_reserver/pages/web/views/account.dart';
-import 'package:table_reserver/pages/web/views/homepage.dart';
-import 'package:table_reserver/pages/web/views/landing.dart';
-import 'package:table_reserver/pages/web/views/ratings_page.dart';
-import 'package:table_reserver/pages/web/views/reservations.dart';
-import 'package:table_reserver/pages/web/views/reservations_graphs_page.dart';
-import 'package:table_reserver/pages/web/views/venue_page.dart';
-import 'package:table_reserver/pages/web/views/venues.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/themes/web_theme.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/sign_up_methods.dart';
-import 'package:table_reserver/utils/theme_provider.dart';
 
 late final String iosGoogleClientId;
 late final String webGoogleClientId;
@@ -125,7 +125,7 @@ class MyApp extends StatelessWidget {
 
   Widget _buildMobileMaterialApp() {
     return MaterialApp(
-      title: 'Table Reserver',
+      title: 'SeatSaver',
       theme: MobileTheme.lightTheme,
       darkTheme: MobileTheme.darkTheme,
       themeMode: ThemeMode.system,
@@ -141,7 +141,7 @@ class MyApp extends StatelessWidget {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, _) {
         return MaterialApp(
-          title: 'Table Reserver',
+          title: 'SeatSaver',
           theme: WebTheme.lightTheme,
           darkTheme: WebTheme.darkTheme,
           themeMode: themeProvider.themeMode,

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/pages/web/auth/authentication.dart';
-import 'package:table_reserver/pages/web/views/homepage.dart';
-import 'package:table_reserver/utils/animations.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/sign_up_methods.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/pages/web/auth/authentication.dart';
+import 'package:seat_saver/pages/web/views/homepage.dart';
+import 'package:seat_saver/utils/animations.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
+import 'package:seat_saver/utils/sign_up_methods.dart';
 
 class AuthenticationModel extends FlutterFlowModel<WebAuthentication> {
   TabController? tabBarController;

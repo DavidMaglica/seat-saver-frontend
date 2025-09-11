@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/components/mobile/action_button.dart';
-import 'package:table_reserver/components/mobile/custom_appbar.dart';
-import 'package:table_reserver/models/mobile/views/notification_settings_model.dart';
-import 'package:table_reserver/pages/mobile/views/account.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:seat_saver/components/mobile/action_button.dart';
+import 'package:seat_saver/components/mobile/custom_appbar.dart';
+import 'package:seat_saver/models/mobile/views/notification_settings_model.dart';
+import 'package:seat_saver/pages/mobile/views/account.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
 
 class NotificationSettings extends StatelessWidget {
   final int userId;

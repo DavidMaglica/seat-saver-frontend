@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/models/web/components/side_nav_model.dart';
-import 'package:table_reserver/pages/web/views/account.dart';
-import 'package:table_reserver/pages/web/views/homepage.dart';
-import 'package:table_reserver/pages/web/views/reservations.dart';
-import 'package:table_reserver/pages/web/views/venues.dart';
-import 'package:table_reserver/themes/web_theme.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:seat_saver/models/web/components/side_nav_model.dart';
+import 'package:seat_saver/pages/web/views/account.dart';
+import 'package:seat_saver/pages/web/views/homepage.dart';
+import 'package:seat_saver/pages/web/views/reservations.dart';
+import 'package:seat_saver/pages/web/views/venues.dart';
+import 'package:seat_saver/themes/web_theme.dart';
+import 'package:seat_saver/utils/routes.dart';
 
 class SideNav extends StatefulWidget {
   const SideNav({super.key});

@@ -1,7 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:table_reserver/themes/web_theme.dart';
+import 'package:seat_saver/themes/web_theme.dart';
 
 class TimerDropdown extends StatelessWidget {
   final int? selectedInterval;

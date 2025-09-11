@@ -2,15 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/api/data/user.dart';
-import 'package:table_reserver/components/mobile/navbar.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/models/mobile/views/account_model.dart';
-import 'package:table_reserver/pages/mobile/auth/authentication.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/routing_utils.dart';
+import 'package:seat_saver/api/data/user.dart';
+import 'package:seat_saver/components/mobile/navbar.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/models/mobile/views/account_model.dart';
+import 'package:seat_saver/pages/mobile/auth/authentication.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
+import 'package:seat_saver/utils/routing_utils.dart';
 
 class Account extends StatelessWidget {
   final int? userId;

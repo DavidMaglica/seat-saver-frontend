@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/models/web/views/venue_page_model.dart';
-import 'package:table_reserver/themes/web_theme.dart';
+import 'package:seat_saver/models/web/views/venue_page_model.dart';
+import 'package:seat_saver/themes/web_theme.dart';
 
 class VenueDetailsTab extends StatelessWidget {
   final VenuePageModel model;

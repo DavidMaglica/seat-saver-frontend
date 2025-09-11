@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:table_reserver/pages/mobile/views/homepage.dart';
-import 'package:table_reserver/pages/mobile/views/landing.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:seat_saver/pages/mobile/views/homepage.dart';
+import 'package:seat_saver/pages/mobile/views/landing.dart';
+import 'package:seat_saver/utils/routes.dart';
 
 import '../../../test_utils/shared_preferences_mock.dart';
 
@@ -16,7 +16,7 @@ void main() {
       final logo = find.byKey(const Key('logoImage'));
       final title = find.byKey(const Key('welcomeText'));
       final button = find.byKey(const Key('getStartedButton'));
-      final titleFinder = find.text('Welcome to TableReserver');
+      final titleFinder = find.text('Welcome to SeatSaver');
       final buttonFinder = find.text('Get Started');
 
       await tester.pumpWidget(MaterialApp(home: const Landing()));

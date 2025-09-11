@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:table_reserver/api/common/api_routes.dart';
-import 'package:table_reserver/api/common/dio_setup.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/data/reservation_details.dart';
-import 'package:table_reserver/utils/logger.dart';
+import 'package:seat_saver/api/common/api_routes.dart';
+import 'package:seat_saver/api/common/dio_setup.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
+import 'package:seat_saver/api/data/reservation_details.dart';
+import 'package:seat_saver/utils/logger.dart';
 
 class ReservationsApi {
   final Dio dio;

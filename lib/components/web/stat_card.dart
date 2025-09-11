@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:table_reserver/themes/web_theme.dart';
+import 'package:seat_saver/themes/web_theme.dart';
 
 class StatCard extends StatelessWidget {
   final String title;

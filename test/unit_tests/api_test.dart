@@ -5,22 +5,22 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/common/api_routes.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/data/notification_settings.dart';
-import 'package:table_reserver/api/data/paged_response.dart';
-import 'package:table_reserver/api/data/rating.dart';
-import 'package:table_reserver/api/data/reservation_details.dart';
-import 'package:table_reserver/api/data/user.dart';
-import 'package:table_reserver/api/data/user_location.dart';
-import 'package:table_reserver/api/data/user_response.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/data/venue_type.dart';
-import 'package:table_reserver/api/geolocation_api.dart';
-import 'package:table_reserver/api/reservation_api.dart';
-import 'package:table_reserver/api/support_api.dart';
-import 'package:table_reserver/api/venue_api.dart';
+import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/api/common/api_routes.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
+import 'package:seat_saver/api/data/notification_settings.dart';
+import 'package:seat_saver/api/data/paged_response.dart';
+import 'package:seat_saver/api/data/rating.dart';
+import 'package:seat_saver/api/data/reservation_details.dart';
+import 'package:seat_saver/api/data/user.dart';
+import 'package:seat_saver/api/data/user_location.dart';
+import 'package:seat_saver/api/data/user_response.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/api/data/venue_type.dart';
+import 'package:seat_saver/api/geolocation_api.dart';
+import 'package:seat_saver/api/reservation_api.dart';
+import 'package:seat_saver/api/support_api.dart';
+import 'package:seat_saver/api/venue_api.dart';
 
 class MockDio extends Mock implements Dio {}
 

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/pages/mobile/auth/sign_up_tab.dart';
-import 'package:table_reserver/pages/mobile/views/homepage.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/toaster.dart';
+import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/pages/mobile/auth/sign_up_tab.dart';
+import 'package:seat_saver/pages/mobile/views/homepage.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
+import 'package:seat_saver/utils/toaster.dart';
 
 class SignUpTabModel extends FlutterFlowModel<SignUpTab> with ChangeNotifier {
   final AccountApi accountApi = AccountApi();

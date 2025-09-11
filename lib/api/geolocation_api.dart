@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:table_reserver/api/common/api_routes.dart';
-import 'package:table_reserver/api/common/dio_setup.dart';
-import 'package:table_reserver/api/data/user_location.dart';
-import 'package:table_reserver/utils/logger.dart';
+import 'package:seat_saver/api/common/api_routes.dart';
+import 'package:seat_saver/api/common/dio_setup.dart';
+import 'package:seat_saver/api/data/user_location.dart';
+import 'package:seat_saver/utils/logger.dart';
 
 class GeolocationApi {
   final Dio dio;

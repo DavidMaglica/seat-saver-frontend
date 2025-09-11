@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:seat_saver/components/common/full_image_view.dart';
+import 'package:seat_saver/models/web/views/venue_page_model.dart';
+import 'package:seat_saver/themes/web_theme.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:table_reserver/components/common/full_image_view.dart';
-import 'package:table_reserver/models/web/views/venue_page_model.dart';
-import 'package:table_reserver/themes/web_theme.dart';
 
 class ImagesTab extends StatelessWidget {
   final VenuePageModel model;

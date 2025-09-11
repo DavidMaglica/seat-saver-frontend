@@ -2,16 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/paged_response.dart';
-import 'package:table_reserver/api/data/reservation_details.dart';
-import 'package:table_reserver/api/data/user.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/reservation_api.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/pages/web/views/reservations.dart';
-import 'package:table_reserver/utils/animations.dart';
+import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/api/data/paged_response.dart';
+import 'package:seat_saver/api/data/reservation_details.dart';
+import 'package:seat_saver/api/data/user.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/api/reservation_api.dart';
+import 'package:seat_saver/api/venue_api.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/pages/web/views/reservations.dart';
+import 'package:seat_saver/utils/animations.dart';
 
 class ReservationsModel extends FlutterFlowModel<WebReservations>
     with ChangeNotifier {

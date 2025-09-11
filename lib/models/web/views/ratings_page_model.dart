@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/utils/animations.dart';
+import 'package:seat_saver/api/venue_api.dart';
+import 'package:seat_saver/utils/animations.dart';
 
 class WebRatingsPageModel extends ChangeNotifier {
   final int ownerId;

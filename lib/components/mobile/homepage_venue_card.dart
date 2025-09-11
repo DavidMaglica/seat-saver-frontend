@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/pages/mobile/views/venue_page.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/utils.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/api/venue_api.dart';
+import 'package:seat_saver/pages/mobile/views/venue_page.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
+import 'package:seat_saver/utils/utils.dart';
 
 class VenueCard extends StatefulWidget {
   final Venue venue;

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/api/reservation_api.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/pages/web/views/account.dart';
-import 'package:table_reserver/pages/web/views/landing.dart';
-import 'package:table_reserver/utils/animations.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/sign_up_methods.dart';
-import 'package:table_reserver/utils/web_toaster.dart';
+import 'package:seat_saver/api/reservation_api.dart';
+import 'package:seat_saver/api/venue_api.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/pages/web/views/account.dart';
+import 'package:seat_saver/pages/web/views/landing.dart';
+import 'package:seat_saver/utils/animations.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
+import 'package:seat_saver/utils/sign_up_methods.dart';
+import 'package:seat_saver/utils/web_toaster.dart';
 
 class AccountModel extends FlutterFlowModel<WebAccount> with ChangeNotifier {
   int? numberOfReservations;

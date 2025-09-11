@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/themes/web_theme.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
+import 'package:seat_saver/themes/web_theme.dart';
 
 Color calculateAvailabilityColour(int maximumCapacity, int availableCapacity) {
   final ratio = maximumCapacity > 0 ? availableCapacity / maximumCapacity : 0.0;

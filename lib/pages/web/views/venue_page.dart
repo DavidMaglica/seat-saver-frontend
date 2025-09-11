@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/components/common/full_image_view.dart';
-import 'package:table_reserver/components/mobile/custom_appbar.dart';
-import 'package:table_reserver/components/web/images_tab.dart';
-import 'package:table_reserver/components/web/modals/edit_venue_modal.dart';
-import 'package:table_reserver/components/web/reviews_tab.dart';
-import 'package:table_reserver/components/web/venue_details_tab.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/models/web/views/venue_page_model.dart';
-import 'package:table_reserver/pages/web/views/homepage.dart';
-import 'package:table_reserver/themes/web_theme.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/utils.dart';
+import 'package:seat_saver/components/common/full_image_view.dart';
+import 'package:seat_saver/components/mobile/custom_appbar.dart';
+import 'package:seat_saver/components/web/images_tab.dart';
+import 'package:seat_saver/components/web/modals/edit_venue_modal.dart';
+import 'package:seat_saver/components/web/reviews_tab.dart';
+import 'package:seat_saver/components/web/venue_details_tab.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/models/web/views/venue_page_model.dart';
+import 'package:seat_saver/pages/web/views/homepage.dart';
+import 'package:seat_saver/themes/web_theme.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
+import 'package:seat_saver/utils/utils.dart';
 
 class WebVenuePage extends StatefulWidget {
   final int venueId;

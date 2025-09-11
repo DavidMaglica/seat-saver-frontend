@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/notification_settings.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/pages/mobile/views/homepage.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/toaster.dart';
-import 'package:table_reserver/utils/utils.dart';
+import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/api/data/notification_settings.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/pages/mobile/views/homepage.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
+import 'package:seat_saver/utils/toaster.dart';
+import 'package:seat_saver/utils/utils.dart';
 
 class LocationPermissionPopUpModel extends ChangeNotifier {
   final BuildContext context;

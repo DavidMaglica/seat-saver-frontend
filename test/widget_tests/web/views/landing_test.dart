@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/pages/web/views/landing.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/pages/web/views/landing.dart';
 
 import '../../../test_utils/google_sign_in_mock.dart';
 import '../../../test_utils/shared_preferences_mock.dart';

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/data/venue_type.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/components/web/modals/edit_venue_modal.dart';
-import 'package:table_reserver/utils/animations.dart';
-import 'package:table_reserver/utils/extensions.dart';
-import 'package:table_reserver/utils/web_toaster.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/api/data/venue_type.dart';
+import 'package:seat_saver/api/venue_api.dart';
+import 'package:seat_saver/components/web/modals/edit_venue_modal.dart';
+import 'package:seat_saver/utils/animations.dart';
+import 'package:seat_saver/utils/extensions.dart';
+import 'package:seat_saver/utils/web_toaster.dart';
 
 class EditVenueModel extends FlutterFlowModel<EditVenueModal>
     with ChangeNotifier {

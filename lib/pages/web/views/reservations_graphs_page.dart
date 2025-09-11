@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/api/data/reservation_details.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/components/mobile/custom_appbar.dart';
-import 'package:table_reserver/components/web/chart_card.dart';
-import 'package:table_reserver/components/web/timer_dropdown.dart';
-import 'package:table_reserver/models/web/views/reservations_graphs_page_model.dart';
-import 'package:table_reserver/pages/web/views/homepage.dart';
-import 'package:table_reserver/themes/web_theme.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:seat_saver/api/data/reservation_details.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/components/mobile/custom_appbar.dart';
+import 'package:seat_saver/components/web/chart_card.dart';
+import 'package:seat_saver/components/web/timer_dropdown.dart';
+import 'package:seat_saver/models/web/views/reservations_graphs_page_model.dart';
+import 'package:seat_saver/pages/web/views/homepage.dart';
+import 'package:seat_saver/themes/web_theme.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
 
 class ReservationsGraphsPage extends StatefulWidget {
   final int ownerId;

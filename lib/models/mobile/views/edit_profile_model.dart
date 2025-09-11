@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/user.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/toaster.dart';
+import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/api/data/user.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
+import 'package:seat_saver/utils/toaster.dart';
 
 class EditProfileModel extends ChangeNotifier {
   final int userId;

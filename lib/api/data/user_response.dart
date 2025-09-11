@@ -1,4 +1,4 @@
-import 'package:table_reserver/api/data/user.dart';
+import 'package:seat_saver/api/data/user.dart';
 
 class UserResponse {
   bool success;

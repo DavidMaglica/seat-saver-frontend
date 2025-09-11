@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:table_reserver/themes/web_theme.dart';
+import 'package:seat_saver/themes/web_theme.dart';
 import 'package:toastification/toastification.dart';
 
 class WebToaster {

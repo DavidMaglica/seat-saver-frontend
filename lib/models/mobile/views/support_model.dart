@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/data/user.dart';
-import 'package:table_reserver/api/support_api.dart';
-import 'package:table_reserver/utils/toaster.dart';
+import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
+import 'package:seat_saver/api/data/user.dart';
+import 'package:seat_saver/api/support_api.dart';
+import 'package:seat_saver/utils/toaster.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SupportModel extends ChangeNotifier {

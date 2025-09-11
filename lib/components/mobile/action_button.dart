@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
 
 class ActionButton extends StatelessWidget {
   final String title;

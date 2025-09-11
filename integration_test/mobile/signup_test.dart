@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:table_reserver/main.dart' as app;
-import 'package:table_reserver/pages/mobile/views/homepage.dart';
+import 'package:seat_saver/main.dart' as app;
+import 'package:seat_saver/pages/mobile/views/homepage.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +12,7 @@ void main() {
   const password = 'password';
 
   testWidgets('should sign up successfully', (tester) async {
-    final welcomeText = find.text('Welcome to TableReserver');
+    final welcomeText = find.text('Welcome to SeatSaver');
     final getStartedButton = find.byKey(const Key('getStartedButton'));
     final navInfo = find.byKey(const Key('navInfo'));
     final reservationHistoryTitle = find.byKey(

@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/models/mobile/auth/authentication_model.dart';
-import 'package:table_reserver/pages/mobile/auth/log_in_tab.dart';
-import 'package:table_reserver/pages/mobile/auth/sign_up_tab.dart';
-import 'package:table_reserver/pages/mobile/views/homepage.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/models/mobile/auth/authentication_model.dart';
+import 'package:seat_saver/pages/mobile/auth/log_in_tab.dart';
+import 'package:seat_saver/pages/mobile/auth/sign_up_tab.dart';
+import 'package:seat_saver/pages/mobile/views/homepage.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
 
 class Authentication extends StatefulWidget {
   const Authentication({super.key});

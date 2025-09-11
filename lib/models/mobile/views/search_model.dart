@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:table_reserver/api/data/paged_response.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/pages/mobile/views/venue_page.dart';
-import 'package:table_reserver/utils/extensions.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:seat_saver/api/data/paged_response.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/api/venue_api.dart';
+import 'package:seat_saver/pages/mobile/views/venue_page.dart';
+import 'package:seat_saver/utils/extensions.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
 
 class SearchModel extends ChangeNotifier {
   final int? selectedVenueType;

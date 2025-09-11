@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/api/data/rating.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/reservation_api.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/pages/web/views/venue_page.dart';
-import 'package:table_reserver/utils/animations.dart';
-import 'package:table_reserver/utils/extensions.dart';
-import 'package:table_reserver/utils/file_data.dart';
-import 'package:table_reserver/utils/file_picker/file_picker_interface.dart';
-import 'package:table_reserver/utils/venue_image_cache/venue_image_cache_interface.dart';
-import 'package:table_reserver/utils/web_toaster.dart';
+import 'package:seat_saver/api/data/rating.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/api/reservation_api.dart';
+import 'package:seat_saver/api/venue_api.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/pages/web/views/venue_page.dart';
+import 'package:seat_saver/utils/animations.dart';
+import 'package:seat_saver/utils/extensions.dart';
+import 'package:seat_saver/utils/file_data.dart';
+import 'package:seat_saver/utils/file_picker/file_picker_interface.dart';
+import 'package:seat_saver/utils/venue_image_cache/venue_image_cache_interface.dart';
+import 'package:seat_saver/utils/web_toaster.dart';
 
 class VenuePageModel extends FlutterFlowModel<WebVenuePage>
     with ChangeNotifier {

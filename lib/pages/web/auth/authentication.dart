@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/models/web/auth/authentication_model.dart';
-import 'package:table_reserver/pages/web/auth/log_in_tab.dart';
-import 'package:table_reserver/pages/web/auth/sign_up_tab.dart';
-import 'package:table_reserver/themes/web_theme.dart';
-import 'package:table_reserver/utils/utils.dart';
+import 'package:seat_saver/models/web/auth/authentication_model.dart';
+import 'package:seat_saver/pages/web/auth/log_in_tab.dart';
+import 'package:seat_saver/pages/web/auth/sign_up_tab.dart';
+import 'package:seat_saver/themes/web_theme.dart';
+import 'package:seat_saver/utils/utils.dart';
 
 class WebAuthentication extends StatefulWidget {
   const WebAuthentication({super.key});

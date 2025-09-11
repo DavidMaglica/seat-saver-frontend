@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/pages/mobile/views/homepage.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:seat_saver/pages/mobile/views/homepage.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
 
 class Landing extends StatelessWidget {
   const Landing({super.key});
@@ -59,7 +59,7 @@ class Landing extends StatelessWidget {
                   ),
                   Text(
                     key: const Key('welcomeText'),
-                    'Welcome to TableReserver',
+                    'Welcome to SeatSaver',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   FFButtonWidget(

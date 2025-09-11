@@ -4,12 +4,12 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/models/mobile/auth/authentication_model.dart';
-import 'package:table_reserver/models/mobile/auth/login_tab_model.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/toaster.dart';
+import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/models/mobile/auth/authentication_model.dart';
+import 'package:seat_saver/models/mobile/auth/login_tab_model.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
+import 'package:seat_saver/utils/toaster.dart';
 
 class LogInTab extends StatefulWidget {
   final AuthenticationModel model;

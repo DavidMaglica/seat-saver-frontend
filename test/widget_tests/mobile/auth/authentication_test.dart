@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:table_reserver/pages/mobile/auth/authentication.dart';
-import 'package:table_reserver/pages/mobile/views/homepage.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:seat_saver/pages/mobile/auth/authentication.dart';
+import 'package:seat_saver/pages/mobile/views/homepage.dart';
+import 'package:seat_saver/utils/routes.dart';
 
 import '../../../test_utils/shared_preferences_mock.dart';
 

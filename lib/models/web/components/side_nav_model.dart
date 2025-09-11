@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/components/web/side_nav.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/theme_provider.dart';
+import 'package:seat_saver/components/web/side_nav.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/theme_provider.dart';
 
 class SideNavModel extends FlutterFlowModel<SideNav> with ChangeNotifier {
   final int ownerId = sharedPreferencesCache.getInt('ownerId')!;

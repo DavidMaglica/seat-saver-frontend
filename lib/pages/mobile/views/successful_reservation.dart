@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/models/mobile/views/successful_reservation_model.dart';
+import 'package:seat_saver/models/mobile/views/successful_reservation_model.dart';
 
 class SuccessfulReservation extends StatelessWidget {
   final String venueName;

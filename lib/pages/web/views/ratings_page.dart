@@ -5,14 +5,14 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:rating_summary/rating_summary.dart';
-import 'package:table_reserver/components/mobile/custom_appbar.dart';
-import 'package:table_reserver/components/web/timer_dropdown.dart';
-import 'package:table_reserver/models/web/views/ratings_page_model.dart';
-import 'package:table_reserver/pages/web/views/homepage.dart';
-import 'package:table_reserver/pages/web/views/venue_page.dart';
-import 'package:table_reserver/themes/web_theme.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:seat_saver/components/mobile/custom_appbar.dart';
+import 'package:seat_saver/components/web/timer_dropdown.dart';
+import 'package:seat_saver/models/web/views/ratings_page_model.dart';
+import 'package:seat_saver/pages/web/views/homepage.dart';
+import 'package:seat_saver/pages/web/views/venue_page.dart';
+import 'package:seat_saver/themes/web_theme.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
 
 class WebRatingsPage extends StatefulWidget {
   final int ownerId;

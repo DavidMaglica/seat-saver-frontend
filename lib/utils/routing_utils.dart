@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import 'package:table_reserver/pages/mobile/views/account.dart';
-import 'package:table_reserver/pages/mobile/views/homepage.dart';
-import 'package:table_reserver/pages/mobile/views/nearby.dart';
-import 'package:table_reserver/pages/mobile/views/search.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:seat_saver/pages/mobile/views/account.dart';
+import 'package:seat_saver/pages/mobile/views/homepage.dart';
+import 'package:seat_saver/pages/mobile/views/nearby.dart';
+import 'package:seat_saver/pages/mobile/views/search.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
 
 void onNavbarItemTapped(BuildContext context, int pageIndex, int index) {
   if (index == pageIndex) {

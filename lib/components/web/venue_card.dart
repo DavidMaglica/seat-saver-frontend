@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/pages/web/views/venue_page.dart';
-import 'package:table_reserver/themes/web_theme.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/utils.dart';
-import 'package:table_reserver/utils/venue_image_cache/venue_image_cache_interface.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/api/venue_api.dart';
+import 'package:seat_saver/pages/web/views/venue_page.dart';
+import 'package:seat_saver/themes/web_theme.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
+import 'package:seat_saver/utils/utils.dart';
+import 'package:seat_saver/utils/venue_image_cache/venue_image_cache_interface.dart';
 
 class WebVenueCard extends StatefulWidget {
   final Venue venue;

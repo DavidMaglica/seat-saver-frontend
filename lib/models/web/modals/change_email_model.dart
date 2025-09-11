@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/components/web/modals/change_email_modal.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/utils/animations.dart';
-import 'package:table_reserver/utils/web_toaster.dart';
+import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
+import 'package:seat_saver/components/web/modals/change_email_modal.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/utils/animations.dart';
+import 'package:seat_saver/utils/web_toaster.dart';
 
 class ChangeEmailModel extends FlutterFlowModel<ChangeEmailModal>
     with ChangeNotifier {

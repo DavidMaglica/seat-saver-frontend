@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:typed_data';
 
-import 'package:table_reserver/utils/file_data.dart';
+import 'package:seat_saver/utils/file_data.dart';
 
 Future<FileData?> imagePicker() async {
   final completer = Completer<FileData?>();

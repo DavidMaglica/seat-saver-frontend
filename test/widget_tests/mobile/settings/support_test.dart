@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/data/user.dart';
-import 'package:table_reserver/api/data/user_response.dart';
-import 'package:table_reserver/api/support_api.dart';
-import 'package:table_reserver/models/mobile/views/support_model.dart';
-import 'package:table_reserver/pages/mobile/settings/support.dart';
+import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
+import 'package:seat_saver/api/data/user.dart';
+import 'package:seat_saver/api/data/user_response.dart';
+import 'package:seat_saver/api/support_api.dart';
+import 'package:seat_saver/models/mobile/views/support_model.dart';
+import 'package:seat_saver/pages/mobile/settings/support.dart';
 
 import '../../../test_utils/shared_preferences_mock.dart';
 

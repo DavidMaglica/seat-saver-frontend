@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/data/rating.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/utils/toaster.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
+import 'package:seat_saver/api/data/rating.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/api/venue_api.dart';
+import 'package:seat_saver/utils/toaster.dart';
 
 class RatingsPageModel extends ChangeNotifier {
   final int venueId;

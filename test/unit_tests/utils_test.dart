@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:table_reserver/api/common/api_routes.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/themes/web_theme.dart';
-import 'package:table_reserver/utils/animations.dart';
-import 'package:table_reserver/utils/extensions.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/theme_provider.dart';
-import 'package:table_reserver/utils/toaster.dart';
-import 'package:table_reserver/utils/utils.dart';
+import 'package:seat_saver/api/common/api_routes.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
+import 'package:seat_saver/themes/web_theme.dart';
+import 'package:seat_saver/utils/animations.dart';
+import 'package:seat_saver/utils/extensions.dart';
+import 'package:seat_saver/utils/routes.dart';
+import 'package:seat_saver/utils/theme_provider.dart';
+import 'package:seat_saver/utils/toaster.dart';
+import 'package:seat_saver/utils/utils.dart';
 
 void main() {
   group('Animations', () {

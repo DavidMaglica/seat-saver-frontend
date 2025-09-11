@@ -1,6 +1,6 @@
 import 'package:mocktail/mocktail.dart';
+import 'package:seat_saver/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:table_reserver/main.dart';
 
 class MockSharedPreferences extends Mock
     implements SharedPreferencesWithCache {}

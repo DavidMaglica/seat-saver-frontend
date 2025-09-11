@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/user.dart';
-import 'package:table_reserver/api/data/user_response.dart';
-import 'package:table_reserver/models/mobile/views/account_model.dart';
-import 'package:table_reserver/pages/mobile/auth/authentication.dart';
-import 'package:table_reserver/pages/mobile/settings/edit_profile.dart';
-import 'package:table_reserver/pages/mobile/settings/notification_settings.dart';
-import 'package:table_reserver/pages/mobile/settings/reservation_history.dart';
-import 'package:table_reserver/pages/mobile/settings/support.dart';
-import 'package:table_reserver/pages/mobile/settings/terms_of_service.dart';
-import 'package:table_reserver/pages/mobile/views/account.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/api/data/user.dart';
+import 'package:seat_saver/api/data/user_response.dart';
+import 'package:seat_saver/models/mobile/views/account_model.dart';
+import 'package:seat_saver/pages/mobile/auth/authentication.dart';
+import 'package:seat_saver/pages/mobile/settings/edit_profile.dart';
+import 'package:seat_saver/pages/mobile/settings/notification_settings.dart';
+import 'package:seat_saver/pages/mobile/settings/reservation_history.dart';
+import 'package:seat_saver/pages/mobile/settings/support.dart';
+import 'package:seat_saver/pages/mobile/settings/terms_of_service.dart';
+import 'package:seat_saver/pages/mobile/views/account.dart';
+import 'package:seat_saver/utils/routes.dart';
 
 import '../../../test_utils/shared_preferences_mock.dart';
 

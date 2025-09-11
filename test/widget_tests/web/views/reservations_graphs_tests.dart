@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/api/data/paged_response.dart';
-import 'package:table_reserver/api/data/reservation_details.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/reservation_api.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/models/web/components/side_nav_model.dart';
-import 'package:table_reserver/models/web/views/reservations_graphs_page_model.dart';
-import 'package:table_reserver/pages/web/views/reservations.dart';
-import 'package:table_reserver/pages/web/views/reservations_graphs_page.dart';
+import 'package:seat_saver/api/data/paged_response.dart';
+import 'package:seat_saver/api/data/reservation_details.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/api/reservation_api.dart';
+import 'package:seat_saver/api/venue_api.dart';
+import 'package:seat_saver/models/web/components/side_nav_model.dart';
+import 'package:seat_saver/models/web/views/reservations_graphs_page_model.dart';
+import 'package:seat_saver/pages/web/views/reservations.dart';
+import 'package:seat_saver/pages/web/views/reservations_graphs_page.dart';
 
 import '../../../test_utils/shared_preferences_mock.dart';
 import '../../../test_utils/utils.dart';

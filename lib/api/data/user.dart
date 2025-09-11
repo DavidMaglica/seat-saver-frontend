@@ -1,4 +1,4 @@
-import 'package:table_reserver/api/data/notification_settings.dart';
+import 'package:seat_saver/api/data/notification_settings.dart';
 
 class User {
   final int id;

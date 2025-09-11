@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:table_reserver/_patched_packages/flutterflow_ui/lib/flutterflow_ui.dart';
-import 'package:table_reserver/themes/web_theme.dart';
+import 'package:seat_saver/_patched_packages/flutterflow_ui/lib/flutterflow_ui.dart';
+import 'package:seat_saver/themes/web_theme.dart';
 
 class CircularStatCard extends StatelessWidget {
   final String title;

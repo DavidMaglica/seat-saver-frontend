@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:table_reserver/api/common/api_routes.dart';
-import 'package:table_reserver/api/common/dio_setup.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/data/notification_settings.dart';
-import 'package:table_reserver/api/data/user.dart';
-import 'package:table_reserver/api/data/user_location.dart';
-import 'package:table_reserver/api/data/user_response.dart';
-import 'package:table_reserver/utils/logger.dart';
+import 'package:seat_saver/api/common/api_routes.dart';
+import 'package:seat_saver/api/common/dio_setup.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
+import 'package:seat_saver/api/data/notification_settings.dart';
+import 'package:seat_saver/api/data/user.dart';
+import 'package:seat_saver/api/data/user_location.dart';
+import 'package:seat_saver/api/data/user_response.dart';
+import 'package:seat_saver/utils/logger.dart';
 
 class AccountApi {
   final Dio dio;

@@ -1,6 +1,6 @@
 {
-    "name": "table_reserver",
-    "short_name": "table_reserver",
+  "name": "seat_saver",
+  "short_name": "seat_saver",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

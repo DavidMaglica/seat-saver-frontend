@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/reservation_api.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/components/web/modals/delete_modal.dart';
-import 'package:table_reserver/utils/animations.dart';
-import 'package:table_reserver/utils/web_toaster.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
+import 'package:seat_saver/api/reservation_api.dart';
+import 'package:seat_saver/api/venue_api.dart';
+import 'package:seat_saver/components/web/modals/delete_modal.dart';
+import 'package:seat_saver/utils/animations.dart';
+import 'package:seat_saver/utils/web_toaster.dart';
 
 class DeleteModalModel extends FlutterFlowModel<DeleteModal>
     with ChangeNotifier {

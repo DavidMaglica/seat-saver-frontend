@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
 
 /// A utility class for displaying toast-style messages using Flutter's [SnackBar].
 ///

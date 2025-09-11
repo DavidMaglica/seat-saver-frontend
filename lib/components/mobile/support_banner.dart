@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
 
 class SupportBanner extends StatelessWidget {
   final String title;

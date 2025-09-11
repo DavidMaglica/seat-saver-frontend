@@ -1,9 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/models/mobile/components/venue_card_by_type_model.dart';
-import 'package:table_reserver/utils/utils.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/models/mobile/components/venue_card_by_type_model.dart';
+import 'package:seat_saver/utils/utils.dart';
 
 class VenueCardByType extends StatelessWidget {
   final Venue venue;

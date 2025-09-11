@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:table_reserver/pages/mobile/settings/terms_of_service.dart';
+import 'package:seat_saver/pages/mobile/settings/terms_of_service.dart';
 
 void main() {
   testWidgets('should display widget correctly', (tester) async {

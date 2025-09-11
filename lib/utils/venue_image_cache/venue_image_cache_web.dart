@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:html' as html;
 import 'dart:typed_data';
 
-import 'package:table_reserver/utils/logger.dart';
+import 'package:seat_saver/utils/logger.dart';
 
 class VenueImageCache {
   static final Map<int, Uint8List> _cache = {};

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/components/web/side_nav.dart';
-import 'package:table_reserver/components/web/venue_card.dart';
-import 'package:table_reserver/models/web/views/venues_model.dart';
-import 'package:table_reserver/themes/web_theme.dart';
+import 'package:seat_saver/components/web/side_nav.dart';
+import 'package:seat_saver/components/web/venue_card.dart';
+import 'package:seat_saver/models/web/views/venues_model.dart';
+import 'package:seat_saver/themes/web_theme.dart';
 
 class WebVenuesPage extends StatefulWidget {
   final VenuesModel? modelOverride;

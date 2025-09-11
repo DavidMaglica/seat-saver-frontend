@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/api/data/paged_response.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/venue_api.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/pages/web/views/venues.dart';
-import 'package:table_reserver/utils/animations.dart';
+import 'package:seat_saver/api/data/paged_response.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/api/venue_api.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/pages/web/views/venues.dart';
+import 'package:seat_saver/utils/animations.dart';
 
 class VenuesModel extends FlutterFlowModel<WebVenuesPage> with ChangeNotifier {
   final VenuesApi venuesApi;

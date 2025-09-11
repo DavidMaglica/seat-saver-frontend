@@ -2,16 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/components/web/modals/change_email_modal.dart';
-import 'package:table_reserver/components/web/modals/change_password_modal.dart';
-import 'package:table_reserver/components/web/modals/change_username_modal.dart';
-import 'package:table_reserver/components/web/modals/modal_widgets.dart';
-import 'package:table_reserver/components/web/modals/support_modal.dart';
-import 'package:table_reserver/components/web/side_nav.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/models/web/components/side_nav_model.dart';
-import 'package:table_reserver/models/web/views/account_model.dart';
-import 'package:table_reserver/themes/web_theme.dart';
+import 'package:seat_saver/components/web/modals/change_email_modal.dart';
+import 'package:seat_saver/components/web/modals/change_password_modal.dart';
+import 'package:seat_saver/components/web/modals/change_username_modal.dart';
+import 'package:seat_saver/components/web/modals/modal_widgets.dart';
+import 'package:seat_saver/components/web/modals/support_modal.dart';
+import 'package:seat_saver/components/web/side_nav.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/models/web/components/side_nav_model.dart';
+import 'package:seat_saver/models/web/views/account_model.dart';
+import 'package:seat_saver/themes/web_theme.dart';
 
 class WebAccount extends StatefulWidget {
   final AccountModel? modelOverride;

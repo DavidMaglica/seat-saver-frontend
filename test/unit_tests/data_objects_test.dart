@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/data/notification_settings.dart';
-import 'package:table_reserver/api/data/paged_response.dart';
-import 'package:table_reserver/api/data/rating.dart';
-import 'package:table_reserver/api/data/reservation_details.dart';
-import 'package:table_reserver/api/data/user.dart';
-import 'package:table_reserver/api/data/user_location.dart';
-import 'package:table_reserver/api/data/user_response.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/data/venue_type.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
+import 'package:seat_saver/api/data/notification_settings.dart';
+import 'package:seat_saver/api/data/paged_response.dart';
+import 'package:seat_saver/api/data/rating.dart';
+import 'package:seat_saver/api/data/reservation_details.dart';
+import 'package:seat_saver/api/data/user.dart';
+import 'package:seat_saver/api/data/user_location.dart';
+import 'package:seat_saver/api/data/user_response.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/api/data/venue_type.dart';
 
 void main() {
   group('BasicResponse', () {

@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
-import 'package:table_reserver/api/data/venue.dart';
-import 'package:table_reserver/api/venue_api.dart';
+import 'package:seat_saver/api/data/venue.dart';
+import 'package:seat_saver/api/venue_api.dart';
 
 class VenueCardByTypeModel extends ChangeNotifier {
   final BuildContext context;

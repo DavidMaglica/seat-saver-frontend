@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:table_reserver/api/account_api.dart';
-import 'package:table_reserver/api/data/user.dart';
-import 'package:table_reserver/pages/mobile/settings/edit_profile.dart';
-import 'package:table_reserver/pages/mobile/settings/notification_settings.dart';
-import 'package:table_reserver/pages/mobile/settings/reservation_history.dart';
-import 'package:table_reserver/pages/mobile/settings/support.dart';
-import 'package:table_reserver/pages/mobile/settings/terms_of_service.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/toaster.dart';
+import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/api/data/user.dart';
+import 'package:seat_saver/pages/mobile/settings/edit_profile.dart';
+import 'package:seat_saver/pages/mobile/settings/notification_settings.dart';
+import 'package:seat_saver/pages/mobile/settings/reservation_history.dart';
+import 'package:seat_saver/pages/mobile/settings/support.dart';
+import 'package:seat_saver/pages/mobile/settings/terms_of_service.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
+import 'package:seat_saver/utils/toaster.dart';
 
 class AccountModel extends ChangeNotifier {
   final int? userId;

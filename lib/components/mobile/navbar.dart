@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
 
 class NavBar extends StatelessWidget {
   final int currentIndex;

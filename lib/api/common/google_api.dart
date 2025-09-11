@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:table_reserver/utils/logger.dart';
+import 'package:seat_saver/utils/logger.dart';
 
 final dio = Dio();
 const String apiKey = String.fromEnvironment('GOOGLE_API_KEY');

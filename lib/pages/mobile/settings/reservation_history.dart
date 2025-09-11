@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:table_reserver/api/data/reservation_details.dart';
-import 'package:table_reserver/components/mobile/custom_appbar.dart';
-import 'package:table_reserver/components/mobile/modal_widgets.dart';
-import 'package:table_reserver/models/mobile/views/reservation_history_model.dart';
-import 'package:table_reserver/pages/mobile/views/account.dart';
-import 'package:table_reserver/themes/mobile_theme.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:seat_saver/api/data/reservation_details.dart';
+import 'package:seat_saver/components/mobile/custom_appbar.dart';
+import 'package:seat_saver/components/mobile/modal_widgets.dart';
+import 'package:seat_saver/models/mobile/views/reservation_history_model.dart';
+import 'package:seat_saver/pages/mobile/views/account.dart';
+import 'package:seat_saver/themes/mobile_theme.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
 
 class ReservationHistory extends StatelessWidget {
   final int userId;

@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/pages/mobile/auth/authentication.dart';
-import 'package:table_reserver/pages/mobile/settings/edit_profile.dart';
-import 'package:table_reserver/pages/mobile/settings/notification_settings.dart';
-import 'package:table_reserver/pages/mobile/settings/reservation_history.dart';
-import 'package:table_reserver/pages/mobile/settings/support.dart';
-import 'package:table_reserver/pages/mobile/settings/terms_of_service.dart';
-import 'package:table_reserver/pages/mobile/views/account.dart';
-import 'package:table_reserver/pages/mobile/views/homepage.dart';
-import 'package:table_reserver/pages/mobile/views/landing.dart';
-import 'package:table_reserver/pages/mobile/views/nearby.dart';
-import 'package:table_reserver/pages/mobile/views/ratings_page.dart';
-import 'package:table_reserver/pages/mobile/views/search.dart';
-import 'package:table_reserver/pages/mobile/views/successful_reservation.dart';
-import 'package:table_reserver/pages/mobile/views/venue_page.dart';
-import 'package:table_reserver/pages/mobile/views/venues_by_type.dart';
-import 'package:table_reserver/utils/routes.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/pages/mobile/auth/authentication.dart';
+import 'package:seat_saver/pages/mobile/settings/edit_profile.dart';
+import 'package:seat_saver/pages/mobile/settings/notification_settings.dart';
+import 'package:seat_saver/pages/mobile/settings/reservation_history.dart';
+import 'package:seat_saver/pages/mobile/settings/support.dart';
+import 'package:seat_saver/pages/mobile/settings/terms_of_service.dart';
+import 'package:seat_saver/pages/mobile/views/account.dart';
+import 'package:seat_saver/pages/mobile/views/homepage.dart';
+import 'package:seat_saver/pages/mobile/views/landing.dart';
+import 'package:seat_saver/pages/mobile/views/nearby.dart';
+import 'package:seat_saver/pages/mobile/views/ratings_page.dart';
+import 'package:seat_saver/pages/mobile/views/search.dart';
+import 'package:seat_saver/pages/mobile/views/successful_reservation.dart';
+import 'package:seat_saver/pages/mobile/views/venue_page.dart';
+import 'package:seat_saver/pages/mobile/views/venues_by_type.dart';
+import 'package:seat_saver/utils/routes.dart';
 
 class FadeInRoute extends PageRouteBuilder {
   final Widget page;

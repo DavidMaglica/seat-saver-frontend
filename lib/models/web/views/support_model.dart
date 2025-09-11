@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/api/data/basic_response.dart';
-import 'package:table_reserver/api/support_api.dart';
-import 'package:table_reserver/components/web/modals/modal_widgets.dart';
-import 'package:table_reserver/components/web/modals/support_modal.dart';
-import 'package:table_reserver/main.dart';
-import 'package:table_reserver/utils/animations.dart';
-import 'package:table_reserver/utils/web_toaster.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
+import 'package:seat_saver/api/support_api.dart';
+import 'package:seat_saver/components/web/modals/modal_widgets.dart';
+import 'package:seat_saver/components/web/modals/support_modal.dart';
+import 'package:seat_saver/main.dart';
+import 'package:seat_saver/utils/animations.dart';
+import 'package:seat_saver/utils/web_toaster.dart';
 
 class WebSupportModel extends FlutterFlowModel<SupportModal>
     with ChangeNotifier {

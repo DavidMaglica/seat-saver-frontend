@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:table_reserver/pages/web/auth/authentication.dart';
-import 'package:table_reserver/themes/web_theme.dart';
-import 'package:table_reserver/utils/animations.dart';
-import 'package:table_reserver/utils/fade_in_route.dart';
-import 'package:table_reserver/utils/routes.dart';
-import 'package:table_reserver/utils/utils.dart';
+import 'package:seat_saver/pages/web/auth/authentication.dart';
+import 'package:seat_saver/themes/web_theme.dart';
+import 'package:seat_saver/utils/animations.dart';
+import 'package:seat_saver/utils/fade_in_route.dart';
+import 'package:seat_saver/utils/routes.dart';
+import 'package:seat_saver/utils/utils.dart';
 
 class WebLanding extends StatefulWidget {
   const WebLanding({super.key});
@@ -95,7 +95,7 @@ class _WebLandingState extends State<WebLanding> with TickerProviderStateMixin {
   Widget _buildTitle(BuildContext context) {
     return Text(
       key: const Key('landingTitle'),
-      'Welcome to your TableReserver Admin Dashboard!',
+      'Welcome to your SeatSaver Admin Dashboard!',
       textAlign: TextAlign.center,
       style: Theme.of(context).textTheme.titleLarge,
     );
