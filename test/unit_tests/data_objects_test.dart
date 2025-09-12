@@ -6,7 +6,6 @@ import 'package:seat_saver/api/data/rating.dart';
 import 'package:seat_saver/api/data/reservation_details.dart';
 import 'package:seat_saver/api/data/user.dart';
 import 'package:seat_saver/api/data/user_location.dart';
-import 'package:seat_saver/api/data/user_response.dart';
 import 'package:seat_saver/api/data/venue.dart';
 import 'package:seat_saver/api/data/venue_type.dart';
 
@@ -146,21 +145,6 @@ void main() {
       expect(user.notificationOptions, null);
       expect(user.lastKnownLatitude, null);
       expect(user.lastKnownLongitude, null);
-    });
-  });
-
-  group('UserResponse', () {
-    test('fromJson parses correctly', () {
-      final json = {
-        'success': true,
-        'message': 'ok',
-        'user': {'id': 1, 'username': 'user', 'email': 'a@b.com'},
-      };
-      final resp = UserResponse.fromJson(json);
-      expect(resp.success, true);
-      expect(resp.message, 'ok');
-      expect(resp.user?.id, 1);
-      expect(resp.user?.username, 'user');
     });
   });
 

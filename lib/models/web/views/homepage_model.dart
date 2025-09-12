@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
 import 'package:seat_saver/api/data/paged_response.dart';
 import 'package:seat_saver/api/data/user.dart';
-import 'package:seat_saver/api/data/user_response.dart';
 import 'package:seat_saver/api/data/venue.dart';
 import 'package:seat_saver/api/reservation_api.dart';
 import 'package:seat_saver/api/venue_api.dart';
@@ -105,9 +105,9 @@ class HomepageModel extends FlutterFlowModel<WebHomepage> with ChangeNotifier {
     BuildContext context,
     int ownerId,
   ) async {
-    UserResponse? response = await accountApi.getUser(ownerId);
-    if (response != null && response.success && response.user != null) {
-      User user = response.user!;
+    BasicResponse<User?> response = await accountApi.getUser(ownerId);
+    if (response.success && response.data != null) {
+      User user = response.data!;
       await sharedPreferencesCache.setString('ownerEmail', user.email);
       await sharedPreferencesCache.setString('ownerName', user.username);
       Provider.of<SideNavModel>(context, listen: false).getUserFromCache();

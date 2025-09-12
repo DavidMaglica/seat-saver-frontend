@@ -38,8 +38,8 @@ class AccountModel extends ChangeNotifier {
 
   Future<void> _getUser(int userId) async {
     final response = await accountApi.getUser(userId);
-    if (response != null && response.success) {
-      currentUser = response.user;
+    if (response.success) {
+      currentUser = response.data;
       notifyListeners();
     }
   }

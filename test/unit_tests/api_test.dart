@@ -14,7 +14,6 @@ import 'package:seat_saver/api/data/rating.dart';
 import 'package:seat_saver/api/data/reservation_details.dart';
 import 'package:seat_saver/api/data/user.dart';
 import 'package:seat_saver/api/data/user_location.dart';
-import 'package:seat_saver/api/data/user_response.dart';
 import 'package:seat_saver/api/data/venue.dart';
 import 'package:seat_saver/api/data/venue_type.dart';
 import 'package:seat_saver/api/geolocation_api.dart';
@@ -83,12 +82,12 @@ void main() {
 
         final result = await accountApi.getUser(testUserId);
 
-        expect(result, isA<UserResponse>());
-        expect(result!.success, true);
+        expect(result, isA<BasicResponse<User?>>());
+        expect(result.success, true);
         expect(result.message, 'User found');
-        expect(result.user!.id, testUserId);
-        expect(result.user!.username, testUsername);
-        expect(result.user!.email, testUserEmail);
+        expect(result.data!.id, testUserId);
+        expect(result.data!.username, testUsername);
+        expect(result.data!.email, testUserEmail);
       });
 
       test('should return UserResponse with false when Dio throws', () async {
@@ -104,10 +103,10 @@ void main() {
 
         final result = await accountApi.getUser(testUserId);
 
-        expect(result, isA<UserResponse>());
-        expect(result!.success, false);
+        expect(result, isA<BasicResponse<User?>>());
+        expect(result.success, false);
         expect(result.message, 'User not found');
-        expect(result.user, isNull);
+        expect(result.data, isNull);
       });
     });
 

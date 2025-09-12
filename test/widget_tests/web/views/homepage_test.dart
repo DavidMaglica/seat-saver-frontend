@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:seat_saver/api/account_api.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
 import 'package:seat_saver/api/data/paged_response.dart';
 import 'package:seat_saver/api/data/user.dart';
-import 'package:seat_saver/api/data/user_response.dart';
 import 'package:seat_saver/api/data/venue.dart';
 import 'package:seat_saver/api/reservation_api.dart';
 import 'package:seat_saver/api/venue_api.dart';
@@ -228,11 +228,11 @@ void main() {
 
 class FakeAccountApi extends Fake implements AccountApi {
   @override
-  Future<UserResponse?> getUser(int userId) async {
-    return UserResponse(
+  Future<BasicResponse<User?>> getUser(int userId) async {
+    return BasicResponse(
       success: true,
       message: 'User found',
-      user: User(id: 1, username: 'testUser', email: 'test@mail.com'),
+      data: User(id: 1, username: 'testUser', email: 'test@mail.com'),
     );
   }
 }

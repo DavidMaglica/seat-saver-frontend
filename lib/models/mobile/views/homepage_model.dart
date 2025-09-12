@@ -8,11 +8,11 @@ import 'package:flutter/scheduler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:seat_saver/api/account_api.dart';
 import 'package:seat_saver/api/common/google_api.dart';
+import 'package:seat_saver/api/data/basic_response.dart';
 import 'package:seat_saver/api/data/notification_settings.dart';
 import 'package:seat_saver/api/data/paged_response.dart';
 import 'package:seat_saver/api/data/user.dart';
 import 'package:seat_saver/api/data/user_location.dart';
-import 'package:seat_saver/api/data/user_response.dart';
 import 'package:seat_saver/api/data/venue.dart';
 import 'package:seat_saver/api/geolocation_api.dart';
 import 'package:seat_saver/api/venue_api.dart';
@@ -172,9 +172,9 @@ class HomepageModel extends ChangeNotifier {
 
   Future<void> checkLogIn() async {
     if (userId != null) {
-      UserResponse? user = await accountApi.getUser(userId!);
-      if (user != null && user.success) {
-        loggedInUser = user.user;
+      BasicResponse<User?> user = await accountApi.getUser(userId!);
+      if (user.success) {
+        loggedInUser = user.data;
       }
     }
     notifyListeners();

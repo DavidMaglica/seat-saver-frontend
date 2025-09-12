@@ -47,8 +47,8 @@ class EditProfileModel extends ChangeNotifier {
 
   Future<void> _getUser(BuildContext context) async {
     final response = await accountApi.getUser(userId);
-    if (response != null && response.success && response.user != null) {
-      currentUser = response.user!;
+    if (response.success && response.data != null) {
+      currentUser = response.data!;
     } else {
       _showToast(context, 'Failed to load user data', MobileTheme.errorColor);
     }

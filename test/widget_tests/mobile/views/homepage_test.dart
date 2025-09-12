@@ -7,7 +7,6 @@ import 'package:seat_saver/api/data/notification_settings.dart';
 import 'package:seat_saver/api/data/paged_response.dart';
 import 'package:seat_saver/api/data/user.dart';
 import 'package:seat_saver/api/data/user_location.dart';
-import 'package:seat_saver/api/data/user_response.dart';
 import 'package:seat_saver/api/data/venue.dart';
 import 'package:seat_saver/api/geolocation_api.dart';
 import 'package:seat_saver/api/venue_api.dart';
@@ -140,11 +139,11 @@ class FakeAccountApi extends Fake implements AccountApi {
   static const longitude = 13.61;
 
   @override
-  Future<UserResponse?> getUser(int userId) async {
-    return UserResponse(
+  Future<BasicResponse<User?>> getUser(int userId) async {
+    return BasicResponse(
       success: true,
       message: 'User found',
-      user: User(
+      data: User(
         id: 1,
         username: 'username',
         email: 'test@mail.com',
@@ -171,8 +170,8 @@ class FakeAccountApi extends Fake implements AccountApi {
 
 class NullUserAccountApi extends Fake implements AccountApi {
   @override
-  Future<UserResponse?> getUser(int userId) async {
-    return UserResponse(success: false, message: 'User not found', user: null);
+  Future<BasicResponse<User?>> getUser(int userId) async {
+    return BasicResponse(success: false, message: 'User not found', data: null);
   }
 
   @override

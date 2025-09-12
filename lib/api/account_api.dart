@@ -6,7 +6,6 @@ import 'package:seat_saver/api/data/basic_response.dart';
 import 'package:seat_saver/api/data/notification_settings.dart';
 import 'package:seat_saver/api/data/user.dart';
 import 'package:seat_saver/api/data/user_location.dart';
-import 'package:seat_saver/api/data/user_response.dart';
 import 'package:seat_saver/utils/logger.dart';
 
 class AccountApi {
@@ -14,20 +13,20 @@ class AccountApi {
 
   AccountApi({Dio? dio}) : dio = dio ?? setupDio();
 
-  Future<UserResponse?> getUser(int userId) async {
+  Future<BasicResponse<User?>> getUser(int userId) async {
     try {
       Response response = await dio.get(ApiRoutes.userById(userId));
 
-      return UserResponse(
+      return BasicResponse(
         success: true,
         message: 'User found',
-        user: User.fromJson(response.data),
+        data: User.fromJson(response.data),
       );
     } catch (e) {
-      return UserResponse(
+      return BasicResponse(
         success: false,
         message: 'User not found',
-        user: null,
+        data: null,
       );
     }
   }

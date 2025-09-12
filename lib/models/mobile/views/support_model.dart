@@ -39,8 +39,8 @@ class SupportModel extends ChangeNotifier {
 
   Future<void> _getUser(BuildContext context) async {
     final response = await accountApi.getUser(userId);
-    if (response != null && response.success && response.user != null) {
-      loggedInUser = response.user!;
+    if (response.success && response.data != null) {
+      loggedInUser = response.data!;
     } else {
       if (!context.mounted) return;
       Toaster.displayError(context, 'Failed to load user data.');

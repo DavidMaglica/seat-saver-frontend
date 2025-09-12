@@ -6,7 +6,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:seat_saver/api/account_api.dart';
 import 'package:seat_saver/api/data/basic_response.dart';
 import 'package:seat_saver/api/data/user.dart';
-import 'package:seat_saver/api/data/user_response.dart';
 import 'package:seat_saver/main.dart';
 import 'package:seat_saver/pages/web/auth/sign_up_tab.dart';
 import 'package:seat_saver/pages/web/views/homepage.dart';
@@ -100,10 +99,10 @@ class SignUpTabModel extends FlutterFlowModel<SignUpTab> with ChangeNotifier {
     if (response.success && response.data != null) {
       int ownerId = response.data!;
 
-      UserResponse? userResponse = await accountApi.getUser(ownerId);
+      BasicResponse<User?> userResponse = await accountApi.getUser(ownerId);
 
-      if (userResponse != null && userResponse.success) {
-        User user = userResponse.user!;
+      if (userResponse.success) {
+        User user = userResponse.data!;
 
         sharedPreferencesCache.setInt('ownerId', ownerId);
 
