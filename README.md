@@ -20,3 +20,5 @@ The goal of this thesis is to create a mobile application for booking available 
 The Flutter framework was used to develop the frontend part of the application, while the backend was implemented using Kotlin and Spring Boot, with an H2 database for data storage. Special attention was paid to the testing system, both frontend and backend, to ensure the stability and reliability of the application. The application was also developed modularly with an emphasis on scalability and the possibility of further development.
 
 Keywords: Flutter, Kotlin, Spring Boot, H2, mobile applications, web applications
+
+Dokumentacija: [prilozena dokumentacija u .pdf formatu](diplomski.pdf)
